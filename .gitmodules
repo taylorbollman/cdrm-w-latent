@@ -1,0 +1,3 @@
+[submodule "vendors/recurrent-transformer"]
+	path = vendors/recurrent-transformer
+	url = https://github.com/taylorbollman/recurrent-transformer.git

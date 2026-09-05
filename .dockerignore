@@ -1,0 +1,19 @@
+# Allow only image inputs; never send credentials or local container state.
+**
+!docker/
+!docker/**
+!vendors/
+!vendors/recurrent-transformer/
+!vendors/recurrent-transformer/pyproject.toml
+!vendors/recurrent-transformer/README.md
+!vendors/recurrent-transformer/LICENSE
+!vendors/recurrent-transformer/olmo/
+!vendors/recurrent-transformer/olmo/**
+!vendors/recurrent-transformer/olmo_data/
+!vendors/recurrent-transformer/olmo_data/**
+!vendors/recurrent-transformer/hf_olmo/
+!vendors/recurrent-transformer/hf_olmo/**
+**/.git
+**/__pycache__
+**/*.pyc
+**/*.egg-info
