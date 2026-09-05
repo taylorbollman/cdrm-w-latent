@@ -35,3 +35,17 @@ For the initial installation on this VM, the already populated image was tagged
 `cdrm-w-latent:pre-recurrent` and reused with
 `CDRM_BASE_IMAGE=cdrm-w-latent:pre-recurrent bash scripts/docker_build.sh`.
 Fresh machines use the default NGC base and install the same pinned requirements.
+
+## Verification on this VM
+
+The editable package is `ai2-olmo==0.6.0`, sourced from the mounted submodule.
+Python 3.12.3 and the original NGC PyTorch build are retained. The installed
+requirements pass `pip check`, and the five upstream configuration tests pass:
+
+```bash
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pip check
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc \
+  'cd vendors/recurrent-transformer && python -m pytest -q tests/config_test.py'
+```
+
+These are installation/configuration checks; GPU execution has not been tested.

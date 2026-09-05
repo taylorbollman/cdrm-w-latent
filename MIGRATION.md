@@ -55,11 +55,12 @@
 - A real CPU-only container smoke check confirms container execution,
   `/workspace/cdrm-w-latent` working directory, project mount and vendor paths.
 - `.env` and `.docker-home` are ignored; `.env.example` remains trackable.
-- The workspace is now prepared for publication at
+- The workspace is now public at
   `https://github.com/taylorbollman/cdrm-w-latent`. Its recurrent-transformer
   submodule points exclusively to the personal GitHub fork for pushes.
 - GPU execution and RAID creation were not tested. Full dependency rebuilds
-  were not run; installed dependencies were preserved from the existing image.
+  were not run during the initial migration; the subsequent recurrent setup
+  rebuilt the image using the existing populated image as its base.
 
 ## Subsequent setup
 
@@ -68,3 +69,14 @@ was forked to `taylorbollman/recurrent-transformer`, added as a submodule under
 `vendors/`, and integrated into the Docker image as an editable installation.
 The fork retains its own history and license. The three earlier vendor snapshots
 remain ordinary tracked source directories.
+
+## Recurrent installation validation
+
+The final `cdrm-w-latent:dev` image was rebuilt successfully. In an explicitly
+CPU-only container, the editable installation resolved to the mounted local
+checkout, both recurrent block classes imported, `pip check` passed, and all
+five upstream `tests/config_test.py` tests passed. Python remains 3.12.3 and
+PyTorch retains its original NGC build. NumPy was changed from 2.1.0 to 1.26.4
+to satisfy the package's `numpy<2` requirement; Rich changed from 15.0.0 to
+13.9.4 to satisfy the dependency resolution. No GPU training, evaluation or
+profiling was run. No source changes were pushed to the original authors.
