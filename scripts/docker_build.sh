@@ -18,7 +18,7 @@ else
   DOCKER=(sudo docker)
 fi
 
-if [ ! -f "${REPO_ROOT}/vendors/recurrent-transformer/pyproject.toml" ]; then
+if [ ! -f "${REPO_ROOT}/recurrent-transformer/pyproject.toml" ]; then
   echo "Initialize the recurrent-transformer submodule first: git submodule update --init --recursive" >&2
   exit 1
 fi

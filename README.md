@@ -25,12 +25,14 @@ CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh
 
 ## Recurrent transformer development
 
-`vendors/recurrent-transformer` is a Git submodule pointing to
+`recurrent-transformer` is a Git submodule pointing to
 [taylorbollman/recurrent-transformer](https://github.com/taylorbollman/recurrent-transformer),
 a fork of [geniucos/recurrent-transformer](https://github.com/geniucos/recurrent-transformer).
 The Docker image installs its `ai2-olmo` package in editable mode. Changes to
 its Python sources are visible in new Python processes without reinstalling.
-The original Apache-2.0 license remains in the submodule.
+The original Apache-2.0 license remains in the submodule. The pinned starting
+revision is `a21b42d2bc292edb86ed1b62cee4bcab809a9d21`; the fork is developed
+as a top-level component while supporting dependencies remain in `vendors/`.
 
 The submodule's `origin` points to the personal fork. Work is independent of
 the upstream authors; publish changes to the personal fork, then commit the
@@ -53,8 +55,22 @@ bash /home/taylorbollman/start_cpu.sh   # CPU + Local SSD bootstrap and shell
 bash /home/taylorbollman/remote_tunnel.sh
 ```
 
+GPU startup reuses an existing image and mounted Local SSD; rebuild explicitly
+with `bash scripts/docker_build.sh` when changing dependencies or install paths.
+For an already bootstrapped machine, use `bash scripts/docker_shell.sh` directly.
+
 Local SSD runtime: `/mnt/localssd/cdrm_runtime`.
 The remote tunnel retains its existing `roadmap-vm2` default name.
 
 See [Docker details](docker/README.md), [SSD setup](scripts/gcp/README.md),
 and [migration notes](MIGRATION.md).
+
+Project inputs are preserved under [docs/inputs](docs/inputs/README.md). The initial
+run protocol is provisional; recorded NUM/OPS results live under
+[docs/reports/stage-a](docs/reports/stage-a/).
+
+The first R3 implementation, conversion API, tests, and bounded GPU commands are
+documented in [Stage A usage](docs/stage-a-usage.md). Scientific and numerical
+choices are recorded in [the decision log](docs/semantic-decisions.md).
+See [Stage A results](docs/reports/stage-a/results.md) for validated behavior,
+measured H100 performance, retained failures, and the next milestone.

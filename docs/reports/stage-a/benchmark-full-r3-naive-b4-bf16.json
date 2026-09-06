@@ -1,0 +1,279 @@
+{
+  "schema": "stage-a-benchmark-v1",
+  "status": "completed",
+  "arguments": {
+    "preset": "full",
+    "topology": "r3",
+    "backend": "naive",
+    "rho": 1.0,
+    "precision": "bf16",
+    "microbatch": 4,
+    "accumulation": 1,
+    "sequence_length": null,
+    "warmup": 2,
+    "steps": 3,
+    "compiled_helpers": false,
+    "seed": 17,
+    "output": ".runtime/stage-a/full-r3-naive-b4-bf16.json"
+  },
+  "provenance": {
+    "recorded_at_utc": "2026-09-06T17:32:39Z",
+    "python": "3.12.3",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda_runtime": "13.3",
+    "cudnn": 92300,
+    "hardware": {
+      "device": "cuda:0",
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1,
+      "name": "NVIDIA H100 80GB HBM3",
+      "total_memory_bytes": 85017493504,
+      "capability": [
+        9,
+        0
+      ],
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916, 81559 MiB, 580.173.02"
+    },
+    "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+    "upstream_pinned_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+    "project_git": {
+      "head": "302e3389390d975f2e0ceb35b6e6c318e63c2b5a",
+      "dirty": true,
+      "tracked_diff_sha256": "ed81569fae0d94c924d074107d922eae7da47cec6812caeeaaba4ae081827af5"
+    },
+    "fork_git": {
+      "head": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+      "dirty": true,
+      "tracked_diff_sha256": "23ed8575033cdcaaca7c94e28fbb8823f9edf30e28476eb311feb627e6c277a0"
+    },
+    "source_sha256": {
+      "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "scripts/stage_a_common.py": "011fd45579b408939be3de8478086dad29da91f87ca48f889ee0a14741badda5",
+      "scripts/benchmark_model.py": "1ece103b9d2897c395e14da61dec544ab55e3e0000c87a7b2e7d761adfae12da",
+      "scripts/stage_a_ops.py": "b73d0755819af6abfb37da7caac11fe3307009f7e09b28d74313b587381a1ed8"
+    },
+    "tf32_matmul": false,
+    "deterministic_algorithms": false,
+    "torch_dynamo_recompile_limit": 8,
+    "torch_dynamo_accumulated_recompile_limit": 256,
+    "torch_dynamo_fail_on_recompile_limit_hit": false
+  },
+  "manifest": {
+    "evidence_class": "OPS",
+    "artifact_warning": "NUM/OPS debugging artifact; NOT a research pretrained checkpoint.",
+    "topology_id": "R3",
+    "replacement_indices_zero_based": [
+      3
+    ],
+    "input_state": "ordinary residual input to block 3",
+    "output_state": "processed z_t passed upward",
+    "parameter_ownership": "one canonical owner per parameter; unique optimizer entries",
+    "cache_sources": "temporary input K/V, then permanent K/V from (1-rho)*x_t+rho*z_t",
+    "gradient_stops": [],
+    "mask": "causal ALiBi; fixed-length unpadded fixture; no document packing",
+    "backend": "naive",
+    "gates": {
+      "rho": 1.0
+    },
+    "checkpoint_provenance": "paired random initialization; no pretrained weights",
+    "optimizer_policy": "fresh AdamW; no converted optimizer moments",
+    "data": "deterministic synthetic token IDs for NUM/OPS only",
+    "tokenizer": "none; symbolic IDs (full preset uses T5-shaped vocabulary only)",
+    "auxiliary_source": null,
+    "auxiliary_target": null,
+    "budget": {
+      "warmup_updates": 2,
+      "measured_updates": 3,
+      "microbatch": 4,
+      "accumulation": 1,
+      "global_sequences_per_update": 4,
+      "precision": "bf16",
+      "seed": 17
+    },
+    "resolved_model_config": {
+      "d_model": 1024,
+      "n_heads": 16,
+      "n_kv_heads": 16,
+      "clip_qkv": null,
+      "n_layers": 12,
+      "mlp_ratio": 4,
+      "mlp_hidden_size": 4096,
+      "activation_type": "gelu",
+      "block_type": "sequential",
+      "recurrent_layers": [
+        3
+      ],
+      "recurrent_backend": "naive",
+      "recurrent_write_rho": 1.0,
+      "reference_eager": true,
+      "block_group_size": 1,
+      "alibi": true,
+      "alibi_bias_max": 8.0,
+      "rope": false,
+      "rope_full_precision": true,
+      "rope_theta": 10000,
+      "flash_attention": false,
+      "attention_dropout": 0.0,
+      "multi_query_attention": null,
+      "attention_layer_norm": true,
+      "residual_dropout": 0.0,
+      "embedding_dropout": 0.0,
+      "embedding_layer_norm": false,
+      "layer_norm_type": "default",
+      "layer_norm_with_affine": true,
+      "layer_norm_eps": 1e-05,
+      "tanh_norm_alpha": 1.0,
+      "tanh_trainable_alpha": false,
+      "attention_layer_norm_with_affine": true,
+      "max_sequence_length": 512,
+      "bwd_mlp_chunks": 4,
+      "include_bias": false,
+      "bias_for_layer_norm": false,
+      "scale_logits": false,
+      "vocab_size": 32100,
+      "embedding_size": 32128,
+      "weight_tying": false,
+      "eos_token_id": 1,
+      "pad_token_id": 0,
+      "init_device": "cpu",
+      "init_fn": "mitchell",
+      "init_std": 0.02,
+      "init_cutoff_factor": null,
+      "precision": null,
+      "scale_emb_init": false,
+      "emb_init_std": null,
+      "norm_after": false
+    },
+    "activation_checkpointing": false,
+    "gradient_clipping": null,
+    "cuda_graphs": false,
+    "model_compilation": false,
+    "helper_compilation": false
+  },
+  "phase": "complete",
+  "conversion": {
+    "transformed": [
+      {
+        "source_keys": [
+          "transformer.blocks.3.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_proj.weight",
+          "transformer.blocks.3.kv_proj.weight"
+        ],
+        "operation": "split",
+        "split_sizes": [
+          1024,
+          2048
+        ]
+      }
+    ],
+    "new": [],
+    "missing": [],
+    "unexpected": [],
+    "source_recurrent_layers": [],
+    "target_recurrent_layers": [
+      3
+    ],
+    "source_key_count": 99,
+    "target_key_count": 100,
+    "semantics": "weights_only",
+    "notes": [
+      "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+      "Optimizer state, training/data counters, and gate schedules are not converted."
+    ],
+    "copied_count": 98,
+    "parameter_mappings_count": 99
+  },
+  "parameters": {
+    "total": 216843264,
+    "trainable": 216843264,
+    "parameter_bytes": 867373056,
+    "parameter_dtype": "torch.float32",
+    "forward_autocast_dtype": "torch.bfloat16"
+  },
+  "optimizer_config": {
+    "name": "AdamW",
+    "learning_rate": 0.001,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "foreach": false,
+    "fused": false
+  },
+  "warmup": [
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 2044,
+      "input_tokens": 2048,
+      "loss": 10.831796187010763,
+      "update_seconds": 3.9532192329997997,
+      "forward_seconds": 1.6646077880859376
+    },
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 2044,
+      "input_tokens": 2048,
+      "loss": 9.60915522566047,
+      "update_seconds": 2.587100597999779,
+      "forward_seconds": 0.41544924926757815
+    }
+  ],
+  "warmup_wall_seconds_including_compilation": 6.540767808000055,
+  "optimizer_state_bytes": 1734746512,
+  "updates": [
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 2044,
+      "input_tokens": 2048,
+      "loss": 9.84406437285959,
+      "update_seconds": 2.515225782000016,
+      "forward_seconds": 0.39788812255859374
+    },
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 2044,
+      "input_tokens": 2048,
+      "loss": 8.092846058586106,
+      "update_seconds": 2.5390826190000553,
+      "forward_seconds": 0.3921706237792969
+    },
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 2044,
+      "input_tokens": 2048,
+      "loss": 6.6882391106592465,
+      "update_seconds": 2.5118910529999994,
+      "forward_seconds": 0.40070806884765625
+    }
+  ],
+  "summary": {
+    "update_seconds_mean": 2.52206648466669,
+    "update_seconds_median": 2.515225782000016,
+    "forward_seconds_mean": 0.39692227172851563,
+    "input_tokens_per_second": 812.0325187504557,
+    "supervised_target_tokens_per_second": 810.4465177372712,
+    "peak_allocated_bytes": 7538116608,
+    "peak_reserved_bytes": 7956594688,
+    "memory_scope": "steady updates with initialized AdamW; reserved includes warmup allocator pool",
+    "update_timing_scope": "zero_grad, forward, shifted CE, backward, AdamW; synchronized wall time; excludes prepared-data transfer",
+    "forward_timing_scope": "CUDA event intervals summed across accumulation microbatches; excludes CE",
+    "input_tokens_total": 6144,
+    "supervised_target_tokens_total": 6132,
+    "final_parameters_finite": true
+  },
+  "compiler_counters": {},
+  "raw_report": ".runtime/stage-a/full-r3-naive-b4-bf16.json",
+  "captured_log": ".runtime/stage-a/full-r3-naive-b4-bf16.log",
+  "helper_execution_observation": {
+    "compiled_helpers_requested": false,
+    "cache_limit_fallback_observed": false,
+    "log_checked": true,
+    "status": "eager helpers"
+  }
+}

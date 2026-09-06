@@ -1,0 +1,19 @@
+____________________ test_bf16_tiled_random_cotangent[True] ____________________
+tests/test_recurrent_foundation.py:331: in test_bf16_tiled_random_cotangent
+tests/test_recurrent_foundation.py:55: in assert_close
+E   AssertionError: BF16 transformer.ff_out.weight: Tensor-likes are not close!
+E   
+E   Mismatched elements: 3 / 1024 (0.3%)
+E   Greatest absolute difference: 0.013671875 at index (25, 5) (up to 0.003 allowed)
+E   Greatest relative difference: 0.15267175436019897 at index (4, 27) (up to 0.03 allowed)
+___________________ test_bf16_tiled_random_cotangent[False] ____________________
+tests/test_recurrent_foundation.py:331: in test_bf16_tiled_random_cotangent
+tests/test_recurrent_foundation.py:55: in assert_close
+E   AssertionError: BF16 transformer.ff_out.weight: Tensor-likes are not close!
+E   
+E   Mismatched elements: 1 / 1024 (0.1%)
+E   Greatest absolute difference: 0.0048828125 at index (4, 27) (up to 0.003 allowed)
+E   Greatest relative difference: 0.15267175436019897 at index (4, 27) (up to 0.03 allowed)
+FAILED tests/test_recurrent_foundation.py::test_bf16_tiled_random_cotangent[True]
+FAILED tests/test_recurrent_foundation.py::test_bf16_tiled_random_cotangent[False]
+2 failed, 45 deselected, 61 warnings in 14.88s

@@ -1,0 +1,274 @@
+{
+  "schema": "stage-a-benchmark-v1",
+  "status": "completed",
+  "arguments": {
+    "preset": "tiny",
+    "topology": "r3",
+    "backend": "tiled",
+    "rho": 1.0,
+    "precision": "bf16",
+    "microbatch": 2,
+    "accumulation": 1,
+    "sequence_length": null,
+    "warmup": 2,
+    "steps": 1,
+    "compiled_helpers": true,
+    "seed": 17,
+    "output": ".runtime/stage-a/final-entrypoint-tiny-r3.json"
+  },
+  "provenance": {
+    "recorded_at_utc": "2026-09-06T17:48:37Z",
+    "python": "3.12.3",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda_runtime": "13.3",
+    "cudnn": 92300,
+    "hardware": {
+      "device": "cuda:0",
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1,
+      "name": "NVIDIA H100 80GB HBM3",
+      "total_memory_bytes": 85017493504,
+      "capability": [
+        9,
+        0
+      ],
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916, 81559 MiB, 580.173.02"
+    },
+    "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+    "upstream_pinned_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+    "project_git": {
+      "head": "302e3389390d975f2e0ceb35b6e6c318e63c2b5a",
+      "dirty": true,
+      "tracked_diff_sha256": "4da713ed1dc5de1bb4f4f2dced498f8d30aa49253176d19a0b5e105085ba95ea"
+    },
+    "fork_git": {
+      "head": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+      "dirty": true,
+      "tracked_diff_sha256": "23ed8575033cdcaaca7c94e28fbb8823f9edf30e28476eb311feb627e6c277a0"
+    },
+    "source_sha256": {
+      "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+      "scripts/benchmark_model.py": "77c49506f8d4d818ce0bf76c12c4f3760e7f2cec95ba1c4f3907a96ecaffbde3",
+      "scripts/stage_a_ops.py": "1b7166fbaa11709c57ebb48d46448a739fd1fcc19487a1ee5904546bd1e00d7b"
+    },
+    "tf32_matmul": false,
+    "deterministic_algorithms": false,
+    "torch_dynamo_recompile_limit": 64,
+    "torch_dynamo_accumulated_recompile_limit": 256,
+    "torch_dynamo_fail_on_recompile_limit_hit": true
+  },
+  "manifest": {
+    "evidence_class": "OPS",
+    "artifact_warning": "NUM/OPS debugging artifact; NOT a research pretrained checkpoint.",
+    "topology_id": "R3",
+    "replacement_indices_zero_based": [
+      3
+    ],
+    "input_state": "ordinary residual input to block 3",
+    "output_state": "processed z_t passed upward",
+    "parameter_ownership": "one canonical owner per parameter; unique optimizer entries",
+    "cache_sources": "temporary input K/V, then permanent K/V from (1-rho)*x_t+rho*z_t",
+    "gradient_stops": [],
+    "mask": "causal ALiBi; fixed-length unpadded fixture; no document packing",
+    "backend": "tiled",
+    "gates": {
+      "rho": 1.0
+    },
+    "checkpoint_provenance": "paired random initialization; no pretrained weights",
+    "optimizer_policy": "fresh AdamW; no converted optimizer moments",
+    "data": "deterministic synthetic token IDs for NUM/OPS only",
+    "tokenizer": "none; symbolic IDs (full preset uses T5-shaped vocabulary only)",
+    "auxiliary_source": null,
+    "auxiliary_target": null,
+    "budget": {
+      "warmup_updates": 2,
+      "measured_updates": 1,
+      "microbatch": 2,
+      "accumulation": 1,
+      "global_sequences_per_update": 2,
+      "precision": "bf16",
+      "seed": 17
+    },
+    "resolved_model_config": {
+      "d_model": 32,
+      "n_heads": 4,
+      "n_kv_heads": 4,
+      "clip_qkv": null,
+      "n_layers": 12,
+      "mlp_ratio": 4,
+      "mlp_hidden_size": 128,
+      "activation_type": "gelu",
+      "block_type": "sequential",
+      "recurrent_layers": [
+        3
+      ],
+      "recurrent_backend": "tiled",
+      "recurrent_write_rho": 1.0,
+      "reference_eager": false,
+      "block_group_size": 1,
+      "alibi": true,
+      "alibi_bias_max": 8.0,
+      "rope": false,
+      "rope_full_precision": true,
+      "rope_theta": 10000,
+      "flash_attention": false,
+      "attention_dropout": 0.0,
+      "multi_query_attention": null,
+      "attention_layer_norm": true,
+      "residual_dropout": 0.0,
+      "embedding_dropout": 0.0,
+      "embedding_layer_norm": true,
+      "layer_norm_type": "default",
+      "layer_norm_with_affine": true,
+      "layer_norm_eps": 1e-05,
+      "tanh_norm_alpha": 1.0,
+      "tanh_trainable_alpha": false,
+      "attention_layer_norm_with_affine": true,
+      "max_sequence_length": 8,
+      "bwd_mlp_chunks": 1,
+      "include_bias": true,
+      "bias_for_layer_norm": true,
+      "scale_logits": false,
+      "vocab_size": 64,
+      "embedding_size": 64,
+      "weight_tying": false,
+      "eos_token_id": 1,
+      "pad_token_id": 0,
+      "init_device": "cpu",
+      "init_fn": "mitchell",
+      "init_std": 0.02,
+      "init_cutoff_factor": null,
+      "precision": null,
+      "scale_emb_init": false,
+      "emb_init_std": null,
+      "norm_after": false
+    },
+    "activation_checkpointing": false,
+    "gradient_clipping": null,
+    "cuda_graphs": false,
+    "model_compilation": false,
+    "helper_compilation": true
+  },
+  "phase": "complete",
+  "parameters": {
+    "total": 158272,
+    "trainable": 158272,
+    "parameter_bytes": 633088,
+    "parameter_dtype": "torch.float32",
+    "forward_autocast_dtype": "torch.bfloat16"
+  },
+  "optimizer_config": {
+    "name": "AdamW",
+    "learning_rate": 0.001,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "foreach": false,
+    "fused": false
+  },
+  "warmup": [
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 14,
+      "input_tokens": 16,
+      "loss": 4.293946947370257,
+      "update_seconds": 11.741289952999978,
+      "forward_seconds": 5.71643603515625
+    },
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 14,
+      "input_tokens": 16,
+      "loss": 2.8814359392438615,
+      "update_seconds": 0.04503761999967537,
+      "forward_seconds": 0.012892736434936523
+    }
+  ],
+  "warmup_wall_seconds_including_compilation": 11.786686477999865,
+  "optimizer_state_bytes": 1266980,
+  "updates": [
+    {
+      "skipped_empty_targets": false,
+      "valid_target_tokens": 14,
+      "input_tokens": 16,
+      "loss": 2.029241153172084,
+      "update_seconds": 0.04340517299988278,
+      "forward_seconds": 0.01149888038635254
+    }
+  ],
+  "summary": {
+    "update_seconds_mean": 0.04340517299988278,
+    "update_seconds_median": 0.04340517299988278,
+    "forward_seconds_mean": 0.01149888038635254,
+    "input_tokens_per_second": 368.6196573860726,
+    "supervised_target_tokens_per_second": 322.54220021281355,
+    "peak_allocated_bytes": 69919232,
+    "peak_reserved_bytes": 142606336,
+    "memory_scope": "steady updates with initialized AdamW; reserved includes warmup allocator pool",
+    "update_timing_scope": "zero_grad, forward, shifted CE, backward, AdamW; synchronized wall time; excludes prepared-data transfer",
+    "forward_timing_scope": "CUDA event intervals summed across accumulation microbatches; excludes CE",
+    "input_tokens_total": 16,
+    "supervised_target_tokens_total": 14,
+    "final_parameters_finite": true
+  },
+  "compiler_counters": {
+    "frames": {
+      "total": 5,
+      "ok": 5
+    },
+    "stats": {
+      "calls_captured": 133,
+      "unique_graphs": 8
+    },
+    "aot_autograd": {
+      "total": 8,
+      "autograd_cache_miss": 7,
+      "autograd_cache_saved": 7,
+      "ok": 8,
+      "autograd_cache_bypass": 1
+    },
+    "inductor": {
+      "pattern_matcher_count": 96,
+      "pattern_matcher_nodes": 113,
+      "fxgraph_cache_miss": 10,
+      "extern_calls": 23,
+      "async_compile_cache_miss": 105,
+      "triton_bundler_save_kernel": 904,
+      "triton_bundler_save_static_autotuner": 10,
+      "benchmarking.InductorBenchmarker.benchmark": 95,
+      "benchmarking.InductorBenchmarker.benchmark_gpu": 103,
+      "removed_pointless_view_pair": 7,
+      "pad_mm_bench": 4,
+      "async_compile_cache_hit": 47
+    },
+    "graph_break": {},
+    "aten_mm_info": {
+      "aten.addmm_16_64_32": 2,
+      "aten.addmm_16_32_32": 2,
+      "aten.bmm_8_1_1_8": 1,
+      "aten.bmm_8_2_2_8": 1,
+      "aten.bmm_8_2_8_2": 1,
+      "aten.bmm_8_4_4_8": 1,
+      "aten.bmm_8_4_8_4": 1,
+      "aten.bmm_8_8_8_8": 2,
+      "aten.mm_16_32_32": 2,
+      "aten.mm_32_32_16": 2,
+      "aten.mm_16_32_64": 1,
+      "aten.mm_64_32_16": 1,
+      "aten.addmm_16_128_32": 1,
+      "aten.addmm_16_32_128": 1,
+      "aten.mm_16_128_32": 1,
+      "aten.mm_32_128_16": 1,
+      "aten.mm_16_32_128": 1,
+      "aten.mm_128_32_16": 1
+    }
+  },
+  "purpose": "Final current-source benchmark entrypoint integration check after adding fallback rejection. One measured tiny-model update; not included in full-model throughput comparisons.",
+  "raw_report": ".runtime/stage-a/final-entrypoint-tiny-r3.json"
+}

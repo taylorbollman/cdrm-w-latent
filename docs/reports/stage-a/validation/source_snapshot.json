@@ -1,0 +1,31 @@
+{
+  "recorded_at_utc": "2026-09-06T17:48:54Z",
+  "source_sha256": {
+    "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+    "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+    "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+    "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+    "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+    "recurrent-transformer/debug_utils.py": "da8f0c1af4037fb52896bed710130ac66fe9d9d76dabf9a53360339fcfab7e3c",
+    "recurrent-transformer/benchmark_block_latencies.py": "b4cabf5d4930be6d7888a7f040552fb0de7eb574f3c473f97fc86cafda4923eb",
+    "recurrent-transformer/scripts/train.py": "ca7df78a6e6618657e6da896cd8775d77a1e4f6301881d4ca6ffa64b35bd13d1",
+    "recurrent-transformer/tests/test_checkpoint_conversion.py": "c9f2941d1ffb5221ba5618aec0c5c400959afd8a09feb35f8d5b20a04d09bacf",
+    "recurrent-transformer/tests/test_recurrent_foundation.py": "1ccaadb7131fad53de97a719ef3ea4cefb024a7400091964330d283d5967fe2e",
+    "scripts/stage_a_ops.py": "1b7166fbaa11709c57ebb48d46448a739fd1fcc19487a1ee5904546bd1e00d7b",
+    "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+    "scripts/benchmark_model.py": "77c49506f8d4d818ce0bf76c12c4f3760e7f2cec95ba1c4f3907a96ecaffbde3",
+    "configs/stage_a/full.json": "57c05eab23a45b79a78d470fa3488bc742d26042726dbc4c1ab6addd56cc5491",
+    "configs/stage_a/tiny.json": "968b39cb368535b007fd669c3946e8db3a139fc2157f41786db81aae30727751",
+    "start.sh": "2c906b9f889553a638b1383f9ebd4f26a44a22300da3c83b9cdd5ed8be121f54",
+    "scripts/docker_shell.sh": "7a893038d010630a3aa95ccdf01b08a584022adc2a156de6d244413231991fa6",
+    "scripts/docker_build.sh": "9eebf65ac700af6521cb86575f175452fefbbce4c7a20a4326c3e0efefdeb4a8",
+    "docker/Dockerfile": "8b315d3ccb9ecd8f07bce298ebd6147018ee5ea0594e5272a5f3cbb0f78db0c2",
+    ".gitmodules": "93040101bce533a4a7311a179d6210dec686e7344acdb451e8206addefc7d7b0"
+  },
+  "syntax": "13 Python files parsed; changed shell scripts bash -n passed",
+  "diff_check": "parent and fork git diff --check passed",
+  "implementation_status": "uncommitted working-tree changes",
+  "gpu_tests": "container only; commands/results and test-time hashes in numerics.json",
+  "parent_head": "302e3389390d975f2e0ceb35b6e6c318e63c2b5a",
+  "fork_head": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21"
+}

@@ -48,9 +48,9 @@ RUN set -eux; \
 
 # Install the editable package at the same path used by the project bind mount.
 # The image contains a source snapshot; local edits are visible through the mount.
-COPY vendors/recurrent-transformer /workspace/cdrm-w-latent/vendors/recurrent-transformer
+COPY recurrent-transformer /workspace/cdrm-w-latent/recurrent-transformer
 RUN python -m pip install --no-cache-dir --no-deps --no-build-isolation \
-    -e /workspace/cdrm-w-latent/vendors/recurrent-transformer
+    -e /workspace/cdrm-w-latent/recurrent-transformer
 
 USER ${USER_UID}:${USER_GID}
 WORKDIR /workspace/cdrm-w-latent

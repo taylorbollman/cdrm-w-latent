@@ -1,0 +1,634 @@
+{
+  "schema": "stage-a-ops-v1",
+  "status": "passed",
+  "artifact_warning": "NUM/OPS debugging artifact; NOT a research pretrained checkpoint.",
+  "provenance": {
+    "recorded_at_utc": "2026-09-06T17:25:49Z",
+    "python": "3.12.3",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda_runtime": "13.3",
+    "cudnn": 92300,
+    "hardware": {
+      "device": "cuda:0",
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1,
+      "name": "NVIDIA H100 80GB HBM3",
+      "total_memory_bytes": 85017493504,
+      "capability": [
+        9,
+        0
+      ],
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916, 81559 MiB, 580.173.02"
+    },
+    "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+    "upstream_pinned_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+    "project_git": {
+      "head": "302e3389390d975f2e0ceb35b6e6c318e63c2b5a",
+      "dirty": true,
+      "tracked_diff_sha256": "ed81569fae0d94c924d074107d922eae7da47cec6812caeeaaba4ae081827af5"
+    },
+    "fork_git": {
+      "head": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+      "dirty": true,
+      "tracked_diff_sha256": "23ed8575033cdcaaca7c94e28fbb8823f9edf30e28476eb311feb627e6c277a0"
+    },
+    "source_sha256": {
+      "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "scripts/stage_a_common.py": "4542214710bf8c7174fee0d52e684670221398167b86b268c8b771eb41dcc333",
+      "scripts/benchmark_model.py": "d4d529cee85841a3b7613b2b518b2cafd86a72fb5ce5c3ee30ad9993a85410f1",
+      "scripts/stage_a_ops.py": "4df3c0092cfdc00fd6936dae0f83b9fe2764f47b6c01c2999688b86374e6c3f7"
+    },
+    "tf32_matmul": false,
+    "deterministic_algorithms": true
+  },
+  "attention_backend": "explicit PyTorch math SDPA for deterministic NUM/OPS",
+  "fixture": {
+    "shape": [
+      4,
+      8
+    ],
+    "sha256": "9954b7eee1a79ea669ae40055cad9e77fbada9621ed0e96ad24e51aae1434894",
+    "description": "four fixed length-8 symbolic sequences; no padding or corpus data"
+  },
+  "topologies": {
+    "seq": {
+      "manifest": {
+        "evidence_class": "NUM/OPS",
+        "artifact_warning": "NUM/OPS debugging artifact; NOT a research pretrained checkpoint.",
+        "topology_id": "SEQ",
+        "replacement_indices_zero_based": [],
+        "input_state": "ordinary block inputs",
+        "output_state": "ordinary block outputs",
+        "parameter_ownership": "one canonical owner per parameter; unique optimizer entries",
+        "cache_sources": "ordinary input K/V",
+        "gradient_stops": [],
+        "mask": "causal ALiBi; fixed-length unpadded fixture; no document packing; accumulation additionally masks target loss positions",
+        "backend": "sequential",
+        "gates": {},
+        "checkpoint_provenance": "paired random initialization; no pretrained weights",
+        "optimizer_policy": "fresh AdamW; no converted optimizer moments",
+        "data": "deterministic synthetic token IDs for NUM/OPS only",
+        "tokenizer": "none; symbolic IDs (full preset uses T5-shaped vocabulary only)",
+        "auxiliary_source": null,
+        "auxiliary_target": null,
+        "budget": {
+          "fixed_batch_updates": 24,
+          "accumulation_updates": 6,
+          "resume_updates_executed": 6,
+          "precision": "fp32",
+          "seed": 1234
+        },
+        "resolved_model_config": {
+          "d_model": 32,
+          "n_heads": 4,
+          "n_kv_heads": 4,
+          "clip_qkv": null,
+          "n_layers": 12,
+          "mlp_ratio": 4,
+          "mlp_hidden_size": 128,
+          "activation_type": "gelu",
+          "block_type": "sequential",
+          "recurrent_layers": [],
+          "recurrent_backend": "tiled",
+          "recurrent_write_rho": 1.0,
+          "reference_eager": false,
+          "block_group_size": 1,
+          "alibi": true,
+          "alibi_bias_max": 8.0,
+          "rope": false,
+          "rope_full_precision": true,
+          "rope_theta": 10000,
+          "flash_attention": false,
+          "attention_dropout": 0.0,
+          "multi_query_attention": null,
+          "attention_layer_norm": true,
+          "residual_dropout": 0.0,
+          "embedding_dropout": 0.0,
+          "embedding_layer_norm": true,
+          "layer_norm_type": "default",
+          "layer_norm_with_affine": true,
+          "layer_norm_eps": 1e-05,
+          "tanh_norm_alpha": 1.0,
+          "tanh_trainable_alpha": false,
+          "attention_layer_norm_with_affine": true,
+          "max_sequence_length": 8,
+          "bwd_mlp_chunks": 1,
+          "include_bias": true,
+          "bias_for_layer_norm": true,
+          "scale_logits": false,
+          "vocab_size": 64,
+          "embedding_size": 64,
+          "weight_tying": false,
+          "eos_token_id": 1,
+          "pad_token_id": 0,
+          "init_device": "cpu",
+          "init_fn": "mitchell",
+          "init_std": 0.02,
+          "init_cutoff_factor": null,
+          "precision": null,
+          "scale_emb_init": false,
+          "emb_init_std": null,
+          "norm_after": false
+        },
+        "activation_checkpointing": false,
+        "cuda_graphs": false,
+        "model_compilation": false,
+        "helper_compilation": true
+      },
+      "conversion": {
+        "transformed": [],
+        "new": [],
+        "missing": [],
+        "unexpected": [],
+        "source_recurrent_layers": [],
+        "target_recurrent_layers": [],
+        "source_key_count": 199,
+        "target_key_count": 199,
+        "semantics": "weights_only",
+        "notes": [
+          "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+          "Optimizer state, training/data counters, and gate schedules are not converted."
+        ],
+        "copied_count": 199,
+        "parameter_mappings_count": 199
+      },
+      "status": "passed",
+      "empty_targets": {
+        "status": "passed",
+        "t1_logits_finite": true,
+        "valid_targets": 0,
+        "optimizer_step_skipped": true
+      },
+      "bias_enabled_accumulation_gradients": {
+        "status": "passed",
+        "valid_target_tokens": 11,
+        "full_loss": 3.836535020308061,
+        "accumulated_loss": 3.836535237052224,
+        "gradients": {
+          "max_absolute_error": 1.1920928955078125e-07,
+          "compared_tensors": 199,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "parameters": {
+          "asserted_equivalent": false,
+          "largest_differences": {
+            "transformer.blocks.0.k_norm.bias": 0.00017763975483831018,
+            "transformer.blocks.1.k_norm.bias": 0.00012736988719552755,
+            "transformer.blocks.3.k_norm.bias": 8.33309386507608e-05,
+            "transformer.blocks.5.k_norm.bias": 7.616427319590002e-05,
+            "transformer.blocks.2.k_norm.bias": 5.4267278756015e-05,
+            "transformer.blocks.6.k_norm.bias": 4.838256791117601e-05,
+            "transformer.blocks.9.k_norm.bias": 4.453847941476852e-05,
+            "transformer.blocks.4.k_norm.bias": 4.3816187826450914e-05
+          },
+          "reason": "diagnostic for bias-enabled FP32 AdamW sensitivity near mathematically zero gradients"
+        },
+        "optimizer": {
+          "asserted_equivalent": false
+        },
+        "full_batch_sequences": 4,
+        "microbatch_sequences": 1,
+        "accumulation": 4,
+        "loss_mask": "unequal counts including one example with zero targets",
+        "optimizer_equivalence_asserted": false,
+        "include_bias": true,
+        "bias_for_layer_norm": true
+      },
+      "accumulation": {
+        "status": "passed",
+        "valid_target_tokens": 11,
+        "full_loss": 3.62004262750799,
+        "accumulated_loss": 3.6200423674149946,
+        "gradients": {
+          "max_absolute_error": 1.6763806343078613e-07,
+          "compared_tensors": 100,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "parameters": {
+          "max_absolute_error": 8.847564458847046e-07,
+          "compared_tensors": 100,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "optimizer": {
+          "max_absolute_error": 1.6763806343078613e-08,
+          "compared_tensors": 300,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "full_batch_sequences": 4,
+        "microbatch_sequences": 1,
+        "accumulation": 4,
+        "loss_mask": "unequal counts including one example with zero targets",
+        "optimizer_equivalence_asserted": true,
+        "include_bias": false,
+        "bias_for_layer_norm": false
+      },
+      "resume": {
+        "status": "passed",
+        "parameters": {
+          "max_absolute_error": 0.0,
+          "compared_tensors": 199,
+          "atol": 0.0,
+          "rtol": 0.0
+        },
+        "optimizer": {
+          "max_absolute_error": 0.0,
+          "compared_tensors": 597,
+          "atol": 0.0,
+          "rtol": 0.0
+        },
+        "rng_states_exact": true,
+        "data_stream_exact": true,
+        "uninterrupted_history": [
+          {
+            "update": 1,
+            "offset": 2,
+            "rho": 1.0,
+            "learning_rate": 0.0006666666666666666,
+            "batch_sha256": "c5238c814d628d4e78ac4bf6e0d7f5e256d5c81dfbf46517d67f2c9b7dcafd2a",
+            "loss": 4.804726736886161
+          },
+          {
+            "update": 2,
+            "offset": 4,
+            "rho": 1.0,
+            "learning_rate": 0.0008333333333333333,
+            "batch_sha256": "8433ccd0e76b8dc0aeb3fe97e8ec116c384315e053c4607f7b8097963fe28b14",
+            "loss": 4.645292009626116
+          },
+          {
+            "update": 3,
+            "offset": 6,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "1d4c320b88e85df1fa0c61b3311d60e8c60f6c00231642f57f9a63795ec4f51a",
+            "loss": 4.820534842354911
+          },
+          {
+            "update": 4,
+            "offset": 8,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "f3033589b7330e39418145414442d79bcde6c4eb9608fc209407b00b1a4172b1",
+            "loss": 4.575776236397879
+          }
+        ],
+        "resumed_history": [
+          {
+            "update": 3,
+            "offset": 6,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "1d4c320b88e85df1fa0c61b3311d60e8c60f6c00231642f57f9a63795ec4f51a",
+            "loss": 4.820534842354911
+          },
+          {
+            "update": 4,
+            "offset": 8,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "f3033589b7330e39418145414442d79bcde6c4eb9608fc209407b00b1a4172b1",
+            "loss": 4.575776236397879
+          }
+        ],
+        "resume_checkpoint": ".runtime/stage-a/ops-tiled-compiled-v1/seq/interrupted-u2.pt",
+        "final_data_offset": 8,
+        "fresh_optimizer_branch": {
+          "verified_empty_optimizer": true,
+          "parent_update_index": 2,
+          "branch_update_index": 0,
+          "preserved_stream_offset": 4,
+          "branch_processed_sequences": 0,
+          "preserved_next_data_batch": true
+        },
+        "rho_schedule": {
+          "kind": "fixed-smoke-linear-rewarm",
+          "base_lr": 0.001,
+          "rho_ramp_updates": 0,
+          "horizon_updates": 4
+        }
+      },
+      "fixed_batch_learnability": {
+        "initial_loss": 4.731000627790179,
+        "final_loss": 0.06344659839357648,
+        "final_over_initial": 0.01341082011718354,
+        "required_final_over_initial_below": 0.8,
+        "updates": 24,
+        "learning_rate": 0.003
+      }
+    },
+    "r3": {
+      "manifest": {
+        "evidence_class": "NUM/OPS",
+        "artifact_warning": "NUM/OPS debugging artifact; NOT a research pretrained checkpoint.",
+        "topology_id": "R3",
+        "replacement_indices_zero_based": [
+          3
+        ],
+        "input_state": "ordinary residual input to block 3",
+        "output_state": "processed z_t passed upward",
+        "parameter_ownership": "one canonical owner per parameter; unique optimizer entries",
+        "cache_sources": "temporary input K/V, then permanent K/V from (1-rho)*x_t+rho*z_t",
+        "gradient_stops": [],
+        "mask": "causal ALiBi; fixed-length unpadded fixture; no document packing; accumulation additionally masks target loss positions",
+        "backend": "tiled",
+        "gates": {
+          "rho": 1.0
+        },
+        "checkpoint_provenance": "paired random initialization; no pretrained weights",
+        "optimizer_policy": "fresh AdamW; no converted optimizer moments",
+        "data": "deterministic synthetic token IDs for NUM/OPS only",
+        "tokenizer": "none; symbolic IDs (full preset uses T5-shaped vocabulary only)",
+        "auxiliary_source": null,
+        "auxiliary_target": null,
+        "budget": {
+          "fixed_batch_updates": 24,
+          "accumulation_updates": 6,
+          "resume_updates_executed": 6,
+          "precision": "fp32",
+          "seed": 1234
+        },
+        "resolved_model_config": {
+          "d_model": 32,
+          "n_heads": 4,
+          "n_kv_heads": 4,
+          "clip_qkv": null,
+          "n_layers": 12,
+          "mlp_ratio": 4,
+          "mlp_hidden_size": 128,
+          "activation_type": "gelu",
+          "block_type": "sequential",
+          "recurrent_layers": [
+            3
+          ],
+          "recurrent_backend": "tiled",
+          "recurrent_write_rho": 1.0,
+          "reference_eager": false,
+          "block_group_size": 1,
+          "alibi": true,
+          "alibi_bias_max": 8.0,
+          "rope": false,
+          "rope_full_precision": true,
+          "rope_theta": 10000,
+          "flash_attention": false,
+          "attention_dropout": 0.0,
+          "multi_query_attention": null,
+          "attention_layer_norm": true,
+          "residual_dropout": 0.0,
+          "embedding_dropout": 0.0,
+          "embedding_layer_norm": true,
+          "layer_norm_type": "default",
+          "layer_norm_with_affine": true,
+          "layer_norm_eps": 1e-05,
+          "tanh_norm_alpha": 1.0,
+          "tanh_trainable_alpha": false,
+          "attention_layer_norm_with_affine": true,
+          "max_sequence_length": 8,
+          "bwd_mlp_chunks": 1,
+          "include_bias": true,
+          "bias_for_layer_norm": true,
+          "scale_logits": false,
+          "vocab_size": 64,
+          "embedding_size": 64,
+          "weight_tying": false,
+          "eos_token_id": 1,
+          "pad_token_id": 0,
+          "init_device": "cpu",
+          "init_fn": "mitchell",
+          "init_std": 0.02,
+          "init_cutoff_factor": null,
+          "precision": null,
+          "scale_emb_init": false,
+          "emb_init_std": null,
+          "norm_after": false
+        },
+        "activation_checkpointing": false,
+        "cuda_graphs": false,
+        "model_compilation": false,
+        "helper_compilation": true
+      },
+      "conversion": {
+        "transformed": [
+          {
+            "source_keys": [
+              "transformer.blocks.3.att_proj.weight"
+            ],
+            "target_keys": [
+              "transformer.blocks.3.q_proj.weight",
+              "transformer.blocks.3.kv_proj.weight"
+            ],
+            "operation": "split",
+            "split_sizes": [
+              32,
+              64
+            ]
+          },
+          {
+            "source_keys": [
+              "transformer.blocks.3.att_proj.bias"
+            ],
+            "target_keys": [
+              "transformer.blocks.3.q_proj.bias",
+              "transformer.blocks.3.kv_proj.bias"
+            ],
+            "operation": "split",
+            "split_sizes": [
+              32,
+              64
+            ]
+          }
+        ],
+        "new": [],
+        "missing": [],
+        "unexpected": [],
+        "source_recurrent_layers": [],
+        "target_recurrent_layers": [
+          3
+        ],
+        "source_key_count": 199,
+        "target_key_count": 201,
+        "semantics": "weights_only",
+        "notes": [
+          "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+          "Optimizer state, training/data counters, and gate schedules are not converted."
+        ],
+        "copied_count": 197,
+        "parameter_mappings_count": 199
+      },
+      "status": "passed",
+      "empty_targets": {
+        "status": "passed",
+        "t1_logits_finite": true,
+        "valid_targets": 0,
+        "optimizer_step_skipped": true
+      },
+      "bias_enabled_accumulation_gradients": {
+        "status": "passed",
+        "valid_target_tokens": 11,
+        "full_loss": 3.846314863725142,
+        "accumulated_loss": 3.8463148203763096,
+        "gradients": {
+          "max_absolute_error": 1.4901161193847656e-07,
+          "compared_tensors": 201,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "parameters": {
+          "asserted_equivalent": false,
+          "largest_differences": {
+            "transformer.blocks.0.k_norm.bias": 0.00011128645564895123,
+            "transformer.blocks.3.k_norm.bias": 0.00010886872769333422,
+            "transformer.blocks.1.k_norm.bias": 0.00010047924297396094,
+            "transformer.blocks.6.k_norm.bias": 9.890119690680876e-05,
+            "transformer.blocks.4.k_norm.bias": 8.555173553759232e-05,
+            "transformer.blocks.10.k_norm.bias": 8.140604040818289e-05,
+            "transformer.blocks.5.k_norm.bias": 7.174996426329017e-05,
+            "transformer.blocks.2.k_norm.bias": 6.890018994454294e-05
+          },
+          "reason": "diagnostic for bias-enabled FP32 AdamW sensitivity near mathematically zero gradients"
+        },
+        "optimizer": {
+          "asserted_equivalent": false
+        },
+        "full_batch_sequences": 4,
+        "microbatch_sequences": 1,
+        "accumulation": 4,
+        "loss_mask": "unequal counts including one example with zero targets",
+        "optimizer_equivalence_asserted": false,
+        "include_bias": true,
+        "bias_for_layer_norm": true
+      },
+      "accumulation": {
+        "status": "passed",
+        "valid_target_tokens": 11,
+        "full_loss": 3.3211149735884233,
+        "accumulated_loss": 3.321115016937256,
+        "gradients": {
+          "max_absolute_error": 1.4901161193847656e-07,
+          "compared_tensors": 101,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "parameters": {
+          "max_absolute_error": 1.1920928955078125e-07,
+          "compared_tensors": 101,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "optimizer": {
+          "max_absolute_error": 1.4901161193847656e-08,
+          "compared_tensors": 303,
+          "atol": 2e-06,
+          "rtol": 2e-05
+        },
+        "full_batch_sequences": 4,
+        "microbatch_sequences": 1,
+        "accumulation": 4,
+        "loss_mask": "unequal counts including one example with zero targets",
+        "optimizer_equivalence_asserted": true,
+        "include_bias": false,
+        "bias_for_layer_norm": false
+      },
+      "resume": {
+        "status": "passed",
+        "parameters": {
+          "max_absolute_error": 0.0,
+          "compared_tensors": 201,
+          "atol": 0.0,
+          "rtol": 0.0
+        },
+        "optimizer": {
+          "max_absolute_error": 0.0,
+          "compared_tensors": 603,
+          "atol": 0.0,
+          "rtol": 0.0
+        },
+        "rng_states_exact": true,
+        "data_stream_exact": true,
+        "uninterrupted_history": [
+          {
+            "update": 1,
+            "offset": 2,
+            "rho": 1.0,
+            "learning_rate": 0.0006666666666666666,
+            "batch_sha256": "daca08ce32dfad33eeb8dabb41f8a8ae7d596cc11effb1660d38f497815817df",
+            "loss": 4.4688230242047995
+          },
+          {
+            "update": 2,
+            "offset": 4,
+            "rho": 1.0,
+            "learning_rate": 0.0008333333333333333,
+            "batch_sha256": "05b2950a02704b1961e8c384dad4c88acdf90693bc10458c392b9fb6e37eb89a",
+            "loss": 4.6775665283203125
+          },
+          {
+            "update": 3,
+            "offset": 6,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "8cbbdba0064195b6af781cfd377b9bd15c9861eeec5b81822cce290efba29cf3",
+            "loss": 4.603082929338727
+          },
+          {
+            "update": 4,
+            "offset": 8,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "d07a1d7fbf9880e287d207a95229d50e1279cd58af1f5b60d0d9b83c59b8bb5c",
+            "loss": 4.795009068080357
+          }
+        ],
+        "resumed_history": [
+          {
+            "update": 3,
+            "offset": 6,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "8cbbdba0064195b6af781cfd377b9bd15c9861eeec5b81822cce290efba29cf3",
+            "loss": 4.603082929338727
+          },
+          {
+            "update": 4,
+            "offset": 8,
+            "rho": 1.0,
+            "learning_rate": 0.001,
+            "batch_sha256": "d07a1d7fbf9880e287d207a95229d50e1279cd58af1f5b60d0d9b83c59b8bb5c",
+            "loss": 4.795009068080357
+          }
+        ],
+        "resume_checkpoint": ".runtime/stage-a/ops-tiled-compiled-v1/r3/interrupted-u2.pt",
+        "final_data_offset": 8,
+        "fresh_optimizer_branch": {
+          "verified_empty_optimizer": true,
+          "parent_update_index": 2,
+          "branch_update_index": 0,
+          "preserved_stream_offset": 4,
+          "branch_processed_sequences": 0,
+          "preserved_next_data_batch": true
+        },
+        "rho_schedule": {
+          "kind": "fixed-smoke-linear-rewarm",
+          "base_lr": 0.001,
+          "rho_ramp_updates": 0,
+          "horizon_updates": 4
+        }
+      },
+      "fixed_batch_learnability": {
+        "initial_loss": 4.7362774440220425,
+        "final_loss": 0.06334378038133893,
+        "final_over_initial": 0.013374170143112953,
+        "required_final_over_initial_below": 0.8,
+        "updates": 24,
+        "learning_rate": 0.003
+      }
+    }
+  },
+  "raw_report": ".runtime/stage-a/ops-tiled-compiled-v1/report.json",
+  "execution_observation": "Compiled helpers requested; broad fixture sweep hit torch._dynamo recompile_limit=8 and some helpers fell back to eager. Treat this as mixed compiled/eager OPS evidence."
+}

@@ -1,0 +1,54 @@
+{
+  "recorded_at_utc": "2026-09-06T17:42:48Z",
+  "source_sha256": {
+    "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+    "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+    "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+    "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+    "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+    "recurrent-transformer/tests/test_checkpoint_conversion.py": "c9f2941d1ffb5221ba5618aec0c5c400959afd8a09feb35f8d5b20a04d09bacf",
+    "recurrent-transformer/tests/test_recurrent_foundation.py": "1ccaadb7131fad53de97a719ef3ea4cefb024a7400091964330d283d5967fe2e",
+    "recurrent-transformer/tests/config_test.py": "4228358f25734959dddd917b28c39cffd5e0081bcce332729e0890653470c290"
+  },
+  "checks": {
+    "cpu": {
+      "command": "CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && cd recurrent-transformer && OMP_NUM_THREADS=1 CDRM_TEST_DEVICE=cpu python -m pytest -q tests/test_recurrent_foundation.py tests/test_checkpoint_conversion.py tests/config_test.py --tb=short --disable-warnings -o log_level=WARNING'",
+      "status": "passed",
+      "passed": 62,
+      "gpu_skipped": 16,
+      "seconds": 2.19,
+      "log": "cpu.txt"
+    },
+    "gpu": {
+      "command": "bash scripts/docker_shell.sh bash -lc 'test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && cd recurrent-transformer && OMP_NUM_THREADS=1 CDRM_TEST_DEVICE=cuda python -m pytest -q tests/test_recurrent_foundation.py --tb=short --disable-warnings -o log_level=WARNING'",
+      "status": "passed",
+      "passed": 55,
+      "seconds": 27.36,
+      "log": "gpu-final.txt"
+    }
+  },
+  "precision_policy": {
+    "fp32": {
+      "atol": 2e-06,
+      "rtol": 2e-05
+    },
+    "bf16_per_parameter": {
+      "relative_l2_max": 0.015625,
+      "max_abs_over_reference_rms_max": 0.0625
+    },
+    "tf32": false,
+    "deterministic_algorithms": true,
+    "seed": 937,
+    "recompile_limit": 64,
+    "fail_on_recompile_limit_hit": true,
+    "scope": "tests/test_recurrent_foundation.py; individual tests declare explicit exceptions such as BF16 logits"
+  },
+  "scope": "Small fixture correctness; full-model performance is separate.",
+  "conversion_test_policy": {
+    "scope": "tests/test_checkpoint_conversion.py",
+    "seed": 91,
+    "nondefault_norm_generator_seed": 482,
+    "gradient_rtol": 0.0002,
+    "notes": "Conversion ownership/state-equality tests and config tests have their own assertions; see recorded test-file hashes."
+  }
+}

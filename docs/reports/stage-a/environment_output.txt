@@ -1,0 +1,73 @@
+
+=============
+== PyTorch ==
+=============
+
+NVIDIA Release 26.06 (build 337426143)
+PyTorch Version 2.13.0a0+8145d63
+Container image Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright (c) 2014-2024 Facebook Inc.
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (c) 2015      Google Inc.
+Copyright (c) 2015      Yangqing Jia
+Copyright (c) 2013-2016 The Caffe contributors
+All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+NOTE: CUDA Forward Compatibility mode ENABLED.
+  Using CUDA 13.3 driver version 610.43.02 with kernel driver version 580.173.02.
+  See https://docs.nvidia.com/deploy/cuda-compatibility/ for details.
+
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916)
+{
+  "evidence_category": "OPS",
+  "status": "verified",
+  "utc": "2026-09-06T17:15:59.184645+00:00",
+  "container": true,
+  "working_directory": "/workspace/cdrm-w-latent",
+  "user_site_enabled": false,
+  "python": "3.12.3",
+  "torch": "2.13.0a0+8145d630e8.nv26.06",
+  "cuda": "13.3",
+  "gpu_query": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02, 9.0",
+  "cuda_device_count": 1,
+  "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+  "editable_distribution": {
+    "dir_info": {
+      "editable": true
+    },
+    "url": "file:///workspace/cdrm-w-latent/recurrent-transformer"
+  },
+  "packages": {
+    "ai2-olmo": "0.6.0",
+    "ai2-olmo-core": "2.6.0",
+    "numpy": "1.26.4",
+    "pytest": "9.1.1",
+    "transformers": "5.13.0",
+    "huggingface-hub": "1.22.0",
+    "datasets": "5.0.0",
+    "flash-attn-4": "4.0.0b20",
+    "triton": "3.7.0+gitb7fa781f.nv26.6"
+  },
+  "parent_revision": "302e3389390d975f2e0ceb35b6e6c318e63c2b5a",
+  "fork_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+  "fork_dirty": true,
+  "requirements_sha256": "581c3d3747ef30202f1b2fa7dafa78c82e242083fb8f6cdc7cdd37bed50ba8d3",
+  "pip_check": {
+    "exit_code": 0,
+    "stdout": "No broken requirements found.",
+    "stderr": ""
+  }
+}

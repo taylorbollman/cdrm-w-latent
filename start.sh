@@ -18,11 +18,18 @@ sudo systemctl start docker
 docker info >/dev/null
 
 cd "${INFRA_ROOT}"
-bash ./scripts/docker_build.sh
+if docker image inspect "${CDRM_DOCKER_IMAGE}" >/dev/null 2>&1; then
+  echo "[start-gpu] Using existing Docker image ${CDRM_DOCKER_IMAGE}"
+else
+  echo "[start-gpu] Docker image missing; building"
+  bash ./scripts/docker_build.sh
+fi
 
-cd "${INFRA_ROOT}"
-LOCALSSD_MOUNT_POINT="${CDRM_LOCALSSD_MOUNT}" bash ./scripts/gcp/setup_localssd_raid0.sh
-LOCALSSD_MOUNT_POINT="${CDRM_LOCALSSD_MOUNT}" bash ./scripts/gcp/setup_localssd_raid0.sh --yes
+if findmnt -M "${CDRM_LOCALSSD_MOUNT}" >/dev/null 2>&1; then
+  echo "[start-gpu] Local SSD already mounted at ${CDRM_LOCALSSD_MOUNT}"
+else
+  LOCALSSD_MOUNT_POINT="${CDRM_LOCALSSD_MOUNT}" bash ./scripts/gcp/setup_localssd_raid0.sh --yes
+fi
 df -h "${CDRM_LOCALSSD_MOUNT}"
 
 cd "${INFRA_ROOT}"

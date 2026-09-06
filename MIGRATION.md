@@ -80,3 +80,28 @@ PyTorch retains its original NGC build. NumPy was changed from 2.1.0 to 1.26.4
 to satisfy the package's `numpy<2` requirement; Rich changed from 15.0.0 to
 13.9.4 to satisfy the dependency resolution. No GPU training, evaluation or
 profiling was run. No source changes were pushed to the original authors.
+
+## Stage A relocation and GPU validation — 2026-09-06
+
+Promoted the maintained recurrent-transformer submodule from `vendors/` to
+`recurrent-transformer/`, preserving its upstream starting revision
+`a21b42d2bc292edb86ed1b62cee4bcab809a9d21`. Updated the restricted Docker build
+context, editable installation paths, build precondition, and documentation.
+Rebuilt the populated `cdrm-w-latent:dev` image without replacing NGC PyTorch/CUDA.
+The mounted top-level editable import and `pip check` now pass. The launcher
+sets `PYTHONNOUSERSITE=1` so persisted user-site packages cannot shadow image
+pins; user-site files were preserved.
+
+GPU `start.sh` now reuses an existing image and mounted Local SSD instead of
+rebuilding on every shell launch. Both the direct launcher and home `start.sh`
+wrapper reach the required project container and successfully run `nvidia-smi`.
+No RAID formatting, data deletion, GPU research training, or external logging
+was performed for this environment work.
+
+Preserved the three supplied project documents unchanged under `docs/inputs/`,
+with hashes and explicit provisional-protocol status. Recorded one H100 80GB,
+Python 3.12.3, and CUDA 13.3 in `docs/reports/stage-a/environment.json`.
+A pristine upstream tiny naïve/tiled comparison passes its surrogate checks but
+shows sparse FP32 random-cotangent gradient tolerance failures; those failures
+and a higher-precision diagnostic are retained, not relabeled as passes.
+See `docs/reports/stage-a/environment.md` for details and limits.
