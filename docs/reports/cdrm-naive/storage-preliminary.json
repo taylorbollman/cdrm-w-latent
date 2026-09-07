@@ -1,0 +1,2224 @@
+{
+  "audit_log_root": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z",
+  "closed_local_files_unchanged_during_upload": true,
+  "cloud_deletion_requested": false,
+  "commands": [
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/source",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:15.959129+00:00",
+      "elapsed_seconds": 1.6853652940044412,
+      "exit_code": 0,
+      "label": "00-source-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/00-source-upload.log",
+      "log_sha256": "3c22b95cefafcae0f9ffaecc9d4eb12bc294be52bdc3f3e874cfb2dacf696855",
+      "started_at_utc": "2026-09-07T13:52:14.273769+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/source",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:17.199950+00:00",
+      "elapsed_seconds": 1.2403944510006113,
+      "exit_code": 0,
+      "label": "00-source-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/00-source-verify.log",
+      "log_sha256": "5623582d7103ac99bd28d8721208277c247b55f8903c947c17630a1a795aa695",
+      "started_at_utc": "2026-09-07T13:52:15.959572+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/data",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:18.460265+00:00",
+      "elapsed_seconds": 1.25891762500396,
+      "exit_code": 0,
+      "label": "01-data-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/01-data-upload.log",
+      "log_sha256": "75ae20a8813e278a1b2f2db2b26aa151c33cd0a139fd31408a9e4ed0825cdc42",
+      "started_at_utc": "2026-09-07T13:52:17.201361+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/data",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:19.718218+00:00",
+      "elapsed_seconds": 1.2574467990052653,
+      "exit_code": 0,
+      "label": "01-data-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/01-data-verify.log",
+      "log_sha256": "4fd60953071e607c11aa0df462fa6e52a727c2a2265a1af6c8f40783f969a7f3",
+      "started_at_utc": "2026-09-07T13:52:18.460800+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:21.555431+00:00",
+      "elapsed_seconds": 1.8357558799907565,
+      "exit_code": 0,
+      "label": "02-data-screening-v1-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/02-data-screening-v1-upload.log",
+      "log_sha256": "5c616638edca6d186ec60c4904d0b7d913f29d351e5e05719e95a62056063768",
+      "started_at_utc": "2026-09-07T13:52:19.719690+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:22.829671+00:00",
+      "elapsed_seconds": 1.2736665150005138,
+      "exit_code": 0,
+      "label": "02-data-screening-v1-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/02-data-screening-v1-verify.log",
+      "log_sha256": "9a2673311007caf2473ecb64aecf3afc557fc6d170f80e86ac0913ed687a4258",
+      "started_at_utc": "2026-09-07T13:52:21.556018+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:24.302271+00:00",
+      "elapsed_seconds": 1.4708460080000805,
+      "exit_code": 0,
+      "label": "03-bench-d128-copy-b128-cdrm-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/03-bench-d128-copy-b128-cdrm-upload.log",
+      "log_sha256": "dbb379283d91ff5713f568c6198d4d52057d24b3cdbfd79277aa4dda369a6467",
+      "started_at_utc": "2026-09-07T13:52:22.831440+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:25.543800+00:00",
+      "elapsed_seconds": 1.2409261889988557,
+      "exit_code": 0,
+      "label": "03-bench-d128-copy-b128-cdrm-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/03-bench-d128-copy-b128-cdrm-verify.log",
+      "log_sha256": "da28395f1bad562c2b459f58d3a0a3515c0440dd0b95786e61ba4e6c1a021719",
+      "started_at_utc": "2026-09-07T13:52:24.302889+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:26.971858+00:00",
+      "elapsed_seconds": 1.4266687919880496,
+      "exit_code": 0,
+      "label": "04-bench-d128-copy-b128-seq-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/04-bench-d128-copy-b128-seq-upload.log",
+      "log_sha256": "c1b2521cadce86dc0e44f1edc201b7504181eb8932d865a320b47161dd036bf4",
+      "started_at_utc": "2026-09-07T13:52:25.545203+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:28.183420+00:00",
+      "elapsed_seconds": 1.2109156620135764,
+      "exit_code": 0,
+      "label": "04-bench-d128-copy-b128-seq-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/04-bench-d128-copy-b128-seq-verify.log",
+      "log_sha256": "217c16a0bb5bec2ec7ce48109a8ecfcc01ce59014c478a17865b1caf305f1504",
+      "started_at_utc": "2026-09-07T13:52:26.972521+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:29.586134+00:00",
+      "elapsed_seconds": 1.4009745240036864,
+      "exit_code": 0,
+      "label": "05-bench-d128-recall-b128-cdrm-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/05-bench-d128-recall-b128-cdrm-upload.log",
+      "log_sha256": "fa65b76e670505a2f22eb52857b4ae95c17032dee1d13a88974226a6006f4e2c",
+      "started_at_utc": "2026-09-07T13:52:28.185175+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:30.801886+00:00",
+      "elapsed_seconds": 1.215060489004827,
+      "exit_code": 0,
+      "label": "05-bench-d128-recall-b128-cdrm-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/05-bench-d128-recall-b128-cdrm-verify.log",
+      "log_sha256": "764cd8ea6511f674858065aa17e425e40e7d0a1f740ea3724521ef9a4abc5411",
+      "started_at_utc": "2026-09-07T13:52:29.586840+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:32.223017+00:00",
+      "elapsed_seconds": 1.4195943270024145,
+      "exit_code": 0,
+      "label": "06-bench-d128-recall-b128-seq-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/06-bench-d128-recall-b128-seq-upload.log",
+      "log_sha256": "2cdc2501a40ddb161539fd9407b9d90ff21a2078fab7a061a2a9811332375231",
+      "started_at_utc": "2026-09-07T13:52:30.803444+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:33.427411+00:00",
+      "elapsed_seconds": 1.20346575199801,
+      "exit_code": 0,
+      "label": "06-bench-d128-recall-b128-seq-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/06-bench-d128-recall-b128-seq-verify.log",
+      "log_sha256": "37f69ad16370e511ea46acf2720e36cb8c0b17670d748c05b6a22fabb9142787",
+      "started_at_utc": "2026-09-07T13:52:32.223957+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:34.839577+00:00",
+      "elapsed_seconds": 1.4104312189883785,
+      "exit_code": 0,
+      "label": "07-bench-d256-b64-cdrm-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/07-bench-d256-b64-cdrm-upload.log",
+      "log_sha256": "b826999668852a62e7e35b4a23bea54c0b7e70f47dd772a6e4fc22f8b71c518c",
+      "started_at_utc": "2026-09-07T13:52:33.429159+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-cdrm",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-cdrm/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:36.051901+00:00",
+      "elapsed_seconds": 1.2116193859983468,
+      "exit_code": 0,
+      "label": "07-bench-d256-b64-cdrm-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/07-bench-d256-b64-cdrm-verify.log",
+      "log_sha256": "e63e4f3f61bb6586b4366f605a129850d10071e9b589d358f970402be9982f21",
+      "started_at_utc": "2026-09-07T13:52:34.840298+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-r3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-r3/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:37.493925+00:00",
+      "elapsed_seconds": 1.4399181400076486,
+      "exit_code": 0,
+      "label": "08-bench-d256-b64-r3-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/08-bench-d256-b64-r3-upload.log",
+      "log_sha256": "18644eafa923d3da45528801aaa63da7dd847e15d6e253a642c6b56168c7f688",
+      "started_at_utc": "2026-09-07T13:52:36.054029+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-r3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-r3/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:38.705212+00:00",
+      "elapsed_seconds": 1.2105757579993224,
+      "exit_code": 0,
+      "label": "08-bench-d256-b64-r3-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/08-bench-d256-b64-r3-verify.log",
+      "log_sha256": "d87de82c33aeafbf53aef58a1d3313d999fa7bf8444bc7d478c1f8ba38491fdd",
+      "started_at_utc": "2026-09-07T13:52:37.494653+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:40.096300+00:00",
+      "elapsed_seconds": 1.3893350639991695,
+      "exit_code": 0,
+      "label": "09-bench-d256-b64-seq-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/09-bench-d256-b64-seq-upload.log",
+      "log_sha256": "8708e7487df86c000840714be86dcfebf7ed70445dd162e555e005d47b80178d",
+      "started_at_utc": "2026-09-07T13:52:38.706979+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d256-b64-seq",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-seq/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:41.323764+00:00",
+      "elapsed_seconds": 1.2266799560020445,
+      "exit_code": 0,
+      "label": "09-bench-d256-b64-seq-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/09-bench-d256-b64-seq-verify.log",
+      "log_sha256": "8b3f93f4ff69d1b02224aaf8ad7f2e4ff6c6a0a21c2e1827582b1469f111f401",
+      "started_at_utc": "2026-09-07T13:52:40.097098+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-copy-v16-t256-k96-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-copy-v16-t256-k96-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:42.748352+00:00",
+      "elapsed_seconds": 1.4228903140028706,
+      "exit_code": 0,
+      "label": "10-bench6-copy-v16-t256-k96-seq-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/10-bench6-copy-v16-t256-k96-seq-b128-upload.log",
+      "log_sha256": "fed9a4533f2591e622d7fdfbf4fb773a84d013eb6a960dd50ff967a265dfb3d3",
+      "started_at_utc": "2026-09-07T13:52:41.325475+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-copy-v16-t256-k96-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-copy-v16-t256-k96-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:43.978737+00:00",
+      "elapsed_seconds": 1.2296216120012105,
+      "exit_code": 0,
+      "label": "10-bench6-copy-v16-t256-k96-seq-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/10-bench6-copy-v16-t256-k96-seq-b128-verify.log",
+      "log_sha256": "3212366b6bccba64e45e1a2575b760b8f0c0d546fe46c14a70d462c57852b86d",
+      "started_at_utc": "2026-09-07T13:52:42.749133+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-recall-v128-t128-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-recall-v128-t128-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:45.430389+00:00",
+      "elapsed_seconds": 1.4497465820022626,
+      "exit_code": 0,
+      "label": "11-bench6-recall-v128-t128-seq-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/11-bench6-recall-v128-t128-seq-b128-upload.log",
+      "log_sha256": "231f86ab9389c4365a245e5c1a9d04ea9a60084fdbbb78a8f80f6dca688e2a30",
+      "started_at_utc": "2026-09-07T13:52:43.980657+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-recall-v128-t128-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-recall-v128-t128-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:46.670871+00:00",
+      "elapsed_seconds": 1.2396752250060672,
+      "exit_code": 0,
+      "label": "11-bench6-recall-v128-t128-seq-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/11-bench6-recall-v128-t128-seq-b128-verify.log",
+      "log_sha256": "20b638392a0125e1db1397e76e955ffd384b1e8dc8b411f014f59fd7723523cc",
+      "started_at_utc": "2026-09-07T13:52:45.431213+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-selected-cdrm-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-selected-cdrm-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:48.070460+00:00",
+      "elapsed_seconds": 1.3976676750025945,
+      "exit_code": 0,
+      "label": "12-bench6-selected-cdrm-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/12-bench6-selected-cdrm-b128-upload.log",
+      "log_sha256": "799b216f2a8e9c05676365f03512989b2c514cfd41ce0c56cd491456ab4da442",
+      "started_at_utc": "2026-09-07T13:52:46.672807+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/bench6-selected-cdrm-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-selected-cdrm-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:49.331679+00:00",
+      "elapsed_seconds": 1.2603381329972763,
+      "exit_code": 0,
+      "label": "12-bench6-selected-cdrm-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/12-bench6-selected-cdrm-b128-verify.log",
+      "log_sha256": "d0f5b3dacf4206d71791b136b11a734636efd94a63f60638280547f77aece367",
+      "started_at_utc": "2026-09-07T13:52:48.071356+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:52.252947+00:00",
+      "elapsed_seconds": 2.9192478740005754,
+      "exit_code": 0,
+      "label": "13-num-d128-copy-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/13-num-d128-copy-b128-upload.log",
+      "log_sha256": "4e693526d3ee95ef2eb8bea38d45bd74dfd27d1ab343ef0fc2db7894b0e2a4ff",
+      "started_at_utc": "2026-09-07T13:52:49.333712+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:53.566484+00:00",
+      "elapsed_seconds": 1.3126270200009458,
+      "exit_code": 0,
+      "label": "13-num-d128-copy-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/13-num-d128-copy-b128-verify.log",
+      "log_sha256": "da84a7cbd97692924c6d554a4ae43b4396efb83d66eafc8e9f1dd3f1c6d2add1",
+      "started_at_utc": "2026-09-07T13:52:52.253874+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:55.384506+00:00",
+      "elapsed_seconds": 1.812062393000815,
+      "exit_code": 0,
+      "label": "14-num-d128-copy-b2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/14-num-d128-copy-b2-upload.log",
+      "log_sha256": "3c4df0691eae0fa94b020e6ad0754f9763a3c3a85674f35a1542cb89fa33507c",
+      "started_at_utc": "2026-09-07T13:52:53.572453+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:56.635370+00:00",
+      "elapsed_seconds": 1.249912804007181,
+      "exit_code": 0,
+      "label": "14-num-d128-copy-b2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/14-num-d128-copy-b2-verify.log",
+      "log_sha256": "e28244a8c9fed2e9d7b8971058b0b6286c603ac705dd0034507a294444bed181",
+      "started_at_utc": "2026-09-07T13:52:55.385471+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:52:59.514533+00:00",
+      "elapsed_seconds": 2.875250725002843,
+      "exit_code": 0,
+      "label": "15-num-d128-recall-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/15-num-d128-recall-b128-upload.log",
+      "log_sha256": "76b8e62e707a7192d164d63fd49348ebe264c69da1e28ff864b5da6fa6b30c38",
+      "started_at_utc": "2026-09-07T13:52:56.639295+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:00.789263+00:00",
+      "elapsed_seconds": 1.27364518000104,
+      "exit_code": 0,
+      "label": "15-num-d128-recall-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/15-num-d128-recall-b128-verify.log",
+      "log_sha256": "5f56f4c837314f857c5e1a91c3d54210971ea5ad99247074acdfdefa26756e91",
+      "started_at_utc": "2026-09-07T13:52:59.515633+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:02.603839+00:00",
+      "elapsed_seconds": 1.8106723790115211,
+      "exit_code": 0,
+      "label": "16-num-d128-recall-b2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/16-num-d128-recall-b2-upload.log",
+      "log_sha256": "423e202ed84df1e3581ebc16dfa5898925334826b0cba52160a37c0430e8a634",
+      "started_at_utc": "2026-09-07T13:53:00.793177+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:03.819464+00:00",
+      "elapsed_seconds": 1.214579777995823,
+      "exit_code": 0,
+      "label": "16-num-d128-recall-b2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/16-num-d128-recall-b2-verify.log",
+      "log_sha256": "7836b273818ff14255189ab1237647e1922322e839cb2090c77a8fd2662d9484",
+      "started_at_utc": "2026-09-07T13:53:02.604897+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d256-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:06.460144+00:00",
+      "elapsed_seconds": 2.6368218010029523,
+      "exit_code": 0,
+      "label": "17-num-d256-b2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/17-num-d256-b2-upload.log",
+      "log_sha256": "3a4bcbaa8e31a53e966e190bf8e1dcb19d20045fc56648cee84171d434c5e2fe",
+      "started_at_utc": "2026-09-07T13:53:03.823334+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d256-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:07.732035+00:00",
+      "elapsed_seconds": 1.2708062729943777,
+      "exit_code": 0,
+      "label": "17-num-d256-b2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/17-num-d256-b2-verify.log",
+      "log_sha256": "8c2d6fd10094179c5de201eb4654fb1ea39a4c6ed4476ae49378716eafcbbe73",
+      "started_at_utc": "2026-09-07T13:53:06.461244+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d256-b64",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b64/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:10.865410+00:00",
+      "elapsed_seconds": 3.129255796011421,
+      "exit_code": 0,
+      "label": "18-num-d256-b64-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/18-num-d256-b64-upload.log",
+      "log_sha256": "8b8da6e4a10e5aa92e21d65421672cd0b4b6575da2ccfc10648631d674bcd7d3",
+      "started_at_utc": "2026-09-07T13:53:07.736167+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num-d256-b64",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b64/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:12.232608+00:00",
+      "elapsed_seconds": 1.36607388399716,
+      "exit_code": 0,
+      "label": "18-num-d256-b64-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/18-num-d256-b64-verify.log",
+      "log_sha256": "9e02b06c3fa057575176e17b68947b805b6cf8c41c79d76dca83644ef21943ec",
+      "started_at_utc": "2026-09-07T13:53:10.866550+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-cdrm-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-cdrm-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:13.836357+00:00",
+      "elapsed_seconds": 1.5996554580051452,
+      "exit_code": 0,
+      "label": "19-num6-copy-v16-t256-k96-cdrm-b2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/19-num6-copy-v16-t256-k96-cdrm-b2-upload.log",
+      "log_sha256": "d630d5a4b52886286a5b5991b249518c997bb0ce8fe06942ef23614fcf48ce6b",
+      "started_at_utc": "2026-09-07T13:53:12.236713+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-cdrm-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-cdrm-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:15.081043+00:00",
+      "elapsed_seconds": 1.2436124819942052,
+      "exit_code": 0,
+      "label": "19-num6-copy-v16-t256-k96-cdrm-b2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/19-num6-copy-v16-t256-k96-cdrm-b2-verify.log",
+      "log_sha256": "d04141dc5f9493729c98857ba87359a23ae860a7d052977e275fa211ca2af480",
+      "started_at_utc": "2026-09-07T13:53:13.837446+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:17.590129+00:00",
+      "elapsed_seconds": 2.5059679100086214,
+      "exit_code": 0,
+      "label": "20-num6-copy-v16-t256-k96-seq-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/20-num6-copy-v16-t256-k96-seq-b128-upload.log",
+      "log_sha256": "68632c4835019653a2709e4683bc853e59a7083dc75d6b2fecb63be15ec31862",
+      "started_at_utc": "2026-09-07T13:53:15.084173+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:18.891255+00:00",
+      "elapsed_seconds": 1.2999409299955005,
+      "exit_code": 0,
+      "label": "20-num6-copy-v16-t256-k96-seq-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/20-num6-copy-v16-t256-k96-seq-b128-verify.log",
+      "log_sha256": "400acccf15eeed343d9313524b562344916a0233d7f5d1dd4bcef444bddddb02",
+      "started_at_utc": "2026-09-07T13:53:17.591328+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-cdrm-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-cdrm-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:20.518191+00:00",
+      "elapsed_seconds": 1.623701163000078,
+      "exit_code": 0,
+      "label": "21-num6-recall-v128-t128-cdrm-b2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/21-num6-recall-v128-t128-cdrm-b2-upload.log",
+      "log_sha256": "655fb6858c6455ee405a4acf37ec3430cbd8e914098c96d4f5e45025c793e2b7",
+      "started_at_utc": "2026-09-07T13:53:18.894506+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-cdrm-b2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-cdrm-b2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:21.735311+00:00",
+      "elapsed_seconds": 1.215967798998463,
+      "exit_code": 0,
+      "label": "21-num6-recall-v128-t128-cdrm-b2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/21-num6-recall-v128-t128-cdrm-b2-verify.log",
+      "log_sha256": "e9d4039dba2c11b00198fe594849bdae63c79abf227df4cc67559cef5599747d",
+      "started_at_utc": "2026-09-07T13:53:20.519360+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:24.393655+00:00",
+      "elapsed_seconds": 2.654890093006543,
+      "exit_code": 0,
+      "label": "22-num6-recall-v128-t128-seq-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/22-num6-recall-v128-t128-seq-b128-upload.log",
+      "log_sha256": "a34125e67ce0683b0e17328c2cb1c8bcd7fd28adbb71945918c2b938c18e2c1b",
+      "started_at_utc": "2026-09-07T13:53:21.738778+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-seq-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-seq-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:25.658592+00:00",
+      "elapsed_seconds": 1.2636587340093683,
+      "exit_code": 0,
+      "label": "22-num6-recall-v128-t128-seq-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/22-num6-recall-v128-t128-seq-b128-verify.log",
+      "log_sha256": "660c5baef5b49f93f38523f1c6af940741542d51e3da9f8821d4886302519c57",
+      "started_at_utc": "2026-09-07T13:53:24.394950+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-selected-cdrm-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-selected-cdrm-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:28.146368+00:00",
+      "elapsed_seconds": 2.4845036390033783,
+      "exit_code": 0,
+      "label": "23-num6-selected-cdrm-b128-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/23-num6-selected-cdrm-b128-upload.log",
+      "log_sha256": "4d7172e95557f49355ba58c466217512408ce8e6bd10e5b68322ced6292935ab",
+      "started_at_utc": "2026-09-07T13:53:25.661878+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/num6-selected-cdrm-b128",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-selected-cdrm-b128/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:29.419402+00:00",
+      "elapsed_seconds": 1.2717502329905983,
+      "exit_code": 0,
+      "label": "23-num6-selected-cdrm-b128-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/23-num6-selected-cdrm-b128-verify.log",
+      "log_sha256": "18a1fdec587e6e7f86f4a4aff041f62eb10bde901240d6a72c0f79bc98f87aa2",
+      "started_at_utc": "2026-09-07T13:53:28.147668+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-fresh-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:31.253945+00:00",
+      "elapsed_seconds": 1.8309066649962915,
+      "exit_code": 0,
+      "label": "24-ops-fresh-v2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/24-ops-fresh-v2-upload.log",
+      "log_sha256": "1598faed3664b7a6374285c30bc8b31b7581b801e2d5dee743003ce5a1a3bf54",
+      "started_at_utc": "2026-09-07T13:53:29.423052+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-fresh-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:32.515528+00:00",
+      "elapsed_seconds": 1.2603161890001502,
+      "exit_code": 0,
+      "label": "24-ops-fresh-v2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/24-ops-fresh-v2-verify.log",
+      "log_sha256": "12e537091f029a6f645c1e4a0f144db9bfe9cdd0429c9d6839396ac30e42bc29",
+      "started_at_utc": "2026-09-07T13:53:31.255224+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-fresh-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:34.360129+00:00",
+      "elapsed_seconds": 1.8411956320051104,
+      "exit_code": 0,
+      "label": "25-ops-fresh-v3-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/25-ops-fresh-v3-upload.log",
+      "log_sha256": "4a67a4aab5d277829525c0069c33427f21daf8ad79915e83163dd00dbfc6c8bb",
+      "started_at_utc": "2026-09-07T13:53:32.518924+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-fresh-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:35.604202+00:00",
+      "elapsed_seconds": 1.24274115699518,
+      "exit_code": 0,
+      "label": "25-ops-fresh-v3-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/25-ops-fresh-v3-verify.log",
+      "log_sha256": "13ba6f4e5e3ac65d4233ec31aa44b4eda2d15542fbd86b4789368811d4c41244",
+      "started_at_utc": "2026-09-07T13:53:34.361476+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:37.418422+00:00",
+      "elapsed_seconds": 1.8109407739975723,
+      "exit_code": 0,
+      "label": "26-ops-immediate-pause-v3-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/26-ops-immediate-pause-v3-upload.log",
+      "log_sha256": "590da71ce09559c4c413ddb7c774523c0bc586e0d063a524ce56911ff815c363",
+      "started_at_utc": "2026-09-07T13:53:35.607495+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:38.655092+00:00",
+      "elapsed_seconds": 1.235222353003337,
+      "exit_code": 0,
+      "label": "26-ops-immediate-pause-v3-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/26-ops-immediate-pause-v3-verify.log",
+      "log_sha256": "bf4d192559d42c3304055ccd7a9a5b0580d8c2ddc4ed762c31947f12a31b3905",
+      "started_at_utc": "2026-09-07T13:53:37.419884+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-pause-resume-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-pause-resume-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:40.465033+00:00",
+      "elapsed_seconds": 1.806763961998513,
+      "exit_code": 0,
+      "label": "27-ops-pause-resume-v3-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/27-ops-pause-resume-v3-upload.log",
+      "log_sha256": "f0823f0f2e96d18c557dad5cc57e9df990b21e29209821537908f90d10d54ceb",
+      "started_at_utc": "2026-09-07T13:53:38.658282+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-pause-resume-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-pause-resume-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:41.684396+00:00",
+      "elapsed_seconds": 1.2179299450071994,
+      "exit_code": 0,
+      "label": "27-ops-pause-resume-v3-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/27-ops-pause-resume-v3-verify.log",
+      "log_sha256": "40ce3933a2e953b79d18a8bc33ddb7fbd2dac18950673c9e1836ef78108edbff",
+      "started_at_utc": "2026-09-07T13:53:40.466478+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-resume-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:43.494358+00:00",
+      "elapsed_seconds": 1.8063798530056374,
+      "exit_code": 0,
+      "label": "28-ops-resume-v2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/28-ops-resume-v2-upload.log",
+      "log_sha256": "9db78fccdd06bbc4b686fbe0d8f2196ba011ff2cc5f34b3dc1e34fb034a90143",
+      "started_at_utc": "2026-09-07T13:53:41.687987+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-resume-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:44.738488+00:00",
+      "elapsed_seconds": 1.2426538159925258,
+      "exit_code": 0,
+      "label": "28-ops-resume-v2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/28-ops-resume-v2-verify.log",
+      "log_sha256": "f13291efe53017cc037081e1971d1495b582b400a70cff7b223cb9a84ad98584",
+      "started_at_utc": "2026-09-07T13:53:43.495851+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-resume-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:46.374282+00:00",
+      "elapsed_seconds": 1.6322346609958913,
+      "exit_code": 0,
+      "label": "29-ops-resume-v3-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/29-ops-resume-v3-upload.log",
+      "log_sha256": "ea489829d1f51b6291476660035c6c6a97d508206ebf9f7916271441534ab8d3",
+      "started_at_utc": "2026-09-07T13:53:44.742060+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-resume-v3",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v3/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:47.596502+00:00",
+      "elapsed_seconds": 1.2207466059917351,
+      "exit_code": 0,
+      "label": "29-ops-resume-v3-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/29-ops-resume-v3-verify.log",
+      "log_sha256": "d8b7ae685026f850e4036a59692ffff2afbbcf7da21c065e3d602f8d0d43b833",
+      "started_at_utc": "2026-09-07T13:53:46.375772+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-tiny-fit",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:49.416600+00:00",
+      "elapsed_seconds": 1.8163934549957048,
+      "exit_code": 0,
+      "label": "30-ops-tiny-fit-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/30-ops-tiny-fit-upload.log",
+      "log_sha256": "e2e7bbc58250c89c34feed84d9567a078c43bcf4c2ded3de9aa285e8bce21f7d",
+      "started_at_utc": "2026-09-07T13:53:47.600216+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-tiny-fit",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:50.665906+00:00",
+      "elapsed_seconds": 1.247849942999892,
+      "exit_code": 0,
+      "label": "30-ops-tiny-fit-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/30-ops-tiny-fit-verify.log",
+      "log_sha256": "f74ab70b92f875bfd11d2e0594dd7540c184269271d6d6e8f80111405c76e808",
+      "started_at_utc": "2026-09-07T13:53:49.418068+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-tiny-fit-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:52.498417+00:00",
+      "elapsed_seconds": 1.8145822739897994,
+      "exit_code": 0,
+      "label": "31-ops-tiny-fit-v2-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/31-ops-tiny-fit-v2-upload.log",
+      "log_sha256": "89e7b8b6d0da8a35bb3b4c4fc6d3f01ee020ca13f6713ac9d744f487a0e6bb3f",
+      "started_at_utc": "2026-09-07T13:53:50.683845+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops-tiny-fit-v2",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit-v2/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:53.777310+00:00",
+      "elapsed_seconds": 1.277407861998654,
+      "exit_code": 0,
+      "label": "31-ops-tiny-fit-v2-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/31-ops-tiny-fit-v2-verify.log",
+      "log_sha256": "a5ce9b85cee27ca89be67369b9964a61958ac33b82e28b93f8bd1ed6e573fcba",
+      "started_at_utc": "2026-09-07T13:53:52.499916+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-copy-fresh",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-fresh/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:55.430797+00:00",
+      "elapsed_seconds": 1.6448153000092134,
+      "exit_code": 0,
+      "label": "32-ops6-copy-fresh-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/32-ops6-copy-fresh-upload.log",
+      "log_sha256": "cbe35a193470f16e1128158ca5d4508c343a8b1a02148cf09363c0ab1e77faa8",
+      "started_at_utc": "2026-09-07T13:53:53.785990+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-copy-fresh",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-fresh/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:56.665353+00:00",
+      "elapsed_seconds": 1.23304507600551,
+      "exit_code": 0,
+      "label": "32-ops6-copy-fresh-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/32-ops6-copy-fresh-verify.log",
+      "log_sha256": "149f46f4ad6dc8520613a85648d654c6c943d126dde3b650a0bba27e9defb6fe",
+      "started_at_utc": "2026-09-07T13:53:55.432323+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-copy-resume",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-resume/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:58.271970+00:00",
+      "elapsed_seconds": 1.6033256469963817,
+      "exit_code": 0,
+      "label": "33-ops6-copy-resume-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/33-ops6-copy-resume-upload.log",
+      "log_sha256": "5c8bc83912a31d90ba1dc4007c647296c0e27a1ecc6c9d1050496129d7205ea8",
+      "started_at_utc": "2026-09-07T13:53:56.668665+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-copy-resume",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-resume/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:53:59.493071+00:00",
+      "elapsed_seconds": 1.2195804300135933,
+      "exit_code": 0,
+      "label": "33-ops6-copy-resume-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/33-ops6-copy-resume-verify.log",
+      "log_sha256": "4ae84f8d47e6d5761539ef9db7acb17c54985bb0bdfa2d430f2552d7e21da938",
+      "started_at_utc": "2026-09-07T13:53:58.273507+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-tiny-recall",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-tiny-recall/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:01.330295+00:00",
+      "elapsed_seconds": 1.8339559830055805,
+      "exit_code": 0,
+      "label": "34-ops6-tiny-recall-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/34-ops6-tiny-recall-upload.log",
+      "log_sha256": "1d0c03b0a504a94b002135ebeb77817d6765b3df24db1df07ef7c1952bc75e4d",
+      "started_at_utc": "2026-09-07T13:53:59.496354+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/ops6-tiny-recall",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-tiny-recall/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:02.576849+00:00",
+      "elapsed_seconds": 1.2449567029980244,
+      "exit_code": 0,
+      "label": "34-ops6-tiny-recall-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/34-ops6-tiny-recall-verify.log",
+      "log_sha256": "8b8737da6431aa4a596e9cbcb30b5a9783821dccbe59763c2bbe2e58ebd25f5c",
+      "started_at_utc": "2026-09-07T13:54:01.331903+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/pilot-recall-seq-e50",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/pilot-recall-seq-e50/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:04.407408+00:00",
+      "elapsed_seconds": 1.821660219997284,
+      "exit_code": 0,
+      "label": "35-pilot-recall-seq-e50-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/35-pilot-recall-seq-e50-upload.log",
+      "log_sha256": "fd6267262e62bc7ca0bc454e57d33dff524e98412be4a5d1e1426d53afaabdad",
+      "started_at_utc": "2026-09-07T13:54:02.585760+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/pilot-recall-seq-e50",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/pilot-recall-seq-e50/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:05.661954+00:00",
+      "elapsed_seconds": 1.2529362790082814,
+      "exit_code": 0,
+      "label": "35-pilot-recall-seq-e50-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/35-pilot-recall-seq-e50-verify.log",
+      "log_sha256": "02d34968334df65ce84cdf14ae0925c5491fed0cd903426f3c454190c08678d2",
+      "started_at_utc": "2026-09-07T13:54:04.409032+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:07.502404+00:00",
+      "elapsed_seconds": 1.8207879000110552,
+      "exit_code": 0,
+      "label": "36-screen6-copy-v16-t256-k96-seq-s0-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/36-screen6-copy-v16-t256-k96-seq-s0-upload.log",
+      "log_sha256": "b083bd225a4c98fb8483b8382ba33d62127252692b6d880b3f5352122ac91ca1",
+      "started_at_utc": "2026-09-07T13:54:05.681629+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:08.750175+00:00",
+      "elapsed_seconds": 1.2461560910014668,
+      "exit_code": 0,
+      "label": "36-screen6-copy-v16-t256-k96-seq-s0-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/36-screen6-copy-v16-t256-k96-seq-s0-verify.log",
+      "log_sha256": "6d6ef2f8e065fed4c4ce2cdc8b4da80148b74c18fdf2371d02c34b93f6e68e55",
+      "started_at_utc": "2026-09-07T13:54:07.504035+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:10.412858+00:00",
+      "elapsed_seconds": 1.6504955860000337,
+      "exit_code": 0,
+      "label": "37-screen6-copy-v16-t256-k96-seq-s1-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/37-screen6-copy-v16-t256-k96-seq-s1-upload.log",
+      "log_sha256": "e5904806da50dfb32193cce25ad93e0d74a799a0d1e09d890a67a407af0a4abb",
+      "started_at_utc": "2026-09-07T13:54:08.762371+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:11.659307+00:00",
+      "elapsed_seconds": 1.244833471995662,
+      "exit_code": 0,
+      "label": "37-screen6-copy-v16-t256-k96-seq-s1-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/37-screen6-copy-v16-t256-k96-seq-s1-verify.log",
+      "log_sha256": "6f1cb5d877ed5210c6d4702deeeff8653f36bfd84ee39d9ba2664be105c33579",
+      "started_at_utc": "2026-09-07T13:54:10.414488+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:13.300473+00:00",
+      "elapsed_seconds": 1.6290740489930613,
+      "exit_code": 0,
+      "label": "38-screen6-recall-v128-t128-seq-s0-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/38-screen6-recall-v128-t128-seq-s0-upload.log",
+      "log_sha256": "7f2e7fd66410caf5eea8ef82d93b605168891da05420fc8a91cb4765a78231e4",
+      "started_at_utc": "2026-09-07T13:54:11.671408+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:14.562300+00:00",
+      "elapsed_seconds": 1.2600151720107533,
+      "exit_code": 0,
+      "label": "38-screen6-recall-v128-t128-seq-s0-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/38-screen6-recall-v128-t128-seq-s0-verify.log",
+      "log_sha256": "b7f598e1064882ff37eb016e6aaddc310945f1c779cc907a8e8d3c4f0796c1ff",
+      "started_at_utc": "2026-09-07T13:54:13.302298+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:16.183906+00:00",
+      "elapsed_seconds": 1.6096324090030976,
+      "exit_code": 0,
+      "label": "39-screen6-recall-v128-t128-seq-s1-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/39-screen6-recall-v128-t128-seq-s1-upload.log",
+      "log_sha256": "5bbea08d1276816559d7da81ca856194728099afb5d5f4b22adf9469d69f0a5c",
+      "started_at_utc": "2026-09-07T13:54:14.574299+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:17.444790+00:00",
+      "elapsed_seconds": 1.2591381640086183,
+      "exit_code": 0,
+      "label": "39-screen6-recall-v128-t128-seq-s1-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/39-screen6-recall-v128-t128-seq-s1-verify.log",
+      "log_sha256": "f5a8ed6144e6db0dde7cba5dfa0e190e3e0df90243abea9c9333c37a8e2a5b14",
+      "started_at_utc": "2026-09-07T13:54:16.185665+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-num-and-first-ops-v1.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:18.456662+00:00",
+      "elapsed_seconds": 0.9992174789949786,
+      "exit_code": 0,
+      "label": "readback-00",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-00.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:17.457451+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/00-source-source-num-and-first-ops-v1.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-ops-v2.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:19.543527+00:00",
+      "elapsed_seconds": 1.0835491780017037,
+      "exit_code": 0,
+      "label": "readback-01",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-01.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:18.459987+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/01-source-source-ops-v2.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-pilot-v3.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:20.557334+00:00",
+      "elapsed_seconds": 1.0103245440113824,
+      "exit_code": 0,
+      "label": "readback-02",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-02.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:19.547020+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/02-source-source-pilot-v3.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-comparison-v4-hf-compat.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:21.526017+00:00",
+      "elapsed_seconds": 0.9653301910002483,
+      "exit_code": 0,
+      "label": "readback-03",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-03.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:20.560701+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/03-source-source-six-comparison-v4-hf-compat.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-screen-v4.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:22.483280+00:00",
+      "elapsed_seconds": 0.9537745300040115,
+      "exit_code": 0,
+      "label": "readback-04",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-04.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:21.529519+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/04-source-source-six-screen-v4.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data/manifest.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:23.441333+00:00",
+      "elapsed_seconds": 0.9545805889938492,
+      "exit_code": 0,
+      "label": "readback-05",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-05.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:22.486763+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/05-data-manifest.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v128-t256-k16/manifest.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:24.418009+00:00",
+      "elapsed_seconds": 0.973345545004122,
+      "exit_code": 0,
+      "label": "readback-06",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-06.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:23.444678+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/06-copy-v128-t256-k16-manifest.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96/manifest.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:25.375117+00:00",
+      "elapsed_seconds": 0.9535615210043034,
+      "exit_code": 0,
+      "label": "readback-07",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-07.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:24.421570+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/07-copy-v16-t256-k96-manifest.json"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128/manifest.json"
+      ],
+      "completed_at_utc": "2026-09-07T13:54:26.330187+00:00",
+      "elapsed_seconds": 0.9513819599960698,
+      "exit_code": 0,
+      "label": "readback-08",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readback-08.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T13:54:25.378818+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/08-recall-v128-t128-manifest.json"
+    }
+  ],
+  "completed_at_utc": "2026-09-07T13:54:30.263189+00:00",
+  "cuda_or_model_execution": false,
+  "directories": [
+    {
+      "bytes": 42921990,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 12,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/",
+      "name": "source",
+      "report_status": null,
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 52483086,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 21,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data/",
+      "name": "data",
+      "report_status": null,
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 85168280,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 24,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/",
+      "name": "data-screening-v1",
+      "report_status": null,
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 24006,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm/",
+      "name": "bench-d128-copy-b128-cdrm",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 19231,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq/",
+      "name": "bench-d128-copy-b128-seq",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 24074,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm/",
+      "name": "bench-d128-recall-b128-cdrm",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 19290,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq/",
+      "name": "bench-d128-recall-b128-seq",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 24013,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-cdrm/",
+      "name": "bench-d256-b64-cdrm",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 74823,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-r3/",
+      "name": "bench-d256-b64-r3",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 19243,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench-d256-b64-seq/",
+      "name": "bench-d256-b64-seq",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 19426,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-copy-v16-t256-k96-seq-b128/",
+      "name": "bench6-copy-v16-t256-k96-seq-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 19343,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-recall-v128-t128-seq-b128/",
+      "name": "bench6-recall-v128-t128-seq-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 21900,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 1,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/bench6-selected-cdrm-b128/",
+      "name": "bench6-selected-cdrm-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 488811649,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b128/",
+      "name": "num-d128-copy-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 55290701,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-copy-b2/",
+      "name": "num-d128-copy-b2",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 266890285,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b128/",
+      "name": "num-d128-recall-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 51823223,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d128-recall-b2/",
+      "name": "num-d128-recall-b2",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 210983425,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b2/",
+      "name": "num-d256-b2",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 487284075,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num-d256-b64/",
+      "name": "num-d256-b64",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 28265042,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-cdrm-b2/",
+      "name": "num6-copy-v16-t256-k96-cdrm-b2",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 263205867,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-copy-v16-t256-k96-seq-b128/",
+      "name": "num6-copy-v16-t256-k96-seq-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 27183670,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-cdrm-b2/",
+      "name": "num6-recall-v128-t128-cdrm-b2",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 157873511,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-recall-v128-t128-seq-b128/",
+      "name": "num6-recall-v128-t128-seq-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 263604894,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 3,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/num6-selected-cdrm-b128/",
+      "name": "num6-selected-cdrm-b128",
+      "report_status": "passed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 67884246,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 8,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v2/",
+      "name": "ops-fresh-v2",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 67884269,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 8,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-fresh-v3/",
+      "name": "ops-fresh-v3",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 29083949,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 4,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3/",
+      "name": "ops-immediate-pause-v3",
+      "report_status": "paused",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 29190395,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 7,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-pause-resume-v3/",
+      "name": "ops-pause-resume-v3",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 29190305,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 7,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v2/",
+      "name": "ops-resume-v2",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 29190333,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 7,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-resume-v3/",
+      "name": "ops-resume-v3",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 38668244,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 7,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit/",
+      "name": "ops-tiny-fit",
+      "report_status": "failed",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 243589139,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 14,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops-tiny-fit-v2/",
+      "name": "ops-tiny-fit-v2",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 34458010,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 8,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-fresh/",
+      "name": "ops6-copy-fresh",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 14802142,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 7,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-copy-resume/",
+      "name": "ops6-copy-resume",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 124871723,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 14,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/ops6-tiny-recall/",
+      "name": "ops6-tiny-recall",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 187652277,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 12,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/pilot-recall-seq-e50/",
+      "name": "pilot-recall-seq-e50",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 80080764,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 11,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/",
+      "name": "screen6-copy-v16-t256-k96-seq-s0",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 65260463,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 10,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/",
+      "name": "screen6-copy-v16-t256-k96-seq-s1",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 81592667,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 11,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0/",
+      "name": "screen6-recall-v128-t128-seq-s0",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    },
+    {
+      "bytes": 81658082,
+      "checksum_dry_run_differences": false,
+      "checksum_dry_run_exit_code": 0,
+      "files": 11,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1/",
+      "name": "screen6-recall-v128-t128-seq-s1",
+      "report_status": "complete",
+      "upload_exit_code": 0
+    }
+  ],
+  "excluded_active_directories": [
+    "compare6-copy96-cdrm-s0-e25"
+  ],
+  "final_data_generated": false,
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/",
+  "inventory": {
+    "directory_count": 40,
+    "file_count": 246,
+    "path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/local-file-inventory.json",
+    "sha256": "8adfca20d6cb7132ead1b88d168314c7ac0d06f65096727532536158b5cc0afa",
+    "total_bytes": 3687112055
+  },
+  "local_root": ".runtime/cdrm-naive/20260907T123830Z",
+  "other_lineages_touched": false,
+  "pending": [
+    "Every compare6-* directory, including active and future comparisons",
+    "Mutable execution/controller/progress outputs and final report/documents",
+    "Future independently seeded final screening data and supplemental manifests",
+    "Final session checkpoint and report retention/readback"
+  ],
+  "remote_manifest_readbacks": [
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/source/source-num-and-first-ops-v1.json",
+      "local_sha256": "775acbf97c79352b1332004c183519a9cc85dffeaca29969a08f459741941a0d",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/00-source-source-num-and-first-ops-v1.json",
+      "remote_readback_sha256": "775acbf97c79352b1332004c183519a9cc85dffeaca29969a08f459741941a0d",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-num-and-first-ops-v1.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/source/source-ops-v2.json",
+      "local_sha256": "6a015e192388c91ac73d860353143a5dcc566dc4f5ce691c1bf43e295e6b84cd",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/01-source-source-ops-v2.json",
+      "remote_readback_sha256": "6a015e192388c91ac73d860353143a5dcc566dc4f5ce691c1bf43e295e6b84cd",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-ops-v2.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/source/source-pilot-v3.json",
+      "local_sha256": "0e7d12d11d6988a05b8916869107e12fd6c1afae5d8a8d36dcceb8536173051e",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/02-source-source-pilot-v3.json",
+      "remote_readback_sha256": "0e7d12d11d6988a05b8916869107e12fd6c1afae5d8a8d36dcceb8536173051e",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-pilot-v3.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-comparison-v4-hf-compat.json",
+      "local_sha256": "de05dc091d9d09adb9b73681f6b9fd94312fa35436919830ae155e3eec6c082f",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/03-source-source-six-comparison-v4-hf-compat.json",
+      "remote_readback_sha256": "de05dc091d9d09adb9b73681f6b9fd94312fa35436919830ae155e3eec6c082f",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-comparison-v4-hf-compat.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-screen-v4.json",
+      "local_sha256": "517cf8799b0f10d94517d4c6fba306046da3f10a8ce3c0425a159c3125ab78d3",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/04-source-source-six-screen-v4.json",
+      "remote_readback_sha256": "517cf8799b0f10d94517d4c6fba306046da3f10a8ce3c0425a159c3125ab78d3",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-screen-v4.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/data/manifest.json",
+      "local_sha256": "b4e2a7f4daca652737552cfb15be0b09b18fb74b9e5efc4f5aa47f3c67a22e7b",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/05-data-manifest.json",
+      "remote_readback_sha256": "b4e2a7f4daca652737552cfb15be0b09b18fb74b9e5efc4f5aa47f3c67a22e7b",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data/manifest.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v128-t256-k16/manifest.json",
+      "local_sha256": "385c24dea422d63ec5d97676f3e4368b969714a04315c1d4391d4fc4aae6c85e",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/06-copy-v128-t256-k16-manifest.json",
+      "remote_readback_sha256": "385c24dea422d63ec5d97676f3e4368b969714a04315c1d4391d4fc4aae6c85e",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v128-t256-k16/manifest.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96/manifest.json",
+      "local_sha256": "a70282765db11bfc559a8af7a1048b474341c9defc7a95d23124ce846607a8e9",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/07-copy-v16-t256-k96-manifest.json",
+      "remote_readback_sha256": "a70282765db11bfc559a8af7a1048b474341c9defc7a95d23124ce846607a8e9",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96/manifest.json",
+      "sha256_equal": true
+    },
+    {
+      "local_path": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128/manifest.json",
+      "local_sha256": "dd7c67c8d91203de5d746c7ec975f1f7d17b5efe7c1b0c68606a3adf6d8afe09",
+      "readback_file": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-preliminary-20260907T135210Z/readbacks/08-recall-v128-t128-manifest.json",
+      "remote_readback_sha256": "dd7c67c8d91203de5d746c7ec975f1f7d17b5efe7c1b0c68606a3adf6d8afe09",
+      "remote_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128/manifest.json",
+      "sha256_equal": true
+    }
+  ],
+  "schema": "cdrm-storage-preliminary-v1",
+  "scope": "Closed source archives, fixed data and completed/failed/expected-paused run directories only",
+  "selected_directory_names": [
+    "source",
+    "data",
+    "data-screening-v1",
+    "bench-d128-copy-b128-cdrm",
+    "bench-d128-copy-b128-seq",
+    "bench-d128-recall-b128-cdrm",
+    "bench-d128-recall-b128-seq",
+    "bench-d256-b64-cdrm",
+    "bench-d256-b64-r3",
+    "bench-d256-b64-seq",
+    "bench6-copy-v16-t256-k96-seq-b128",
+    "bench6-recall-v128-t128-seq-b128",
+    "bench6-selected-cdrm-b128",
+    "num-d128-copy-b128",
+    "num-d128-copy-b2",
+    "num-d128-recall-b128",
+    "num-d128-recall-b2",
+    "num-d256-b2",
+    "num-d256-b64",
+    "num6-copy-v16-t256-k96-cdrm-b2",
+    "num6-copy-v16-t256-k96-seq-b128",
+    "num6-recall-v128-t128-cdrm-b2",
+    "num6-recall-v128-t128-seq-b128",
+    "num6-selected-cdrm-b128",
+    "ops-fresh-v2",
+    "ops-fresh-v3",
+    "ops-immediate-pause-v3",
+    "ops-pause-resume-v3",
+    "ops-resume-v2",
+    "ops-resume-v3",
+    "ops-tiny-fit",
+    "ops-tiny-fit-v2",
+    "ops6-copy-fresh",
+    "ops6-copy-resume",
+    "ops6-tiny-recall",
+    "pilot-recall-seq-e50",
+    "screen6-copy-v16-t256-k96-seq-s0",
+    "screen6-copy-v16-t256-k96-seq-s1",
+    "screen6-recall-v128-t128-seq-s0",
+    "screen6-recall-v128-t128-seq-s1"
+  ],
+  "source_archive_pairs_locally_verified": 5,
+  "started_at_utc": "2026-09-07T13:52:10.110524+00:00",
+  "status": "complete",
+  "verification": {
+    "all_checksum_dry_runs_exit_zero": true,
+    "all_checksum_dry_runs_no_differences": true,
+    "all_upload_commands_exit_zero": true,
+    "independent_sha256_readback_scope": "Source JSON manifests and four data top manifests; large checkpoint/tensor objects checked by gcloud checksum comparison, not downloaded for SHA256",
+    "no_final_data_generated": true,
+    "remote_manifest_readbacks_match": true
+  }
+}

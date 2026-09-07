@@ -1,0 +1,405 @@
+{
+  "cost_ratios": {
+    "elapsed_seconds": 17.806238762846498,
+    "recorded_update_seconds": 19.370673234256568
+  },
+  "endpoint_cdrm_minus_seq": {
+    "ce": 0.26149140993754083,
+    "sequence_exact_match": 0.0,
+    "token_accuracy": -0.07644042968750003
+  },
+  "interpretation": "One seed at an intermediate common epoch before the frozen runtime-only continuation decision; no training-seed confidence interval or final-holdout claim. Monitored shared gradients combine ordinary and side contributions and do not independently quantify recurrence use.",
+  "members": {
+    "cdrm": {
+      "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+      "all_update_losses_and_norms_finite": true,
+      "best_dev": {
+        "ce": 0.8685169458389282,
+        "ce_sum": 106723.3623046875,
+        "correct": 68108,
+        "exact": 0,
+        "examples": 1280,
+        "sequence_exact_match": 0.0,
+        "targets": 122880,
+        "token_accuracy": 0.5542643229166667
+      },
+      "best_dev_checkpoint": {
+        "bytes": 15247483,
+        "completed_epochs": 24,
+        "completed_updates": 2400,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0024.pt",
+        "sha256": "9b76673bc9e97bc74d48db9147275ce4a8e171851e970b80b0662caf8bb9c55d"
+      },
+      "best_dev_epoch": 24,
+      "clip_fraction": 0.928,
+      "clipped_updates": 2320,
+      "elapsed_seconds": 2290.393593312998,
+      "endpoint": {
+        "ce": 1.1446150859196982,
+        "ce_sum": 140650.3017578125,
+        "correct": 49945,
+        "exact": 0,
+        "examples": 1280,
+        "sequence_exact_match": 0.0,
+        "targets": 122880,
+        "token_accuracy": 0.4064534505208333
+      },
+      "endpoint_checkpoint": {
+        "bytes": 15269755,
+        "completed_epochs": 25,
+        "completed_updates": 2500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0025.pt",
+        "sha256": "2fecfb2d3dc463c0a519f9f8edeee283dc06b59400e972b2013ad47f36cdf93e",
+        "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0025.pt"
+      },
+      "final_precision": {
+        "gradients": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 53
+        },
+        "missing_gradients": [],
+        "moments": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 106
+        },
+        "parameters": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 53
+        },
+        "step_counters": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 53
+        }
+      },
+      "first_state_summary": {
+        "bridge_correction_over_p8_rms": 0.010277606445554513,
+        "bridge_correction_rms": 0.010555082932114601,
+        "candidate_correction_over_p3_rms": 0.12001506690816831,
+        "candidate_rms": 0.8487837314605713,
+        "deep_correction_rms": 0.10044192522764206,
+        "hat_m_rms": 1.157524585723877,
+        "m_rms": 1.157524585723877,
+        "p3_rms": 0.8369109630584717,
+        "p8_rms": 1.0269981622695923
+      },
+      "last_state_summary": {
+        "bridge_correction_over_p8_rms": 0.007070552475134634,
+        "bridge_correction_rms": 0.011177215725183487,
+        "candidate_correction_over_p3_rms": 0.0830745993208853,
+        "candidate_rms": 1.321313738822937,
+        "deep_correction_rms": 0.10991787165403366,
+        "hat_m_rms": 1.9118772745132446,
+        "m_rms": 1.9118772745132446,
+        "p3_rms": 1.323122501373291,
+        "p8_rms": 1.5808122158050537
+      },
+      "monitor_rows": 26,
+      "monitored_preclip_gradient_signals": {
+        "cdrm.bridge_adapter.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 0.08574055880308151,
+          "min_preclip_l2": 0.0005275208968669176,
+          "samples": 26
+        },
+        "cdrm.deep_adapter.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 0.019645659253001213,
+          "min_preclip_l2": 7.009672117419541e-05,
+          "samples": 26
+        },
+        "transformer.blocks.1.att_proj.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 18.0191650390625,
+          "min_preclip_l2": 0.05998189374804497,
+          "samples": 26
+        },
+        "transformer.blocks.1.attn_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 1.388394832611084,
+          "min_preclip_l2": 0.005310680717229843,
+          "samples": 26
+        },
+        "transformer.blocks.1.attn_out.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 13.458763122558594,
+          "min_preclip_l2": 0.06175253540277481,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 0.5723022222518921,
+          "min_preclip_l2": 0.0021408589091151953,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_out.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 12.996671676635742,
+          "min_preclip_l2": 0.07304182648658752,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_proj.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 4.760004997253418,
+          "min_preclip_l2": 0.018932588398456573,
+          "samples": 26
+        },
+        "transformer.blocks.1.k_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 2.033342123031616,
+          "min_preclip_l2": 0.003815922187641263,
+          "samples": 26
+        },
+        "transformer.blocks.1.q_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 2.033341884613037,
+          "min_preclip_l2": 0.0038159226533025503,
+          "samples": 26
+        }
+      },
+      "recorded_update_seconds": 2216.6699632433447,
+      "report": {
+        "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/report.json",
+        "sha256": "cb5a7910001043d0e5d68aff9cfcc17bcbc11943e731babd3270d221a88db903"
+      },
+      "updates": 2500
+    },
+    "seq": {
+      "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+      "all_update_losses_and_norms_finite": true,
+      "best_dev": {
+        "ce": 0.7079326868057251,
+        "ce_sum": 86990.7685546875,
+        "correct": 82156,
+        "exact": 0,
+        "examples": 1280,
+        "sequence_exact_match": 0.0,
+        "targets": 122880,
+        "token_accuracy": 0.6685872395833333
+      },
+      "best_dev_checkpoint": {
+        "bytes": 14821339,
+        "completed_epochs": 23,
+        "completed_updates": 2300,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/epoch-0023.pt",
+        "sha256": "47c18179ff09ee169178adb37d3faefaf7ca1b518bee37332ebf3d4b36f1d75c"
+      },
+      "best_dev_epoch": 23,
+      "clip_fraction": 0.924,
+      "clipped_updates": 2310,
+      "elapsed_seconds": 128.62871400399308,
+      "endpoint": {
+        "ce": 0.8831236759821574,
+        "ce_sum": 108518.2373046875,
+        "correct": 59338,
+        "exact": 0,
+        "examples": 1280,
+        "sequence_exact_match": 0.0,
+        "targets": 122880,
+        "token_accuracy": 0.48289388020833335
+      },
+      "endpoint_checkpoint": {
+        "bytes": 14864539,
+        "completed_epochs": 25,
+        "completed_updates": 2500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/epoch-0025.pt",
+        "sha256": "95b7363ae460880bb9049cb9402a9cace9f7623ffbe95c75653adc0895d7d122",
+        "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/epoch-0025.pt"
+      },
+      "final_precision": {
+        "gradients": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 51
+        },
+        "missing_gradients": [],
+        "moments": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 102
+        },
+        "parameters": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 51
+        },
+        "step_counters": {
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true,
+          "tensors": 51
+        }
+      },
+      "first_state_summary": {},
+      "last_state_summary": {},
+      "monitor_rows": 26,
+      "monitored_preclip_gradient_signals": {
+        "transformer.blocks.1.att_proj.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 12.231563568115234,
+          "min_preclip_l2": 0.08429772406816483,
+          "samples": 26
+        },
+        "transformer.blocks.1.attn_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 0.9131337404251099,
+          "min_preclip_l2": 0.007638140581548214,
+          "samples": 26
+        },
+        "transformer.blocks.1.attn_out.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 10.44085693359375,
+          "min_preclip_l2": 0.08221247792243958,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 0.43325385451316833,
+          "min_preclip_l2": 0.003043027361854911,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_out.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 9.84113883972168,
+          "min_preclip_l2": 0.09530822187662125,
+          "samples": 26
+        },
+        "transformer.blocks.1.ff_proj.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 3.7102644443511963,
+          "min_preclip_l2": 0.02483411878347397,
+          "samples": 26
+        },
+        "transformer.blocks.1.k_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 1.284044623374939,
+          "min_preclip_l2": 0.005635786801576614,
+          "samples": 26
+        },
+        "transformer.blocks.1.q_norm.weight": {
+          "all_nonzero": true,
+          "max_preclip_l2": 1.2840445041656494,
+          "min_preclip_l2": 0.005635786801576614,
+          "samples": 26
+        }
+      },
+      "recorded_update_seconds": 114.43432742044388,
+      "report": {
+        "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/report.json",
+        "sha256": "2552f392d0f3cbd33be99802908fcf19271f1a3812a9219e8b3ee43c2e4c7803"
+      },
+      "updates": 2500
+    }
+  },
+  "pairing": {
+    "all_common_identity_fields_equal": true,
+    "core_sources_equal": true,
+    "dev": {
+      "answer_labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+      "examples": 1280,
+      "input_ids": "935219cb0ee9f7aba000ad6b6e5a867f7f8006bf36febf24e8034cf21ee918b6",
+      "labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+      "length": 256
+    },
+    "dev_arrays_equal": true,
+    "initial_inventory": {
+      "adapters_nonzero_and_distinct": true,
+      "cdrm": {
+        "bytes": 4920029,
+        "completed_epochs": 0,
+        "completed_updates": 0,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/initial-weights.pt",
+        "sha256": "1eaa8a146875463550c3579f51612345a63d66cfcf8524cc0ad66226c651d75b",
+        "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/initial-weights.pt"
+      },
+      "common_initial_tensors": 51,
+      "common_initial_weights_bitwise_equal": true,
+      "extra_parameter_elements": 32768,
+      "extra_parameters": [
+        "cdrm.bridge_adapter.weight",
+        "cdrm.deep_adapter.weight"
+      ],
+      "seq": {
+        "bytes": 4788301,
+        "completed_epochs": 0,
+        "completed_updates": 0,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/initial-weights.pt",
+        "sha256": "aab2274dba92735cd189cacb91df620e950c7dd93b572e2673d0da0c5465158f",
+        "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/initial-weights.pt"
+      }
+    },
+    "per_update_indices_verified": 2500,
+    "shuffle_seed": 45678,
+    "source_maps_equal": true,
+    "source_sha256": {
+      "cdrm/mad_data.py": "097704522fa01552dcd5064634103353456f47272cb968078936d0aa22d25c55",
+      "configs/cdrm/base_d128.json": "c81a15bc57e03208f161da22e4ed23892fd8600224c77af2ebc9e7d38b95c15b",
+      "configs/cdrm/base_d128_6.json": "ec538367ae5ee35d2f45c7fec2248beebb94210d536bcba162cb5b0b9ef8046d",
+      "configs/cdrm/base_d256.json": "0dc3123b119c01650d9e5df0df72b08e8d8c79f993fb37181ce5e3c362c4262e",
+      "recurrent-transformer/olmo/__init__.py": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2",
+      "recurrent-transformer/olmo/aliases.py": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744",
+      "recurrent-transformer/olmo/beam_search.py": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3",
+      "recurrent-transformer/olmo/cdrm.py": "e47221811489f9cc8757d10521f91814a7c979b5a5ecebf83339b7ce20daf8d9",
+      "recurrent-transformer/olmo/checkpoint.py": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "recurrent-transformer/olmo/config.py": "728b9f4e5dd1b82a5d574e12264bc8dae74622d9b285b568642a139a16aa8db6",
+      "recurrent-transformer/olmo/data/__init__.py": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041",
+      "recurrent-transformer/olmo/data/collator.py": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b",
+      "recurrent-transformer/olmo/data/custom_datasets.py": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223",
+      "recurrent-transformer/olmo/data/iterable_dataset.py": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5",
+      "recurrent-transformer/olmo/data/memmap_dataset.py": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81",
+      "recurrent-transformer/olmo/data/named_data_mixes.py": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c",
+      "recurrent-transformer/olmo/data/util.py": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b",
+      "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+      "recurrent-transformer/olmo/eval/__init__.py": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a",
+      "recurrent-transformer/olmo/eval/downstream.py": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f",
+      "recurrent-transformer/olmo/eval/evaluator.py": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2",
+      "recurrent-transformer/olmo/exceptions.py": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679",
+      "recurrent-transformer/olmo/initialization.py": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+      "recurrent-transformer/olmo/model.py": "74a9b0819264cd5c2ada9e00373f49d1afc9c64209c2d06a49b9d41833327f17",
+      "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+      "recurrent-transformer/olmo/ortho_basis.py": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d",
+      "recurrent-transformer/olmo/safetensors_util.py": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c",
+      "recurrent-transformer/olmo/tokenizer.py": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e",
+      "recurrent-transformer/olmo/torch_util.py": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+      "recurrent-transformer/olmo/train.py": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c",
+      "recurrent-transformer/olmo/util.py": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c",
+      "recurrent-transformer/olmo/version.py": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b",
+      "scripts/cdrm_common.py": "6791e1bb825f71220c8255ce02926e72e4f2acbb28856862c2b3a318c98a9e6c",
+      "scripts/cdrm_train.py": "e8040d8fdb79b307f960358ad9815e74ff37c0904cd0617733826e4d03d61079",
+      "scripts/r3_mixed_operational.py": "e6ccace6afeb100eabdace86b6b82432ab6eb947b4f499f194d9f6db1a597efc",
+      "scripts/r3_validation_metrics.py": "239193533a1837c840411b79811dc35625c86a9abd99413b100ae1ca48c39a4d",
+      "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+      "scripts/stage_b_train.py": "03efc040358db0224d71e50c6dc798e1b567bf3fab4433feac342b1fcc2067c9",
+      "vendors/mad-lab/mad/data/instances.py": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8"
+    },
+    "stream_and_schedule_chain_sha256": "cf58425d2e6732f019d37f5c4c304881b25c5784a65112b38868200cc31fc2be",
+    "train": {
+      "answer_labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+      "examples": 12800,
+      "input_ids": "f220aa1bf3505116c09d66c4ee544779911c9a6640ecb604aa857b8f81d18db0",
+      "labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+      "length": 256
+    },
+    "train_arrays_equal": true
+  },
+  "scope": "Closed seed-0 E25 pair only; no model forward or GPU execution; seed1/continuation/final remain pending"
+}

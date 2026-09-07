@@ -1,0 +1,448 @@
+{
+  "scope": "NUM/OPS only; later six-block screening has separate records",
+  "cpu": {
+    "cdrm_reference_initial": {
+      "passed": 52,
+      "raw_log": "Original agent tool output only"
+    },
+    "cdrm_reference_with_six_block": {
+      "passed": 60,
+      "raw_log": ".runtime/cdrm-naive/20260907T123830Z/execution/cdrm-six-block-tests-cpu.log"
+    },
+    "foundation_conversion": {
+      "passed": 60,
+      "skipped": 20,
+      "skip_reason": "CUDA-only checks in explicit CPU container",
+      "raw_log": ".runtime/cdrm-naive/20260907T123830Z/execution/core-regression-cpu.log"
+    },
+    "mad_data_initial": {
+      "passed": 17,
+      "raw_log": ".runtime/cdrm-naive/20260907T123830Z/execution/mad-data-tests-cpu.log"
+    }
+  },
+  "gpu": [
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b128/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "pinned MAD native training labels",
+        "task": "selective-copying",
+        "sha256": "b277f943f0428b183cb6bdcc01dc6aaf73e3149c470fbac839d1406909fc6fdc",
+        "batch": 128,
+        "length": 256,
+        "vocab": 16,
+        "native_targets": 2048,
+        "answer_targets": 2048,
+        "extra_lm_shift": false
+      },
+      "preset": "d128",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 1.2057605981826782,
+        "p8_rms": 1.4123482704162598,
+        "candidate_rms": 1.2092554569244385,
+        "hat_m_rms": 1.4080636501312256,
+        "m_rms": 1.4080636501312256,
+        "deep_correction_rms": 0.0937853753566742,
+        "bridge_correction_rms": 0.010091121308505535,
+        "candidate_correction_over_p3_rms": 0.07778109145217339,
+        "bridge_correction_over_p8_rms": 0.0071449241804440984
+      },
+      "actual_loss": 3.0929646492004395,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 17124414976
+    },
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b2/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "pinned MAD native training labels",
+        "task": "selective-copying",
+        "sha256": "850f390e0090cadb8b5675e1fc0058a7e6013ba98df9f2e70e60957ad8075aa0",
+        "batch": 2,
+        "length": 256,
+        "vocab": 16,
+        "native_targets": 32,
+        "answer_targets": 32,
+        "extra_lm_shift": false
+      },
+      "preset": "d128",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 1.2057806253433228,
+        "p8_rms": 1.4130750894546509,
+        "candidate_rms": 1.209613561630249,
+        "hat_m_rms": 1.4072598218917847,
+        "m_rms": 1.4072598218917847,
+        "deep_correction_rms": 0.09407231956720352,
+        "bridge_correction_rms": 0.01009484101086855,
+        "candidate_correction_over_p3_rms": 0.0780177733743385,
+        "bridge_correction_over_p8_rms": 0.007143881515004598
+      },
+      "actual_loss": 3.065023899078369,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 406449152
+    },
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b128/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "pinned MAD native training labels",
+        "task": "in-context-recall",
+        "sha256": "80f3c42b878a67c326adb9c4fc577b56bd66f2450d9477ee75282ccae7e00389",
+        "batch": 128,
+        "length": 127,
+        "vocab": 16,
+        "native_targets": 16256,
+        "answer_targets": 7168,
+        "extra_lm_shift": false
+      },
+      "preset": "d128",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 0.870286226272583,
+        "p8_rms": 1.1060553789138794,
+        "candidate_rms": 0.874528169631958,
+        "hat_m_rms": 1.0533416271209717,
+        "m_rms": 1.0533416271209717,
+        "deep_correction_rms": 0.09732317179441452,
+        "bridge_correction_rms": 0.010526944883167744,
+        "candidate_correction_over_p3_rms": 0.11182892346952054,
+        "bridge_correction_over_p8_rms": 0.009517556791328981
+      },
+      "actual_loss": 3.228107213973999,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 5395172352
+    },
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b2/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "pinned MAD native training labels",
+        "task": "in-context-recall",
+        "sha256": "baa7c2d4e84c9210fde50b55281a629a9b76833cf71e4daa3d511e6ec9b209e7",
+        "batch": 2,
+        "length": 127,
+        "vocab": 16,
+        "native_targets": 254,
+        "answer_targets": 112,
+        "extra_lm_shift": false
+      },
+      "preset": "d128",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 0.8911721110343933,
+        "p8_rms": 1.1185131072998047,
+        "candidate_rms": 0.8978819847106934,
+        "hat_m_rms": 1.0780079364776611,
+        "m_rms": 1.0780079364776611,
+        "deep_correction_rms": 0.0948917418718338,
+        "bridge_correction_rms": 0.010591491125524044,
+        "candidate_correction_over_p3_rms": 0.10647970318740328,
+        "bridge_correction_over_p8_rms": 0.009469259730977042
+      },
+      "actual_loss": 3.363590717315674,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 229987840
+    },
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d256-b2/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "authoritative Stage B MQAR aligned answer-only labels",
+        "task": "mqar",
+        "sha256": "ddd68f0800eb573e3aeb98c7aa6828593bbd53c82ac6cb29d97bd36a2459094c",
+        "batch": 2,
+        "length": 128,
+        "vocab": 1024,
+        "native_targets": 16,
+        "answer_targets": 16,
+        "extra_lm_shift": false
+      },
+      "preset": "d256",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 0.8731642961502075,
+        "p8_rms": 1.0956581830978394,
+        "candidate_rms": 0.8788171410560608,
+        "hat_m_rms": 1.0503661632537842,
+        "m_rms": 1.0503661632537842,
+        "deep_correction_rms": 0.10263059288263321,
+        "bridge_correction_rms": 0.009711452759802341,
+        "candidate_correction_over_p3_rms": 0.11753869613672112,
+        "bridge_correction_over_p8_rms": 0.0088635789059179
+      },
+      "actual_loss": 7.573912143707275,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 451611648
+    },
+    {
+      "report": ".runtime/cdrm-naive/20260907T123830Z/num-d256-b64/report.json",
+      "status": "passed",
+      "fixture": {
+        "source": "authoritative Stage B MQAR aligned answer-only labels",
+        "task": "mqar",
+        "sha256": "8b58825b9c1f91d5449cb1dcb78e700d29f04ce5c7db901eb1648547ace4386a",
+        "batch": 64,
+        "length": 128,
+        "vocab": 1024,
+        "native_targets": 512,
+        "answer_targets": 512,
+        "extra_lm_shift": false
+      },
+      "preset": "d256",
+      "logits_max_error": 0.0,
+      "all_common_gradients_pass": true,
+      "causality_pass": true,
+      "round_trip": {
+        "model_exact": true,
+        "optimizer_exact": true,
+        "logits_exact": true
+      },
+      "initial_corrections": {
+        "p3_rms": 0.8540235757827759,
+        "p8_rms": 1.0653820037841797,
+        "candidate_rms": 0.8570784330368042,
+        "hat_m_rms": 1.0265710353851318,
+        "m_rms": 1.0265710353851318,
+        "deep_correction_rms": 0.10119888186454773,
+        "bridge_correction_rms": 0.009963056072592735,
+        "candidate_correction_over_p3_rms": 0.11849659041530727,
+        "bridge_correction_over_p8_rms": 0.009351627901733365
+      },
+      "actual_loss": 7.392969131469727,
+      "all_F32_finite": {
+        "parameters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 202,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 101,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "num_peak_allocated_bytes": 3914682368
+    }
+  ],
+  "known_retained_failure": {
+    "path": ".runtime/cdrm-naive/20260907T123830Z/ops-tiny-fit/report.json",
+    "cause": "Imported atomic_json refuses replacement by default; checkpoint-ledger written again",
+    "fix": "Only three current-run checkpoint-ledger writes use replace=True; checkpoint files remain immutable",
+    "successful_retry": "ops-tiny-fit-v2"
+  },
+  "source_changes_after_initial_NUM": [
+    "Ledger replacement and immediate-pause reporting only in train.py; normal/pause resume exactness revalidated onv3",
+    "Later six-block user steering adds new preset, configured diagnostics, task-manifest vocab and development-only early stopping; separate validation before new runs"
+  ],
+  "source_archives": [
+    ".runtime/cdrm-naive/20260907T123830Z/source/source-num-and-first-ops-v1.json",
+    ".runtime/cdrm-naive/20260907T123830Z/source/source-ops-v2.json",
+    ".runtime/cdrm-naive/20260907T123830Z/source/source-pilot-v3.json"
+  ]
+}

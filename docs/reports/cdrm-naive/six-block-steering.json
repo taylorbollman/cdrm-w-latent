@@ -1,0 +1,7 @@
+{
+  "at_utc": "2026-09-07T13:14:00.451759+00:00",
+  "reason": "User replaced initial12block paired pilot with6block SEQ-first development screening on harder established settings. Skip CDRM for settings SEQ6 aces early; final remainsreserved.",
+  "action": "Terminated outer serial pilot queue PID586989 only, preventing subsequent12blockCDRM/copy launches. ExistingSEQ12recall run may finish50epochs; retain allartifacts ashistoricalcalibration, notselected6blockcomparison.",
+  "supersedes": "pilot-decision.json paired12block execution plan; coreNUM/OPS remainvalid in their recorded scopes",
+  "final_model_evaluations_so_far": 0
+}

@@ -1,0 +1,48 @@
+{
+  "upstream_repository": "https://github.com/athms/mad-lab",
+  "revision": "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b",
+  "retrieved_date_utc": "2026-09-07",
+  "snapshot_type": "Additional unmodified primary sources for CDRM pilot; existing Stage B snapshot unchanged",
+  "paper_references": [
+    "https://arxiv.org/abs/2403.17844",
+    "https://arxiv.org/html/2604.21215#A4.SS2"
+  ],
+  "files": {
+    "configs/tasks/in-context-recall.yml": {
+      "sha256": "7be6752039dac5934d2bf65fb645ba13037544e74f927c5e9f1f538b5578f24d",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/in-context-recall.yml"
+    },
+    "configs/tasks/selective-copying.yml": {
+      "sha256": "c342339f554abef90857e9c906fe16b2a848cb273edcd32d62873f8dc20f8ba4",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/selective-copying.yml"
+    },
+    "configs/tasks/fuzzy-in-context-recall.yml": {
+      "sha256": "71a2a76243c7b8335f1610298aad6f4339d939322aa0ed87495c7c70a523bd4b",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/fuzzy-in-context-recall.yml"
+    },
+    "mad/configs.py": {
+      "sha256": "c9076cc717439dcaa615b626dcc533f6c8599e0eceb7d2dc926f632f9174118c",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/mad/configs.py"
+    },
+    "mad/data/dataset.py": {
+      "sha256": "5e3d80ce9f733b7402a335154a6606ef25aee132f1ec40ddabeff9741236e49b",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/mad/data/dataset.py"
+    },
+    "mad/data/instances.py": {
+      "sha256": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/mad/data/instances.py"
+    },
+    "LICENSE": {
+      "sha256": "26803f323cbd186f5321d9e5333196468a7bce0a1c60b63b064eddb5da9192ff",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/LICENSE"
+    },
+    "train.py": {
+      "sha256": "0edb7b282ba461fb062522d95f02a11c8e3916b66ddc3870fc8d20072d7656de",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/train.py"
+    },
+    "mad/model/pl_model_wrapper.py": {
+      "sha256": "590ef3fec1423f33716150745aefb0642414306bddb6af6d6064ede6ef94fbf8",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/mad/model/pl_model_wrapper.py"
+    }
+  }
+}

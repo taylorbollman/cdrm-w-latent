@@ -1,0 +1,6 @@
+{
+  "authoritative_config_source": ".runtime/r3-backward/20260906T210249Z/init-b2/report.json",
+  "source_sha256": "726228d6afc88b197eddc69a29e830abfa6148e1e0bb410836fc995f72204ec5",
+  "d256_changes": "Normalize saved R3 configuration to ordinary SEQ; retain all detailed backbone norm/bias/initialization semantics. New data vocabulary is explicit per run.",
+  "d128_changes": "Separate paper-oriented 12-block D128/H16/MLP512 profile; sites3/8; 12-block depth is deliberate adaptation; vocab16 provisional nativeMAD range confirmed."
+}

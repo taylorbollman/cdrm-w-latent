@@ -1,0 +1,940 @@
+{
+  "all_current_source_hashes_verified": true,
+  "all_four_streams_and_schedules_identical": true,
+  "common_epochs": 45,
+  "common_updates": 4500,
+  "completed_members": 4,
+  "continuation_receipt": {
+    "bytes": 41703,
+    "path": ".runtime/cdrm-naive/20260907T123830Z/six-continuation-decision-execution.json",
+    "sha256": "7f4e972ed1ddeee217a579bcf9644d8c6fe3b72df0871eed2b100777f1fe26df",
+    "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/six-continuation-decision-execution.json"
+  },
+  "created_utc": "2026-09-07T15:59:22.550703+00:00",
+  "pairs": [
+    {
+      "endpoint_cdrm_minus_seq": {
+        "ce": 0.04062765439351396,
+        "sequence_exact_match": 0.0,
+        "token_accuracy": -0.048551432291666696
+      },
+      "members": {
+        "cdrm": {
+          "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+          "all_update_losses_and_norms_finite": true,
+          "best_dev": {
+            "ce": 0.4167401194572449,
+            "ce_sum": 51209.02587890625,
+            "correct": 100596,
+            "exact": 0,
+            "examples": 1280,
+            "sequence_exact_match": 0.0,
+            "targets": 122880,
+            "token_accuracy": 0.81865234375
+          },
+          "best_dev_checkpoint": {
+            "bytes": 15686011,
+            "completed_epochs": 44,
+            "completed_updates": 4400,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0044.pt",
+            "sha256": "8b4bc8137d86877c943f5349b39e4a0eb2d53058fa2d5be5913a2dd84b9c1474",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0044.pt"
+          },
+          "best_dev_epoch": 44,
+          "checkpoint_tensor_checks": {
+            "best_dev": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            },
+            "endpoint": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            },
+            "resume": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            }
+          },
+          "clip_fraction": 0.96,
+          "clipped_updates": 4320,
+          "continuation_elapsed_seconds": 1773.78885129001,
+          "endpoint": {
+            "ce": 0.4394433259963989,
+            "ce_sum": 53998.7958984375,
+            "correct": 94079,
+            "exact": 0,
+            "examples": 1280,
+            "sequence_exact_match": 0.0,
+            "targets": 122880,
+            "token_accuracy": 0.7656168619791667
+          },
+          "endpoint_checkpoint": {
+            "bytes": 15708283,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0045.pt",
+            "sha256": "26bdaee27f5c75652491c3c60cce154dd731db52282756bed92dfcdb20741df9",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0045.pt"
+          },
+          "final_precision": {
+            "gradients": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            },
+            "missing_gradients": [],
+            "moments": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 106
+            },
+            "parameters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            },
+            "step_counters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            }
+          },
+          "first_state_summary": {
+            "bridge_correction_over_p8_rms": 0.010277606445554513,
+            "bridge_correction_rms": 0.010555082932114601,
+            "candidate_correction_over_p3_rms": 0.12001506690816831,
+            "candidate_rms": 0.8487837314605713,
+            "deep_correction_rms": 0.10044192522764206,
+            "hat_m_rms": 1.157524585723877,
+            "m_rms": 1.157524585723877,
+            "p3_rms": 0.8369109630584717,
+            "p8_rms": 1.0269981622695923
+          },
+          "inherited_development_receipts_exact": 26,
+          "inherited_history_rows_exact": 2500,
+          "last_state_summary": {
+            "bridge_correction_over_p8_rms": 0.005966729697396031,
+            "bridge_correction_rms": 0.01158869732171297,
+            "candidate_correction_over_p3_rms": 0.07376804869937591,
+            "candidate_rms": 1.5936671495437622,
+            "deep_correction_rms": 0.11785625666379929,
+            "hat_m_rms": 2.346869468688965,
+            "m_rms": 2.346869468688965,
+            "p3_rms": 1.597659945487976,
+            "p8_rms": 1.9422192573547363
+          },
+          "lineage_elapsed_seconds": 4064.1824446030078,
+          "monitor_rows": 46,
+          "monitored_preclip_gradient_signals": {
+            "cdrm.bridge_adapter.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.12314508855342865,
+              "min_preclip_l2": 0.0005275208968669176,
+              "samples": 46
+            },
+            "cdrm.deep_adapter.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.03094373643398285,
+              "min_preclip_l2": 7.009672117419541e-05,
+              "samples": 46
+            },
+            "transformer.blocks.1.att_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 27.730091094970703,
+              "min_preclip_l2": 0.05998189374804497,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 1.8704712390899658,
+              "min_preclip_l2": 0.005310680717229843,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 16.495290756225586,
+              "min_preclip_l2": 0.06175253540277481,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.6831796169281006,
+              "min_preclip_l2": 0.0021408589091151953,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 13.624592781066895,
+              "min_preclip_l2": 0.07304182648658752,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 5.342681407928467,
+              "min_preclip_l2": 0.018932588398456573,
+              "samples": 46
+            },
+            "transformer.blocks.1.k_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 3.7882564067840576,
+              "min_preclip_l2": 0.003815922187641263,
+              "samples": 46
+            },
+            "transformer.blocks.1.q_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 3.7882561683654785,
+              "min_preclip_l2": 0.0038159226533025503,
+              "samples": 46
+            }
+          },
+          "recorded_update_seconds": 3931.5406995514786,
+          "report": {
+            "bytes": 2286702,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/report.json",
+            "sha256": "205575bdb57474fc36c7b9cbb873a75107fc00075600a7d192ae5b5751dc24e4",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/report.json"
+          },
+          "resume_checkpoint": {
+            "bytes": 15269755,
+            "completed_epochs": 25,
+            "completed_updates": 2500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0025.pt",
+            "sha256": "2fecfb2d3dc463c0a519f9f8edeee283dc06b59400e972b2013ad47f36cdf93e",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0025.pt"
+          }
+        },
+        "seq": {
+          "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+          "all_update_losses_and_norms_finite": true,
+          "best_dev": {
+            "ce": 0.39881567160288495,
+            "ce_sum": 49006.4697265625,
+            "correct": 100045,
+            "exact": 0,
+            "examples": 1280,
+            "sequence_exact_match": 0.0,
+            "targets": 122880,
+            "token_accuracy": 0.8141682942708334
+          },
+          "best_dev_checkpoint": {
+            "bytes": 15295323,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/epoch-0045.pt",
+            "sha256": "f42d225351b6ed039963ce42127e9a389e639dffca2c8651240060fc695df534",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/epoch-0045.pt"
+          },
+          "best_dev_epoch": 45,
+          "checkpoint_tensor_checks": {
+            "best_dev": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            },
+            "endpoint": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            },
+            "resume": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            }
+          },
+          "clip_fraction": 0.9577777777777777,
+          "clipped_updates": 4310,
+          "continuation_elapsed_seconds": 103.51996993600915,
+          "endpoint": {
+            "ce": 0.39881567160288495,
+            "ce_sum": 49006.4697265625,
+            "correct": 100045,
+            "exact": 0,
+            "examples": 1280,
+            "sequence_exact_match": 0.0,
+            "targets": 122880,
+            "token_accuracy": 0.8141682942708334
+          },
+          "endpoint_checkpoint": {
+            "bytes": 15295323,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/epoch-0045.pt",
+            "sha256": "f42d225351b6ed039963ce42127e9a389e639dffca2c8651240060fc695df534",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/epoch-0045.pt"
+          },
+          "final_precision": {
+            "gradients": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            },
+            "missing_gradients": [],
+            "moments": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 102
+            },
+            "parameters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            },
+            "step_counters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            }
+          },
+          "first_state_summary": {},
+          "inherited_development_receipts_exact": 26,
+          "inherited_history_rows_exact": 2500,
+          "last_state_summary": {},
+          "lineage_elapsed_seconds": 232.14868394000223,
+          "monitor_rows": 46,
+          "monitored_preclip_gradient_signals": {
+            "transformer.blocks.1.att_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 15.220117568969727,
+              "min_preclip_l2": 0.08429772406816483,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 1.057888388633728,
+              "min_preclip_l2": 0.007638140581548214,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 10.44085693359375,
+              "min_preclip_l2": 0.08221247792243958,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.5168147087097168,
+              "min_preclip_l2": 0.003043027361854911,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 9.84113883972168,
+              "min_preclip_l2": 0.09530822187662125,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 3.7102644443511963,
+              "min_preclip_l2": 0.02483411878347397,
+              "samples": 46
+            },
+            "transformer.blocks.1.k_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 1.8830230236053467,
+              "min_preclip_l2": 0.005635786801576614,
+              "samples": 46
+            },
+            "transformer.blocks.1.q_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 1.8830238580703735,
+              "min_preclip_l2": 0.005635786801576614,
+              "samples": 46
+            }
+          },
+          "recorded_update_seconds": 205.69467564937077,
+          "report": {
+            "bytes": 2259563,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/report.json",
+            "sha256": "ef16c265c1e80efadbf4e6e0c4a1a93c85816a0dc930f72d85bfb8082d407f98",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/report.json"
+          },
+          "resume_checkpoint": {
+            "bytes": 14864539,
+            "completed_epochs": 25,
+            "completed_updates": 2500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/epoch-0025.pt",
+            "sha256": "95b7363ae460880bb9049cb9402a9cace9f7623ffbe95c75653adc0895d7d122",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/epoch-0025.pt"
+          }
+        }
+      },
+      "pairing": {
+        "all_common_identity_fields_equal": true,
+        "core_sources_equal": true,
+        "dev": {
+          "answer_labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+          "examples": 1280,
+          "input_ids": "935219cb0ee9f7aba000ad6b6e5a867f7f8006bf36febf24e8034cf21ee918b6",
+          "labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+          "length": 256
+        },
+        "dev_arrays_equal": true,
+        "initial_inventory": {
+          "adapters_nonzero_and_distinct": true,
+          "cdrm": {
+            "bytes": 4920029,
+            "completed_epochs": 0,
+            "completed_updates": 0,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/initial-weights.pt",
+            "sha256": "1eaa8a146875463550c3579f51612345a63d66cfcf8524cc0ad66226c651d75b",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/initial-weights.pt"
+          },
+          "common_initial_tensors": 51,
+          "common_initial_weights_bitwise_equal": true,
+          "extra_parameter_elements": 32768,
+          "extra_parameters": [
+            "cdrm.bridge_adapter.weight",
+            "cdrm.deep_adapter.weight"
+          ],
+          "seq": {
+            "bytes": 4788301,
+            "completed_epochs": 0,
+            "completed_updates": 0,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/initial-weights.pt",
+            "sha256": "aab2274dba92735cd189cacb91df620e950c7dd93b572e2673d0da0c5465158f",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/initial-weights.pt"
+          }
+        },
+        "per_update_indices_verified": 4500,
+        "shuffle_seed": 45678,
+        "source_maps_equal": true,
+        "source_sha256": {
+          "cdrm/mad_data.py": "097704522fa01552dcd5064634103353456f47272cb968078936d0aa22d25c55",
+          "configs/cdrm/base_d128.json": "c81a15bc57e03208f161da22e4ed23892fd8600224c77af2ebc9e7d38b95c15b",
+          "configs/cdrm/base_d128_6.json": "ec538367ae5ee35d2f45c7fec2248beebb94210d536bcba162cb5b0b9ef8046d",
+          "configs/cdrm/base_d256.json": "0dc3123b119c01650d9e5df0df72b08e8d8c79f993fb37181ce5e3c362c4262e",
+          "recurrent-transformer/olmo/__init__.py": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2",
+          "recurrent-transformer/olmo/aliases.py": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744",
+          "recurrent-transformer/olmo/beam_search.py": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3",
+          "recurrent-transformer/olmo/cdrm.py": "e47221811489f9cc8757d10521f91814a7c979b5a5ecebf83339b7ce20daf8d9",
+          "recurrent-transformer/olmo/checkpoint.py": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d",
+          "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+          "recurrent-transformer/olmo/config.py": "728b9f4e5dd1b82a5d574e12264bc8dae74622d9b285b568642a139a16aa8db6",
+          "recurrent-transformer/olmo/data/__init__.py": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041",
+          "recurrent-transformer/olmo/data/collator.py": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b",
+          "recurrent-transformer/olmo/data/custom_datasets.py": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223",
+          "recurrent-transformer/olmo/data/iterable_dataset.py": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5",
+          "recurrent-transformer/olmo/data/memmap_dataset.py": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81",
+          "recurrent-transformer/olmo/data/named_data_mixes.py": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c",
+          "recurrent-transformer/olmo/data/util.py": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b",
+          "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+          "recurrent-transformer/olmo/eval/__init__.py": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a",
+          "recurrent-transformer/olmo/eval/downstream.py": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f",
+          "recurrent-transformer/olmo/eval/evaluator.py": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2",
+          "recurrent-transformer/olmo/exceptions.py": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679",
+          "recurrent-transformer/olmo/initialization.py": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+          "recurrent-transformer/olmo/model.py": "74a9b0819264cd5c2ada9e00373f49d1afc9c64209c2d06a49b9d41833327f17",
+          "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+          "recurrent-transformer/olmo/ortho_basis.py": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d",
+          "recurrent-transformer/olmo/safetensors_util.py": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c",
+          "recurrent-transformer/olmo/tokenizer.py": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e",
+          "recurrent-transformer/olmo/torch_util.py": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+          "recurrent-transformer/olmo/train.py": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c",
+          "recurrent-transformer/olmo/util.py": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c",
+          "recurrent-transformer/olmo/version.py": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b",
+          "scripts/cdrm_common.py": "6791e1bb825f71220c8255ce02926e72e4f2acbb28856862c2b3a318c98a9e6c",
+          "scripts/cdrm_train.py": "e8040d8fdb79b307f960358ad9815e74ff37c0904cd0617733826e4d03d61079",
+          "scripts/r3_mixed_operational.py": "e6ccace6afeb100eabdace86b6b82432ab6eb947b4f499f194d9f6db1a597efc",
+          "scripts/r3_validation_metrics.py": "239193533a1837c840411b79811dc35625c86a9abd99413b100ae1ca48c39a4d",
+          "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+          "scripts/stage_b_train.py": "03efc040358db0224d71e50c6dc798e1b567bf3fab4433feac342b1fcc2067c9",
+          "vendors/mad-lab/mad/data/instances.py": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8"
+        },
+        "stream_and_schedule_chain_sha256": "5eb9d1bdd5ef105d99b596cebd1da1a892c258beeaf0d4eaf64395c59c0803c8",
+        "train": {
+          "answer_labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+          "examples": 12800,
+          "input_ids": "f220aa1bf3505116c09d66c4ee544779911c9a6640ecb604aa857b8f81d18db0",
+          "labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+          "length": 256
+        },
+        "train_arrays_equal": true
+      },
+      "seed": 0,
+      "status": "passed"
+    },
+    {
+      "endpoint_cdrm_minus_seq": {
+        "ce": -0.04531414310137433,
+        "sequence_exact_match": 0.01328125,
+        "token_accuracy": 0.01338704427083337
+      },
+      "members": {
+        "cdrm": {
+          "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+          "all_update_losses_and_norms_finite": true,
+          "best_dev": {
+            "ce": 0.25923991004625957,
+            "ce_sum": 31855.400146484375,
+            "correct": 109577,
+            "exact": 18,
+            "examples": 1280,
+            "sequence_exact_match": 0.0140625,
+            "targets": 122880,
+            "token_accuracy": 0.8917399088541667
+          },
+          "best_dev_checkpoint": {
+            "bytes": 15708091,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/epoch-0045.pt",
+            "sha256": "dd7df095b7abf048915d68fbb2d0830351ef5f621bf41c6e1c0fbd5605ce8209",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/epoch-0045.pt"
+          },
+          "best_dev_epoch": 45,
+          "checkpoint_tensor_checks": {
+            "best_dev": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            },
+            "endpoint": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            },
+            "resume": {
+              "fp32_and_finite": true,
+              "moment_tensors": 106,
+              "parameter_tensors": 53
+            }
+          },
+          "clip_fraction": 0.9584444444444444,
+          "clipped_updates": 4313,
+          "continuation_elapsed_seconds": 1799.6147069340077,
+          "endpoint": {
+            "ce": 0.25923991004625957,
+            "ce_sum": 31855.400146484375,
+            "correct": 109577,
+            "exact": 18,
+            "examples": 1280,
+            "sequence_exact_match": 0.0140625,
+            "targets": 122880,
+            "token_accuracy": 0.8917399088541667
+          },
+          "endpoint_checkpoint": {
+            "bytes": 15708091,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/epoch-0045.pt",
+            "sha256": "dd7df095b7abf048915d68fbb2d0830351ef5f621bf41c6e1c0fbd5605ce8209",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/epoch-0045.pt"
+          },
+          "final_precision": {
+            "gradients": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            },
+            "missing_gradients": [],
+            "moments": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 106
+            },
+            "parameters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            },
+            "step_counters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 53
+            }
+          },
+          "first_state_summary": {
+            "bridge_correction_over_p8_rms": 0.00881806983483715,
+            "bridge_correction_rms": 0.009549640119075775,
+            "candidate_correction_over_p3_rms": 0.10690124970848955,
+            "candidate_rms": 0.9655531644821167,
+            "deep_correction_rms": 0.10210379213094711,
+            "hat_m_rms": 1.3884053230285645,
+            "m_rms": 1.3884053230285645,
+            "p3_rms": 0.9551225304603577,
+            "p8_rms": 1.0829626321792603
+          },
+          "inherited_development_receipts_exact": 26,
+          "inherited_history_rows_exact": 2500,
+          "last_state_summary": {
+            "bridge_correction_over_p8_rms": 0.007218516376159994,
+            "bridge_correction_rms": 0.011547361500561237,
+            "candidate_correction_over_p3_rms": 0.08563794537277344,
+            "candidate_rms": 1.4177199602127075,
+            "deep_correction_rms": 0.12144481390714645,
+            "hat_m_rms": 1.8175935745239258,
+            "m_rms": 1.8175935745239258,
+            "p3_rms": 1.418119192123413,
+            "p8_rms": 1.5996862649917603
+          },
+          "lineage_elapsed_seconds": 4027.974794408001,
+          "monitor_rows": 46,
+          "monitored_preclip_gradient_signals": {
+            "cdrm.bridge_adapter.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.10919678956270218,
+              "min_preclip_l2": 0.0006959652528166771,
+              "samples": 46
+            },
+            "cdrm.deep_adapter.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 0.021541330963373184,
+              "min_preclip_l2": 0.00013077844050712883,
+              "samples": 46
+            },
+            "transformer.blocks.1.att_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 45.24997329711914,
+              "min_preclip_l2": 0.04924038425087929,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 2.9605071544647217,
+              "min_preclip_l2": 0.0041345227509737015,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 32.68918228149414,
+              "min_preclip_l2": 0.07507234811782837,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 1.4863194227218628,
+              "min_preclip_l2": 0.0027391952462494373,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 22.93726348876953,
+              "min_preclip_l2": 0.09746911376714706,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 10.629877090454102,
+              "min_preclip_l2": 0.02743970975279808,
+              "samples": 46
+            },
+            "transformer.blocks.1.k_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 7.025967597961426,
+              "min_preclip_l2": 0.0026519657112658024,
+              "samples": 46
+            },
+            "transformer.blocks.1.q_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 7.025965690612793,
+              "min_preclip_l2": 0.002651966642588377,
+              "samples": 46
+            }
+          },
+          "recorded_update_seconds": 3896.5142513874453,
+          "report": {
+            "bytes": 2287061,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/report.json",
+            "sha256": "09493fafb1edf63f32224b3a35ae6978bb137252d02921bca177848903bde834",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/report.json"
+          },
+          "resume_checkpoint": {
+            "bytes": 15269691,
+            "completed_epochs": 25,
+            "completed_updates": 2500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0025.pt",
+            "sha256": "b9df42141e116434b59afba7b9f0fc362764100acfd1d8874918ca0ad1cc1699",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0025.pt"
+          }
+        },
+        "seq": {
+          "all_monitored_tensors_fp32_finite_without_missing_gradients": true,
+          "all_update_losses_and_norms_finite": true,
+          "best_dev": {
+            "ce": 0.2385140816370646,
+            "ce_sum": 29308.6103515625,
+            "correct": 111972,
+            "exact": 8,
+            "examples": 1280,
+            "sequence_exact_match": 0.00625,
+            "targets": 122880,
+            "token_accuracy": 0.91123046875
+          },
+          "best_dev_checkpoint": {
+            "bytes": 15209563,
+            "completed_epochs": 41,
+            "completed_updates": 4100,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0041.pt",
+            "sha256": "f3e2310d7b76fa0130cb89cb71b7d3b545c1dc30610805fe9bbbe6d1f779b89d",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0041.pt"
+          },
+          "best_dev_epoch": 41,
+          "checkpoint_tensor_checks": {
+            "best_dev": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            },
+            "endpoint": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            },
+            "resume": {
+              "fp32_and_finite": true,
+              "moment_tensors": 102,
+              "parameter_tensors": 51
+            }
+          },
+          "clip_fraction": 0.9568888888888889,
+          "clipped_updates": 4306,
+          "continuation_elapsed_seconds": 103.78353137399245,
+          "endpoint": {
+            "ce": 0.3045540531476339,
+            "ce_sum": 37423.60205078125,
+            "correct": 107932,
+            "exact": 1,
+            "examples": 1280,
+            "sequence_exact_match": 0.00078125,
+            "targets": 122880,
+            "token_accuracy": 0.8783528645833333
+          },
+          "endpoint_checkpoint": {
+            "bytes": 15295771,
+            "completed_epochs": 45,
+            "completed_updates": 4500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0045.pt",
+            "sha256": "7e9560304df23c637c3d5de7a76fde3fa0ec80fe0856a13254b43971973cf185",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0045.pt"
+          },
+          "final_precision": {
+            "gradients": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            },
+            "missing_gradients": [],
+            "moments": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 102
+            },
+            "parameters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            },
+            "step_counters": {
+              "dtypes": [
+                "torch.float32"
+              ],
+              "finite": true,
+              "tensors": 51
+            }
+          },
+          "first_state_summary": {},
+          "inherited_development_receipts_exact": 26,
+          "inherited_history_rows_exact": 2500,
+          "last_state_summary": {},
+          "lineage_elapsed_seconds": 232.24178079799458,
+          "monitor_rows": 46,
+          "monitored_preclip_gradient_signals": {
+            "transformer.blocks.1.att_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 54.03058624267578,
+              "min_preclip_l2": 0.05080568790435791,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 4.602055549621582,
+              "min_preclip_l2": 0.00423528952524066,
+              "samples": 46
+            },
+            "transformer.blocks.1.attn_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 42.63343048095703,
+              "min_preclip_l2": 0.07852938771247864,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 2.4790444374084473,
+              "min_preclip_l2": 0.002866102149710059,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_out.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 32.889102935791016,
+              "min_preclip_l2": 0.10198617726564407,
+              "samples": 46
+            },
+            "transformer.blocks.1.ff_proj.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 15.442519187927246,
+              "min_preclip_l2": 0.02858453430235386,
+              "samples": 46
+            },
+            "transformer.blocks.1.k_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 9.835702896118164,
+              "min_preclip_l2": 0.0026518218219280243,
+              "samples": 46
+            },
+            "transformer.blocks.1.q_norm.weight": {
+              "all_nonzero": true,
+              "max_preclip_l2": 9.835700035095215,
+              "min_preclip_l2": 0.0026518204249441624,
+              "samples": 46
+            }
+          },
+          "recorded_update_seconds": 205.87881998575176,
+          "report": {
+            "bytes": 2260051,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/report.json",
+            "sha256": "f5321d8686590980f872d5160ba26a3ef887b2a5cc97d50a871dc08ad59d657c",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/report.json"
+          },
+          "resume_checkpoint": {
+            "bytes": 14864667,
+            "completed_epochs": 25,
+            "completed_updates": 2500,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/epoch-0025.pt",
+            "sha256": "04c9e06b170f323ea9f87ddab07534244f58448fc0d058d3aad3d5df73424f4e",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/epoch-0025.pt"
+          }
+        }
+      },
+      "pairing": {
+        "all_common_identity_fields_equal": true,
+        "core_sources_equal": true,
+        "dev": {
+          "answer_labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+          "examples": 1280,
+          "input_ids": "935219cb0ee9f7aba000ad6b6e5a867f7f8006bf36febf24e8034cf21ee918b6",
+          "labels": "9f5ae0372809e1d77075621fb892a47bfdaf24da6f67805d0b060b8033592be9",
+          "length": 256
+        },
+        "dev_arrays_equal": true,
+        "initial_inventory": {
+          "adapters_nonzero_and_distinct": true,
+          "cdrm": {
+            "bytes": 4920093,
+            "completed_epochs": 0,
+            "completed_updates": 0,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/initial-weights.pt",
+            "sha256": "d2982b5376c764761a0a946ad861080af004d30529068a776c05e70f3459e754",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/initial-weights.pt"
+          },
+          "common_initial_tensors": 51,
+          "common_initial_weights_bitwise_equal": true,
+          "extra_parameter_elements": 32768,
+          "extra_parameters": [
+            "cdrm.bridge_adapter.weight",
+            "cdrm.deep_adapter.weight"
+          ],
+          "seq": {
+            "bytes": 4788429,
+            "completed_epochs": 0,
+            "completed_updates": 0,
+            "path": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/initial-weights.pt",
+            "sha256": "bd4f239a9dd495712e46d2ffad7478c4bc4e887410f6448b63a3f00f190a00cd",
+            "storage_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/initial-weights.pt"
+          }
+        },
+        "per_update_indices_verified": 4500,
+        "shuffle_seed": 45678,
+        "source_maps_equal": true,
+        "source_sha256": {
+          "cdrm/mad_data.py": "097704522fa01552dcd5064634103353456f47272cb968078936d0aa22d25c55",
+          "configs/cdrm/base_d128.json": "c81a15bc57e03208f161da22e4ed23892fd8600224c77af2ebc9e7d38b95c15b",
+          "configs/cdrm/base_d128_6.json": "ec538367ae5ee35d2f45c7fec2248beebb94210d536bcba162cb5b0b9ef8046d",
+          "configs/cdrm/base_d256.json": "0dc3123b119c01650d9e5df0df72b08e8d8c79f993fb37181ce5e3c362c4262e",
+          "recurrent-transformer/olmo/__init__.py": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2",
+          "recurrent-transformer/olmo/aliases.py": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744",
+          "recurrent-transformer/olmo/beam_search.py": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3",
+          "recurrent-transformer/olmo/cdrm.py": "e47221811489f9cc8757d10521f91814a7c979b5a5ecebf83339b7ce20daf8d9",
+          "recurrent-transformer/olmo/checkpoint.py": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d",
+          "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+          "recurrent-transformer/olmo/config.py": "728b9f4e5dd1b82a5d574e12264bc8dae74622d9b285b568642a139a16aa8db6",
+          "recurrent-transformer/olmo/data/__init__.py": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041",
+          "recurrent-transformer/olmo/data/collator.py": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b",
+          "recurrent-transformer/olmo/data/custom_datasets.py": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223",
+          "recurrent-transformer/olmo/data/iterable_dataset.py": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5",
+          "recurrent-transformer/olmo/data/memmap_dataset.py": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81",
+          "recurrent-transformer/olmo/data/named_data_mixes.py": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c",
+          "recurrent-transformer/olmo/data/util.py": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b",
+          "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+          "recurrent-transformer/olmo/eval/__init__.py": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a",
+          "recurrent-transformer/olmo/eval/downstream.py": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f",
+          "recurrent-transformer/olmo/eval/evaluator.py": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2",
+          "recurrent-transformer/olmo/exceptions.py": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679",
+          "recurrent-transformer/olmo/initialization.py": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+          "recurrent-transformer/olmo/model.py": "74a9b0819264cd5c2ada9e00373f49d1afc9c64209c2d06a49b9d41833327f17",
+          "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+          "recurrent-transformer/olmo/ortho_basis.py": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d",
+          "recurrent-transformer/olmo/safetensors_util.py": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c",
+          "recurrent-transformer/olmo/tokenizer.py": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e",
+          "recurrent-transformer/olmo/torch_util.py": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+          "recurrent-transformer/olmo/train.py": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c",
+          "recurrent-transformer/olmo/util.py": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c",
+          "recurrent-transformer/olmo/version.py": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b",
+          "scripts/cdrm_common.py": "6791e1bb825f71220c8255ce02926e72e4f2acbb28856862c2b3a318c98a9e6c",
+          "scripts/cdrm_train.py": "e8040d8fdb79b307f960358ad9815e74ff37c0904cd0617733826e4d03d61079",
+          "scripts/r3_mixed_operational.py": "e6ccace6afeb100eabdace86b6b82432ab6eb947b4f499f194d9f6db1a597efc",
+          "scripts/r3_validation_metrics.py": "239193533a1837c840411b79811dc35625c86a9abd99413b100ae1ca48c39a4d",
+          "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+          "scripts/stage_b_train.py": "03efc040358db0224d71e50c6dc798e1b567bf3fab4433feac342b1fcc2067c9",
+          "vendors/mad-lab/mad/data/instances.py": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8"
+        },
+        "stream_and_schedule_chain_sha256": "5eb9d1bdd5ef105d99b596cebd1da1a892c258beeaf0d4eaf64395c59c0803c8",
+        "train": {
+          "answer_labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+          "examples": 12800,
+          "input_ids": "f220aa1bf3505116c09d66c4ee544779911c9a6640ecb604aa857b8f81d18db0",
+          "labels": "80d1c2aa5e8d0a3327209cc0c24b7f39be7471cb7d819193b3cca55031999945",
+          "length": 256
+        },
+        "train_arrays_equal": true
+      },
+      "seed": 1,
+      "status": "passed"
+    }
+  ],
+  "schema": "cdrm-e45-full-cohort-audit-v1",
+  "status": "passed"
+}

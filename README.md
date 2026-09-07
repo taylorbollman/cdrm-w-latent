@@ -95,3 +95,18 @@ The [BF16 mixed-precision milestone](docs/reports/r3-bf16/results.md) adds an
 opt-in FP32-state recurrent policy and [reproducible commands](docs/r3-bf16-usage.md).
 Paired training and midpoint recovery work, but numerical maximum-error flags
 remain; FP32 stays the default. At B64/T128, BF16 lowers memory and slows updates.
+
+The naïve FP32 CDRM reference adds a graph-connected side memory after the
+ordinary preview, shares the configured early block’s parameters, and bridges into the ordinary suffix.
+See [the architecture](docs/cdrm-architecture.md),
+[usage and recovery](docs/cdrm-naive-usage.md), the
+[pinned MAD data contract](docs/cdrm-mad-data.md),
+[resolved profiles and joint manifests](configs/cdrm/README.md), and
+[the CDRM milestone report](docs/reports/cdrm-naive/results.md).
+The completed pilot screened harder settings with SEQ6 first, then compared
+SEQ6/CDRM6 on selective copying across two seeds and 45 epochs. Independent
+held-out evaluations give mixed results; the reference passes its declared
+FP32 correctness and recovery checks, with no consistent learning advantage
+established by this pilot.
+Its independent lineage is `.runtime/cdrm-naive/20260907T123830Z/` and the
+matching `gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/` prefix.

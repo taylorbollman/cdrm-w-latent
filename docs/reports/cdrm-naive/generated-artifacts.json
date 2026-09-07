@@ -1,0 +1,27 @@
+{
+  "generator": "scripts/cdrm_report.py",
+  "files": [
+    "summary.json",
+    "development.csv",
+    "training.csv",
+    "operational-development.csv",
+    "operational-training.csv",
+    "unpaired-development.csv",
+    "unpaired-training.csv",
+    "benchmarks.csv",
+    "final-evaluations.csv",
+    "pairing.csv",
+    "development-learning-curves.png",
+    "development-learning-curves.svg",
+    "development-update-time-curves.png",
+    "development-update-time-curves.svg",
+    "native-training-loss.png",
+    "native-training-loss.svg",
+    "operational-learning-curves.png",
+    "operational-learning-curves.svg",
+    "unpaired-development-curves.png",
+    "unpaired-development-curves.svg",
+    "unpaired-native-training-loss.png",
+    "unpaired-native-training-loss.svg"
+  ]
+}

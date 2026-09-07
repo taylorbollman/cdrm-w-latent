@@ -1,0 +1,145 @@
+{
+  "recorded_at_utc": "2026-09-07T13:10:43.497286+00:00",
+  "decision_basis": "Measured synchronized20update costs after5warmups, full1280example evaluation on training-only subset, NUM/OPS gates",
+  "pilot_model_development_access_before_decision": false,
+  "final_model_evaluation_before_decision": false,
+  "costs": {
+    "in-context-recall": {
+      "first_common_epochs": 50,
+      "physical_batch": 128,
+      "updates_per_epoch": 100,
+      "step_seconds": {
+        "seq": 0.03803847875169595,
+        "cdrm": 0.3357580613483151
+      },
+      "evaluation_seconds_per1280": {
+        "seq": 0.14661050800350495,
+        "cdrm": 0.6816121480078436
+      },
+      "checkpoint_overhead_allowance_seconds_per_pair_epoch": 0.5,
+      "startup_allowance_seconds_per_pair": 20,
+      "estimated_pair_seconds": 1955.3938333006226,
+      "with15percent_margin_seconds": 2248.702908295716,
+      "benchmark_reports": [
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-seq/report.json",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-recall-b128-cdrm/report.json"
+      ]
+    },
+    "selective-copying": {
+      "first_common_epochs": 25,
+      "physical_batch": 128,
+      "updates_per_epoch": 100,
+      "step_seconds": {
+        "seq": 0.0895690890007245,
+        "cdrm": 0.9065045852476032
+      },
+      "evaluation_seconds_per1280": {
+        "seq": 0.38028772799589206,
+        "cdrm": 1.5526385699922685
+      },
+      "checkpoint_overhead_allowance_seconds_per_pair_epoch": 0.5,
+      "startup_allowance_seconds_per_pair": 20,
+      "estimated_pair_seconds": 2571.0073430705233,
+      "with15percent_margin_seconds": 2956.6584445311014,
+      "benchmark_reports": [
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-seq/report.json",
+        ".runtime/cdrm-naive/20260907T123830Z/bench-d128-copy-b128-cdrm/report.json"
+      ]
+    }
+  },
+  "estimated_total_seconds": 4526.401176371146,
+  "training_cutoff_utc": "2026-09-07T16:18:30+00:00",
+  "session_end_utc": "2026-09-07T16:38:30+00:00",
+  "pair": [
+    "seq",
+    "cdrm"
+  ],
+  "preset": "d128",
+  "model_seed": 0,
+  "shuffle_seed": 45678,
+  "gates": {
+    "epsilon": 0.1,
+    "rho": 1.0,
+    "lambda": 0.01
+  },
+  "schedule": {
+    "horizon_epochs": 200,
+    "step": "epoch_end",
+    "min_lr": 1e-06,
+    "warmup": false
+  },
+  "optimizer": {
+    "AdamW_lr": 0.0005,
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "clip_norm": 1.0
+  },
+  "data_manifest_sha256": "b4e2a7f4daca652737552cfb15be0b09b18fb74b9e5efc4f5aa47f3c67a22e7b",
+  "quality_gate_reports_sha256": {
+    ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b128/report.json": "7e69d1178bfbdced8794c21533437738fd8173f8e0ad27ec9bf3611054f4e17c",
+    ".runtime/cdrm-naive/20260907T123830Z/num-d128-copy-b2/report.json": "a57f7acc68c00d42b2cdb22edc4eff74a8a1b8c8360ca0f40c44700a1f906334",
+    ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b128/report.json": "513d9902606cd99ba5fb01d018f9db7b2f1c54ed0a13174e2271677f100105e0",
+    ".runtime/cdrm-naive/20260907T123830Z/num-d128-recall-b2/report.json": "0e6f61a9a4375bb4f02aaeb511a56e26b90be14484fdc138431b39994adbc8e7",
+    ".runtime/cdrm-naive/20260907T123830Z/num-d256-b2/report.json": "640caee9a1abb34ee3a77b4d1c0be525b0409530fb357be86e9b750fe008c765",
+    ".runtime/cdrm-naive/20260907T123830Z/num-d256-b64/report.json": "acf188fe21a382901d6ec248e21c560cdffb7e2a0357d275fcf1a7f409af1204",
+    ".runtime/cdrm-naive/20260907T123830Z/ops-fresh-v3/report.json": "3c119375156c6ec2b6b780b1ed8d8c37cc8aae4031f06e1f99e22f8552bed4c1",
+    ".runtime/cdrm-naive/20260907T123830Z/ops-resume-v3/report.json": "4732acfe4fc51b0059e724436918a9bdda3fe6d7e936c801809a07ae01faeaec",
+    ".runtime/cdrm-naive/20260907T123830Z/ops-immediate-pause-v3/report.json": "0da158234f62b2fd35a260ea64b463021ad040f95081b71d53d18d46e622e7f1",
+    ".runtime/cdrm-naive/20260907T123830Z/ops-pause-resume-v3/report.json": "96f1658d6811e189a515ede40f606f5dd6ae25afca2a65c6835e8eb3558ea5b4"
+  },
+  "final_selection_policy": "After training/continuation choices fixed, evaluate declared endpoint and best dev(answerCE) perarm on final exactly once perdistinctcheckpoint. Initialweights eligible best; final never selects checkpoint.",
+  "continuation_policy": "After both first pairs finish, use actual remaining walltime and measured training cost to consider common recall100 or200 with15percent margin; retain earlier endpoints and preserve schedule. Do not change gates/optimizer or stop one arm selectively by outcomes.",
+  "deferred": [
+    "fuzzy recall",
+    "R3 learning arm",
+    "same-depth attribution learning",
+    "BF16 repair",
+    "custom CDRM tiling",
+    "latent objectives"
+  ],
+  "source_sha256": {
+    "cdrm/mad_data.py": "cdac715b6604df060d462f13e0a525214991d6b0204554acc12261212a858ade",
+    "configs/cdrm/base_d128.json": "c81a15bc57e03208f161da22e4ed23892fd8600224c77af2ebc9e7d38b95c15b",
+    "configs/cdrm/base_d256.json": "0dc3123b119c01650d9e5df0df72b08e8d8c79f993fb37181ce5e3c362c4262e",
+    "recurrent-transformer/olmo/__init__.py": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2",
+    "recurrent-transformer/olmo/aliases.py": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744",
+    "recurrent-transformer/olmo/beam_search.py": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3",
+    "recurrent-transformer/olmo/cdrm.py": "e47221811489f9cc8757d10521f91814a7c979b5a5ecebf83339b7ce20daf8d9",
+    "recurrent-transformer/olmo/checkpoint.py": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d",
+    "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+    "recurrent-transformer/olmo/config.py": "728b9f4e5dd1b82a5d574e12264bc8dae74622d9b285b568642a139a16aa8db6",
+    "recurrent-transformer/olmo/data/__init__.py": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041",
+    "recurrent-transformer/olmo/data/collator.py": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b",
+    "recurrent-transformer/olmo/data/custom_datasets.py": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223",
+    "recurrent-transformer/olmo/data/iterable_dataset.py": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5",
+    "recurrent-transformer/olmo/data/memmap_dataset.py": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81",
+    "recurrent-transformer/olmo/data/named_data_mixes.py": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c",
+    "recurrent-transformer/olmo/data/util.py": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b",
+    "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+    "recurrent-transformer/olmo/eval/__init__.py": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a",
+    "recurrent-transformer/olmo/eval/downstream.py": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f",
+    "recurrent-transformer/olmo/eval/evaluator.py": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2",
+    "recurrent-transformer/olmo/exceptions.py": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679",
+    "recurrent-transformer/olmo/initialization.py": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+    "recurrent-transformer/olmo/model.py": "74a9b0819264cd5c2ada9e00373f49d1afc9c64209c2d06a49b9d41833327f17",
+    "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+    "recurrent-transformer/olmo/ortho_basis.py": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d",
+    "recurrent-transformer/olmo/safetensors_util.py": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c",
+    "recurrent-transformer/olmo/tokenizer.py": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e",
+    "recurrent-transformer/olmo/torch_util.py": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+    "recurrent-transformer/olmo/train.py": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c",
+    "recurrent-transformer/olmo/util.py": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c",
+    "recurrent-transformer/olmo/version.py": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b",
+    "scripts/cdrm_common.py": "6ed06f2500ac06d1f04207a26f0e1ae209825b51e638137ddba77127f5d191b6",
+    "scripts/cdrm_train.py": "97eb0a828e22b120bb0f85e14b5b5c75bfe559a6059ae0f2a1da104d5ffcc603",
+    "scripts/r3_mixed_operational.py": "e6ccace6afeb100eabdace86b6b82432ab6eb947b4f499f194d9f6db1a597efc",
+    "scripts/r3_validation_metrics.py": "239193533a1837c840411b79811dc35625c86a9abd99413b100ae1ca48c39a4d",
+    "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+    "scripts/stage_b_train.py": "03efc040358db0224d71e50c6dc798e1b567bf3fab4433feac342b1fcc2067c9",
+    "vendors/mad-lab/mad/data/instances.py": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8"
+  }
+}

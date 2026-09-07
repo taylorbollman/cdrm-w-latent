@@ -1,0 +1,153 @@
+{
+  "at_utc": "2026-09-07T13:33:39.625458+00:00",
+  "selected_setting": "copy-v16-t256-k96",
+  "task": "selective-copying",
+  "preset": "d128_6",
+  "sites": [
+    1,
+    3
+  ],
+  "reason": "BothSEQ6seeds show substantial learning above12.196percentmodalbaseline, retain48.3/66.2percenttokenaccuracy and0whole-exampleexact at25epochs, andneitheracesearly. Thisprovidesmeaningfulheadroom with functioning optimization/supervision.",
+  "deferred_recall": "Bothseedsbelow9.663percentmodalbaseline; notdisprovedasrecurrence-sensitive, but lessinformative nowgivenlearningcopyingalternative. Native dense objective remainsunchanged.",
+  "optional_third": "copy-v128-t256-k16 train/devpreparedbut no modelscreen needed because first2 yielded aninformativecandidate; finalabsent",
+  "screening_results": [
+    {
+      "setting": "recall-v128-t128",
+      "seed": 0,
+      "report": ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s0/report.json",
+      "report_sha256": "6569721d848da3c1ff6e84ea18a97826d5e8bf4595ca5a7fe72726fc043ee9ce",
+      "epochs": 25,
+      "early_ace": false,
+      "endpoint": {
+        "ce_sum": 128084.513671875,
+        "targets": 30435,
+        "correct": 1496,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 4.2084611030680135,
+        "token_accuracy": 0.04915393461475275,
+        "sequence_exact_match": 0.0
+      },
+      "best_dev_epoch": 11,
+      "best_dev": {
+        "ce_sum": 114151.935546875,
+        "targets": 30435,
+        "correct": 2197,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 3.7506796631140134,
+        "token_accuracy": 0.07218662723837686,
+        "sequence_exact_match": 0.0
+      },
+      "identity_sha256": "c861e130b6183d37e3a1034a80828736c4dc7a93c53fd2172da6dc7f688fc68a"
+    },
+    {
+      "setting": "recall-v128-t128",
+      "seed": 1,
+      "report": ".runtime/cdrm-naive/20260907T123830Z/screen6-recall-v128-t128-seq-s1/report.json",
+      "report_sha256": "e3ecef4b4a1631d391a8c4656aeb7a9ebec8f2729358c8e104467e15e28c23ae",
+      "epochs": 25,
+      "early_ace": false,
+      "endpoint": {
+        "ce_sum": 124549.873046875,
+        "targets": 30435,
+        "correct": 1768,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 4.092323740656317,
+        "token_accuracy": 0.05809101363561689,
+        "sequence_exact_match": 0.0
+      },
+      "best_dev_epoch": 14,
+      "best_dev": {
+        "ce_sum": 114041.4521484375,
+        "targets": 30435,
+        "correct": 2142,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 3.747049520237802,
+        "token_accuracy": 0.07037949728930508,
+        "sequence_exact_match": 0.0
+      },
+      "identity_sha256": "2445f2da1edfc4c04cf8637262b42372b848a8c4456a4fa76c34d59c85600546"
+    },
+    {
+      "setting": "copy-v16-t256-k96",
+      "seed": 0,
+      "report": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s0/report.json",
+      "report_sha256": "2552f392d0f3cbd33be99802908fcf19271f1a3812a9219e8b3ee43c2e4c7803",
+      "epochs": 25,
+      "early_ace": false,
+      "endpoint": {
+        "ce_sum": 108518.2373046875,
+        "targets": 122880,
+        "correct": 59338,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 0.8831236759821574,
+        "token_accuracy": 0.48289388020833335,
+        "sequence_exact_match": 0.0
+      },
+      "best_dev_epoch": 23,
+      "best_dev": {
+        "ce_sum": 86990.7685546875,
+        "targets": 122880,
+        "correct": 82156,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 0.7079326868057251,
+        "token_accuracy": 0.6685872395833333,
+        "sequence_exact_match": 0.0
+      },
+      "identity_sha256": "0170903947dee1b1f4438bdc4190a5a24261198ed74a74d5a15602ae11c7fda3"
+    },
+    {
+      "setting": "copy-v16-t256-k96",
+      "seed": 1,
+      "report": ".runtime/cdrm-naive/20260907T123830Z/screen6-copy-v16-t256-k96-seq-s1/report.json",
+      "report_sha256": "d3c8bb9e52e05315bc34402b21b4a2d0baac0d37b19a864088cdf11fac626c0c",
+      "epochs": 25,
+      "early_ace": false,
+      "endpoint": {
+        "ce_sum": 91736.861328125,
+        "targets": 122880,
+        "correct": 81327,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 0.7465564886728923,
+        "token_accuracy": 0.6618408203125,
+        "sequence_exact_match": 0.0
+      },
+      "best_dev_epoch": 25,
+      "best_dev": {
+        "ce_sum": 91736.861328125,
+        "targets": 122880,
+        "correct": 81327,
+        "exact": 0,
+        "examples": 1280,
+        "ce": 0.7465564886728923,
+        "token_accuracy": 0.6618408203125,
+        "sequence_exact_match": 0.0
+      },
+      "identity_sha256": "8bc544b7aee2719f4795638b0e2ac3f9a523942ee02afbc585f3ad20f2ffb71d"
+    }
+  ],
+  "comparison_seeds": [
+    0,
+    1
+  ],
+  "first_common_epoch_target": 25,
+  "target_conditional_on": "MeasuredCDRM6B128fit/cost andremainingOPSchecks; recordcostfreeze beforemainCDRM",
+  "backbone_initialization": "FreshmatchingSEQbackboneseed perarm; reuseexistingSEQ6screens atcommonepochs, no trainedSEQ-toCDRMwarmstart",
+  "gates": {
+    "epsilon": 0.1,
+    "rho": 1,
+    "lambda": 0.01
+  },
+  "physical_batch": 128,
+  "schedule_horizon_epochs": 200,
+  "optimizer_unchanged": true,
+  "final_generated": false,
+  "final_model_evaluated": false,
+  "continuation": "Consider common50 acrossbothseeds onlyif actualremainingtimefits withmargin; do notselectivelystopweakerarm orretunehyperparameters."
+}

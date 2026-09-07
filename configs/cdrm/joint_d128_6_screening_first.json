@@ -1,0 +1,472 @@
+{
+  "base_config": "configs/cdrm/base_d128_6.json",
+  "base_config_sha256": "ec538367ae5ee35d2f45c7fec2248beebb94210d536bcba162cb5b0b9ef8046d",
+  "cdrm": {
+    "active_same_depth_candidate": "p_early + epsilon*Ad(Nd(p_early))",
+    "bridge": "p_late + lambda*Ab(Nb(hat_m-p_early))",
+    "candidate": "p_early + epsilon*Ad(Nd(p_late-p_early))",
+    "epsilon": 0.1,
+    "lambda": 0.01,
+    "note": "Shared ordinary early-block owner; same-depth keeps the adapter active and does not replace the late preview with the early preview",
+    "rho": 1.0
+  },
+  "dev_examples": 1280,
+  "execution_records_are_authoritative": true,
+  "final_examples": 1280,
+  "final_examples_status": "Planned count only; all harder-setting final arrays absent at comparison launch",
+  "historical": {
+    "old_paired_plan": "Superseded before paired execution",
+    "seq12": "Completed original recall E50 calibration is historical; no CDRM12 SYN arm was launched"
+  },
+  "model": {
+    "d_model": 128,
+    "early_layer": 1,
+    "late_layer": 3,
+    "mlp_hidden_size": 512,
+    "n_heads": 16,
+    "n_layers": 6,
+    "ordinary_preview_layers": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "ordinary_suffix_layers": [
+      4,
+      5
+    ],
+    "state_aliases": {
+      "p3": "post ordinary block1 early preview",
+      "p8": "post ordinary block3 late preview",
+      "v8": "bridge output entering ordinary block4"
+    }
+  },
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "eps": 1e-08,
+    "gradient_clip_norm": 1.0,
+    "learning_rate": 0.0005,
+    "name": "AdamW",
+    "weight_decay": 0.0
+  },
+  "physical_batch": 128,
+  "precision": {
+    "autocast": false,
+    "computation": "float32",
+    "gradient_accumulation": false,
+    "parameters": "float32",
+    "tf32": false
+  },
+  "required_variables": {
+    "CDRM_COMPARE_EPOCHS": "25 first; the frozen runtime-only controller selects common50/45/25 for all four runs from measured wall durations and the original cutoff",
+    "CDRM_COMPARE_SEED": "0 or 1, matched to the retained SEQ screening seed",
+    "CDRM_DEADLINE_UTC": "Explicit future UTC session cutoff",
+    "CDRM_RUN_ROOT": "Fresh output parent",
+    "CDRM_SCREEN_SEED": "0 first,1 for replication as required"
+  },
+  "schedule": {
+    "horizon_epochs": 200,
+    "minimum_lr": 1e-06,
+    "shortened_on_early_screen_stop": false,
+    "step": "after each completed epoch",
+    "type": "CosineAnnealingLR",
+    "warmup": false
+  },
+  "schema": "cdrm-six-block-screening-first-v1",
+  "selected_comparison": {
+    "actual_run_names": [
+      "compare6-copy96-cdrm-s0-e25",
+      "compare6-copy96-cdrm-s1-e25"
+    ],
+    "baseline": "Reuse the matching completed SEQ6 screening trajectory for each seed; initialize CDRM from the same fresh backbone seed, never from trained SEQ weights",
+    "budget_decision": "docs/reports/cdrm-naive/six-comparison-budget.json",
+    "budget_decision_sha256": "572c4070d059f11add99011c4bf7811f0e88573040206fcd78b760ea9627fc54",
+    "continuation": "After all four E25 runs complete, select first fitting common endpoint50/45/25 using sum(elapsed_seconds/25*added_epochs)+60, times1.15, against16:18:30UTC. No accuracy-dependent allocation.",
+    "continuation_controller": ".runtime/cdrm-naive/20260907T123830Z/execution/six-continuation-queue.py",
+    "continuation_policy": "docs/reports/cdrm-naive/six-continuation-policy-update.json",
+    "decision": "docs/reports/cdrm-naive/six-comparison-selection.json",
+    "decision_sha256": "c6e6753bcef4586ef8bd87b38ac7b8bab6ae40e032a9ea95ec0fdcef6063e1f2",
+    "initial_common_epochs": 25,
+    "seeds": [
+      0,
+      1
+    ],
+    "setting": "copy-v16-t256-k96",
+    "status": "Launched after selected B128 NUM/OPS checks; completed run reports determine results"
+  },
+  "selection": {
+    "baseline_reuse": "Compatible retained SEQ6 screening checkpoints/history may serve or continue as the same-setting baseline; run-purpose and stopping policy do not redefine model/data/optimizer identity",
+    "data_split": "development only",
+    "easy_setting": "Skip CDRM after replicated early SEQ6 success",
+    "final_holdout": "Remain untouched by models until setting and comparison endpoint are fixed",
+    "matched_comparison": "Match depth, setting/corpus, backbone initialization, seed, physical batch, ordered epoch examples and completed epochs/updates",
+    "otherwise": "Use progress, difficulty and measured cost to select a useful harder setting; partial learning is not reliable ease"
+  },
+  "settings": {
+    "copy-v16-t256-k96": {
+      "actual_sequence_length": 256,
+      "comparison_status": "Selected for CDRM seed 0/1 at common epoch 25, conditional on declared NUM/OPS and measured cost checks; R3/same-depth remain deferred",
+      "conditional_comparison_argv_templates": {
+        "cdrm": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "cdrm",
+          "--preset",
+          "d128_6",
+          "--task",
+          "selective-copying",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-copy-v16-t256-k96-cdrm-s${CDRM_COMPARE_SEED}"
+        ],
+        "r3": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "r3",
+          "--preset",
+          "d128_6",
+          "--task",
+          "selective-copying",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-copy-v16-t256-k96-r3-s${CDRM_COMPARE_SEED}"
+        ],
+        "same_depth": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "same_depth",
+          "--preset",
+          "d128_6",
+          "--task",
+          "selective-copying",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-copy-v16-t256-k96-same_depth-s${CDRM_COMPARE_SEED}"
+        ]
+      },
+      "data_root": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+      "manifest_sha256": "a70282765db11bfc559a8af7a1048b474341c9defc7a95d23124ce846607a8e9",
+      "profiles": {
+        "cdrm": {
+          "path": "configs/cdrm/d128_6_copy_v16_t256_k96_cdrm.json",
+          "sha256": "cef0795bc08db7bd694672cec10ce753863ffa77feb8afe944576c2c21a21d71"
+        },
+        "r3": {
+          "path": "configs/cdrm/d128_6_copy_v16_t256_k96_r3.json",
+          "sha256": "4c049d442cabe3aff73989db874b55cf7a2d47c5f25e4ab153f889d08b0f8050"
+        },
+        "same_depth": {
+          "path": "configs/cdrm/d128_6_copy_v16_t256_k96_same_depth.json",
+          "sha256": "85b4e97ace968b7f0ea102e78aedf1d622fd834822cbbb1c44f2a96419e9ad02"
+        },
+        "seq": {
+          "path": "configs/cdrm/d128_6_copy_v16_t256_k96_seq.json",
+          "sha256": "cc2f5a341ca545dfeb281fe16c453c10480989612de0e5df57ad78096f3e7e5c"
+        }
+      },
+      "screen_argv_template": [
+        "python",
+        "scripts/cdrm_train.py",
+        "--topology",
+        "seq",
+        "--preset",
+        "d128_6",
+        "--task",
+        "selective-copying",
+        "--data-root",
+        ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+        "--batch",
+        "128",
+        "--stop-epochs",
+        "25",
+        "--seed",
+        "${CDRM_SCREEN_SEED}",
+        "--shuffle-seed",
+        "45678",
+        "--run-purpose",
+        "screening",
+        "--screen-early-ace",
+        "--ace-token-accuracy",
+        "0.999",
+        "--ace-exact-match",
+        "0.99",
+        "--ace-consecutive-epochs",
+        "3",
+        "--ace-by-epoch",
+        "10",
+        "--deadline-utc",
+        "${CDRM_DEADLINE_UTC}",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/screen6-copy-v16-t256-k96-seq-s${CDRM_SCREEN_SEED}"
+      ],
+      "screening": {
+        "comparison_policy": "If SEQ6 aces early on both declared screening seeds, skip CDRM for this setting. Otherwise choose a harder useful setting using development behavior and cost, then freeze its CDRM comparison.",
+        "early_ace": {
+          "by_epoch": 10,
+          "consecutive_epochs": 3,
+          "sequence_exact_match": 0.99,
+          "token_accuracy": 0.999
+        },
+        "epoch_cap": 25,
+        "execution_status": "Both seeds completed 25 epochs without early ace; see frozen selection decision",
+        "seed1_policy": "Both seeds were executed for each setting in this session. Future efficient screening may conditionally repeat seed1 after seed0 early ace before declaring reliable ease.",
+        "seeds": [
+          0,
+          1
+        ]
+      },
+      "setting": {
+        "config_source_sha256": "c342339f554abef90857e9c906fe16b2a848cb273edcd32d62873f8dc20f8ba4",
+        "config_source_url": "https://github.com/athms/mad-lab/blob/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/selective-copying.yml",
+        "name": "copy-v16-t256-k96",
+        "official_change": "changes.num_tokens_to_copy=96",
+        "overrides": {
+          "num_tokens_to_copy": 96
+        },
+        "resolved_config": {
+          "frac_noise": 0.0,
+          "k_motif_size": 1,
+          "multi_query": true,
+          "noise_vocab_size": 0,
+          "num_tokens_to_copy": 96,
+          "seq_len": 256,
+          "target_ignore_idx": -100,
+          "v_motif_size": 1,
+          "vocab_size": 16
+        },
+        "revision": "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b",
+        "task": "selective-copying"
+      },
+      "train_manifest_sha256": "332d50bddf5792c3f4ec0c2a2cf2809097cca8d58f8191ee771fb13d2455c506",
+      "vocab_size": 16
+    },
+    "recall-v128-t128": {
+      "actual_sequence_length": 127,
+      "comparison_status": "Deferred after development-only screening; no CDRM comparison planned in this session",
+      "conditional_comparison_argv_templates": {
+        "cdrm": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "cdrm",
+          "--preset",
+          "d128_6",
+          "--task",
+          "in-context-recall",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-recall-v128-t128-cdrm-s${CDRM_COMPARE_SEED}"
+        ],
+        "r3": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "r3",
+          "--preset",
+          "d128_6",
+          "--task",
+          "in-context-recall",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-recall-v128-t128-r3-s${CDRM_COMPARE_SEED}"
+        ],
+        "same_depth": [
+          "python",
+          "scripts/cdrm_train.py",
+          "--topology",
+          "same_depth",
+          "--preset",
+          "d128_6",
+          "--task",
+          "in-context-recall",
+          "--data-root",
+          ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+          "--batch",
+          "128",
+          "--stop-epochs",
+          "${CDRM_COMPARE_EPOCHS}",
+          "--seed",
+          "${CDRM_COMPARE_SEED}",
+          "--shuffle-seed",
+          "45678",
+          "--run-purpose",
+          "comparison",
+          "--deadline-utc",
+          "${CDRM_DEADLINE_UTC}",
+          "--output-dir",
+          "${CDRM_RUN_ROOT}/compare6-recall-v128-t128-same_depth-s${CDRM_COMPARE_SEED}"
+        ]
+      },
+      "data_root": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+      "manifest_sha256": "dd7c67c8d91203de5d746c7ec975f1f7d17b5efe7c1b0c68606a3adf6d8afe09",
+      "profiles": {
+        "cdrm": {
+          "path": "configs/cdrm/d128_6_recall_v128_t128_cdrm.json",
+          "sha256": "af859f4956ca34498e6085ac805f85c35b9631eeda58172974fc368b1ab016d1"
+        },
+        "r3": {
+          "path": "configs/cdrm/d128_6_recall_v128_t128_r3.json",
+          "sha256": "300c171c4fdcf6b90c66f89f38e3efc34ad0f8fbaafd4166a66bc06e6a3dc7d6"
+        },
+        "same_depth": {
+          "path": "configs/cdrm/d128_6_recall_v128_t128_same_depth.json",
+          "sha256": "7ae2fe541cccc079b2f43a37fb31de2f2243e9ed5cd9751d277fd1fdb71f61f7"
+        },
+        "seq": {
+          "path": "configs/cdrm/d128_6_recall_v128_t128_seq.json",
+          "sha256": "7ea04699aaa2f3c0687904dab4fbdbfd0ded854de7b7ee1fdb726ebc6fd7692e"
+        }
+      },
+      "screen_argv_template": [
+        "python",
+        "scripts/cdrm_train.py",
+        "--topology",
+        "seq",
+        "--preset",
+        "d128_6",
+        "--task",
+        "in-context-recall",
+        "--data-root",
+        ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+        "--batch",
+        "128",
+        "--stop-epochs",
+        "25",
+        "--seed",
+        "${CDRM_SCREEN_SEED}",
+        "--shuffle-seed",
+        "45678",
+        "--run-purpose",
+        "screening",
+        "--screen-early-ace",
+        "--ace-token-accuracy",
+        "0.999",
+        "--ace-exact-match",
+        "0.99",
+        "--ace-consecutive-epochs",
+        "3",
+        "--ace-by-epoch",
+        "10",
+        "--deadline-utc",
+        "${CDRM_DEADLINE_UTC}",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/screen6-recall-v128-t128-seq-s${CDRM_SCREEN_SEED}"
+      ],
+      "screening": {
+        "comparison_policy": "If SEQ6 aces early on both declared screening seeds, skip CDRM for this setting. Otherwise choose a harder useful setting using development behavior and cost, then freeze its CDRM comparison.",
+        "early_ace": {
+          "by_epoch": 10,
+          "consecutive_epochs": 3,
+          "sequence_exact_match": 0.99,
+          "token_accuracy": 0.999
+        },
+        "epoch_cap": 25,
+        "execution_status": "Both seeds completed 25 epochs without early ace; see frozen selection decision",
+        "seed1_policy": "Both seeds were executed for each setting in this session. Future efficient screening may conditionally repeat seed1 after seed0 early ace before declaring reliable ease.",
+        "seeds": [
+          0,
+          1
+        ]
+      },
+      "setting": {
+        "config_source_sha256": "7be6752039dac5934d2bf65fb645ba13037544e74f927c5e9f1f538b5578f24d",
+        "config_source_url": "https://github.com/athms/mad-lab/blob/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/in-context-recall.yml",
+        "name": "recall-v128-t128",
+        "official_change": "changes.vocab_size=128",
+        "overrides": {
+          "vocab_size": 128
+        },
+        "resolved_config": {
+          "frac_noise": 0.0,
+          "k_motif_size": 1,
+          "multi_query": true,
+          "noise_vocab_size": 0,
+          "num_tokens_to_copy": 0,
+          "seq_len": 128,
+          "target_ignore_idx": -100,
+          "v_motif_size": 1,
+          "vocab_size": 128
+        },
+        "revision": "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b",
+        "task": "in-context-recall"
+      },
+      "train_manifest_sha256": "14a7812812ca35d17a4833bccadbeb0151a3dfa237cbc370bc21b8ab2bf4f3fd",
+      "vocab_size": 128
+    }
+  },
+  "shuffle_seed": 45678,
+  "status": "screening_completed_selected_comparison_launched",
+  "supersedes": "configs/cdrm/joint_d128_mad_recall.json",
+  "train_examples": 12800
+}

@@ -1,0 +1,260 @@
+{
+  "arms": {
+    "cdrm": {
+      "benchmark_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "benchmark",
+        "--preset",
+        "d256",
+        "--topology",
+        "cdrm",
+        "--batch",
+        "${CDRM_BATCH}",
+        "--warmup",
+        "5",
+        "--steps",
+        "20",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/benchmark-mqar-cdrm"
+      ],
+      "execution_status": "unexecuted_manifest",
+      "model_config": "configs/cdrm/d256_mqar_cdrm.json",
+      "model_config_sha256": "c84829096bb90f7b16c08ce044be667323eee8864c9aaf6807a187dfce9df7db",
+      "num_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "validate",
+        "--preset",
+        "d256",
+        "--topology",
+        "cdrm",
+        "--batch",
+        "2",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/num-mqar-cdrm-b2"
+      ],
+      "required_validation": "Matching shape, physical batch, backend and real loss forward/backward/Adam must pass before research training",
+      "topology": "cdrm"
+    },
+    "r3": {
+      "benchmark_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "benchmark",
+        "--preset",
+        "d256",
+        "--topology",
+        "r3",
+        "--batch",
+        "${CDRM_BATCH}",
+        "--warmup",
+        "5",
+        "--steps",
+        "20",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/benchmark-mqar-r3"
+      ],
+      "execution_status": "unexecuted_manifest",
+      "model_config": "configs/cdrm/d256_mqar_r3.json",
+      "model_config_sha256": "81e6eebbc3fd0e01c8b566fe586399d8284277cdfe978930b2dd51f45ffa7a19",
+      "num_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "validate",
+        "--preset",
+        "d256",
+        "--topology",
+        "r3",
+        "--batch",
+        "2",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/num-mqar-r3-b2"
+      ],
+      "required_validation": "Matching shape, physical batch, backend and real loss forward/backward/Adam must pass before research training",
+      "topology": "r3"
+    },
+    "same_depth": {
+      "benchmark_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "benchmark",
+        "--preset",
+        "d256",
+        "--topology",
+        "same_depth",
+        "--batch",
+        "${CDRM_BATCH}",
+        "--warmup",
+        "5",
+        "--steps",
+        "20",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/benchmark-mqar-same_depth"
+      ],
+      "execution_status": "unexecuted_manifest",
+      "model_config": "configs/cdrm/d256_mqar_same_depth.json",
+      "model_config_sha256": "ab079ea2418a50f1519b7b9ddba7168da63e1910cf202436f95a99a0ab7e1801",
+      "num_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "validate",
+        "--preset",
+        "d256",
+        "--topology",
+        "same_depth",
+        "--batch",
+        "2",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/num-mqar-same_depth-b2"
+      ],
+      "required_validation": "Matching shape, physical batch, backend and real loss forward/backward/Adam must pass before research training",
+      "topology": "same_depth"
+    },
+    "seq": {
+      "benchmark_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "benchmark",
+        "--preset",
+        "d256",
+        "--topology",
+        "seq",
+        "--batch",
+        "${CDRM_BATCH}",
+        "--warmup",
+        "5",
+        "--steps",
+        "20",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/benchmark-mqar-seq"
+      ],
+      "execution_status": "unexecuted_manifest",
+      "model_config": "configs/cdrm/d256_mqar_seq.json",
+      "model_config_sha256": "74ea90646f57bce94cc4027be5a24a8a066ef27f685c949807fb85651a458617",
+      "num_argv_template": [
+        "python",
+        "scripts/cdrm_validate.py",
+        "--mode",
+        "validate",
+        "--preset",
+        "d256",
+        "--topology",
+        "seq",
+        "--batch",
+        "2",
+        "--output-dir",
+        "${CDRM_RUN_ROOT}/num-mqar-seq-b2"
+      ],
+      "required_validation": "Matching shape, physical batch, backend and real loss forward/backward/Adam must pass before research training",
+      "topology": "seq"
+    }
+  },
+  "base_config": "configs/cdrm/base_d256.json",
+  "base_config_sha256": "0dc3123b119c01650d9e5df0df72b08e8d8c79f993fb37181ce5e3c362c4262e",
+  "cdrm_contract": {
+    "active_control_note": "same_depth keeps its shallow adapter input active and the ordinary p8 bridge anchor; it is not the zero-difference ablation p8=p3",
+    "adapter": "Separate nonzero bias-free D-to-D linears, normal std 1/sqrt(D)",
+    "adapter_normalization": "Stateless FP32 RMS, eps 1e-6",
+    "backbone_owner": "transformer.blocks.3",
+    "bridge": "p8 + lambda*Ab(Nb(hat_m-p3))",
+    "deep_candidate": "p3 + epsilon*Ad(Nd(p8-p3))",
+    "early_post_ordinary_layer": 3,
+    "epsilon": 0.1,
+    "lambda": 0.01,
+    "lambda_zero_note": "Numerical SEQ bypass with copied backbone and matched math execution, not the active learning profile",
+    "late_post_ordinary_layer": 8,
+    "preview_replacements": [],
+    "rho": 1.0,
+    "rho_zero_note": "Stores projected p3 but leaves scan and bridge active; not SEQ",
+    "same_depth_candidate": "p3 + epsilon*Ad(Nd(p3))",
+    "side_scans_per_forward": 1,
+    "suffix_layers": [
+      9,
+      10,
+      11
+    ]
+  },
+  "data": {
+    "historical_tests": "Previously inspected Stage B endpoints remain exploratory; future confirmatory claims need fresh examples",
+    "native_mad": false,
+    "num_kv_pairs": 8,
+    "num_ops_fixture": "generate_training_batch(plan,mqar,completed_update=0), first requested B<=64 rows",
+    "sequence_length": 128,
+    "supervision": "Already aligned answer-only labels",
+    "task": "Stage B custom MQAR",
+    "task_plan": "configs/stage_b/pilot.json",
+    "task_plan_sha256": "7aa288c7498df0e23a0ec55a67191e1e72401a723565a6ace68eb699eaa8c605",
+    "vocab_size": 1024
+  },
+  "endpoint": {
+    "decision": "Select a common endpoint from measured cost before examining research development results; proposed choices 10/25/50, with continuation allowed to 200 within the authorized budget",
+    "selected_epochs": null
+  },
+  "interpretation": "Prospective configuration and command templates, not records of completed experiments",
+  "model_depth": 12,
+  "optimizer": {
+    "betas": [
+      0.9,
+      0.98
+    ],
+    "eps": 1e-08,
+    "foreach": false,
+    "fused": false,
+    "gradient_clip_norm": 1.0,
+    "learning_rate": 0.0005,
+    "type": "AdamW",
+    "weight_decay": 0.0
+  },
+  "paired_data": "Same fixed corpus and shared ordered epoch permutation for every arm",
+  "paired_initialization": "Same fresh SEQ backbone seed 0; CDRM/same-depth adapters initialized using seed 100003; R3 uses validated weights-only conversion",
+  "physical_batch": {
+    "candidate": 64,
+    "maximum_existing_fixture_batch": 64,
+    "selected": null,
+    "validation_probe": 2
+  },
+  "preset": "d256",
+  "runtime": {
+    "attention": "math SDPA for ordinary blocks; explicit FP32 prefix attention for CDRM side scan",
+    "autocast": false,
+    "computation": "float32",
+    "device": "single CUDA GPU inside project Docker container",
+    "dropout": 0.0,
+    "gradient_accumulation": false,
+    "parameters": "float32",
+    "tf32": false
+  },
+  "schedule": {
+    "eta_min": 1e-06,
+    "horizon_epochs": 200,
+    "horizon_shortened_for_early_stop": false,
+    "stepping": "once after each completed epoch",
+    "type": "CosineAnnealingLR",
+    "warmup": false
+  },
+  "schema": "cdrm-joint-manifest-v1",
+  "scope": "Runnable NUM/OPS comparison and fully resolved model profiles; prospective SYN training requires a new declared MQAR runner/data protocol",
+  "seed": 0,
+  "status": "unexecuted_manifest",
+  "training_runner": {
+    "available": false,
+    "future_data_protocol": "Declare fixed MQAR corpus, epoch shuffle and split seeds before implementing epoch training; Stage B itself used a different fresh-stream 2000-update schedule",
+    "future_schedule": {
+      "eta_min": 1e-06,
+      "horizon_epochs": 200,
+      "horizon_shortened_for_early_stop": false,
+      "stepping": "once after each completed epoch",
+      "type": "CosineAnnealingLR",
+      "warmup": false
+    },
+    "reason": "cdrm_train.py currently consumes MAD; stage_b_train.py supports SEQ/R3 only. Do not pass MQAR to the MAD trainer or claim a CDRM Stage B training command exists."
+  }
+}

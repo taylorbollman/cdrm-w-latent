@@ -1,0 +1,424 @@
+{
+  "audit_log_root": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z",
+  "closed_local_files_unchanged_during_upload": true,
+  "cloud_deletion_requested": false,
+  "commands": [
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:26.136359+00:00",
+      "elapsed_seconds": 1.7005336050060578,
+      "exit_code": 0,
+      "label": "0-compare6-copy96-cdrm-s0-e25-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/0-compare6-copy96-cdrm-s0-e25-upload.log",
+      "log_sha256": "90c29097a66b95881718ed2cc50e75e15cc6d51d6703372575e9543befc75cf2",
+      "started_at_utc": "2026-09-07T14:57:24.435827+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:27.400420+00:00",
+      "elapsed_seconds": 1.2632477049919544,
+      "exit_code": 0,
+      "label": "0-compare6-copy96-cdrm-s0-e25-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/0-compare6-copy96-cdrm-s0-e25-verify.log",
+      "log_sha256": "965605099c2ec213492b40a0281da2ac1b3071a53aca83f77df828bce4180be0",
+      "started_at_utc": "2026-09-07T14:57:26.137187+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:29.035486+00:00",
+      "elapsed_seconds": 1.6339986180100823,
+      "exit_code": 0,
+      "label": "1-compare6-copy96-cdrm-s1-e25-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/1-compare6-copy96-cdrm-s1-e25-upload.log",
+      "log_sha256": "c795b58ed5298cd0d9f2fc6e8c46c5dfce7843fdc2fee7618854e1a9aab2a8b6",
+      "started_at_utc": "2026-09-07T14:57:27.401501+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:30.281824+00:00",
+      "elapsed_seconds": 1.2456751520076068,
+      "exit_code": 0,
+      "label": "1-compare6-copy96-cdrm-s1-e25-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/1-compare6-copy96-cdrm-s1-e25-verify.log",
+      "log_sha256": "e641b5fcb4a1e17d647426c60e1912a7cf297832b3db63069cec3f42b36e65f8",
+      "started_at_utc": "2026-09-07T14:57:29.036172+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/source-payload",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/",
+        "--recursive",
+        "--checksums-only",
+        "--no-clobber"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:31.690925+00:00",
+      "elapsed_seconds": 1.4079358559974935,
+      "exit_code": 0,
+      "label": "2-source-v5-only-upload",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/2-source-v5-only-upload.log",
+      "log_sha256": "d492912a5126f0cac8e883253afc7e4d4f6dd2d9780880891b19a915858eaa57",
+      "started_at_utc": "2026-09-07T14:57:30.283011+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "rsync",
+        ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/source-payload",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/",
+        "--recursive",
+        "--checksums-only",
+        "--dry-run"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:32.949964+00:00",
+      "elapsed_seconds": 1.2583639709919225,
+      "exit_code": 0,
+      "label": "2-source-v5-only-verify",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/2-source-v5-only-verify.log",
+      "log_sha256": "04e9f890d045d01bd59b8c84d307777eca25edf590ab2e0774f8dac654da1fe8",
+      "started_at_utc": "2026-09-07T14:57:31.691617+00:00"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/report.json"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:33.931262+00:00",
+      "elapsed_seconds": 0.9804388979973737,
+      "exit_code": 0,
+      "label": "3-readback-0",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/3-readback-0.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T14:57:32.950842+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-0-report.json",
+      "stdout_sha256": "cb5a7910001043d0e5d68aff9cfcc17bcbc11943e731babd3270d221a88db903"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/report.json"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:34.909170+00:00",
+      "elapsed_seconds": 0.9728705059969798,
+      "exit_code": 0,
+      "label": "3-readback-1",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/3-readback-1.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T14:57:33.936307+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-1-report.json",
+      "stdout_sha256": "74d29dacd21cd7bdf9806baf6943bdfc4fe46a8016843463d9eb680c7fe6e1f7"
+    },
+    {
+      "argv": [
+        "gcloud",
+        "storage",
+        "cat",
+        "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.json"
+      ],
+      "completed_at_utc": "2026-09-07T14:57:35.863710+00:00",
+      "elapsed_seconds": 0.9502287460054504,
+      "exit_code": 0,
+      "label": "3-readback-2",
+      "log": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/3-readback-2.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "started_at_utc": "2026-09-07T14:57:34.913491+00:00",
+      "stdout_path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-2-source-six-finalization-v5.json",
+      "stdout_sha256": "e381b29cef5b2a5e57fff2d8432c8799b2a889b60714aa8890f633e2deb55ba1"
+    }
+  ],
+  "completed_at_utc": "2026-09-07T14:57:36.053259+00:00",
+  "cuda_or_model_execution": false,
+  "excluded": [
+    "All continue6-* directories, regardless of completion during upload",
+    "All other run directories already covered by prior retention or pending",
+    "Mutable execution/controller/report files outside selected completed runs",
+    "This receipt, logs, and inventory (local audit only; final retention pending)"
+  ],
+  "final_data_generated": false,
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/",
+  "inventory": {
+    "file_count": 23,
+    "files": [
+      {
+        "bytes": 5935,
+        "path": "compare6-copy96-cdrm-s0-e25/checkpoint-ledger.json",
+        "sha256": "97292b80fd981267993d603450eb7c64dab989150499a9c4723f31d5326e8259",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/checkpoint-ledger.json"
+      },
+      {
+        "bytes": 11053,
+        "path": "compare6-copy96-cdrm-s0-e25/development.jsonl",
+        "sha256": "3bfe253e4c0983753e80f26428db3dcf7509a46e9845ecfc7971763e6fda00d5",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/development.jsonl"
+      },
+      {
+        "bytes": 14744891,
+        "path": "compare6-copy96-cdrm-s0-e25/epoch-0001.pt",
+        "sha256": "c22a4bb25ae7866c3549f58b657a3094c692a93a9bebd48fabf24006e0b514ad",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0001.pt"
+      },
+      {
+        "bytes": 14832059,
+        "path": "compare6-copy96-cdrm-s0-e25/epoch-0005.pt",
+        "sha256": "6394898fced699812541654ae5659b4be251ac53cfd01861fc1339dd76cedc74",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0005.pt"
+      },
+      {
+        "bytes": 14941435,
+        "path": "compare6-copy96-cdrm-s0-e25/epoch-0010.pt",
+        "sha256": "ff12cb4017753dfa16664fa1939fb7a600c46c52dfe13b04962367bd4dbd49f6",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0010.pt"
+      },
+      {
+        "bytes": 15247483,
+        "path": "compare6-copy96-cdrm-s0-e25/epoch-0024.pt",
+        "sha256": "9b76673bc9e97bc74d48db9147275ce4a8e171851e970b80b0662caf8bb9c55d",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0024.pt"
+      },
+      {
+        "bytes": 15269755,
+        "path": "compare6-copy96-cdrm-s0-e25/epoch-0025.pt",
+        "sha256": "2fecfb2d3dc463c0a519f9f8edeee283dc06b59400e972b2013ad47f36cdf93e",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/epoch-0025.pt"
+      },
+      {
+        "bytes": 4920029,
+        "path": "compare6-copy96-cdrm-s0-e25/initial-weights.pt",
+        "sha256": "1eaa8a146875463550c3579f51612345a63d66cfcf8524cc0ad66226c651d75b",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/initial-weights.pt"
+      },
+      {
+        "bytes": 1005857,
+        "path": "compare6-copy96-cdrm-s0-e25/learning-curve.jsonl",
+        "sha256": "d329dd02e70af09120174230978d65b9a84329d22a042ac517f4876fd551f09e",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/learning-curve.jsonl"
+      },
+      {
+        "bytes": 1276825,
+        "path": "compare6-copy96-cdrm-s0-e25/report.json",
+        "sha256": "cb5a7910001043d0e5d68aff9cfcc17bcbc11943e731babd3270d221a88db903",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/report.json"
+      },
+      {
+        "bytes": 8408,
+        "path": "compare6-copy96-cdrm-s0-e25/resolved-config.json",
+        "sha256": "099bc03791226554e2332bd753635b04af89d3973f6cb9d02b66107759d77135",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/resolved-config.json"
+      },
+      {
+        "bytes": 6152,
+        "path": "compare6-copy96-cdrm-s1-e25/checkpoint-ledger.json",
+        "sha256": "8967d5b940396cf3f3d4a489ae40789438af4b2755d1133134c4fcf4d7d2b5a4",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/checkpoint-ledger.json"
+      },
+      {
+        "bytes": 10962,
+        "path": "compare6-copy96-cdrm-s1-e25/development.jsonl",
+        "sha256": "392c98dc0b43dfbd5808386c60ee7af65e80c25fe4c49c920558623fe88f8c9b",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/development.jsonl"
+      },
+      {
+        "bytes": 14745019,
+        "path": "compare6-copy96-cdrm-s1-e25/epoch-0001.pt",
+        "sha256": "a7ad57b410cfd7899336964b2dbb5f88d3c2991480e31eac49d74327a8511d6a",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0001.pt"
+      },
+      {
+        "bytes": 14832123,
+        "path": "compare6-copy96-cdrm-s1-e25/epoch-0005.pt",
+        "sha256": "f0be595444ccc3aac8000c0261603e127b0e7ab9ba66e869f66635f44c7a2fe1",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0005.pt"
+      },
+      {
+        "bytes": 14941499,
+        "path": "compare6-copy96-cdrm-s1-e25/epoch-0010.pt",
+        "sha256": "2293968cdd13970f205298f8025f9f3984641bc803c1322d8326aa0541e9030f",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0010.pt"
+      },
+      {
+        "bytes": 15269691,
+        "path": "compare6-copy96-cdrm-s1-e25/epoch-0025.pt",
+        "sha256": "b9df42141e116434b59afba7b9f0fc362764100acfd1d8874918ca0ad1cc1699",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/epoch-0025.pt"
+      },
+      {
+        "bytes": 4920093,
+        "path": "compare6-copy96-cdrm-s1-e25/initial-weights.pt",
+        "sha256": "d2982b5376c764761a0a946ad861080af004d30529068a776c05e70f3459e754",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/initial-weights.pt"
+      },
+      {
+        "bytes": 1005746,
+        "path": "compare6-copy96-cdrm-s1-e25/learning-curve.jsonl",
+        "sha256": "b4b62b9cdcd710352a614b6ebd7fbe006bf490c909ed71be8e6b13356dce88e4",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/learning-curve.jsonl"
+      },
+      {
+        "bytes": 1276848,
+        "path": "compare6-copy96-cdrm-s1-e25/report.json",
+        "sha256": "74d29dacd21cd7bdf9806baf6943bdfc4fe46a8016843463d9eb680c7fe6e1f7",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/report.json"
+      },
+      {
+        "bytes": 8408,
+        "path": "compare6-copy96-cdrm-s1-e25/resolved-config.json",
+        "sha256": "86376fc806c4428d8e16b60b8099c4d542d3a3d9add7058197687ea1fb6afc89",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/resolved-config.json"
+      },
+      {
+        "bytes": 22339,
+        "path": "source/source-six-finalization-v5.json",
+        "sha256": "e381b29cef5b2a5e57fff2d8432c8799b2a889b60714aa8890f633e2deb55ba1",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.json"
+      },
+      {
+        "bytes": 8584654,
+        "path": "source/source-six-finalization-v5.tar.gz",
+        "sha256": "197e72652b302dd15b2fee077ebff16f988bae98f9275ffd577042d7ae4fcbf8",
+        "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.tar.gz"
+      }
+    ],
+    "path": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/inventory.json",
+    "sha256": "d03de9d4e5ad9e32894cb8e0af716ec946f25777b12b2e86b134b5c6ea597854",
+    "total_bytes": 157887264
+  },
+  "local_root": ".runtime/cdrm-naive/20260907T123830Z",
+  "other_lineages_touched": false,
+  "overwrite_existing_cloud_objects": false,
+  "pending": [
+    "All continue6-* artifacts (active queue excluded)",
+    "Any later final evaluations and newly generated final data",
+    "Mutable execution/controller/progress files and final reports",
+    "Final complete-session retention"
+  ],
+  "remote_sha256_readbacks": [
+    {
+      "byte_identical": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/report.json",
+      "local_sha256": "cb5a7910001043d0e5d68aff9cfcc17bcbc11943e731babd3270d221a88db903",
+      "readback": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-0-report.json",
+      "readback_sha256": "cb5a7910001043d0e5d68aff9cfcc17bcbc11943e731babd3270d221a88db903",
+      "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/report.json"
+    },
+    {
+      "byte_identical": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/report.json",
+      "local_sha256": "74d29dacd21cd7bdf9806baf6943bdfc4fe46a8016843463d9eb680c7fe6e1f7",
+      "readback": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-1-report.json",
+      "readback_sha256": "74d29dacd21cd7bdf9806baf6943bdfc4fe46a8016843463d9eb680c7fe6e1f7",
+      "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/report.json"
+    },
+    {
+      "byte_identical": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.json",
+      "local_sha256": "e381b29cef5b2a5e57fff2d8432c8799b2a889b60714aa8890f633e2deb55ba1",
+      "readback": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/readback-2-source-six-finalization-v5.json",
+      "readback_sha256": "e381b29cef5b2a5e57fff2d8432c8799b2a889b60714aa8890f633e2deb55ba1",
+      "uri": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.json"
+    }
+  ],
+  "run_report_statuses": {
+    "compare6-copy96-cdrm-s0-e25": {
+      "completed_epochs": 25,
+      "completed_updates": 2500,
+      "status": "complete"
+    },
+    "compare6-copy96-cdrm-s1-e25": {
+      "completed_epochs": 25,
+      "completed_updates": 2500,
+      "status": "complete"
+    }
+  },
+  "schema": "cdrm-e25-retention-v1",
+  "scope": {
+    "run_directories": [
+      "compare6-copy96-cdrm-s0-e25",
+      "compare6-copy96-cdrm-s1-e25"
+    ],
+    "source_files": [
+      "source/source-six-finalization-v5.json",
+      "source/source-six-finalization-v5.tar.gz"
+    ]
+  },
+  "source_archive_validation": {
+    "all_manifest_member_hashes_match": true,
+    "archive": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.tar.gz",
+    "archive_bytes": 8584654,
+    "archive_sha256": "197e72652b302dd15b2fee077ebff16f988bae98f9275ffd577042d7ae4fcbf8",
+    "exact_member_name_set_match": true,
+    "manifest": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-finalization-v5.json",
+    "manifest_sha256": "e381b29cef5b2a5e57fff2d8432c8799b2a889b60714aa8890f633e2deb55ba1",
+    "member_count": 188,
+    "scope": "Archive contents checked against its own frozen manifest; current mutable working-tree documents were not compared.",
+    "unsafe_paths_or_links": false
+  },
+  "started_at_utc": "2026-09-07T14:57:24.098379+00:00",
+  "status": "complete",
+  "verification": {
+    "all_readbacks_byte_identical": true,
+    "all_upload_commands_exit_zero": true,
+    "checksum_dry_runs_no_differences": true,
+    "independent_sha256_readback_count": 3,
+    "large_checkpoints_and_archive": "Verified by gcloud checksum comparison and zero-difference dry runs; no independent full remote SHA256 readback of large binaries was performed."
+  },
+  "verified_uploads": [
+    {
+      "checksum_dry_run_no_differences": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25",
+      "remote": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s0-e25/"
+    },
+    {
+      "checksum_dry_run_no_differences": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25",
+      "remote": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/compare6-copy96-cdrm-s1-e25/"
+    },
+    {
+      "checksum_dry_run_no_differences": true,
+      "local": ".runtime/cdrm-naive/20260907T123830Z/verification/storage-e25-20260907T145717Z/source-payload",
+      "remote": "gs://fast-chunks/cdrm-w-latent/cdrm-naive/20260907T123830Z/source/"
+    }
+  ]
+}

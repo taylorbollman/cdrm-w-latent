@@ -1,0 +1,146 @@
+{
+  "schema": "cdrm-final-data-append-verification-v1",
+  "verified_at_utc": "2026-09-07T16:01:06.445482+00:00",
+  "generation_exit_code": 0,
+  "cpu_container_explicit": true,
+  "command": [
+    "python",
+    "scripts/cdrm_prepare_mad.py",
+    "--output-dir",
+    ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+    "--setting",
+    "copy-v16-t256-k96",
+    "--append-splits",
+    "--splits",
+    "final"
+  ],
+  "plan_existed_before_generation": true,
+  "all_frozen_input_hashes_unchanged": true,
+  "supplement_sha256": "5f8254e36f3d93d938705c69bb1f7b095867506d926efb93a5a81a9774b53f69",
+  "final": {
+    "answer_baselines": {
+      "independent_uniform_answer_guess_sequence_chance": 9.369330846828746e-111,
+      "label_scope": "answer_labels only; dense native training objective is separate",
+      "oracle": {
+        "answer_accuracy": 1.0,
+        "correct_answers": 122880,
+        "exact_sequences": 1280,
+        "examples": 1280,
+        "scored_answers": 122880,
+        "sequence_exact_match": 1.0
+      },
+      "query_ignoring_modal": {
+        "answer_accuracy": 0.12125651041666667,
+        "conditional_expected_token_accuracy": 0.12125651041666667,
+        "correct_answers": 14900,
+        "exact_sequences": 0,
+        "examples": 1280,
+        "information_restriction": "Only tokens at or before the scored position; no labels or future values select predictions.",
+        "method": "Repeat the mode of visible copied symbols at every output position; smallest-value tie break. Ignores required output order; conditional expected equals its exact token fraction.",
+        "scored_answers": 122880,
+        "sequence_exact_match": 0.0
+      },
+      "uniform_answer_vocabulary_token_chance": 0.07142857142857142,
+      "uniform_full_vocabulary_token_chance": 0.0625
+    },
+    "array_sha256": "6a9deffa208038ace5cbd8d4776d93ac6c8bae58b82ac714b79a0e52646fa5e7",
+    "integrity": {
+      "counterfactual_examples": 64,
+      "counterfactuals_checked": 64,
+      "examples_checked_against_oracle": 1280,
+      "future_tokens_used_to_predict_answers": false,
+      "native_alignment_and_masks_exact": true,
+      "native_dense_training_targets_are_not_claimed_causally_predictable": true,
+      "oracle_exact": true,
+      "prefix_only_predictions_checked": 6144
+    },
+    "path": "selective-copying/final.manifest.json",
+    "sha256": "ec48b23dd3f9c233efe34adecf5ed38cba32f85cc75d5ccdde94dd970bb3a27c",
+    "shape": [
+      1280,
+      256
+    ]
+  },
+  "overlap_audit": {
+    "cross_split": {
+      "dev__final": {
+        "input": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        },
+        "input_and_native_labels": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        }
+      },
+      "train__dev": {
+        "input": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        },
+        "input_and_native_labels": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        }
+      },
+      "train__final": {
+        "input": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        },
+        "input_and_native_labels": {
+          "example_hashes": [],
+          "first_split_rows": 0,
+          "overlapping_unique_examples": 0,
+          "second_split_rows": 0
+        }
+      }
+    },
+    "no_exact_input_cross_split_overlap": true,
+    "policy": "No resampling or deduplication; report observed exact input collisions.",
+    "within_split": {
+      "dev": {
+        "input": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        },
+        "input_and_native_labels": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        }
+      },
+      "final": {
+        "input": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        },
+        "input_and_native_labels": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        }
+      },
+      "train": {
+        "input": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        },
+        "input_and_native_labels": {
+          "duplicate_rows": 0,
+          "duplicated_unique_examples": 0
+        }
+      }
+    }
+  },
+  "generation_log": ".runtime/cdrm-naive/20260907T123830Z/execution/prepare-selected-final.log",
+  "generation_log_sha256": "7272ee5007118cc5004a6050bf5eee046d9f4e4f522a7650dbc1a03e9ad55333"
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "cdrm-final-endpoint-decision-v1",
+  "created_at_utc": "2026-09-07T15:58:02.953717+00:00",
+  "endpoint_choice_frozen": true,
+  "final_access_authorized": true,
+  "setting": "copy-v16-t256-k96",
+  "task": "selective-copying",
+  "preset": "d128_6",
+  "endpoint_epochs": 45,
+  "seeds": [
+    0,
+    1
+  ],
+  "topologies": [
+    "seq",
+    "cdrm"
+  ],
+  "data_root": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+  "evaluation_output_root": ".runtime/cdrm-naive/20260907T123830Z",
+  "cohort": [
+    {
+      "seed": 0,
+      "topology": "seq",
+      "report_path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/report.json",
+      "report_sha256": "ef16c265c1e80efadbf4e6e0c4a1a93c85816a0dc930f72d85bfb8082d407f98"
+    },
+    {
+      "seed": 1,
+      "topology": "seq",
+      "report_path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/report.json",
+      "report_sha256": "f5321d8686590980f872d5160ba26a3ef887b2a5cc97d50a871dc08ad59d657c"
+    },
+    {
+      "seed": 0,
+      "topology": "cdrm",
+      "report_path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/report.json",
+      "report_sha256": "205575bdb57474fc36c7b9cbb873a75107fc00075600a7d192ae5b5751dc24e4"
+    },
+    {
+      "seed": 1,
+      "topology": "cdrm",
+      "report_path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/report.json",
+      "report_sha256": "09493fafb1edf63f32224b3a35ae6978bb137252d02921bca177848903bde834"
+    }
+  ],
+  "basis": "Completed common endpoint selected by frozen runtime-only continuation policy. Endpoint and minimum development answer CE through epoch45 (earliest exact tie) are evaluated; no final-data-dependent choices.",
+  "continuation_execution": ".runtime/cdrm-naive/20260907T123830Z/six-continuation-decision-execution.json",
+  "continuation_execution_sha256": "7f4e972ed1ddeee217a579bcf9644d8c6fe3b72df0871eed2b100777f1fe26df",
+  "checkpoint_policy": {
+    "endpoint": 45,
+    "best_dev": "minimum answer CE across epochs0..45; earliest exact tie"
+  },
+  "subsequent_training": "None in this pilot; any later decisions informed by these final results require fresh confirmatory data."
+}

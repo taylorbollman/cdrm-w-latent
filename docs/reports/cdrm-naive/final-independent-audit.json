@@ -1,0 +1,324 @@
+{
+  "all_final_array_identities_equal": true,
+  "append_verification_sha256": "b8548960fde5e2a5639a546be39f1bf9bf4bfb8650a64b597517937bcef9a298",
+  "created_utc": "2026-09-07T16:02:44.063197+00:00",
+  "evaluations": [
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s0-26bdaee27f5c.json": "d7857cb80ab1415f2e4abb5821ece7b33305f67b9ea77aa1fc3eec72408892c5",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s0-26bdaee27f5c.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s0-26bdaee27f5c/report.json": "96ed6040f492feae95c3dbcc3ed27cc60bad75b884cba1de86c2be23b9ab348f",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s0-26bdaee27f5c/resolved-config.json": "099bc03791226554e2332bd753635b04af89d3973f6cb9d02b66107759d77135"
+      },
+      "checkpoint": {
+        "completed_epochs": 45,
+        "completed_updates": 4500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0045.pt",
+        "sha256": "26bdaee27f5c75652491c3c60cce154dd731db52282756bed92dfcdb20741df9"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "0160a25991cd1b21fcca327f9dc0711f600d6fceb2b64f70ee528e53e8f44090",
+      "label": "final6-copy-v16-t256-k96-cdrm-s0-26bdaee27f5c",
+      "metrics": {
+        "answer": {
+          "ce": 0.4357438643773397,
+          "ce_sum": 53544.2060546875,
+          "correct": 94737,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.7709716796875
+        },
+        "native": {
+          "ce": 0.4357438643773397,
+          "ce_sum": 53544.2060546875,
+          "correct": 94737,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.7709716796875
+        },
+        "seconds": 2.54686761899211
+      },
+      "roles": [
+        "endpoint"
+      ],
+      "seed": 0,
+      "topology": "cdrm"
+    },
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s0-8b4bc8137d86.json": "3344874f85bfb20c8d90297fb4478919f1f346c175a18213f6c1e4c15868debd",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s0-8b4bc8137d86.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s0-8b4bc8137d86/report.json": "9f09b75e8f9db942d8cea1c48fe3fd278a6aed5cc3f852004c55c80dffa4b390",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s0-8b4bc8137d86/resolved-config.json": "099bc03791226554e2332bd753635b04af89d3973f6cb9d02b66107759d77135"
+      },
+      "checkpoint": {
+        "completed_epochs": 44,
+        "completed_updates": 4400,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s0-e45/epoch-0044.pt",
+        "sha256": "8b4bc8137d86877c943f5349b39e4a0eb2d53058fa2d5be5913a2dd84b9c1474"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "0160a25991cd1b21fcca327f9dc0711f600d6fceb2b64f70ee528e53e8f44090",
+      "label": "final6-copy-v16-t256-k96-cdrm-s0-8b4bc8137d86",
+      "metrics": {
+        "answer": {
+          "ce": 0.41846223672231037,
+          "ce_sum": 51420.6396484375,
+          "correct": 100442,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.8173990885416667
+        },
+        "native": {
+          "ce": 0.41846223672231037,
+          "ce_sum": 51420.6396484375,
+          "correct": 100442,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.8173990885416667
+        },
+        "seconds": 2.5241907210001955
+      },
+      "roles": [
+        "best_dev"
+      ],
+      "seed": 0,
+      "topology": "cdrm"
+    },
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s0-f42d225351b6.json": "b7a435cc71b55220613de257343bf889812011ea266740f1140845d67f7132b2",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s0-f42d225351b6.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s0-f42d225351b6/report.json": "b455b1fa788d5a72dcfac2ec4a02fa72bf78ed0a25e8de4a58eb6e714e33aafb",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s0-f42d225351b6/resolved-config.json": "1e5163d3cd95d97fda1665628b18354929dfde59d9e22c51e270311fccab2a93"
+      },
+      "checkpoint": {
+        "completed_epochs": 45,
+        "completed_updates": 4500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s0-e45/epoch-0045.pt",
+        "sha256": "f42d225351b6ed039963ce42127e9a389e639dffca2c8651240060fc695df534"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "0170903947dee1b1f4438bdc4190a5a24261198ed74a74d5a15602ae11c7fda3",
+      "label": "final6-copy-v16-t256-k96-seq-s0-f42d225351b6",
+      "metrics": {
+        "answer": {
+          "ce": 0.39796332120895384,
+          "ce_sum": 48901.73291015625,
+          "correct": 100143,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.8149658203125
+        },
+        "native": {
+          "ce": 0.39796332120895384,
+          "ce_sum": 48901.73291015625,
+          "correct": 100143,
+          "exact": 0,
+          "examples": 1280,
+          "sequence_exact_match": 0.0,
+          "targets": 122880,
+          "token_accuracy": 0.8149658203125
+        },
+        "seconds": 0.5354712050029775
+      },
+      "roles": [
+        "endpoint",
+        "best_dev"
+      ],
+      "seed": 0,
+      "topology": "seq"
+    },
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s1-dd7df095b7ab.json": "b77db019378453bcad068c5aa7e3587109ea6ebb263157bcfe959679df87bc15",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-cdrm-s1-dd7df095b7ab.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s1-dd7df095b7ab/report.json": "60709a604b4d2df9a45995d36d6a9d9dfec5b03abc137f27bb51a7fa46945809",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-cdrm-s1-dd7df095b7ab/resolved-config.json": "86376fc806c4428d8e16b60b8099c4d542d3a3d9add7058197687ea1fb6afc89"
+      },
+      "checkpoint": {
+        "completed_epochs": 45,
+        "completed_updates": 4500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-cdrm-s1-e45/epoch-0045.pt",
+        "sha256": "dd7df095b7abf048915d68fbb2d0830351ef5f621bf41c6e1c0fbd5605ce8209"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "5e458e1cd6918c33f325f62e9102e5969057ab8c6329fad5b6f913e162daca57",
+      "label": "final6-copy-v16-t256-k96-cdrm-s1-dd7df095b7ab",
+      "metrics": {
+        "answer": {
+          "ce": 0.2599574347337087,
+          "ce_sum": 31943.569580078125,
+          "correct": 109491,
+          "exact": 6,
+          "examples": 1280,
+          "sequence_exact_match": 0.0046875,
+          "targets": 122880,
+          "token_accuracy": 0.8910400390625
+        },
+        "native": {
+          "ce": 0.2599574347337087,
+          "ce_sum": 31943.569580078125,
+          "correct": 109491,
+          "exact": 6,
+          "examples": 1280,
+          "sequence_exact_match": 0.0046875,
+          "targets": 122880,
+          "token_accuracy": 0.8910400390625
+        },
+        "seconds": 2.5582779660035158
+      },
+      "roles": [
+        "endpoint",
+        "best_dev"
+      ],
+      "seed": 1,
+      "topology": "cdrm"
+    },
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s1-7e9560304df2.json": "434fee2e872ede53796165f459ecfe89b7b3041cecf7eb2bf41720ff57434a31",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s1-7e9560304df2.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s1-7e9560304df2/report.json": "17393b694350e7add607feef12bf0812de076a6f3741fb5865f937c77c49506b",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s1-7e9560304df2/resolved-config.json": "60489485594ba5330e6f28a7cdbf266a9b81744e1317d788193e9dde89e049f2"
+      },
+      "checkpoint": {
+        "completed_epochs": 45,
+        "completed_updates": 4500,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0045.pt",
+        "sha256": "7e9560304df23c637c3d5de7a76fde3fa0ec80fe0856a13254b43971973cf185"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "8bc544b7aee2719f4795638b0e2ac3f9a523942ee02afbc585f3ad20f2ffb71d",
+      "label": "final6-copy-v16-t256-k96-seq-s1-7e9560304df2",
+      "metrics": {
+        "answer": {
+          "ce": 0.3048376739025116,
+          "ce_sum": 37458.453369140625,
+          "correct": 107983,
+          "exact": 2,
+          "examples": 1280,
+          "sequence_exact_match": 0.0015625,
+          "targets": 122880,
+          "token_accuracy": 0.8787679036458333
+        },
+        "native": {
+          "ce": 0.3048376739025116,
+          "ce_sum": 37458.453369140625,
+          "correct": 107983,
+          "exact": 2,
+          "examples": 1280,
+          "sequence_exact_match": 0.0015625,
+          "targets": 122880,
+          "token_accuracy": 0.8787679036458333
+        },
+        "seconds": 0.5347766019986011
+      },
+      "roles": [
+        "endpoint"
+      ],
+      "seed": 1,
+      "topology": "seq"
+    },
+    {
+      "artifact_sha256": {
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s1-f3e2310d7b76.json": "53c71440c169329881c140a9465e2ea1ac9917d7e0019a72de9a6749b7f7099e",
+        ".runtime/cdrm-naive/20260907T123830Z/execution/final6-copy-v16-t256-k96-seq-s1-f3e2310d7b76.log": "ab927d67b5178595f97d1186ec9078c98e352f86872b49e36bf0b3a5be116391",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s1-f3e2310d7b76/report.json": "3df2a1444a69c36fdbf51b9955bbaf15c3805d286199a110f76229488ac8ced2",
+        ".runtime/cdrm-naive/20260907T123830Z/final6-copy-v16-t256-k96-seq-s1-f3e2310d7b76/resolved-config.json": "60489485594ba5330e6f28a7cdbf266a9b81744e1317d788193e9dde89e049f2"
+      },
+      "checkpoint": {
+        "completed_epochs": 41,
+        "completed_updates": 4100,
+        "path": ".runtime/cdrm-naive/20260907T123830Z/continue6-copy96-seq-s1-e45/epoch-0041.pt",
+        "sha256": "f3e2310d7b76fa0130cb89cb71b7d3b545c1dc30610805fe9bbbe6d1f779b89d"
+      },
+      "evaluation_data": {
+        "answer_labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "examples": 1280,
+        "input_ids": "1ea979bde301559a58c78606b7f189d4bc70e3d93b4ee09e4d4f5b43c40e16bc",
+        "labels": "4b5ad3a9ed85ebb9bb4452d17491ccc744569cd4671cbf03a2ddc4b3e01c2aa8",
+        "length": 256
+      },
+      "identity_sha256": "8bc544b7aee2719f4795638b0e2ac3f9a523942ee02afbc585f3ad20f2ffb71d",
+      "label": "final6-copy-v16-t256-k96-seq-s1-f3e2310d7b76",
+      "metrics": {
+        "answer": {
+          "ce": 0.24215683539708455,
+          "ce_sum": 29756.23193359375,
+          "correct": 111711,
+          "exact": 8,
+          "examples": 1280,
+          "sequence_exact_match": 0.00625,
+          "targets": 122880,
+          "token_accuracy": 0.9091064453125
+        },
+        "native": {
+          "ce": 0.24215683539708455,
+          "ce_sum": 29756.23193359375,
+          "correct": 111711,
+          "exact": 8,
+          "examples": 1280,
+          "sequence_exact_match": 0.00625,
+          "targets": 122880,
+          "token_accuracy": 0.9091064453125
+        },
+        "seconds": 0.5335271999938414
+      },
+      "roles": [
+        "best_dev"
+      ],
+      "seed": 1,
+      "topology": "seq"
+    }
+  ],
+  "execution_receipt_sha256": "0e9eff705690600666732ba326a5b44ae179bbeebaeec82510380ab8d44c40e6",
+  "final_files_verified": 4,
+  "final_plan_sha256": "bb0f06cbdc4288971192778c35763be75ee858c6892a3ff33e2676a3225fe0fe",
+  "frozen_input_files_verified": 104,
+  "logical_roles": 8,
+  "schema": "cdrm-final-independent-audit-v1",
+  "scope": "Read-only exact plan/receipt/report/source/data-file hash and aggregate count audit; checkpoint payload audit is also performed by the CPU report generator. No model execution.",
+  "status": "passed",
+  "unique_evaluations": 6
+}

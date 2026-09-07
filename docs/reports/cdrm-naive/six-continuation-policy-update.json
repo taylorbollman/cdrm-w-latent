@@ -1,0 +1,40 @@
+{
+  "schema": "cdrm-continuation-budget-policy-v1",
+  "recorded_at_utc": "2026-09-07T14:00:42.154500+00:00",
+  "supersedes": "The exclusive common-50 continuation candidate; the first common endpoint remains 25.",
+  "endpoint_candidates_in_order": [
+    50,
+    45,
+    25
+  ],
+  "decision_after": "Both CDRM seeds have completed their already frozen 25-epoch runs.",
+  "decision_inputs": "Remaining time to the original training cutoff and observed end-to-end per-epoch duration of all four members; no accuracy-dependent allocation.",
+  "reason": "The observed approximately 0.89 second CDRM update plus evaluation/checkpoint overhead makes 50 epochs tight. A common 45-epoch endpoint provides additional learning evidence while keeping a 15 percent time margin and the original finalization reserve.",
+  "time_estimate": "For each member, multiply its full observed elapsed_seconds / completed_epochs by requested additional epochs. Sum all four members, add 60 seconds for continuation startup/checkpoint overhead, and multiply by 1.15. Choose the first candidate whose estimate fits the remaining training window.",
+  "startup_allowance_seconds": 60,
+  "time_margin_fraction": 0.15,
+  "training_cutoff_utc": "2026-09-07T16:18:30+00:00",
+  "final_deadline_utc": "2026-09-07T16:38:30+00:00",
+  "cohort": {
+    "setting": "copy-v16-t256-k96",
+    "preset": "d128_6",
+    "topologies": [
+      "seq",
+      "cdrm"
+    ],
+    "seeds": [
+      0,
+      1
+    ]
+  },
+  "constraints": [
+    "No independent hyperparameter or gate changes.",
+    "No outcome-dependent continuation of a subset.",
+    "Keep epoch-25 artifacts and the original 200-epoch scheduler state.",
+    "Generate/evaluate final data only after the endpoint choice and checkpoint-selection rules are frozen."
+  ],
+  "CDRM_progress_seen": true,
+  "CDRM_completed_research_runs": 0,
+  "hard_final_generated": false,
+  "hard_final_model_evaluations": 0
+}

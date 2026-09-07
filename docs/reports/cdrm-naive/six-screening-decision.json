@@ -1,0 +1,54 @@
+{
+  "at_utc": "2026-09-07T13:24:54.749377+00:00",
+  "user_update": "docs/inputs/cdrm_six_block_screening_update.md",
+  "purpose": "Use development-only SEQ6 screening to allocate CDRM training; preserve compatible baselines",
+  "preset": "d128_6",
+  "sites": {
+    "early": 1,
+    "late": 3,
+    "suffix": [
+      4,
+      5
+    ],
+    "reason": "Early capture after2/6blocks preserves original4/12fraction; retain2suffixblocks; fixedbeforehardsettingoutcomes afteroptionalquestionreceivednoreply"
+  },
+  "settings": [
+    {
+      "setting": "recall-v128-t128",
+      "task": "in-context-recall",
+      "root": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/recall-v128-t128",
+      "manifest_sha256": "dd7c67c8d91203de5d746c7ec975f1f7d17b5efe7c1b0c68606a3adf6d8afe09"
+    },
+    {
+      "setting": "copy-v16-t256-k96",
+      "task": "selective-copying",
+      "root": ".runtime/cdrm-naive/20260907T123830Z/data-screening-v1/copy-v16-t256-k96",
+      "manifest_sha256": "a70282765db11bfc559a8af7a1048b474341c9defc7a95d23124ce846607a8e9"
+    }
+  ],
+  "training_seeds": [
+    0,
+    1
+  ],
+  "shuffle_seed": 45678,
+  "physical_batch": 128,
+  "training_examples": 12800,
+  "development_examples": 1280,
+  "max_epochs": 25,
+  "schedule_horizon_epochs": 200,
+  "early_ace": {
+    "token_accuracy_at_least": 0.999,
+    "sequence_exact_match_at_least": 0.99,
+    "consecutive_epochs": 3,
+    "latest_qualifying_epoch": 10,
+    "both_training_seeds_required_for_easy_classification": true
+  },
+  "criteria_interpretation": "Consecutive development checks across two training seeds support a bounded reliability screen, not proof across seeds or distributions. Token accuracy alone cannot stop screening.",
+  "selection": "Skip CDRM on reliably early-aced settings. Prefer substantial learning with persistent whole-example or token errors. Near-shortcut settings remain eligible after optimization/supervision checks; do not require SEQ to solve. Choose feasible common endpoint from measuredCDRMcost before its maintraining.",
+  "optional_third_setting": "copy-v128-t256-k16, anotherofficialone-factorchoice, if neitherfirstsettingisinformative",
+  "pairing": "Retain initial weights, optimizer/schedule/data order and checkpoints. Reuse existing compatibleSEQ6trajectory ratherthanrerun seed0baseline. CDRMstartsfrommatchingfreshbackbone seed andsametrain/dev, commoncompletedepochcomparisons.",
+  "final_policy": "No final data generated during screening. Freeze selectedsetting and finalcheckpoint/endpointchoices before new final generation/evaluation; never use final to select.",
+  "initial12blockpilot": "Superseded. SEQ12recallcompleted50epochs and remains historical; noCDRM12SYNlaunched, no model final evaluated.",
+  "source_archive": ".runtime/cdrm-naive/20260907T123830Z/source/source-six-screen-v4.tar.gz",
+  "training_stop_utc": "2026-09-07T16:18:30+00:00"
+}
