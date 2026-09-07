@@ -1,0 +1,79 @@
+
+=============
+== PyTorch ==
+=============
+
+NVIDIA Release 26.06 (build 337426143)
+PyTorch Version 2.13.0a0+8145d63
+Container image Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright (c) 2014-2024 Facebook Inc.
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (c) 2015      Google Inc.
+Copyright (c) 2015      Yangqing Jia
+Copyright (c) 2013-2016 The Caffe contributors
+All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+fixture mqar/iid/dev: 1024, hash=9cae5fe7f7d7
+fixture mqar/iid/test: 4096, hash=1a4d29cbde2c
+fixture mqar/delay256/dev: 1024, hash=cbbc2de5880b
+fixture mqar/delay256/test: 4096, hash=8ee8a19f8311
+fixture mqar/delay512/dev: 1024, hash=0db2d5043ecb
+fixture mqar/delay512/test: 4096, hash=e1fb9c9357c5
+fixture mqar/associations16/dev: 1024, hash=f37e8091e1d8
+fixture mqar/associations16/test: 4096, hash=14d75327917c
+training audit mqar: 500/2000
+training audit mqar: 1000/2000
+training audit mqar: 1500/2000
+training audit mqar: 2000/2000
+prepared mqar: {'status': 'passed', 'training_batches': 2000, 'unique_training_examples': 128000, 'training_stream_sha256': 'c6433af61e2a628136583accc29a12ceecfc9d1a828ccb3216ddaa1474d1f608', 'training_input_tokens': 16384000, 'training_target_tokens': 1024000, 'exact_example_overlap_train_dev_test': 0, 'duplicates_within_each_split_condition': 0, 'condition_note': 'Controlled length variants deliberately reuse semantic examples within a split; no exact input/label example crosses splits.', 'seconds': 41.244805524000185}
+fixture noisy_recall/low/dev: 1024, hash=146a6b2454b9
+fixture noisy_recall/low/test: 4096, hash=6abe9bf85f5d
+fixture noisy_recall/moderate/dev: 1024, hash=c0ddb9e21758
+fixture noisy_recall/moderate/test: 4096, hash=ec5e86751166
+fixture noisy_recall/low_delay256/dev: 1024, hash=9f9d5adb3933
+fixture noisy_recall/low_delay256/test: 4096, hash=f78ecd834464
+fixture noisy_recall/moderate_delay256/dev: 1024, hash=0821a0959da1
+fixture noisy_recall/moderate_delay256/test: 4096, hash=7279f3bf54c1
+fixture noisy_recall/low_delay512/dev: 1024, hash=c3af278ac117
+fixture noisy_recall/low_delay512/test: 4096, hash=bd3cd71b981c
+fixture noisy_recall/moderate_delay512/dev: 1024, hash=5d7fa6e4d4a7
+fixture noisy_recall/moderate_delay512/test: 4096, hash=159436af6d4f
+training audit noisy_recall: 500/2000
+training audit noisy_recall: 1000/2000
+training audit noisy_recall: 1500/2000
+training audit noisy_recall: 2000/2000
+prepared noisy_recall: {'status': 'passed', 'training_batches': 2000, 'unique_training_examples': 128000, 'training_stream_sha256': 'ed398316cbd8a7928c08933562e6d47996ea9bd36d25c47824355ff5751155ae', 'training_input_tokens': 16384000, 'training_target_tokens': 128000, 'exact_example_overlap_train_dev_test': 0, 'duplicates_within_each_split_condition': 0, 'condition_note': 'Controlled length variants deliberately reuse semantic examples within a split; no exact input/label example crosses splits.', 'seconds': 160.01188188500055}
+fixture state_tracking/iid/dev: 1024, hash=4eb1e6e3c62d
+fixture state_tracking/iid/test: 4096, hash=d98f97d0911c
+fixture state_tracking/composition/dev: 1024, hash=accb94bc0884
+fixture state_tracking/composition/test: 4096, hash=902189a50e96
+fixture state_tracking/query_role/dev: 1024, hash=e14a7063dc4e
+fixture state_tracking/query_role/test: 4096, hash=ddb647a45244
+fixture state_tracking/delay256/dev: 1024, hash=12b430a1a8f2
+fixture state_tracking/delay256/test: 4096, hash=c149f12d756c
+fixture state_tracking/delay512/dev: 1024, hash=20e8985c9c3c
+fixture state_tracking/delay512/test: 4096, hash=56f590f2c08a
+fixture state_tracking/updates8/dev: 1024, hash=950e337942ee
+fixture state_tracking/updates8/test: 4096, hash=8d544ecb8673
+training audit state_tracking: 500/2000
+training audit state_tracking: 1000/2000
+training audit state_tracking: 1500/2000
+training audit state_tracking: 2000/2000
+prepared state_tracking: {'status': 'passed', 'training_batches': 2000, 'unique_training_examples': 128000, 'training_stream_sha256': 'b2e6197b16dac3584ef1447767d55179a6eac1d03f23fdb838acd9e69c9f029a', 'training_input_tokens': 16384000, 'training_target_tokens': 128000, 'exact_example_overlap_train_dev_test': 0, 'duplicates_within_each_split_condition': 0, 'condition_note': 'Controlled length variants deliberately reuse semantic examples within a split; no exact input/label example crosses splits.', 'seconds': 65.82517528099925}

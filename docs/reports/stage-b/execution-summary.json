@@ -1,0 +1,29 @@
+{
+  "status": "complete",
+  "gpu": "One NVIDIA H100 80GB HBM3, all model commands inside Docker",
+  "wall_window_seconds": 2825.959571838379,
+  "wall_budget_seconds": 7200,
+  "wall_window_scope": "Calibration, SYN training, final evaluation and intervening uploads; CPU preparation excluded",
+  "phases": {
+    "calibrate": {
+      "jobs": 6,
+      "model_execution_seconds": 174.1979205608368,
+      "all_jobs_uploaded": true
+    },
+    "train": {
+      "jobs": 6,
+      "model_execution_seconds": 2224.3908598423004,
+      "all_jobs_uploaded": true
+    },
+    "evaluate": {
+      "jobs": 6,
+      "model_execution_seconds": 261.2887511253357,
+      "all_jobs_uploaded": true
+    }
+  },
+  "research_optimizer_updates": 12000,
+  "research_examples_seen": 768000,
+  "research_input_tokens": 98304000,
+  "research_supervised_targets": 2560000,
+  "research_update_seconds": 1586.4615851840335
+}

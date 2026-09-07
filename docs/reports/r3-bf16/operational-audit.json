@@ -1,0 +1,536 @@
+{
+  "schema": "r3-bf16-operational-json-audit-v1",
+  "evidence_class": "OPS",
+  "source_reports": {
+    "train-fp32": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/train-fp32/report.json",
+      "sha256": "781198f06677174a8358177243283fcd880085abe2714e6ab1710203cc011cd2"
+    },
+    "train-bf16": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/train-bf16/report.json",
+      "sha256": "80747a99617a0fa9343fdf9d1c593ec8d1f0bf3b465214d3e4ff53ebc338bdca"
+    },
+    "resume-bf16": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/resume-bf16/report.json",
+      "sha256": "e9de143c2f2cacdbbb0d003cad12bac28979e7daf01cd33292c66f18d9331b7c"
+    },
+    "bench-seq-fp32": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/bench-seq-fp32/report.json",
+      "sha256": "588b15401a6df4a28ff55e03fdf42e6210a9ab74e012d79d61565ab8740cb72f"
+    },
+    "bench-seq-bf16": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/bench-seq-bf16/report.json",
+      "sha256": "4bf383aa309e841b15b8d92372df634c80d98e88df12cf0ba8a71a625eeff814"
+    },
+    "bench-r3-fp32": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/bench-r3-fp32/report.json",
+      "sha256": "ae4e85070addfc14a92f5875fbb24b012b9b69c6b7b9c3a877ffee3fa6b8a293"
+    },
+    "bench-r3-bf16": {
+      "path": ".runtime/r3-bf16/20260906T225438Z/bench-r3-bf16/report.json",
+      "sha256": "0b31ceb096c9437600e891b4784da980b9fcd0eb0488fb63282cdd56d3840033"
+    }
+  },
+  "analysis_script_sha256": "ddea95ab6a1291952c314b67d43ff8e56b8c36d3d41d3a802e623a87446e4f31",
+  "checks": {
+    "identity_equal_except_declared_precision_profile": true,
+    "model_config_equal_except_declared_precision_policy": true,
+    "initial_model_optimizer_rng_hashes_equal": true,
+    "per_update_data_hashes_equal": true,
+    "per_update_learning_rates_equal": true,
+    "recorded_next_data_and_actual_history_match": true,
+    "development_fixture_equal": true,
+    "exactly100_updates_each": true,
+    "physical64_t128_512answers_every_update": true,
+    "no_accumulation": true,
+    "saved2000_horizon_and100_warmup": true,
+    "cold_resume_loaded_state_exact": true,
+    "cold_resume_recorded_full_state_bitwise_equal": true,
+    "cold_resume_json_numerical_history_exact": true,
+    "cold_resume_development_metrics_exact": true,
+    "cold_resume_no_warmup_or_repeated_midpoint_eval": true,
+    "fp32_100updates_all_parameters_gradients_moments_finite_fp32": true,
+    "fp32_observed_logits_and_CE_dtypes": true,
+    "fp32_all_block3_projection_gradient_signals_nonzero": true,
+    "bf16_100updates_all_parameters_gradients_moments_finite_fp32": true,
+    "bf16_observed_logits_and_CE_dtypes": true,
+    "bf16_all_block3_projection_gradient_signals_nonzero": true
+  },
+  "training": {
+    "fp32": {
+      "loss": {
+        "first": 7.383334159851074,
+        "last": 6.280226707458496,
+        "mean": 6.502145457267761,
+        "median": 6.333884000778198,
+        "min": 6.226077556610107,
+        "max": 7.418633937835693
+      },
+      "gradient_norm_before_clipping": {
+        "first": 5.2078375816345215,
+        "last": 0.8856469392776489,
+        "mean": 1.856276575922966,
+        "median": 0.8824851810932159,
+        "min": 0.7815280556678772,
+        "max": 46.361698150634766
+      },
+      "update_l2": {
+        "first": 0.03154515154949724,
+        "last": 0.7264726319843718,
+        "mean": 0.30804778782971165,
+        "median": 0.25896836665492795,
+        "min": 0.03154515154949724,
+        "max": 0.7660917895645103
+      },
+      "clipping_updates": 37,
+      "development": {
+        "0": {
+          "answer_ce": 7.424483299255371,
+          "answer_accuracy": 0.00048828125,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        },
+        "50": {
+          "answer_ce": 6.337362885475159,
+          "answer_accuracy": 0.0009765625,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        },
+        "100": {
+          "answer_ce": 6.236422181129456,
+          "answer_accuracy": 0.00390625,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        }
+      },
+      "final_precision": {
+        "parameters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 200,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "block3_projection_gradient_l2": {
+        "transformer.blocks.3.q_proj.weight": {
+          "first": 0.041471551452274436,
+          "last": 0.001933946113663243,
+          "mean": 0.01214719052393812,
+          "median": 0.0009046850608889446,
+          "min": 0.0002153556402400558,
+          "max": 0.6901683499284605
+        },
+        "transformer.blocks.3.kv_proj.weight": {
+          "first": 0.2885074228643589,
+          "last": 0.018687491490630367,
+          "mean": 0.09106520737671818,
+          "median": 0.02551324420794205,
+          "min": 0.01504960433106373,
+          "max": 3.334752230873726
+        }
+      }
+    },
+    "bf16": {
+      "loss": {
+        "first": 7.382625102996826,
+        "last": 6.285614967346191,
+        "mean": 6.501206707954407,
+        "median": 6.333779573440552,
+        "min": 6.214712142944336,
+        "max": 7.418896675109863
+      },
+      "gradient_norm_before_clipping": {
+        "first": 5.209792137145996,
+        "last": 0.9260085821151733,
+        "mean": 1.6678447586297989,
+        "median": 0.8854479193687439,
+        "min": 0.7823494076728821,
+        "max": 28.78572654724121
+      },
+      "update_l2": {
+        "first": 0.03154507694800691,
+        "last": 0.7204434097911614,
+        "mean": 0.3075757093409178,
+        "median": 0.25895654229827925,
+        "min": 0.03154507694800691,
+        "max": 0.7204434097911614
+      },
+      "clipping_updates": 37,
+      "development": {
+        "0": {
+          "answer_ce": 7.424376368522644,
+          "answer_accuracy": 0.00048828125,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        },
+        "50": {
+          "answer_ce": 6.337329864501953,
+          "answer_accuracy": 0.0009765625,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        },
+        "100": {
+          "answer_ce": 6.232714891433716,
+          "answer_accuracy": 0.0048828125,
+          "supervised_targets": 2048,
+          "examples": 256,
+          "fixture_sha256": "1671064b70eeee716de0ae3c812d44b58ef08a2b93c16324efb0c5e50a26da3c"
+        }
+      },
+      "final_precision": {
+        "parameters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 200,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      },
+      "block3_projection_gradient_l2": {
+        "transformer.blocks.3.q_proj.weight": {
+          "first": 0.04147364223932224,
+          "last": 0.002463085775873116,
+          "mean": 0.009347980483354728,
+          "median": 0.0009152506102814426,
+          "min": 0.00021531185517799955,
+          "max": 0.4074726764240052
+        },
+        "transformer.blocks.3.kv_proj.weight": {
+          "first": 0.2884923641028941,
+          "last": 0.02093319881505766,
+          "mean": 0.0769952134124777,
+          "median": 0.025523440180869977,
+          "min": 0.015120665209918154,
+          "max": 2.063430994703078
+        }
+      }
+    }
+  },
+  "paired_differences": {
+    "loss": {
+      "bf16_minus_fp32": {
+        "first": -0.0007090568542480469,
+        "last": 0.0053882598876953125,
+        "mean": -0.0009387493133544922,
+        "median": -0.00015044212341308594,
+        "min": -0.04347801208496094,
+        "max": 0.00673675537109375
+      },
+      "max_absolute_difference": 0.04347801208496094,
+      "rms_difference": 0.005431410745030774,
+      "mean_difference_last20_updates": -0.004224991798400879,
+      "bf16_over_fp32": {
+        "first": 0.9999039652223648,
+        "last": 1.0008579721941082,
+        "mean": 0.9998523018890962,
+        "median": 0.9999764893454441,
+        "min": 0.9930526220827566,
+        "max": 1.001081077937547
+      }
+    },
+    "gradient_norm_before_clipping": {
+      "bf16_minus_fp32": {
+        "first": 0.0019545555114746094,
+        "last": 0.040361642837524414,
+        "mean": -0.1884318172931671,
+        "median": 0.0005646944046020508,
+        "min": -17.575971603393555,
+        "max": 0.44495224952697754
+      },
+      "max_absolute_difference": 17.575971603393555,
+      "rms_difference": 1.7681538892209934,
+      "mean_difference_last20_updates": -0.9446254402399064,
+      "bf16_over_fp32": {
+        "first": 1.0003753103818689,
+        "last": 1.0455730619590287,
+        "mean": 0.9961814770148358,
+        "median": 1.0004885687275675,
+        "min": 0.32544505300167115,
+        "max": 1.5071250324550618
+      }
+    },
+    "update_l2": {
+      "bf16_minus_fp32": {
+        "first": -7.460149033244878e-08,
+        "last": -0.006029222193210448,
+        "mean": -0.0004720784887937977,
+        "median": -1.302194175142879e-06,
+        "min": -0.05034085540476896,
+        "max": 0.06625096577812284
+      },
+      "max_absolute_difference": 0.06625096577812284,
+      "rms_difference": 0.010685826790079532,
+      "mean_difference_last20_updates": -0.00218392450342067,
+      "bf16_over_fp32": {
+        "first": 0.9999976350885423,
+        "last": 0.9917006891550181,
+        "mean": 0.9997035708555159,
+        "median": 0.9999879971214019,
+        "min": 0.9342887417793819,
+        "max": 1.1015025747552705
+      }
+    },
+    "development_answer_ce": {
+      "0": -0.00010693073272705078,
+      "50": -3.3020973205566406e-05,
+      "100": -0.003707289695739746
+    },
+    "norm_scope": "Differences/ratios of logged gradient and update norm magnitudes along diverging trajectories; not norms of vector differences or direction comparisons."
+  },
+  "benchmarks": {
+    "seq-fp32": {
+      "latency_ms": {
+        "first": 28.52496600098675,
+        "last": 29.625167000631336,
+        "mean": 28.975424700001895,
+        "median": 28.982088499105885,
+        "min": 28.44108100180165,
+        "max": 29.860626000299817
+      },
+      "input_tokens_per_second": 282722.34435961396,
+      "peak_allocated_mib": 2291.33251953125,
+      "peak_reserved_mib": 2488.0,
+      "optimizer_state_mib": 76.0960807800293,
+      "warmup_seconds_including_compilation": 0.6592961329988611,
+      "compilation_free_measured_updates": true,
+      "final_precision": {
+        "parameters": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 198,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      }
+    },
+    "seq-bf16": {
+      "latency_ms": {
+        "first": 32.46209099961561,
+        "last": 32.803387999592815,
+        "mean": 32.57641079981113,
+        "median": 32.54360199935036,
+        "min": 31.212220001179958,
+        "max": 34.01370199935627
+      },
+      "input_tokens_per_second": 251470.30623912366,
+      "peak_allocated_mib": 1645.33251953125,
+      "peak_reserved_mib": 1808.0,
+      "optimizer_state_mib": 76.0960807800293,
+      "warmup_seconds_including_compilation": 0.8003858449992549,
+      "compilation_free_measured_updates": true,
+      "final_precision": {
+        "parameters": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 198,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 99,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      }
+    },
+    "r3-fp32": {
+      "latency_ms": {
+        "first": 239.74382300002617,
+        "last": 242.23685700053466,
+        "mean": 242.75679110032797,
+        "median": 240.08549900099752,
+        "min": 235.00950499874307,
+        "max": 275.89195300242864
+      },
+      "input_tokens_per_second": 33745.708875408396,
+      "peak_allocated_mib": 2135.08251953125,
+      "peak_reserved_mib": 2386.0,
+      "optimizer_state_mib": 76.09608459472656,
+      "warmup_seconds_including_compilation": 10.220899102998374,
+      "compilation_free_measured_updates": true,
+      "final_precision": {
+        "parameters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 200,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      }
+    },
+    "r3-bf16": {
+      "latency_ms": {
+        "first": 299.1773549983918,
+        "last": 296.70813900156645,
+        "mean": 293.3927653994033,
+        "median": 293.7214564990427,
+        "min": 288.62505399956717,
+        "max": 299.80876199988415
+      },
+      "input_tokens_per_second": 27921.615547840844,
+      "peak_allocated_mib": 1539.58251953125,
+      "peak_reserved_mib": 1716.0,
+      "optimizer_state_mib": 76.09608459472656,
+      "warmup_seconds_including_compilation": 11.520490932998655,
+      "compilation_free_measured_updates": true,
+      "final_precision": {
+        "parameters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "gradients": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "moments": {
+          "tensors": 200,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "step_counters": {
+          "tensors": 100,
+          "dtypes": [
+            "torch.float32"
+          ],
+          "finite": true
+        },
+        "missing_gradients": []
+      }
+    }
+  },
+  "ratios": {
+    "seq": {
+      "bf16_over_fp32_latency": 1.124277250017633,
+      "bf16_allocated_memory_reduction_fraction": 0.28193201750226793
+    },
+    "r3": {
+      "bf16_over_fp32_latency": 1.2085872616356514,
+      "bf16_allocated_memory_reduction_fraction": 0.27891193644859213
+    },
+    "r3_over_seq_latency": {
+      "fp32": 8.378023570446997,
+      "bf16": 9.00629499064103
+    }
+  },
+  "recovery_scope": "State equality is the retained byte-sensitive checkpoint comparison; this script independently checks JSON histories/identities, not raw checkpoint tensors.",
+  "interpretation": "One paired100-update warmup trajectory and one serial timing sample per arm. Experimental BF16; no quality-equivalence/generalization claim and no waiver of unresolved numerical criteria."
+}

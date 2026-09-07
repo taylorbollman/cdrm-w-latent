@@ -1,0 +1,45 @@
+{
+  "schema": "r3-backward-storage-v1",
+  "status": "complete",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/",
+  "local_root": ".runtime/r3-backward/20260906T210249Z",
+  "local_persistence": "Project/home filesystem persists; SSD compiler caches are disposable.",
+  "authorization": "User requested retaining useful checkpoints/data in gs://fast-chunks.",
+  "artifacts": {
+    "file_count": 59,
+    "bytes": 3582484213,
+    "manifest_uri": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/artifact-manifest.json",
+    "manifest_sha256": "89af94fec5898dac0f18cf03c170c27d5b9afa52de6e2ce6d682c5e3566cf7bd",
+    "manifest_exact_gcs_readback": true,
+    "checksum_verification": "All 59 listed files plus manifest matched GCS; no transfer actions in checksum-only dry run."
+  },
+  "source": {
+    "archive": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/source/numerical-source-v2.tar.gz",
+    "sha256": "667e5374e5480e39f385b0dfb1a69b484fe03d1e6395722393fd6baaa4d6aa7b",
+    "files": 87,
+    "all_source_files_match_current": true,
+    "initial_harness_version": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/source/r3_backward_validate-v1.py"
+  },
+  "reports": {
+    "prefix": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/reports/",
+    "verified_report_files_excluding_this_manifest": 11,
+    "bytes_excluding_this_manifest": 3680090,
+    "status": "Uploaded and checksum verified; final storage manifest separately retained with exact readback receipt."
+  },
+  "verification": {
+    "complete_prefix_check": "76 local and 76 remote files; no transfers required before final verification logs and storage receipt were added.",
+    "checksum_log": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/verification/final-check.log",
+    "artifact_manifest_readback": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/verification/manifest-readback.json",
+    "storage_manifest_readback_receipt": "gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/verification/storage-readback.json",
+    "method": "gcloud storage rsync --recursive --checksums-only --dry-run, plus exact byte comparison of manifest GCS readbacks"
+  },
+  "stage_b_checkpoints": {
+    "reused_from": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/runs/SYN-mqar-R3-seed0/",
+    "files": [
+      "SYN-mqar-R3-seed0-init.pt",
+      "SYN-mqar-R3-seed0-final.pt"
+    ],
+    "status": "Original lineage unchanged; checkpoint SHA-256 identities and source/data hashes verified in NUM reports."
+  },
+  "recorded_at_utc": "2026-09-06T21:33:20Z"
+}

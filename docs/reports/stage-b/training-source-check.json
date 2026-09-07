@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "source_files": {
+    "scripts/stage_b_train.py": {
+      "sha256": "03efc040358db0224d71e50c6dc798e1b567bf3fab4433feac342b1fcc2067c9",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "scripts/stage_a_common.py": {
+      "sha256": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "cdrm/synthetic/__init__.py": {
+      "sha256": "f6b0806d554186318787cff2ac9a94432ebb3a65a3ae1bfb9685507d76d3ffb1",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "cdrm/synthetic/common.py": {
+      "sha256": "1509ae9f83bb5f8c4966ef690e2948d46cc3604a094ca03b190d4a3d03c1e0f5",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "cdrm/synthetic/experiment.py": {
+      "sha256": "28ae25e1f7ef6376429152ed26369153f30c5e36d0786a9749a954524c0aa847",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "cdrm/synthetic/retrieval.py": {
+      "sha256": "1e2261bebc724581fa4f4f7685c18afaed1a7e5bcf8a7782f31c843d67d6ea51",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "cdrm/synthetic/state_tracking.py": {
+      "sha256": "975459850d7f75aefe539b38d9017c4075fa64f9b16ef86fbfb6673a4374ce49",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/model.py": {
+      "sha256": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/config.py": {
+      "sha256": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/checkpoint_conversion.py": {
+      "sha256": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/efficient_utils.py": {
+      "sha256": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/initialization.py": {
+      "sha256": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "recurrent-transformer/olmo/torch_util.py": {
+      "sha256": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    },
+    "vendors/mad-lab/mad/data/instances.py": {
+      "sha256": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8",
+      "matches_training_identity": true,
+      "matches_training_snapshot": true
+    }
+  }
+}

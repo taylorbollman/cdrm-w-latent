@@ -1,0 +1,198 @@
+{
+  "schema": "r3-backward-execution-v1",
+  "run_id": "20260906T210249Z",
+  "gpu_command_count": 12,
+  "gpu_command_seconds": 241.21563105100358,
+  "gpu_command_budget_seconds": 2700,
+  "all_exit_codes_zero": true,
+  "serial_one_gpu": true,
+  "gpu_commands": [
+    {
+      "label": "init-b2",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case ce --checkpoint .runtime/stage-b/20260906T190223Z/runs/SYN-mqar-R3-seed0/SYN-mqar-R3-seed0-init.pt --batch 2 --output-dir .runtime/r3-backward/20260906T210249Z/init-b2"
+      ],
+      "prior_gpu_command_seconds": 57.90262262900069,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 24.638056103001873,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/init-b2.json"
+    },
+    {
+      "label": "init-b64-fp64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_ce_fp64_reference.py --reference-run .runtime/r3-backward/20260906T210249Z/init-b64 --output-dir .runtime/r3-backward/20260906T210249Z/init-b64-fp64"
+      ],
+      "prior_gpu_command_seconds": 207.93518646400116,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 19.57616397000311,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/init-b64-fp64.json"
+    },
+    {
+      "label": "init-b64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case ce --checkpoint .runtime/stage-b/20260906T190223Z/runs/SYN-mqar-R3-seed0/SYN-mqar-R3-seed0-init.pt --batch 64 --output-dir .runtime/r3-backward/20260906T210249Z/init-b64"
+      ],
+      "prior_gpu_command_seconds": 107.13510681800472,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 27.99451125500127,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/init-b64.json"
+    },
+    {
+      "label": "raw-d32-auto",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case raw --legacy-report docs/reports/stage-b/backend-num-d32-t128.json --sdpa auto --output-dir .runtime/r3-backward/20260906T210249Z/raw-d32-auto"
+      ],
+      "prior_gpu_command_seconds": 18.51061346300048,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 19.218602508000913,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/raw-d32-auto.json"
+    },
+    {
+      "label": "raw-d32-math",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case raw --legacy-report docs/reports/stage-b/backend-num-d32-t128.json --sdpa math --fp64-reference --output-dir .runtime/r3-backward/20260906T210249Z/raw-d32-math"
+      ],
+      "prior_gpu_command_seconds": 37.729215971001395,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 20.173406657999294,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/raw-d32-math.json"
+    },
+    {
+      "label": "tiny-ce-fp64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_ce_fp64_reference.py --reference-run .runtime/r3-backward/20260906T210249Z/tiny-ce --output-dir .runtime/r3-backward/20260906T210249Z/tiny-ce-fp64"
+      ],
+      "prior_gpu_command_seconds": 178.07662847800384,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 8.586889958998654,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/tiny-ce-fp64.json"
+    },
+    {
+      "label": "tiny-ce",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case ce --output-dir .runtime/r3-backward/20260906T210249Z/tiny-ce"
+      ],
+      "prior_gpu_command_seconds": 0,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 18.51061346300048,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/tiny-ce.json"
+    },
+    {
+      "label": "trained-b2-fp64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_ce_fp64_reference.py --reference-run .runtime/r3-backward/20260906T210249Z/trained-b2 --output-dir .runtime/r3-backward/20260906T210249Z/trained-b2-fp64"
+      ],
+      "prior_gpu_command_seconds": 227.51135043400427,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 13.704280616999313,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/trained-b2-fp64.json"
+    },
+    {
+      "label": "trained-b2",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case ce --checkpoint .runtime/stage-b/20260906T190223Z/runs/SYN-mqar-R3-seed0/SYN-mqar-R3-seed0-final.pt --batch 2 --output-dir .runtime/r3-backward/20260906T210249Z/trained-b2"
+      ],
+      "prior_gpu_command_seconds": 82.54067873200256,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 24.594428086002154,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/trained-b2.json"
+    },
+    {
+      "label": "trained-b64-fp64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_ce_fp64_reference.py --reference-run .runtime/r3-backward/20260906T210249Z/trained-b64 --output-dir .runtime/r3-backward/20260906T210249Z/trained-b64-fp64"
+      ],
+      "prior_gpu_command_seconds": 186.6635184370025,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 21.271668026998668,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/trained-b64-fp64.json"
+    },
+    {
+      "label": "trained-b64",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_backward_validate.py --case ce --checkpoint .runtime/stage-b/20260906T190223Z/runs/SYN-mqar-R3-seed0/SYN-mqar-R3-seed0-final.pt --batch 64 --output-dir .runtime/r3-backward/20260906T210249Z/trained-b64"
+      ],
+      "prior_gpu_command_seconds": 135.129618073006,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 27.33910964399911,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/trained-b64.json"
+    },
+    {
+      "label": "write-path",
+      "command": [
+        "bash",
+        "scripts/docker_shell.sh",
+        "bash",
+        "-lc",
+        "test -f /.dockerenv && test \"$PWD\" = /workspace/cdrm-w-latent && nvidia-smi -L && OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 python scripts/r3_write_path_probe.py --output-dir .runtime/r3-backward/20260906T210249Z/write-path"
+      ],
+      "prior_gpu_command_seconds": 162.4687277170051,
+      "timeout_seconds": 900,
+      "exit_code": 0,
+      "elapsed_seconds": 15.607900760998746,
+      "record_path": ".runtime/r3-backward/20260906T210249Z/execution/write-path.json"
+    }
+  ],
+  "cpu_metric_tests": {
+    "count": 22,
+    "status": "passed",
+    "log": ".runtime/r3-backward/20260906T210249Z/execution/metrics-cpu.log",
+    "sha256": "44cce82ddf8e36b167f3d1728587f63ac0e3e600cb0570693d0bac671b1f3d85"
+  },
+  "source_note": "Exact initial validator is retained as source/r3_backward_validate-v1.py; later assertions only harden fixture/state identity and finite-value reporting."
+}

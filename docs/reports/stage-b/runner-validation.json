@@ -1,0 +1,644 @@
+{
+  "evidence_class": "NUM",
+  "status": "passed_for_fixed_microbatch_midpoint_resume_with_explicit_limitations",
+  "artifact_directory": ".runtime/stage-b/20260906T190223Z/runner-validation",
+  "fixture": {
+    "task": "mqar",
+    "width": 32,
+    "layers": 12,
+    "heads": 4,
+    "mlp": 128,
+    "vocab": 1024,
+    "sequence_length": 128,
+    "global_batch": 4,
+    "updates": 4,
+    "train_pair_counts": [
+      4,
+      8
+    ],
+    "microbatch_answer_counts": [
+      8,
+      16
+    ],
+    "precision": "fp32",
+    "math_sdpa": true,
+    "deterministic_algorithms": true,
+    "tf32": false,
+    "recurrent_backend": "tiled",
+    "bwd_mlp_chunks": 4
+  },
+  "paired_initialization": {
+    "all_source_tensors": 99,
+    "all_target_tensors": 100,
+    "weights_exact": true
+  },
+  "exact_resume": {
+    "seq": {
+      "status": "passed",
+      "exact": {
+        "identity": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "model_config": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "model": {
+          "exact": true,
+          "tensor_count": 99,
+          "maximum_error": 0.0
+        },
+        "optimizer": {
+          "exact": true,
+          "tensor_count": 297,
+          "maximum_error": 0.0
+        },
+        "rng": {
+          "exact": true,
+          "tensor_count": 2,
+          "maximum_error": 0.0
+        },
+        "completed_updates": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "data_offset_examples": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "schedule": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "next_data_sha256": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "rho": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "best_development": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "training_and_development_metrics_exact": true,
+        "excluded_runtime_fields": [
+          "wall-clock counters",
+          "compiler counters",
+          "run UUID/artifact paths"
+        ]
+      }
+    },
+    "r3": {
+      "status": "passed",
+      "exact": {
+        "identity": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "model_config": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "model": {
+          "exact": true,
+          "tensor_count": 100,
+          "maximum_error": 0.0
+        },
+        "optimizer": {
+          "exact": true,
+          "tensor_count": 300,
+          "maximum_error": 0.0
+        },
+        "rng": {
+          "exact": true,
+          "tensor_count": 2,
+          "maximum_error": 0.0
+        },
+        "completed_updates": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "data_offset_examples": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "schedule": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "next_data_sha256": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "rho": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "best_development": {
+          "exact": true,
+          "tensor_count": 0,
+          "maximum_error": 0.0
+        },
+        "training_and_development_metrics_exact": true,
+        "excluded_runtime_fields": [
+          "wall-clock counters",
+          "compiler counters",
+          "run UUID/artifact paths"
+        ]
+      }
+    }
+  },
+  "seq_initial_resume": {
+    "status": "passed",
+    "exact": {
+      "identity": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "model_config": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "model": {
+        "exact": true,
+        "tensor_count": 99,
+        "maximum_error": 0.0
+      },
+      "optimizer": {
+        "exact": true,
+        "tensor_count": 297,
+        "maximum_error": 0.0
+      },
+      "rng": {
+        "exact": true,
+        "tensor_count": 2,
+        "maximum_error": 0.0
+      },
+      "completed_updates": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "data_offset_examples": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "schedule": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "next_data_sha256": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "rho": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "best_development": {
+        "exact": true,
+        "tensor_count": 0,
+        "maximum_error": 0.0
+      },
+      "training_and_development_metrics_exact": true,
+      "excluded_runtime_fields": [
+        "wall-clock counters",
+        "compiler counters",
+        "run UUID/artifact paths"
+      ]
+    }
+  },
+  "r3_initial_resume": {
+    "status": "failed",
+    "error": "model.transformer.wte.weight: Tensor-likes are not equal!\n\nMismatched elements: 1124 / 32768 (3.4%)\nGreatest absolute difference: 4.3019652366638184e-05 at index (724, 27)\nGreatest relative difference: 0.0005370992585085332 at index (724, 27)",
+    "largest_model_differences": [
+      {
+        "name": "transformer.wte.weight",
+        "different": 1124,
+        "maxabs": 4.3019652366638184e-05,
+        "rel_l2": 1.401618073867194e-06
+      },
+      {
+        "name": "transformer.blocks.9.ff_out.weight",
+        "different": 2144,
+        "maxabs": 1.3865530490875244e-05,
+        "rel_l2": 1.1222940713664742e-05
+      },
+      {
+        "name": "transformer.blocks.7.ff_out.weight",
+        "different": 1942,
+        "maxabs": 1.2921169400215149e-05,
+        "rel_l2": 9.119913750438763e-06
+      },
+      {
+        "name": "transformer.blocks.2.ff_proj.weight",
+        "different": 747,
+        "maxabs": 8.247792720794678e-06,
+        "rel_l2": 7.372464189684155e-07
+      },
+      {
+        "name": "transformer.blocks.3.ff_out.weight",
+        "different": 1790,
+        "maxabs": 7.0156529545784e-06,
+        "rel_l2": 3.576483948588895e-06
+      },
+      {
+        "name": "transformer.blocks.10.att_proj.weight",
+        "different": 647,
+        "maxabs": 1.8700957298278809e-06,
+        "rel_l2": 1.9885172388165496e-07
+      },
+      {
+        "name": "transformer.blocks.7.ff_proj.weight",
+        "different": 645,
+        "maxabs": 1.7881393432617188e-06,
+        "rel_l2": 2.2675027980695118e-07
+      },
+      {
+        "name": "transformer.blocks.6.ff_proj.weight",
+        "different": 637,
+        "maxabs": 3.948807716369629e-07,
+        "rel_l2": 4.537125697939914e-08
+      }
+    ],
+    "cause": "Not established; no identified data/RNG/state-loading logic discrepancy. Compiled execution history or memory layout are hypotheses, not verified causes.",
+    "policy": "Reject R3 resume at update0 pending validation; fresh initialization and the tested midpoint resume remain supported."
+  },
+  "accumulation": {
+    "seq": {
+      "parameters": {
+        "passed": true,
+        "tensor_count": 99,
+        "maximum_error": 1.5124678611755371e-06
+      },
+      "gradients": {
+        "passed": true,
+        "tensor_count": 99,
+        "maximum_error": 1.862645149230957e-08
+      },
+      "optimizer": {
+        "passed": true,
+        "tensor_count": 297,
+        "maximum_error": 1.862645149230957e-09
+      },
+      "microbatch_answer_counts": [
+        8,
+        16
+      ],
+      "full_loss": 7.314359029134114,
+      "accumulated_loss": 7.314359029134114,
+      "atol": 2e-06,
+      "rtol": 2e-05,
+      "compiler_audit": {
+        "required": false,
+        "counters": {},
+        "recompile_limit": 8,
+        "accumulated_recompile_limit": 256,
+        "fail_on_recompile_limit_hit": false
+      }
+    },
+    "r3": {
+      "parameters": {
+        "passed": false,
+        "tensor_count": 100,
+        "maximum_error": 1.163780689239502e-05,
+        "failed_tensor_count": 1
+      },
+      "gradients": {
+        "passed": true,
+        "tensor_count": 100,
+        "maximum_error": 1.862645149230957e-08,
+        "failed_tensor_count": 0
+      },
+      "optimizer": {
+        "passed": true,
+        "tensor_count": 300,
+        "maximum_error": 1.862645149230957e-09,
+        "failed_tensor_count": 0
+      },
+      "microbatch_answer_counts": [
+        8,
+        16
+      ],
+      "full_loss": 7.35399055480957,
+      "accumulated_loss": 7.353990236918132,
+      "atol": 2e-06,
+      "rtol": 2e-05,
+      "compiler_audit": {
+        "required": true,
+        "counters": {
+          "frames": {
+            "total": 18,
+            "ok": 18
+          },
+          "stats": {
+            "calls_captured": 443,
+            "unique_graphs": 24
+          },
+          "aot_autograd": {
+            "total": 24,
+            "autograd_cache_miss": 22,
+            "autograd_cache_saved": 22,
+            "ok": 24,
+            "autograd_cache_bypass": 2
+          },
+          "inductor": {
+            "pattern_matcher_count": 254,
+            "pattern_matcher_nodes": 292,
+            "fxgraph_cache_miss": 28,
+            "extern_calls": 62,
+            "async_compile_cache_miss": 180,
+            "triton_bundler_save_kernel": 1416,
+            "triton_bundler_save_static_autotuner": 28,
+            "removed_pointless_view_pair": 22,
+            "benchmarking.InductorBenchmarker.benchmark": 112,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 112,
+            "async_compile_cache_hit": 82
+          },
+          "graph_break": {},
+          "aten_mm_info": {
+            "aten.mm_512_64_32": 2,
+            "aten.mm_512_32_32": 4,
+            "aten.bmm_16_1_1_8": 1,
+            "aten.bmm_16_2_2_8": 1,
+            "aten.bmm_16_2_8_2": 1,
+            "aten.bmm_16_4_4_8": 1,
+            "aten.bmm_16_4_8_4": 1,
+            "aten.bmm_16_8_8_8": 2,
+            "aten.bmm_16_16_16_8": 1,
+            "aten.bmm_16_16_8_16": 1,
+            "aten.bmm_16_32_32_8": 1,
+            "aten.bmm_16_32_8_32": 1,
+            "aten.bmm_16_64_64_8": 1,
+            "aten.bmm_16_64_8_64": 1,
+            "aten.bmm_16_128_128_8": 1,
+            "aten.bmm_16_8_128_128": 1,
+            "aten.mm_32_32_512": 2,
+            "aten.mm_64_32_512": 1,
+            "aten.mm_512_32_64": 1,
+            "aten.mm_512_128_32": 2,
+            "aten.mm_512_32_128": 2,
+            "aten.mm_32_128_512": 1,
+            "aten.mm_128_32_512": 1,
+            "aten.mm_256_64_32": 2,
+            "aten.mm_256_32_32": 3,
+            "aten.bmm_8_1_1_8": 1,
+            "aten.bmm_8_2_2_8": 1,
+            "aten.bmm_8_2_8_2": 1,
+            "aten.bmm_8_4_4_8": 1,
+            "aten.bmm_8_4_8_4": 1,
+            "aten.bmm_8_8_8_8": 2,
+            "aten.bmm_8_16_16_8": 1,
+            "aten.bmm_8_16_8_16": 1,
+            "aten.bmm_8_32_32_8": 1,
+            "aten.bmm_8_32_8_32": 1,
+            "aten.bmm_8_64_64_8": 1,
+            "aten.bmm_8_64_8_64": 1,
+            "aten.bmm_4*s34_128_128_8": 1,
+            "aten.bmm_4*s33_8_128_128": 1,
+            "aten.mm_32_32_256": 1,
+            "aten.mm_64_32_256": 1,
+            "aten.mm_256_32_64": 1,
+            "aten.mm_128*s35_32_32": 1,
+            "aten.mm_128*s35_128_32": 2,
+            "aten.mm_128*s35_32_128": 2,
+            "aten.mm_32_128_128*s35": 1,
+            "aten.mm_128_32_128*s35": 1,
+            "aten.mm_32_32_128*s35": 1
+          }
+        },
+        "recompile_limit": 64,
+        "accumulated_recompile_limit": 256,
+        "fail_on_recompile_limit_hit": true
+      }
+    },
+    "r3_failed_tensors": [
+      {
+        "path": "parameters.transformer.wte.weight",
+        "shape": [
+          1024,
+          32
+        ],
+        "atol": 2e-06,
+        "rtol": 2e-05,
+        "passed": false,
+        "maxabs": 1.163780689239502e-05,
+        "rel_l2": 3.6808440915126574e-07,
+        "fail_elements": 1,
+        "worst_flat_index": 23195,
+        "reference_worst": -0.08012492209672928,
+        "candidate_worst": -0.08011328428983688
+      }
+    ],
+    "policy": "No R3 parameter-equivalence claim for microbatch changes; actual pilot uses global_batch=microbatch=64. Gradient and optimizer-state tolerance checks passed; parameter difference is consistent with Adam sensitivity but cause is not established."
+  },
+  "mixed_length_transition": {
+    "evidence_class": "NUM",
+    "status": "passed",
+    "fixture_width": 32,
+    "evaluation_lengths": [
+      128,
+      256,
+      512
+    ],
+    "evaluation_batch": 4,
+    "training_length": 128,
+    "training_batch": 4,
+    "eval": {
+      "update": 0,
+      "split": "dev",
+      "conditions": {
+        "T128": {
+          "answer_ce": 7.455705642700195,
+          "answer_accuracy": 0.0,
+          "sequence_accuracy": 0.0,
+          "correct_answers": 0,
+          "supervised_targets": 16,
+          "examples": 4,
+          "input_tokens": 512,
+          "fixture_sha256": "af7c2c9aa4c07d3bde298ee480875391992cda955ce0f6a393dab93f2dbd0663",
+          "predictions": null
+        },
+        "T256": {
+          "answer_ce": 7.237982273101807,
+          "answer_accuracy": 0.0,
+          "sequence_accuracy": 0.0,
+          "correct_answers": 0,
+          "supervised_targets": 16,
+          "examples": 4,
+          "input_tokens": 1024,
+          "fixture_sha256": "07e87bc88b1b329e1aadf237641c3b9b6bd8ed52566a699a31d1d0136736cfee",
+          "predictions": null
+        },
+        "T512": {
+          "answer_ce": 7.258431434631348,
+          "answer_accuracy": 0.0,
+          "sequence_accuracy": 0.0,
+          "correct_answers": 0,
+          "supervised_targets": 16,
+          "examples": 4,
+          "input_tokens": 2048,
+          "fixture_sha256": "173b06d512609f135576238940cbb56b24d638d1cc1191d6d07135014aadffb5",
+          "predictions": null
+        }
+      },
+      "primary_macro_answer_ce": 7.455705642700195,
+      "compiler_audit": {
+        "required": true,
+        "counters": {
+          "frames": {
+            "total": 12,
+            "ok": 12
+          },
+          "stats": {
+            "calls_captured": 246,
+            "unique_graphs": 12
+          },
+          "aot_autograd": {
+            "total": 12,
+            "autograd_cache_miss": 5,
+            "autograd_cache_saved": 5,
+            "ok": 12,
+            "autograd_cache_hit": 7
+          },
+          "inductor": {
+            "pattern_matcher_count": 41,
+            "pattern_matcher_nodes": 43,
+            "triton_bundler_load_static_autotuner": 26,
+            "async_compile_cache_miss": 86,
+            "async_compile_cache_hit": 48,
+            "extern_calls": 23,
+            "fxgraph_cache_hit": 8,
+            "fxgraph_cache_miss": 4,
+            "triton_bundler_save_kernel": 200,
+            "triton_bundler_save_static_autotuner": 4,
+            "removed_pointless_view_pair": 2,
+            "benchmarking.InductorBenchmarker.benchmark": 17,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 17
+          },
+          "graph_break": {},
+          "aten_mm_info": {
+            "aten.mm_1024_64_32": 1,
+            "aten.mm_1024_32_32": 1,
+            "aten.bmm_16_128_128_8": 1,
+            "aten.bmm_16_128_8_128": 1,
+            "aten.mm_2048_64_32": 1,
+            "aten.mm_2048_32_32": 1,
+            "aten.bmm_16_256_256_8": 1,
+            "aten.bmm_16_256_8_256": 1
+          }
+        },
+        "recompile_limit": 64,
+        "accumulated_recompile_limit": 256,
+        "fail_on_recompile_limit_hit": true
+      }
+    },
+    "update": {
+      "update": 1,
+      "loss": 7.597287495930989,
+      "answer_accuracy": 0.0,
+      "sequence_accuracy": 0.0,
+      "correct_answers": 0,
+      "supervised_targets": 24,
+      "input_tokens": 512,
+      "examples": 4,
+      "learning_rate": 0.001,
+      "gradient_norm_before_clipping": 7.0749969482421875,
+      "update_seconds": 1.5338334040006885,
+      "data_sha256": "6230665dee43f49ca5da8579bdea8a0aecf7cddbdd65f1dbbedd9e100e662a51"
+    },
+    "compiler_audit": {
+      "required": true,
+      "counters": {
+        "frames": {
+          "total": 14,
+          "ok": 14
+        },
+        "stats": {
+          "calls_captured": 313,
+          "unique_graphs": 17
+        },
+        "aot_autograd": {
+          "total": 17,
+          "autograd_cache_miss": 6,
+          "autograd_cache_saved": 6,
+          "ok": 17,
+          "autograd_cache_hit": 10,
+          "autograd_cache_bypass": 1
+        },
+        "inductor": {
+          "pattern_matcher_count": 73,
+          "pattern_matcher_nodes": 83,
+          "triton_bundler_load_static_autotuner": 50,
+          "async_compile_cache_miss": 159,
+          "async_compile_cache_hit": 95,
+          "extern_calls": 41,
+          "fxgraph_cache_hit": 14,
+          "fxgraph_cache_miss": 5,
+          "triton_bundler_save_kernel": 216,
+          "triton_bundler_save_static_autotuner": 5,
+          "removed_pointless_view_pair": 2,
+          "benchmarking.InductorBenchmarker.benchmark": 17,
+          "benchmarking.InductorBenchmarker.benchmark_gpu": 17
+        },
+        "graph_break": {},
+        "aten_mm_info": {
+          "aten.mm_1024_64_32": 1,
+          "aten.mm_1024_32_32": 1,
+          "aten.bmm_16_128_128_8": 1,
+          "aten.bmm_16_128_8_128": 1,
+          "aten.mm_2048_64_32": 1,
+          "aten.mm_2048_32_32": 1,
+          "aten.bmm_16_256_256_8": 1,
+          "aten.bmm_16_256_8_256": 1,
+          "aten.mm_512_64_32": 1,
+          "aten.mm_512_32_32": 1
+        }
+      },
+      "recompile_limit": 64,
+      "accumulated_recompile_limit": 256,
+      "fail_on_recompile_limit_hit": true
+    }
+  },
+  "excluded_claims": [
+    "No BF16 precision approval",
+    "No full-width or full-batch exact-resume certificate",
+    "No R3 update0 exact-resume claim",
+    "No R3 accumulation parameter-equivalence claim",
+    "No research learning evidence from these private fixtures"
+  ],
+  "artifact_sha256": {
+    "plan.json": "2316308b948ffb6ae5c2f6335e188c77a552da705ae13950c8dd92ac3178cc1a",
+    "fixtures/mqar/manifest.json": "4fdf428e2580de260686fcefeeef45755a5c66e698ad741e745474bc5cca8c8b",
+    "check_results.py": "a25affa1df2e240872f3dc49ba856fb09836d3a7866307459d66970fdf646736",
+    "diagnose_runner.py": "b2a97dc9f35fb6940aca3f2b00aa3a238de8242ba409cc3e15eb2666f08070f7",
+    "runner-validation-initial-failure.json": "b8ccd7b44b82f64bc7a3292df357cf6e187d3a59fa60db3c23278f3186e3db36",
+    "exact-resume-diagnostic.json": "e931a67867ff133036b380346627c3adcd400aa1f83f6e480e2d8a6b1cd60d9f",
+    "accumulation-diagnostic.json": "baf0933c45ce93450fef315699faa95773e5bda8dd4555f572d04533f07e8058",
+    "mixed-length-transition.json": "32be345da28bc71ca31456693048639ebc87c121dc83af6755018e5beb16f03d"
+  }
+}

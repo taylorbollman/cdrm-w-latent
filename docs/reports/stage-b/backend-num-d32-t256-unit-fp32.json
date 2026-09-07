@@ -1,0 +1,3144 @@
+{
+  "schema": "stage-b-backend-v1",
+  "evidence": "NUM",
+  "status": "passed",
+  "arguments": {
+    "mode": "numerical",
+    "width": 32,
+    "length": 256,
+    "batch": 2,
+    "vocab": 256,
+    "topology": "r3",
+    "precision": "fp32",
+    "seed": 937,
+    "unit_cotangent": true,
+    "output": "docs/reports/stage-b/backend-num-d32-t256-unit-fp32.json"
+  },
+  "provenance": {
+    "recorded_at_utc": "2026-09-06T19:03:10Z",
+    "python": "3.12.3",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda_runtime": "13.3",
+    "cudnn": 92300,
+    "hardware": {
+      "device": "cuda:0",
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1,
+      "name": "NVIDIA H100 80GB HBM3",
+      "total_memory_bytes": 85017493504,
+      "capability": [
+        9,
+        0
+      ],
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916, 81559 MiB, 580.173.02"
+    },
+    "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+    "upstream_pinned_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+    "project_git": {
+      "head": "a605d3c167034e2a1da8f3acc4677f3d07b9c06f",
+      "dirty": true,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fork_git": {
+      "head": "0a82392fa394084e05f24cef09fe53dda85de71a",
+      "dirty": false,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source_sha256": {
+      "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+      "scripts/benchmark_model.py": "77c49506f8d4d818ce0bf76c12c4f3760e7f2cec95ba1c4f3907a96ecaffbde3",
+      "scripts/stage_a_ops.py": "1b7166fbaa11709c57ebb48d46448a739fd1fcc19487a1ee5904546bd1e00d7b"
+    },
+    "tf32_matmul": false,
+    "deterministic_algorithms": true,
+    "torch_dynamo_recompile_limit": 64,
+    "torch_dynamo_accumulated_recompile_limit": 256,
+    "torch_dynamo_fail_on_recompile_limit_hit": true
+  },
+  "attention_backend": "explicit math SDPA; deterministic algorithms; TF32 off",
+  "script_sha256": "41e0ba1b5f01a645718e44766e78f4894fa92855bc10de7647b7c51f730d0441",
+  "conversion": {
+    "copied": [
+      {
+        "source_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.kv_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.kv_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "target_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.wte.weight"
+        ],
+        "target_keys": [
+          "transformer.wte.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      }
+    ],
+    "transformed": [],
+    "new": [],
+    "missing": [],
+    "unexpected": [],
+    "parameter_mappings": [
+      {
+        "source_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.kv_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.kv_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "target_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.wte.weight"
+        ],
+        "target_keys": [
+          "transformer.wte.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      }
+    ],
+    "source_recurrent_layers": [
+      3
+    ],
+    "target_recurrent_layers": [
+      3
+    ],
+    "source_key_count": 100,
+    "target_key_count": 100,
+    "semantics": "weights_only",
+    "notes": [
+      "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+      "Optimizer state, training/data counters, and gate schedules are not converted."
+    ]
+  },
+  "model_config": {
+    "d_model": 32,
+    "n_heads": 4,
+    "n_kv_heads": 4,
+    "clip_qkv": null,
+    "n_layers": 12,
+    "mlp_ratio": 4,
+    "mlp_hidden_size": 128,
+    "activation_type": "gelu",
+    "block_type": "sequential",
+    "recurrent_layers": [
+      3
+    ],
+    "recurrent_backend": "naive",
+    "recurrent_write_rho": 1.0,
+    "reference_eager": true,
+    "block_group_size": 1,
+    "alibi": true,
+    "alibi_bias_max": 8.0,
+    "rope": false,
+    "rope_full_precision": true,
+    "rope_theta": 10000,
+    "flash_attention": false,
+    "attention_dropout": 0,
+    "multi_query_attention": null,
+    "attention_layer_norm": true,
+    "residual_dropout": 0,
+    "embedding_dropout": 0,
+    "embedding_layer_norm": false,
+    "layer_norm_type": "default",
+    "layer_norm_with_affine": true,
+    "layer_norm_eps": 1e-05,
+    "tanh_norm_alpha": 1.0,
+    "tanh_trainable_alpha": false,
+    "attention_layer_norm_with_affine": true,
+    "max_sequence_length": 256,
+    "bwd_mlp_chunks": 4,
+    "include_bias": false,
+    "bias_for_layer_norm": false,
+    "scale_logits": false,
+    "vocab_size": 256,
+    "embedding_size": 256,
+    "weight_tying": false,
+    "eos_token_id": 1,
+    "pad_token_id": 0,
+    "init_device": "cuda",
+    "init_fn": "mitchell",
+    "init_std": 0.02,
+    "init_cutoff_factor": null,
+    "precision": null,
+    "scale_emb_init": false,
+    "emb_init_std": null,
+    "norm_after": false
+  },
+  "fixture": {
+    "token_sha256": "afaa29b6f7544bf7c299d34debc4864e19237b263d91a1131f27e43b37371d62",
+    "cotangent_sha256": "9dae215bf3b287075f75eea3b1e6b9bbd534430d52a28d69641aebacce258db9",
+    "cotangent": "unit-L2 FP32 random cotangent",
+    "cotangent_l2": 1.0,
+    "input_gradient": "gradient at the embedding output; includes embedding parameter gradient separately"
+  },
+  "mode_seconds": {
+    "naive_fp32": 1.7864476819995616,
+    "tiled_fp32": 8.181370121999862
+  },
+  "comparisons": {
+    "tiled_fp32_vs_naive_fp32": {
+      "parameter_tensor_count": 100,
+      "gradients": {
+        "input": {
+          "numel": 16384,
+          "finite": true,
+          "max_abs": 1.7881393432617188e-07,
+          "reference_rms": 0.05450401830064465,
+          "relative_l2": 4.851442779569106e-07,
+          "max_abs_over_reference_rms": 3.2807477301917927e-06,
+          "passed": true
+        },
+        "transformer.wte.weight": {
+          "numel": 8192,
+          "finite": true,
+          "max_abs": 2.5331974029541016e-07,
+          "reference_rms": 0.07871242515000741,
+          "relative_l2": 4.905692882700681e-07,
+          "max_abs_over_reference_rms": 3.21829418687891e-06,
+          "passed": true
+        },
+        "transformer.ln_f.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1175870895385742e-07,
+          "reference_rms": 0.19085836103691553,
+          "relative_l2": 2.1866073028851335e-07,
+          "max_abs_over_reference_rms": 5.855583603813994e-07,
+          "passed": true
+        },
+        "transformer.blocks.0.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1548399925231934e-07,
+          "reference_rms": 0.1004332697474049,
+          "relative_l2": 4.976871960855196e-07,
+          "max_abs_over_reference_rms": 1.1498580056466133e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1920928955078125e-07,
+          "reference_rms": 0.10043327343460826,
+          "relative_l2": 5.114907752339922e-07,
+          "max_abs_over_reference_rms": 1.1869501558006869e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 8.344650268554688e-07,
+          "reference_rms": 0.23957483327869017,
+          "relative_l2": 5.599508389435939e-07,
+          "max_abs_over_reference_rms": 3.483108035328405e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 6.258487701416016e-07,
+          "reference_rms": 0.22635811591430086,
+          "relative_l2": 4.236258293654571e-07,
+          "max_abs_over_reference_rms": 2.7648611918052356e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 3.8743019104003906e-07,
+          "reference_rms": 0.12426345840203129,
+          "relative_l2": 5.793514604188079e-07,
+          "max_abs_over_reference_rms": 3.1178127184146186e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 1.4901161193847656e-07,
+          "reference_rms": 0.07498793412082766,
+          "relative_l2": 4.5279311250912496e-07,
+          "max_abs_over_reference_rms": 1.987141180584798e-06,
+          "passed": true
+        },
+        "transformer.blocks.0.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.086162567138672e-07,
+          "reference_rms": 0.2711409565412569,
+          "relative_l2": 3.4907892764854647e-07,
+          "max_abs_over_reference_rms": 7.694014927697729e-07,
+          "passed": true
+        },
+        "transformer.blocks.0.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.7881393432617188e-07,
+          "reference_rms": 0.1370043915421719,
+          "relative_l2": 4.941307821202011e-07,
+          "max_abs_over_reference_rms": 1.3051693621888784e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 4.470348358154297e-08,
+          "reference_rms": 0.028243801174172932,
+          "relative_l2": 5.321833836465327e-07,
+          "max_abs_over_reference_rms": 1.5827715011115896e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 3.3527612686157227e-08,
+          "reference_rms": 0.02824379720985318,
+          "relative_l2": 4.419851248341208e-07,
+          "max_abs_over_reference_rms": 1.1870787924529045e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 6.556510925292969e-07,
+          "reference_rms": 0.18296257360088028,
+          "relative_l2": 5.360305012675772e-07,
+          "max_abs_over_reference_rms": 3.583525743136696e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 5.364418029785156e-07,
+          "reference_rms": 0.160497602048505,
+          "relative_l2": 4.1406109574191366e-07,
+          "max_abs_over_reference_rms": 3.3423664661132704e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 2.7567148208618164e-07,
+          "reference_rms": 0.0664042153772698,
+          "relative_l2": 4.939718193589548e-07,
+          "max_abs_over_reference_rms": 4.151415396145832e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 1.0803341865539551e-07,
+          "reference_rms": 0.04456927653727728,
+          "relative_l2": 3.8934528674572937e-07,
+          "max_abs_over_reference_rms": 2.423943735434823e-06,
+          "passed": true
+        },
+        "transformer.blocks.1.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.341104507446289e-07,
+          "reference_rms": 0.15264654640382597,
+          "relative_l2": 3.348147489715224e-07,
+          "max_abs_over_reference_rms": 8.78568522538598e-07,
+          "passed": true
+        },
+        "transformer.blocks.1.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 7.078051567077637e-08,
+          "reference_rms": 0.06832636184845665,
+          "relative_l2": 4.939587755158181e-07,
+          "max_abs_over_reference_rms": 1.0359181106080675e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.7939677238464355e-08,
+          "reference_rms": 0.025386528215184254,
+          "relative_l2": 3.7840118207277543e-07,
+          "max_abs_over_reference_rms": 1.10057101946508e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.862645149230957e-08,
+          "reference_rms": 0.025386528055770522,
+          "relative_l2": 3.2740510811027647e-07,
+          "max_abs_over_reference_rms": 7.337140175840492e-07,
+          "passed": true
+        },
+        "transformer.blocks.2.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 3.5762786865234375e-07,
+          "reference_rms": 0.1442811266614511,
+          "relative_l2": 5.259145598265619e-07,
+          "max_abs_over_reference_rms": 2.4786878015688137e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 3.129243850708008e-07,
+          "reference_rms": 0.14608784012056938,
+          "relative_l2": 3.8282093083081557e-07,
+          "max_abs_over_reference_rms": 2.1420289656725547e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 1.341104507446289e-07,
+          "reference_rms": 0.03952182462737087,
+          "relative_l2": 5.114588464670614e-07,
+          "max_abs_over_reference_rms": 3.3933263964678042e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 6.705522537231445e-08,
+          "reference_rms": 0.030389449397202367,
+          "relative_l2": 3.7794564712712716e-07,
+          "max_abs_over_reference_rms": 2.2065297892000475e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.043081283569336e-07,
+          "reference_rms": 0.0699118927874727,
+          "relative_l2": 4.668721638216632e-07,
+          "max_abs_over_reference_rms": 1.491994054202238e-06,
+          "passed": true
+        },
+        "transformer.blocks.2.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 5.960464477539063e-08,
+          "reference_rms": 0.05490894804618056,
+          "relative_l2": 4.0472143264193826e-07,
+          "max_abs_over_reference_rms": 1.0855178781655188e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 3.166496753692627e-08,
+          "reference_rms": 0.0160615253174488,
+          "relative_l2": 6.476766903318883e-07,
+          "max_abs_over_reference_rms": 1.971479477265233e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.7939677238464355e-08,
+          "reference_rms": 0.01606152361902884,
+          "relative_l2": 5.804472418037357e-07,
+          "max_abs_over_reference_rms": 1.739540899181128e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 5.066394805908203e-07,
+          "reference_rms": 0.1399733004284923,
+          "relative_l2": 6.348607246075897e-07,
+          "max_abs_over_reference_rms": 3.6195437204086333e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 5.364418029785156e-07,
+          "reference_rms": 0.15081495918540638,
+          "relative_l2": 4.874092187303741e-07,
+          "max_abs_over_reference_rms": 3.5569535401261736e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 8.195638656616211e-08,
+          "reference_rms": 0.026562542951680777,
+          "relative_l2": 4.742074632646351e-07,
+          "max_abs_over_reference_rms": 3.0854119168954122e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 4.470348358154297e-08,
+          "reference_rms": 0.04801473341031403,
+          "relative_l2": 3.418607748143607e-07,
+          "max_abs_over_reference_rms": 9.310367965500404e-07,
+          "passed": true
+        },
+        "transformer.blocks.3.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 4.470348358154297e-08,
+          "reference_rms": 0.05570415019821617,
+          "relative_l2": 4.064519278608239e-07,
+          "max_abs_over_reference_rms": 8.025162114936011e-07,
+          "passed": true
+        },
+        "transformer.blocks.3.q_proj.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 5.774199962615967e-08,
+          "reference_rms": 0.017994885685578933,
+          "relative_l2": 6.486747203011975e-07,
+          "max_abs_over_reference_rms": 3.208800580068925e-06,
+          "passed": true
+        },
+        "transformer.blocks.3.kv_proj.weight": {
+          "numel": 2048,
+          "finite": true,
+          "max_abs": 1.6391277313232422e-07,
+          "reference_rms": 0.04170924327930685,
+          "relative_l2": 4.02882583612579e-07,
+          "max_abs_over_reference_rms": 3.9298908406148435e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.909211277961731e-08,
+          "reference_rms": 0.01089940733501857,
+          "relative_l2": 5.649048804477028e-07,
+          "max_abs_over_reference_rms": 1.751665222959096e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.7695128917694092e-08,
+          "reference_rms": 0.010899407217504212,
+          "relative_l2": 5.833257410189174e-07,
+          "max_abs_over_reference_rms": 1.6234946143929826e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 3.4086406230926514e-07,
+          "reference_rms": 0.12743035609261866,
+          "relative_l2": 5.222937269347507e-07,
+          "max_abs_over_reference_rms": 2.6749047304044184e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.942979335784912e-07,
+          "reference_rms": 0.11947990448564996,
+          "relative_l2": 3.7927845747747576e-07,
+          "max_abs_over_reference_rms": 2.463158426895442e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 1.341104507446289e-07,
+          "reference_rms": 0.027220311647244987,
+          "relative_l2": 4.6402718367745606e-07,
+          "max_abs_over_reference_rms": 4.926852141981352e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 4.470348358154297e-08,
+          "reference_rms": 0.01971862057885235,
+          "relative_l2": 3.8394884521718183e-07,
+          "max_abs_over_reference_rms": 2.267069514461177e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 5.8673322200775146e-08,
+          "reference_rms": 0.04231429354168141,
+          "relative_l2": 4.271905665162339e-07,
+          "max_abs_over_reference_rms": 1.3866076280578662e-06,
+          "passed": true
+        },
+        "transformer.blocks.4.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 4.190951585769653e-08,
+          "reference_rms": 0.043649399965020604,
+          "relative_l2": 3.121493447433028e-07,
+          "max_abs_over_reference_rms": 9.601395641470818e-07,
+          "passed": true
+        },
+        "transformer.blocks.5.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.7939677238464355e-08,
+          "reference_rms": 0.010854364061474305,
+          "relative_l2": 8.329188170923535e-07,
+          "max_abs_over_reference_rms": 2.574050131378164e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.421438694000244e-08,
+          "reference_rms": 0.010854363937278422,
+          "relative_l2": 7.279186244374509e-07,
+          "max_abs_over_reference_rms": 2.230843472719771e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 4.76837158203125e-07,
+          "reference_rms": 0.15871429200711828,
+          "relative_l2": 5.141011867364844e-07,
+          "max_abs_over_reference_rms": 3.0043744150132303e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.384185791015625e-07,
+          "reference_rms": 0.10761893893907565,
+          "relative_l2": 3.871404203650984e-07,
+          "max_abs_over_reference_rms": 2.215396113843253e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 9.313225746154785e-08,
+          "reference_rms": 0.02291538630025205,
+          "relative_l2": 4.967308563030536e-07,
+          "max_abs_over_reference_rms": 4.064180120783017e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 3.259629011154175e-08,
+          "reference_rms": 0.016997237689993408,
+          "relative_l2": 3.8072858893440546e-07,
+          "max_abs_over_reference_rms": 1.9177404414796056e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 5.21540641784668e-08,
+          "reference_rms": 0.04192793338017738,
+          "relative_l2": 4.191038712599496e-07,
+          "max_abs_over_reference_rms": 1.243897802106414e-06,
+          "passed": true
+        },
+        "transformer.blocks.5.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 3.3527612686157227e-08,
+          "reference_rms": 0.03542885557147181,
+          "relative_l2": 3.584256872609613e-07,
+          "max_abs_over_reference_rms": 9.463363166930655e-07,
+          "passed": true
+        },
+        "transformer.blocks.6.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1175870895385742e-08,
+          "reference_rms": 0.009865867336164258,
+          "relative_l2": 4.3322124849421083e-07,
+          "max_abs_over_reference_rms": 1.1327813880508552e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1175870895385742e-08,
+          "reference_rms": 0.009865867541067734,
+          "relative_l2": 3.766303679022671e-07,
+          "max_abs_over_reference_rms": 1.1327813645242021e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 4.470348358154297e-07,
+          "reference_rms": 0.14192566109035903,
+          "relative_l2": 4.488672972054628e-07,
+          "max_abs_over_reference_rms": 3.1497815996137475e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.60770320892334e-07,
+          "reference_rms": 0.10373563472271416,
+          "relative_l2": 3.8268521088768363e-07,
+          "max_abs_over_reference_rms": 2.5137969376615304e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 8.940696716308594e-08,
+          "reference_rms": 0.020705027896420897,
+          "relative_l2": 4.243141069457427e-07,
+          "max_abs_over_reference_rms": 4.318128312135284e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 4.0978193283081055e-08,
+          "reference_rms": 0.014747376520524933,
+          "relative_l2": 4.0654657182537664e-07,
+          "max_abs_over_reference_rms": 2.778676819300633e-06,
+          "passed": true
+        },
+        "transformer.blocks.6.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.60770320892334e-08,
+          "reference_rms": 0.034256073652384894,
+          "relative_l2": 3.802016622080779e-07,
+          "max_abs_over_reference_rms": 7.612382070943476e-07,
+          "passed": true
+        },
+        "transformer.blocks.6.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.60770320892334e-08,
+          "reference_rms": 0.035265602442867416,
+          "relative_l2": 3.563125488504212e-07,
+          "max_abs_over_reference_rms": 7.394466642525078e-07,
+          "passed": true
+        },
+        "transformer.blocks.7.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.5832483768463135e-08,
+          "reference_rms": 0.0069227357102178005,
+          "relative_l2": 5.933509149927166e-07,
+          "max_abs_over_reference_rms": 2.2870270412164872e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 9.313225746154785e-09,
+          "reference_rms": 0.006922736504006438,
+          "relative_l2": 5.838186296696252e-07,
+          "max_abs_over_reference_rms": 1.3453098699863681e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 2.384185791015625e-07,
+          "reference_rms": 0.11074046378103893,
+          "relative_l2": 4.933053123651179e-07,
+          "max_abs_over_reference_rms": 2.1529490753531115e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.682209014892578e-07,
+          "reference_rms": 0.0988328629969803,
+          "relative_l2": 3.751159561402026e-07,
+          "max_abs_over_reference_rms": 2.713883756432847e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 5.21540641784668e-08,
+          "reference_rms": 0.020068527706621958,
+          "relative_l2": 4.1580090463051793e-07,
+          "max_abs_over_reference_rms": 2.598798723100034e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 3.3527612686157227e-08,
+          "reference_rms": 0.013198009386977827,
+          "relative_l2": 3.8268023359773986e-07,
+          "max_abs_over_reference_rms": 2.5403537535924285e-06,
+          "passed": true
+        },
+        "transformer.blocks.7.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.2351741790771484e-08,
+          "reference_rms": 0.02487161855763992,
+          "relative_l2": 3.4783947891927065e-07,
+          "max_abs_over_reference_rms": 8.986846488889082e-07,
+          "passed": true
+        },
+        "transformer.blocks.7.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.9802322387695312e-08,
+          "reference_rms": 0.025789061107774312,
+          "relative_l2": 4.700882309461491e-07,
+          "max_abs_over_reference_rms": 1.1556187432783728e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.1175870895385742e-08,
+          "reference_rms": 0.005778039543903711,
+          "relative_l2": 6.194146012184989e-07,
+          "max_abs_over_reference_rms": 1.934197717143901e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 5.820766091346741e-09,
+          "reference_rms": 0.0057780397537487566,
+          "relative_l2": 5.364790106171093e-07,
+          "max_abs_over_reference_rms": 1.007394607759537e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 2.682209014892578e-07,
+          "reference_rms": 0.11302920658330753,
+          "relative_l2": 4.7493623907419273e-07,
+          "max_abs_over_reference_rms": 2.3730229521833113e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.682209014892578e-07,
+          "reference_rms": 0.11092475735377398,
+          "relative_l2": 3.6007219003811127e-07,
+          "max_abs_over_reference_rms": 2.4180436170242583e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 5.21540641784668e-08,
+          "reference_rms": 0.018414507753994194,
+          "relative_l2": 4.06587045070648e-07,
+          "max_abs_over_reference_rms": 2.8322268982267165e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 3.3527612686157227e-08,
+          "reference_rms": 0.012704982792424453,
+          "relative_l2": 4.055249454784989e-07,
+          "max_abs_over_reference_rms": 2.6389341279665955e-06,
+          "passed": true
+        },
+        "transformer.blocks.8.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.2351741790771484e-08,
+          "reference_rms": 0.026991022879805725,
+          "relative_l2": 3.19436151041934e-07,
+          "max_abs_over_reference_rms": 8.281176260087098e-07,
+          "passed": true
+        },
+        "transformer.blocks.8.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.6763806343078613e-08,
+          "reference_rms": 0.020212279511580708,
+          "relative_l2": 4.0158732103431337e-07,
+          "max_abs_over_reference_rms": 8.293872214400025e-07,
+          "passed": true
+        },
+        "transformer.blocks.9.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 7.450580596923828e-09,
+          "reference_rms": 0.0068110872571043885,
+          "relative_l2": 4.4688442875439963e-07,
+          "max_abs_over_reference_rms": 1.0938900524512307e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 7.450580596923828e-09,
+          "reference_rms": 0.006811086613777248,
+          "relative_l2": 4.541064184835081e-07,
+          "max_abs_over_reference_rms": 1.0938901557723598e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 2.980232238769531e-07,
+          "reference_rms": 0.1282253279295133,
+          "relative_l2": 3.889356499730812e-07,
+          "max_abs_over_reference_rms": 2.3242149479296274e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.4959444999694824e-07,
+          "reference_rms": 0.10794445959711303,
+          "relative_l2": 3.54124595306392e-07,
+          "max_abs_over_reference_rms": 2.3122488261882373e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 5.960464477539063e-08,
+          "reference_rms": 0.020519252353812217,
+          "relative_l2": 3.3409513121580766e-07,
+          "max_abs_over_reference_rms": 2.9048156213311953e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.7939677238464355e-08,
+          "reference_rms": 0.01192654636340332,
+          "relative_l2": 3.9505882357253187e-07,
+          "max_abs_over_reference_rms": 2.3426460927697752e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.60770320892334e-08,
+          "reference_rms": 0.02106301169367222,
+          "relative_l2": 4.957424084523507e-07,
+          "max_abs_over_reference_rms": 1.2380485976308649e-06,
+          "passed": true
+        },
+        "transformer.blocks.9.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.2351741790771484e-08,
+          "reference_rms": 0.028802825191719592,
+          "relative_l2": 3.7472323853772346e-07,
+          "max_abs_over_reference_rms": 7.760260197391087e-07,
+          "passed": true
+        },
+        "transformer.blocks.10.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 6.51925802230835e-09,
+          "reference_rms": 0.007096613206336776,
+          "relative_l2": 5.027659588986433e-07,
+          "max_abs_over_reference_rms": 9.18643560351734e-07,
+          "passed": true
+        },
+        "transformer.blocks.10.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 8.381903171539307e-09,
+          "reference_rms": 0.007096614419445153,
+          "relative_l2": 4.965702983659551e-07,
+          "max_abs_over_reference_rms": 1.1811129471219944e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 2.980232238769531e-07,
+          "reference_rms": 0.13881966602206927,
+          "relative_l2": 3.723288882333676e-07,
+          "max_abs_over_reference_rms": 2.146837205540993e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.086162567138672e-07,
+          "reference_rms": 0.10375824528000381,
+          "relative_l2": 3.4023736832047546e-07,
+          "max_abs_over_reference_rms": 2.0105993133450908e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 3.725290298461914e-08,
+          "reference_rms": 0.014237365524927544,
+          "relative_l2": 4.502522759098406e-07,
+          "max_abs_over_reference_rms": 2.616558724954751e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 3.725290298461914e-08,
+          "reference_rms": 0.01213729350659043,
+          "relative_l2": 3.5917437985507283e-07,
+          "max_abs_over_reference_rms": 3.0692924221030977e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.60770320892334e-08,
+          "reference_rms": 0.02013859937225244,
+          "relative_l2": 4.900150034446825e-07,
+          "max_abs_over_reference_rms": 1.2948781395970916e-06,
+          "passed": true
+        },
+        "transformer.blocks.10.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 2.2351741790771484e-08,
+          "reference_rms": 0.022650150712289697,
+          "relative_l2": 4.2489390959573943e-07,
+          "max_abs_over_reference_rms": 9.868253008419807e-07,
+          "passed": true
+        },
+        "transformer.blocks.11.k_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 7.450580596923828e-09,
+          "reference_rms": 0.005567708605367,
+          "relative_l2": 5.808753607127908e-07,
+          "max_abs_over_reference_rms": 1.338177179341216e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.q_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 7.450580596923828e-09,
+          "reference_rms": 0.005567708436699035,
+          "relative_l2": 5.757578501004389e-07,
+          "max_abs_over_reference_rms": 1.3381772198799088e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.attn_out.weight": {
+          "numel": 1024,
+          "finite": true,
+          "max_abs": 3.2782554626464844e-07,
+          "reference_rms": 0.13649142018426055,
+          "relative_l2": 3.699214414622422e-07,
+          "max_abs_over_reference_rms": 2.4018033208394404e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.ff_out.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.2351741790771484e-07,
+          "reference_rms": 0.10288002422092044,
+          "relative_l2": 3.4141335687389806e-07,
+          "max_abs_over_reference_rms": 2.1726026952301498e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.att_proj.weight": {
+          "numel": 3072,
+          "finite": true,
+          "max_abs": 5.21540641784668e-08,
+          "reference_rms": 0.016488243364468556,
+          "relative_l2": 3.562819218233561e-07,
+          "max_abs_over_reference_rms": 3.163106161500292e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.ff_proj.weight": {
+          "numel": 4096,
+          "finite": true,
+          "max_abs": 2.1653249859809875e-08,
+          "reference_rms": 0.010989255281376361,
+          "relative_l2": 3.623278641816892e-07,
+          "max_abs_over_reference_rms": 1.970401934015122e-06,
+          "passed": true
+        },
+        "transformer.blocks.11.attn_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.6763806343078613e-08,
+          "reference_rms": 0.027619751776019306,
+          "relative_l2": 2.4888617694218916e-07,
+          "max_abs_over_reference_rms": 6.069499276830465e-07,
+          "passed": true
+        },
+        "transformer.blocks.11.ff_norm.weight": {
+          "numel": 32,
+          "finite": true,
+          "max_abs": 1.4901161193847656e-08,
+          "reference_rms": 0.02033007819366773,
+          "relative_l2": 3.415055485156264e-07,
+          "max_abs_over_reference_rms": 7.32961332066542e-07,
+          "passed": true
+        },
+        "transformer.ff_out.weight": {
+          "numel": 8192,
+          "finite": true,
+          "max_abs": 8.195638656616211e-08,
+          "reference_rms": 0.06282023029387301,
+          "relative_l2": 2.674296235438584e-07,
+          "max_abs_over_reference_rms": 1.304617735127206e-06,
+          "passed": true
+        }
+      },
+      "logits": {
+        "numel": 131072,
+        "finite": true,
+        "max_abs": 1.1920928955078125e-06,
+        "reference_rms": 0.9801363274887789,
+        "relative_l2": 2.250735098001826e-07,
+        "max_abs_over_reference_rms": 1.2162521294992611e-06,
+        "passed": true
+      }
+    }
+  },
+  "bounds": {
+    "fp32_elementwise_atol": 2e-06,
+    "fp32_elementwise_rtol": 2e-05,
+    "bf16_gradient_relative_l2": 0.015625,
+    "bf16_gradient_max_abs_over_reference_rms": 0.0625,
+    "bf16_logit_elementwise_atol": 0.002,
+    "bf16_logit_elementwise_rtol": 0.02,
+    "selection": "unchanged Stage A bounds; failures are retained"
+  },
+  "failures": [],
+  "compiler_counters": {
+    "frames": {
+      "total": 10,
+      "ok": 10
+    },
+    "stats": {
+      "calls_captured": 243,
+      "unique_graphs": 13
+    },
+    "aot_autograd": {
+      "total": 13,
+      "autograd_cache_miss": 12,
+      "autograd_cache_saved": 12,
+      "ok": 13,
+      "autograd_cache_bypass": 1
+    },
+    "inductor": {
+      "pattern_matcher_count": 137,
+      "pattern_matcher_nodes": 157,
+      "fxgraph_cache_miss": 15,
+      "extern_calls": 33,
+      "async_compile_cache_miss": 87,
+      "triton_bundler_save_kernel": 592,
+      "triton_bundler_save_static_autotuner": 15,
+      "removed_pointless_view_pair": 12,
+      "async_compile_cache_hit": 32,
+      "benchmarking.InductorBenchmarker.benchmark": 27,
+      "benchmarking.InductorBenchmarker.benchmark_gpu": 27
+    },
+    "graph_break": {},
+    "aten_mm_info": {
+      "aten.mm_512_64_32": 2,
+      "aten.mm_512_32_32": 4,
+      "aten.bmm_8_1_1_8": 1,
+      "aten.bmm_8_2_2_8": 1,
+      "aten.bmm_8_2_8_2": 1,
+      "aten.bmm_8_4_4_8": 1,
+      "aten.bmm_8_4_8_4": 1,
+      "aten.bmm_8_8_8_8": 2,
+      "aten.bmm_8_16_16_8": 1,
+      "aten.bmm_8_16_8_16": 1,
+      "aten.bmm_8_32_32_8": 1,
+      "aten.bmm_8_32_8_32": 1,
+      "aten.bmm_8_64_64_8": 1,
+      "aten.bmm_8_64_8_64": 1,
+      "aten.bmm_8_128_128_8": 1,
+      "aten.bmm_8_128_8_128": 1,
+      "aten.bmm_8_256_256_8": 1,
+      "aten.bmm_8_8_256_256": 1,
+      "aten.mm_32_32_512": 2,
+      "aten.mm_64_32_512": 1,
+      "aten.mm_512_32_64": 1,
+      "aten.mm_512_128_32": 2,
+      "aten.mm_512_32_128": 2,
+      "aten.mm_32_128_512": 1,
+      "aten.mm_128_32_512": 1
+    }
+  }
+}

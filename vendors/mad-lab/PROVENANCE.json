@@ -1,0 +1,20 @@
+{
+  "upstream_repository": "https://github.com/athms/mad-lab",
+  "revision": "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b",
+  "retrieved_date_utc": "2026-09-06",
+  "snapshot_type": "minimal unmodified source snapshot; not installed",
+  "files": {
+    "mad/data/instances.py": {
+      "sha256": "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/mad/data/instances.py"
+    },
+    "configs/tasks/noisy-in-context-recall.yml": {
+      "sha256": "03ce24dec8fc99ab1048a903f9c1c203721f24bf885ec160249b80401cb9c372",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/configs/tasks/noisy-in-context-recall.yml"
+    },
+    "LICENSE": {
+      "sha256": "26803f323cbd186f5321d9e5333196468a7bce0a1c60b63b064eddb5da9192ff",
+      "url": "https://raw.githubusercontent.com/athms/mad-lab/0f49a452b84ca0d13f8eb9c1ffa649032376fb1b/LICENSE"
+    }
+  }
+}

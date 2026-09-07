@@ -1,0 +1,28 @@
+{
+  "docker_images": [
+    {
+      "name": "cdrm-w-latent:dev",
+      "id": "sha256:6350532c9d2d1deb0d7c80ea6b50623290f90163a8a67c788e2485a4e61980ea",
+      "repo_digests": [
+        "cdrm-w-latent@sha256:6350532c9d2d1deb0d7c80ea6b50623290f90163a8a67c788e2485a4e61980ea"
+      ],
+      "created": "2026-09-06T17:13:03.899951533Z",
+      "architecture": "amd64",
+      "os": "linux"
+    },
+    {
+      "name": "nvcr.io/nvidia/pytorch:26.06-py3",
+      "id": "sha256:43c018d6a12963f1a1bad85ef8574b5c2a978eec2be0ebcacfb87f69e0d210e1",
+      "repo_digests": [
+        "nvcr.io/nvidia/pytorch@sha256:43c018d6a12963f1a1bad85ef8574b5c2a978eec2be0ebcacfb87f69e0d210e1"
+      ],
+      "created": "2026-06-09T23:57:51.610052591Z",
+      "architecture": "amd64",
+      "os": "linux"
+    }
+  ],
+  "packages_file": "docs/reports/stage-b/environment-packages.json",
+  "packages_sha256": "cd406ed59113188d68ab666548fc38e92cf59b0d757e4d3302d89d86de03b7bf",
+  "package_count": 262,
+  "scope": "Installed package versions and local image identities; this is not an uploaded container image."
+}

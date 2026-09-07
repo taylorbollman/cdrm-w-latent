@@ -1,0 +1,91 @@
+{
+  "storage_prefix": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z",
+  "authorization": "User requested retaining checkpoints and data in gs://fast-chunks",
+  "plan": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/plan/pilot.json",
+    "sha256": "7aa288c7498df0e23a0ec55a67191e1e72401a723565a6ace68eb699eaa8c605",
+    "verified_by_readback": true
+  },
+  "status": "Complete: data, research and calibration checkpoints, final predictions, numerical diagnostics, source, execution logs and reports retained in GCS.",
+  "fixtures": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/fixtures",
+    "local_path": ".runtime/stage-b/20260906T190223Z/fixtures",
+    "file_count": 77,
+    "bytes": 150012639,
+    "rsync_exit_code": 0,
+    "includes": "All exact training arrays, fixed dev/test arrays, calibration arrays, metadata and audited manifests.",
+    "checksum_dry_run": "77 local and 77 remote objects; no transfer actions needed"
+  },
+  "local_persistence": "Project .runtime is on persistent home/root filesystem; SSD caches are disposable",
+  "calibration": {
+    "status": "All six runs uploaded.",
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration",
+    "file_count": 54,
+    "checksum_dry_run": "54 local and 54 remote files; no transfer actions required.",
+    "verification_log": "storage-calibration-check.txt"
+  },
+  "runner_validation": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/runner-validation",
+    "file_count": 82,
+    "upload_exit_code": 0,
+    "checksum_dry_run": "82 local and 82 remote files; no transfer actions required.",
+    "verification_log": "storage-runner-validation-check.txt"
+  },
+  "research_runs": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/runs",
+    "file_count": 152,
+    "bytes": 2463889374,
+    "status": "Uploaded and checksum verified.",
+    "checksum_dry_run": "No transfer actions required.",
+    "verification_log": "storage-runs-check.txt",
+    "completed_training_runs": 6,
+    "completed_final_test_evaluations": 6,
+    "research_checkpoint_files": 24,
+    "prediction_files": 32
+  },
+  "source": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/source",
+    "file_count": 6,
+    "bytes": 25262060,
+    "status": "Uploaded and checksum verified.",
+    "checksum_dry_run": "No transfer actions required.",
+    "verification_log": "storage-source-check.txt",
+    "training_snapshot": "training-source-v2.tar.gz",
+    "final_snapshot": "final-source-v3.tar.gz",
+    "snapshots": {
+      "final-source-v3": {
+        "archive_sha256": "82bb1506998fc1d6743c11548fbc2aa4b2e525b32f372c769e0bd11c334216e2",
+        "archive_bytes": 8422763
+      },
+      "preflight-source-v1": {
+        "archive_sha256": "a902042183495dae478287bfd0b030ecc0b333aa492bc110504b579c26ba3edc",
+        "archive_bytes": 8405814
+      },
+      "training-source-v2": {
+        "archive_sha256": "e13e69d9c3160e7f6ebbbe5e5425e1d483b17a1544b131e0592af0479638dd3a",
+        "archive_bytes": 8406199
+      }
+    }
+  },
+  "execution": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/execution",
+    "file_count": 34,
+    "bytes": 180627,
+    "status": "Uploaded and checksum verified.",
+    "checksum_dry_run": "No transfer actions required.",
+    "verification_log": "storage-execution-check.txt"
+  },
+  "reports": {
+    "uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/reports",
+    "status": "Uploaded and checksum verified; final storage manifest separately verified by readback.",
+    "includes": "Primary paired results, posthoc modal-value baseline, checkpoint ledger, NUM/OPS/data/retention reports and environment metadata.",
+    "file_count": 52,
+    "verification_log": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/verification/reports-check.txt",
+    "checksum_dry_run": "52 local and 52 remote files; no transfer actions required."
+  },
+  "verification_methods": {
+    "artifact_directories": "gcloud storage rsync --recursive --checksums-only --dry-run; no transfer actions required.",
+    "research_checkpoint_identity": "Local SHA-256 matched all 24 recorded checkpoint digests; all six final checkpoints loaded for test evaluation.",
+    "storage_manifest": "Final local JSON bytes compared with GCS readback; see verification/storage-readback.json in the archive."
+  }
+}

@@ -1,0 +1,2149 @@
+{
+  "schema": "stage-b-backend-v1",
+  "evidence": "OPS",
+  "status": "passed",
+  "arguments": {
+    "mode": "eval",
+    "width": 256,
+    "length": 512,
+    "batch": 64,
+    "vocab": 1024,
+    "topology": "seq",
+    "precision": "fp32",
+    "seed": 937,
+    "unit_cotangent": false,
+    "output": "docs/reports/stage-b/backend-eval-d256-t512-b64-seq-fp32.json"
+  },
+  "provenance": {
+    "recorded_at_utc": "2026-09-06T19:05:19Z",
+    "python": "3.12.3",
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda_runtime": "13.3",
+    "cudnn": 92300,
+    "hardware": {
+      "device": "cuda:0",
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1,
+      "name": "NVIDIA H100 80GB HBM3",
+      "total_memory_bytes": 85017493504,
+      "capability": [
+        9,
+        0
+      ],
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-f97d0ae1-3af8-84f5-c678-0b9afc6f7916, 81559 MiB, 580.173.02"
+    },
+    "olmo_import": "/workspace/cdrm-w-latent/recurrent-transformer/olmo/__init__.py",
+    "upstream_pinned_revision": "a21b42d2bc292edb86ed1b62cee4bcab809a9d21",
+    "project_git": {
+      "head": "a605d3c167034e2a1da8f3acc4677f3d07b9c06f",
+      "dirty": true,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "fork_git": {
+      "head": "0a82392fa394084e05f24cef09fe53dda85de71a",
+      "dirty": false,
+      "tracked_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "source_sha256": {
+      "recurrent-transformer/olmo/model.py": "ccab0ea36b9b4eec093e1eb3ba6e086b4476a64de9fbcbc63728cb9110e57b63",
+      "recurrent-transformer/olmo/config.py": "fe139d654b98eb42801330a6f74e9270593fdb434851784a166e8321c15ff753",
+      "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+      "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8",
+      "scripts/benchmark_model.py": "77c49506f8d4d818ce0bf76c12c4f3760e7f2cec95ba1c4f3907a96ecaffbde3",
+      "scripts/stage_a_ops.py": "1b7166fbaa11709c57ebb48d46448a739fd1fcc19487a1ee5904546bd1e00d7b"
+    },
+    "tf32_matmul": false,
+    "deterministic_algorithms": true,
+    "torch_dynamo_recompile_limit": 64,
+    "torch_dynamo_accumulated_recompile_limit": 256,
+    "torch_dynamo_fail_on_recompile_limit_hit": true
+  },
+  "attention_backend": "explicit math SDPA; deterministic algorithms; TF32 off",
+  "script_sha256": "41e0ba1b5f01a645718e44766e78f4894fa92855bc10de7647b7c51f730d0441",
+  "conversion": {
+    "copied": [
+      {
+        "source_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "target_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.wte.weight"
+        ],
+        "target_keys": [
+          "transformer.wte.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      }
+    ],
+    "transformed": [],
+    "new": [],
+    "missing": [],
+    "unexpected": [],
+    "parameter_mappings": [
+      {
+        "source_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.0.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.1.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.10.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.11.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.2.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.3.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.4.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.5.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.6.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.7.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.8.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.att_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.attn_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.ff_proj.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.k_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "target_keys": [
+          "transformer.blocks.9.q_norm.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "target_keys": [
+          "transformer.ff_out.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "target_keys": [
+          "transformer.ln_f.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      },
+      {
+        "source_keys": [
+          "transformer.wte.weight"
+        ],
+        "target_keys": [
+          "transformer.wte.weight"
+        ],
+        "operation": "copy",
+        "split_sizes": []
+      }
+    ],
+    "source_recurrent_layers": [],
+    "target_recurrent_layers": [],
+    "source_key_count": 99,
+    "target_key_count": 99,
+    "semantics": "weights_only",
+    "notes": [
+      "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+      "Optimizer state, training/data counters, and gate schedules are not converted."
+    ]
+  },
+  "model_config": {
+    "d_model": 256,
+    "n_heads": 4,
+    "n_kv_heads": 4,
+    "clip_qkv": null,
+    "n_layers": 12,
+    "mlp_ratio": 4,
+    "mlp_hidden_size": 1024,
+    "activation_type": "gelu",
+    "block_type": "sequential",
+    "recurrent_layers": [],
+    "recurrent_backend": "tiled",
+    "recurrent_write_rho": 1.0,
+    "reference_eager": false,
+    "block_group_size": 1,
+    "alibi": true,
+    "alibi_bias_max": 8.0,
+    "rope": false,
+    "rope_full_precision": true,
+    "rope_theta": 10000,
+    "flash_attention": false,
+    "attention_dropout": 0,
+    "multi_query_attention": null,
+    "attention_layer_norm": true,
+    "residual_dropout": 0,
+    "embedding_dropout": 0,
+    "embedding_layer_norm": false,
+    "layer_norm_type": "default",
+    "layer_norm_with_affine": true,
+    "layer_norm_eps": 1e-05,
+    "tanh_norm_alpha": 1.0,
+    "tanh_trainable_alpha": false,
+    "attention_layer_norm_with_affine": true,
+    "max_sequence_length": 512,
+    "bwd_mlp_chunks": 4,
+    "include_bias": false,
+    "bias_for_layer_norm": false,
+    "scale_logits": false,
+    "vocab_size": 1024,
+    "embedding_size": 1024,
+    "weight_tying": false,
+    "eos_token_id": 1,
+    "pad_token_id": 0,
+    "init_device": "cuda",
+    "init_fn": "mitchell",
+    "init_std": 0.02,
+    "init_cutoff_factor": null,
+    "precision": null,
+    "scale_emb_init": false,
+    "emb_init_std": null,
+    "norm_after": false
+  },
+  "parameter_count": 9974016,
+  "data": {
+    "kind": "random symbolic IDs; no scientific learning claim",
+    "target_alignment": "labels at scored logit positions, no extra shift",
+    "answer_count": 2048,
+    "answer_positions": "every sixteenth position including final position",
+    "token_sha256": "c0a9a28d8d899ac39f74842b763aa535d3437328ba4db12aef9521cf916e1dd7"
+  },
+  "warmup": [
+    {
+      "forward_seconds": 0.1652939340001467
+    },
+    {
+      "forward_seconds": 0.040390944999671774
+    }
+  ],
+  "measured": [
+    {
+      "forward_seconds": 0.04042294899954868
+    },
+    {
+      "forward_seconds": 0.0404197629995906
+    },
+    {
+      "forward_seconds": 0.04038940700047533
+    }
+  ],
+  "summary": {
+    "mean_forward_seconds": 0.04041070633320487,
+    "peak_allocated_bytes": 960415232,
+    "peak_reserved_bytes": 1075838976,
+    "input_tokens_per_forward": 32768,
+    "timing_scope": "prepared-data forward only"
+  },
+  "compiler_counters": {}
+}

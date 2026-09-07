@@ -1,0 +1,267 @@
+{
+  "schema": "stage-b-pilot-v1",
+  "run_id": "20260906T190223Z",
+  "evidence_class": "SYN",
+  "storage_prefix": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z",
+  "seed": 0,
+  "model": {
+    "d_model": 256,
+    "n_heads": 4,
+    "n_kv_heads": 4,
+    "n_layers": 12,
+    "mlp_hidden_size": 1024,
+    "activation_type": "gelu",
+    "block_type": "sequential",
+    "block_group_size": 1,
+    "alibi": true,
+    "rope": false,
+    "norm_after": false,
+    "flash_attention": false,
+    "attention_dropout": 0.0,
+    "residual_dropout": 0.0,
+    "embedding_dropout": 0.0,
+    "attention_layer_norm": true,
+    "attention_layer_norm_with_affine": true,
+    "layer_norm_type": "default",
+    "layer_norm_with_affine": true,
+    "bias_for_layer_norm": false,
+    "include_bias": false,
+    "embedding_layer_norm": false,
+    "weight_tying": false,
+    "eos_token_id": 1,
+    "pad_token_id": 0,
+    "max_sequence_length": 512,
+    "init_fn": "mitchell",
+    "init_device": "cpu",
+    "reference_eager": false,
+    "bwd_mlp_chunks": 4
+  },
+  "training": {
+    "updates": 2000,
+    "global_batch": 64,
+    "microbatch": 64,
+    "precision": "fp32",
+    "learning_rate": 0.001,
+    "betas": [
+      0.9,
+      0.95
+    ],
+    "eps": 1e-08,
+    "weight_decay": 0.0,
+    "gradient_clip": 1.0,
+    "warmup_updates": 100,
+    "final_lr_multiplier": 0.1,
+    "eval_interval": 200,
+    "checkpoint_interval": 200,
+    "eval_microbatch": 64,
+    "max_wall_seconds_per_run": 3600
+  },
+  "calibration": {
+    "updates": 100,
+    "warmup_updates": 20,
+    "fixed_examples": 64,
+    "seed": 20260906
+  },
+  "fixtures": {
+    "dev_examples": 1024,
+    "test_examples": 4096,
+    "seed": 271828,
+    "training_audit_batches": 2000
+  },
+  "tasks": {
+    "mqar": {
+      "training_conditions": [
+        {
+          "sequence_length": 128,
+          "num_kv_pairs": 8,
+          "vocab_size": 1024,
+          "power_a": 0.01,
+          "random_non_queries": true,
+          "delay_tokens": 0
+        }
+      ],
+      "evaluation_conditions": {
+        "iid": {
+          "sequence_length": 128,
+          "num_kv_pairs": 8,
+          "vocab_size": 1024,
+          "power_a": 0.01,
+          "random_non_queries": true,
+          "delay_tokens": 0
+        },
+        "delay256": {
+          "sequence_length": 256,
+          "num_kv_pairs": 8,
+          "vocab_size": 1024,
+          "power_a": 0.01,
+          "random_non_queries": true,
+          "delay_tokens": 128
+        },
+        "delay512": {
+          "sequence_length": 512,
+          "num_kv_pairs": 8,
+          "vocab_size": 1024,
+          "power_a": 0.01,
+          "random_non_queries": true,
+          "delay_tokens": 384
+        },
+        "associations16": {
+          "sequence_length": 128,
+          "num_kv_pairs": 16,
+          "vocab_size": 1024,
+          "power_a": 0.01,
+          "random_non_queries": true,
+          "delay_tokens": 0
+        }
+      },
+      "primary_dev_conditions": [
+        "iid"
+      ]
+    },
+    "noisy_recall": {
+      "training_conditions": [
+        {
+          "sequence_length": 128,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.2,
+          "delay_tokens": 0
+        },
+        {
+          "sequence_length": 128,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.6,
+          "delay_tokens": 0
+        }
+      ],
+      "evaluation_conditions": {
+        "low": {
+          "sequence_length": 128,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.2,
+          "delay_tokens": 0
+        },
+        "moderate": {
+          "sequence_length": 128,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.6,
+          "delay_tokens": 0
+        },
+        "low_delay256": {
+          "sequence_length": 256,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.2,
+          "delay_tokens": 128
+        },
+        "moderate_delay256": {
+          "sequence_length": 256,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.6,
+          "delay_tokens": 128
+        },
+        "low_delay512": {
+          "sequence_length": 512,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.2,
+          "delay_tokens": 384
+        },
+        "moderate_delay512": {
+          "sequence_length": 512,
+          "vocab_size": 81,
+          "noise_vocab_size": 16,
+          "frac_noise": 0.6,
+          "delay_tokens": 384
+        }
+      },
+      "primary_dev_conditions": [
+        "low",
+        "moderate"
+      ]
+    },
+    "state_tracking": {
+      "training_conditions": [
+        {
+          "sequence_length": 128,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "train",
+          "minimum_query_delay": 0
+        }
+      ],
+      "evaluation_conditions": {
+        "iid": {
+          "sequence_length": 128,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "train",
+          "minimum_query_delay": 0
+        },
+        "composition": {
+          "sequence_length": 128,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "heldout",
+          "entity_partition": "train",
+          "minimum_query_delay": 0
+        },
+        "query_role": {
+          "sequence_length": 128,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "heldout",
+          "minimum_query_delay": 0
+        },
+        "delay256": {
+          "sequence_length": 256,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "train",
+          "minimum_query_delay": 128
+        },
+        "delay512": {
+          "sequence_length": 512,
+          "num_entities": 3,
+          "relevant_updates": 4,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "train",
+          "minimum_query_delay": 384
+        },
+        "updates8": {
+          "sequence_length": 128,
+          "num_entities": 3,
+          "relevant_updates": 8,
+          "distractor_updates": 4,
+          "entity_vocab_size": 4,
+          "composition_partition": "train",
+          "entity_partition": "train",
+          "minimum_query_delay": 0
+        }
+      },
+      "primary_dev_conditions": [
+        "iid"
+      ]
+    }
+  }
+}

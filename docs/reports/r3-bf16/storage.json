@@ -1,0 +1,39 @@
+{
+  "schema": "r3-mixed-storage-v1",
+  "status": "complete",
+  "recorded_at_utc": "2026-09-06T23:35:06.122208+00:00",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/",
+  "local_root": ".runtime/r3-bf16/20260906T225438Z",
+  "local_persistence": "Persistent project/home filesystem; SSD compiler caches are disposable.",
+  "authorization": "User requested retaining useful checkpoints/data in gs://fast-chunks.",
+  "artifacts": {
+    "file_count": 136,
+    "bytes": 5642481911,
+    "manifest_uri": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/artifact-manifest.json",
+    "manifest_sha256": "5ea4c32cd9bdda2e4bed61092fc2fd516e48845e6555ae2f283ce4e416a3f461",
+    "manifest_exact_gcs_readback": true,
+    "checksum_verification": "All 136 manifest-listed files plus manifest matched GCS; checksum-only dry run listed 137 local and 137 remote files with no transfer actions."
+  },
+  "source": {
+    "archive": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/source/mixed-source-v3.tar.gz",
+    "sha256": "fc4adb1d03c46ca7d9321b6f1389491e1baae6bbf078b07c1d2f78b54fbe80f5",
+    "files": 90,
+    "all_source_files_match_current": true,
+    "supplement": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/source/milestone-support.tar.gz",
+    "prior_versions_retained": true
+  },
+  "verification": {
+    "method": "gcloud storage rsync --recursive --checksums-only --dry-run; exact manifest and storage receipt readback",
+    "checksum_log": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/verification/checksum-check.log",
+    "manifest_readback": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/verification/manifest-readback-receipt.json",
+    "storage_readback": "gs://fast-chunks/cdrm-w-latent/r3-bf16/20260906T225438Z/verification/storage-readback-receipt.json",
+    "exclusions": "Verification receipts/logs and this post-upload storage record are separate from the immutable artifact manifest."
+  },
+  "original_lineage_integrity": {
+    "reference_manifest_sha256": "89af94fec5898dac0f18cf03c170c27d5b9afa52de6e2ce6d682c5e3566cf7bd",
+    "files_checked": 59,
+    "mismatches": [],
+    "status": "passed"
+  },
+  "claim_boundary": "Experimental BF16 implementation: full numerical maximum-error gate remains incomplete; bounded training/recovery verified; memory lower and updates slower."
+}

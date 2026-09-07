@@ -1,0 +1,61 @@
+{
+  "status": "complete",
+  "evidence_class": "OPS",
+  "scope": "100 updates on 64 reused examples; separate weights and schedule; not held-out learning.",
+  "runs": [
+    {
+      "task": "mqar",
+      "topology": "seq",
+      "updates": 100,
+      "ce_ratio": 4.128675862248992e-05,
+      "final_ce": 0.00030714133754372597,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-mqar-SEQ-seed0"
+    },
+    {
+      "task": "mqar",
+      "topology": "r3",
+      "updates": 100,
+      "ce_ratio": 4.1152416729325345e-05,
+      "final_ce": 0.0003061395836994052,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-mqar-R3-seed0"
+    },
+    {
+      "task": "noisy_recall",
+      "topology": "seq",
+      "updates": 100,
+      "ce_ratio": 5.8349358146889846e-06,
+      "final_ce": 2.854086233128328e-05,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-noisy_recall-SEQ-seed0"
+    },
+    {
+      "task": "noisy_recall",
+      "topology": "r3",
+      "updates": 100,
+      "ce_ratio": 5.880672782424146e-06,
+      "final_ce": 2.881093678297475e-05,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-noisy_recall-R3-seed0"
+    },
+    {
+      "task": "state_tracking",
+      "topology": "seq",
+      "updates": 100,
+      "ce_ratio": 2.525300337103264e-05,
+      "final_ce": 8.641555905342102e-05,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-state_tracking-SEQ-seed0"
+    },
+    {
+      "task": "state_tracking",
+      "topology": "r3",
+      "updates": 100,
+      "ce_ratio": 2.475320454547235e-05,
+      "final_ce": 8.520881965523586e-05,
+      "final_accuracy": 1.0,
+      "gcs_uri": "gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/calibration/OPS-state_tracking-R3-seed0"
+    }
+  ]
+}

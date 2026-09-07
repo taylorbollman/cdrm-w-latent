@@ -1,0 +1,431 @@
+{
+  "archive_source_audit": {
+    "claim": "Current sources regenerate the previously audited exact training-stream hash; source hashes were captured at archive time.",
+    "source_sha256_at_archive": {
+      "cdrm/synthetic/common.py": "1509ae9f83bb5f8c4966ef690e2948d46cc3604a094ca03b190d4a3d03c1e0f5",
+      "cdrm/synthetic/experiment.py": "28ae25e1f7ef6376429152ed26369153f30c5e36d0786a9749a954524c0aa847",
+      "cdrm/synthetic/retrieval.py": "1e2261bebc724581fa4f4f7685c18afaed1a7e5bcf8a7782f31c843d67d6ea51",
+      "cdrm/synthetic/state_tracking.py": "975459850d7f75aefe539b38d9017c4075fa64f9b16ef86fbfb6673a4374ce49",
+      "scripts/stage_b_archive_training.py": "71c1f63dbca80e77ed4bbf6b974110668bde1a5eefa8294794ebc0d331b7d03c"
+    },
+    "upstream": {
+      "mad-lab": {
+        "provenance_sha256": "34cbd4591bd4200c837d8a9c77ed1f1b329ba1a5d5ba13d276434a19a7fd33e9",
+        "revision": "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b",
+        "source_hashes_verified": true
+      },
+      "zoology": {
+        "provenance_sha256": "4a4e7610cff45ae5acabbb26281b955bd03156d9dd0fce818179395dfd692632",
+        "revision": "1ad20d193b6113cae1e8f3c655c300d7b4b3f4bb",
+        "source_hashes_verified": true
+      }
+    }
+  },
+  "negative_checks_passed": [
+    "input-only cross-split leakage rejected",
+    "complete-map cross-split leakage rejected",
+    "mapping metadata corruption rejected"
+  ],
+  "schema": "stage-b-data-archive-audit-v1",
+  "status": "passed",
+  "tasks": {
+    "mqar": {
+      "split_audit": {
+        "between_splits": {
+          "dev:test": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          },
+          "train:dev": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          },
+          "train:test": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          }
+        },
+        "conditions": {
+          "associations16": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "delay256": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "delay512": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "iid": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          }
+        },
+        "input_hash_contract": "SHA-256 of little-endian int64 input IDs only",
+        "mapping_claim": "All complete observed retrieval mappings are disjoint across train/dev/test. Individual pairs and symbols may be shared.",
+        "retrieval_mapping_hash_contract": "SHA-256 of sorted complete observed key/value mapping; checked against metadata",
+        "status": "passed",
+        "unique_complete_retrieval_mappings_by_split": {
+          "dev": 2048,
+          "test": 8192,
+          "train": 128000
+        },
+        "unique_inputs_by_split": {
+          "dev": 4096,
+          "test": 16384,
+          "train": 128000
+        },
+        "within_split_note": "Controlled delay conditions intentionally reuse semantic mappings within each evaluation split; this is allowed and not counted as independent evidence."
+      },
+      "training": {
+        "examples": 128000,
+        "global_batch": 64,
+        "input_tokens": 16384000,
+        "metadata": "Regenerable from pinned generator, exact plan, split=train, update index; arrays retained directly.",
+        "path": ".runtime/stage-b/20260906T190223Z/fixtures/mqar/training.npz",
+        "row_order": "completed_update * global_batch + within-batch index; balanced condition chunks",
+        "sha256_file": "010657fd2a3f319e7c21e09d8f91565c564be720c148edad679fd4950ef8f98b",
+        "target_tokens": 1024000,
+        "training_stream_sha256": "c6433af61e2a628136583accc29a12ceecfc9d1a828ccb3216ddaa1474d1f608"
+      }
+    },
+    "noisy_recall": {
+      "split_audit": {
+        "between_splits": {
+          "dev:test": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          },
+          "train:dev": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          },
+          "train:test": {
+            "complete_retrieval_mapping_overlap": 0,
+            "exact_input_overlap": 0
+          }
+        },
+        "conditions": {
+          "low": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "low_delay256": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "low_delay512": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "moderate": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "moderate_delay256": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          },
+          "moderate_delay512": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 1024,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": true,
+              "unique_complete_retrieval_mappings": 4096,
+              "unique_inputs": 4096
+            }
+          }
+        },
+        "input_hash_contract": "SHA-256 of little-endian int64 input IDs only",
+        "mapping_claim": "All complete observed retrieval mappings are disjoint across train/dev/test. Individual pairs and symbols may be shared.",
+        "retrieval_mapping_hash_contract": "SHA-256 of sorted complete observed key/value mapping; checked against metadata",
+        "status": "passed",
+        "unique_complete_retrieval_mappings_by_split": {
+          "dev": 2048,
+          "test": 8192,
+          "train": 128000
+        },
+        "unique_inputs_by_split": {
+          "dev": 6144,
+          "test": 24576,
+          "train": 128000
+        },
+        "within_split_note": "Controlled delay conditions intentionally reuse semantic mappings within each evaluation split; this is allowed and not counted as independent evidence."
+      },
+      "training": {
+        "examples": 128000,
+        "global_batch": 64,
+        "input_tokens": 16384000,
+        "metadata": "Regenerable from pinned generator, exact plan, split=train, update index; arrays retained directly.",
+        "path": ".runtime/stage-b/20260906T190223Z/fixtures/noisy_recall/training.npz",
+        "row_order": "completed_update * global_batch + within-batch index; balanced condition chunks",
+        "sha256_file": "6c0f73057cc2afb4c15b26329aeda52881a96ccfed167ee9aa7d0699373b7e5f",
+        "target_tokens": 128000,
+        "training_stream_sha256": "ed398316cbd8a7928c08933562e6d47996ea9bd36d25c47824355ff5751155ae"
+      }
+    },
+    "state_tracking": {
+      "split_audit": {
+        "between_splits": {
+          "dev:test": {
+            "complete_retrieval_mapping_overlap": null,
+            "exact_input_overlap": 0
+          },
+          "train:dev": {
+            "complete_retrieval_mapping_overlap": null,
+            "exact_input_overlap": 0
+          },
+          "train:test": {
+            "complete_retrieval_mapping_overlap": null,
+            "exact_input_overlap": 0
+          }
+        },
+        "conditions": {
+          "composition": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          },
+          "delay256": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          },
+          "delay512": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          },
+          "iid": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          },
+          "query_role": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          },
+          "updates8": {
+            "dev": {
+              "array_manifest_hash_verified": true,
+              "examples": 1024,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 1024
+            },
+            "test": {
+              "array_manifest_hash_verified": true,
+              "examples": 4096,
+              "mapping_metadata_verified_from_inputs": false,
+              "unique_complete_retrieval_mappings": null,
+              "unique_inputs": 4096
+            }
+          }
+        },
+        "input_hash_contract": "SHA-256 of little-endian int64 input IDs only",
+        "mapping_claim": "Not applicable: fixed operation permutations are shared; composition condition withholds ordered token patterns.",
+        "retrieval_mapping_hash_contract": "SHA-256 of sorted complete observed key/value mapping; checked against metadata",
+        "status": "passed",
+        "unique_complete_retrieval_mappings_by_split": null,
+        "unique_inputs_by_split": {
+          "dev": 6144,
+          "test": 24576,
+          "train": 128000
+        },
+        "within_split_note": "Controlled delay conditions intentionally reuse semantic mappings within each evaluation split; this is allowed and not counted as independent evidence."
+      },
+      "state_chance": {
+        "chance_accuracy": 0.16666666666666666,
+        "chance_definition": "Uniform over six legal state tokens; full-vocabulary chance is separate",
+        "chance_full_vocab_accuracy": 0.038461538461538464,
+        "chance_full_vocab_cross_entropy": 3.2580965380214817,
+        "chance_task_class_accuracy": 0.16666666666666666,
+        "chance_task_class_cross_entropy": 1.791759469228055
+      },
+      "training": {
+        "examples": 128000,
+        "global_batch": 64,
+        "input_tokens": 16384000,
+        "metadata": "Regenerable from pinned generator, exact plan, split=train, update index; arrays retained directly.",
+        "path": ".runtime/stage-b/20260906T190223Z/fixtures/state_tracking/training.npz",
+        "row_order": "completed_update * global_batch + within-batch index; balanced condition chunks",
+        "sha256_file": "33cb003b917fee7af235d5652b7d57fe42a66bab61ea153d058e6cda7fcdd6fa",
+        "target_tokens": 128000,
+        "training_stream_sha256": "b2e6197b16dac3584ef1447767d55179a6eac1d03f23fdb838acd9e69c9f029a"
+      }
+    }
+  }
+}

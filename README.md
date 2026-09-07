@@ -74,3 +74,24 @@ documented in [Stage A usage](docs/stage-a-usage.md). Scientific and numerical
 choices are recorded in [the decision log](docs/semantic-decisions.md).
 See [Stage A results](docs/reports/stage-a/results.md) for validated behavior,
 measured H100 performance, retained failures, and the next milestone.
+
+The completed Stage B synthetic pilot pairs SEQ and R3 on associative recall,
+noisy recall, and ordered state updates. See [the results](docs/reports/stage-b/results.md),
+its [frozen plan](docs/stage-b-plan.md),
+[task definition](docs/stage-b-state-task.md), and
+[execution and recovery guide](docs/stage-b-usage.md). Checkpoints and fixed data
+live in the persistent project `.runtime` directory and are archived under
+`gs://fast-chunks/cdrm-w-latent/stage-b/20260906T190223Z/`; local SSD caches are
+disposable. Actual cloud retention is recorded in
+[the storage manifest](docs/reports/stage-b/storage.json).
+
+The subsequent [R3 backward investigation](docs/reports/r3-backward/results.md)
+clears the tested FP32/no-accumulation MQAR path at D256/T128/B2 and B64,
+with classified floating-point and first-step Adam discrepancies retained.
+No backward or trainer patch was needed. Its diagnostics and FP64 references
+are archived separately under `gs://fast-chunks/cdrm-w-latent/r3-backward/20260906T210249Z/`.
+
+The [BF16 mixed-precision milestone](docs/reports/r3-bf16/results.md) adds an
+opt-in FP32-state recurrent policy and [reproducible commands](docs/r3-bf16-usage.md).
+Paired training and midpoint recovery work, but numerical maximum-error flags
+remain; FP32 stays the default. At B64/T128, BF16 lowers memory and slows updates.
