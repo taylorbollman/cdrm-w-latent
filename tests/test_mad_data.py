@@ -9,6 +9,7 @@ from cdrm.mad_data import (
     IGNORE_INDEX, TASKS, answer_oracle, baseline_audit, epoch_indices, generate_dataset,
     load_dataset, official_generators, overlap_audit, recall_prefix_prediction,
     save_dataset, score_predictions, task_config, task_spec, setting_spec, SETTINGS,
+    FUZZY_TASK, SUPPORTED_TASKS, fuzzy_answer_annotation, fuzzy_prefix_prediction,
 )
 from scripts.cdrm_prepare_mad import structural_audit, prepare
 
@@ -211,3 +212,112 @@ def test_append_final_is_nonoverwriting_and_preserves_parent_and_epoch_order(tmp
 def test_unsupported_or_inconsistent_recall_settings_fail_explicitly(overrides):
     with pytest.raises(ValueError):
         task_config("in-context-recall", overrides)
+
+
+@pytest.mark.parametrize("length", [17, 32, 64, 128, 256, 300])
+@pytest.mark.parametrize("split", ["train", "dev"])
+def test_fuzzy_preserves_native_arrays_masks_lengths_and_distribution(length, split):
+    from scripts.cdrm_fuzzy_prepare import structural_audit as fuzzy_audit
+    seed = 962000 + 2 * length + (split == "dev")
+    overrides = {"seq_len": length}
+    actual = generate_dataset(FUZZY_TASK, split, seed, 12, overrides)
+    rng = np.random.default_rng(seed)
+    native = [official_generators().generate_fuzzy_in_context_recall_instance(
+        **task_config(FUZZY_TASK, overrides), rng=rng, is_training=split == "train") for _ in range(12)]
+    np.testing.assert_array_equal(actual.input_ids, np.stack([x for x, _ in native]))
+    np.testing.assert_array_equal(actual.labels, np.stack([y for _, y in native]))
+    assert actual.input_ids.shape == (12, length)
+    assert actual.manifest["actual_sequence_length"] == length
+    assert not np.any(actual.answer_labels == 15)
+    assert fuzzy_audit(actual, prefix_limit=12)["native_alignment_and_masks_exact"]
+    baseline = baseline_audit(actual)
+    assert baseline["uniform_answer_vocabulary_token_chance"] == 1 / 8
+    assert baseline["oracle"]["available_answer_accuracy"] in (None, 1.0)
+    assert baseline["oracle"]["unretrievable_answers"] == actual.manifest["oracle_coverage"]["unavailable_tokens"]
+    if split == "train":
+        assert not np.any(actual.labels == IGNORE_INDEX)
+        np.testing.assert_array_equal(actual.labels[:, :-1], actual.input_ids[:, 1:])
+    else:
+        np.testing.assert_array_equal(actual.labels, actual.answer_labels)
+        assert all(len(pair["key"]) == 3 for row in actual.metadata for pair in row["pairs"])
+
+
+def test_fuzzy_variable_key_training_cannot_replay_eval_to_recover_same_inputs():
+    train = generate_dataset(FUZZY_TASK, "train", 87, 16)
+    dev = generate_dataset(FUZZY_TASK, "dev", 87, 16)
+    assert not np.array_equal(train.input_ids, dev.input_ids)
+    assert {len(pair["key"]) for row in train.metadata for pair in row["pairs"]} == {1, 2, 3}
+    assert {len(pair["key"]) for row in dev.metadata for pair in row["pairs"]} == {3}
+
+
+def test_fuzzy_short_key_prediction_is_not_a_causal_supervision_mask():
+    # At position3, known key(0,) also prefixes key(0,1): next token is random
+    # key continuation1, not the remembered value7. Only position7 is scored.
+    tokens = np.array([15, 0, 7, 0, 1, 8, 0, 1])
+    labels = answer_oracle(FUZZY_TASK, tokens)
+    assert labels.tolist() == [-100] * 7 + [8]
+    assert fuzzy_prefix_prediction(tokens[:4]) == 7
+    assert labels[3] == IGNORE_INDEX
+    assert fuzzy_prefix_prediction(tokens) == 8
+    # Future tokens do not alter a prediction on the unchanged prefix.
+    changed_future = tokens.copy()
+    changed_future[4:] = [2, 9, 0, 2]
+    assert fuzzy_prefix_prediction(changed_future[:4]) == 7
+
+
+def test_fuzzy_partial_final_value_is_recovered_from_an_earlier_complete_mapping():
+    tokens = np.array([15, 15, 0, 1, 2, 7, 9, 11, 3, 4, 5, 8, 0, 1, 2, 7, 9])
+    labels, metadata = fuzzy_answer_annotation(tokens)
+    assert labels[-3:].tolist() == [7, 9, 11]
+    assert np.all(labels[:-3] == IGNORE_INDEX)
+    assert metadata["left_padding"] == 2
+    for index in range(len(tokens) - 3, len(tokens)):
+        assert fuzzy_prefix_prediction(tokens[:index + 1]) == labels[index]
+    corrupted = tokens.copy()
+    corrupted[-1] = 10
+    with pytest.raises(ValueError, match="omit exactly one"):
+        fuzzy_answer_annotation(corrupted)
+
+
+@pytest.mark.parametrize("length,split,seed", [(17, "dev", 962035), (256, "train", 962512)])
+def test_native_unseen_terminal_probe_is_preserved_and_qualified(length, split, seed):
+    dataset = generate_dataset(FUZZY_TASK, split, seed, 1, {"seq_len": length})
+    record = dataset.metadata[0]
+    assert not record["pairs"][-1]["repeated"]
+    assert record["unretrievable_answer_positions"]
+    assert dataset.labels[0, -1] in range(7, 15)
+    assert dataset.answer_labels[0, -1] == dataset.labels[0, -1]
+    assert not dataset.oracle_available_mask[0, -1]
+    assert answer_oracle(FUZZY_TASK, dataset.input_ids[0])[-1] == IGNORE_INDEX
+    audit = baseline_audit(dataset)
+    assert audit["oracle"]["coverage"] < 1
+    assert audit["oracle"]["scored_answers"] == (dataset.answer_labels != IGNORE_INDEX).sum()
+    assert dataset.manifest["oracle_coverage"]["context_unavailable_tokens"] == 0
+
+
+def test_fuzzy_unseen_terminal_annotation_never_supplies_oracle_answers():
+    tokens = np.array([15, 0, 1, 2, 7, 8, 3, 4, 5, 9])
+    oracle, _ = fuzzy_answer_annotation(tokens)
+    assert np.all(oracle == IGNORE_INDEX)
+    annotated, _ = fuzzy_answer_annotation(tokens, terminal_target=10)
+    assert annotated[-2:].tolist() == [9, 10]
+    assert fuzzy_prefix_prediction(tokens[:-1]) == IGNORE_INDEX
+    assert fuzzy_prefix_prediction(tokens) == IGNORE_INDEX
+
+
+def test_fuzzy_save_load_coverage_identity_and_legacy_task_defaults(tmp_path):
+    assert TASKS == ("in-context-recall", "selective-copying")
+    assert FUZZY_TASK in SUPPORTED_TASKS
+    dataset = generate_dataset(FUZZY_TASK, "dev", 962035, 12, {"seq_len": 17})
+    save_dataset(tmp_path, dataset)
+    restored = load_dataset(tmp_path, FUZZY_TASK, "dev")
+    assert dataset.sha256 == restored.sha256
+    np.testing.assert_array_equal(dataset.oracle_available_mask, restored.oracle_available_mask)
+    with pytest.raises(FileExistsError):
+        save_dataset(tmp_path, restored)
+
+
+@pytest.mark.parametrize("overrides", [{"seq_len": 12}, {"vocab_size": 32}, {"k_motif_size": 2}, {"multi_query": False}])
+def test_fuzzy_initial_scope_guards_are_explicit(overrides):
+    with pytest.raises(ValueError):
+        task_config(FUZZY_TASK, overrides)

@@ -1,0 +1,38 @@
+{
+  "all_local_sha256_match_frozen_manifest": true,
+  "all_prospective_fixtures_and_optional_initialization_retained": true,
+  "all_remote_size_and_md5_or_crc32c_match_local": true,
+  "checksum_dry_run_no_differences": true,
+  "checksum_record_sha256": "ba76518de0b26893f331515a4bf45ecdc0257a3bd43542f39d268a2d13bb4963",
+  "checksum_record_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-pilot/20260907T212606Z/verification/checksums.json",
+  "compiler_cache_archive_sha256": "310e96a7e101b3605064f1fc17d981d8aa4b8936d60d52ae19dc28bce979c9df",
+  "composite_objects_verified_by_crc32c": [
+    "analysis/u1000-head-localization/tensors.pt",
+    "num/seed7500-u1000-bf16/tensors.pt",
+    "num/seed7500-u1000-fp32/tensors.pt"
+  ],
+  "exclusions": "Raw W&B service/cache files; raw compiler cache (retained as source/inductor-cache.tar.gz); verification paths and storage.json receipts; Python caches. Manifest excludes its own bytes.",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-pilot/20260907T212606Z/",
+  "immutable_parent_and_inherited_copies_rehashed": true,
+  "manifest_readback_equal": true,
+  "manifest_sha256": "8065b0b017ee9f498794d49b972895b60772fed93eb6cd0c52c2fc251cbf366b",
+  "manifest_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-pilot/20260907T212606Z/artifact-manifest.json",
+  "method": "Every local scientific file rehashed with SHA256; every remote size and MD5 (or CRC32C for composite objects) checked against local bytes. Manifest downloaded and matched exactly. Checksum-only rsync dry run reported zero changes. Large objects were not individually downloaded.",
+  "notes": [
+    "Scientific manifest excludes itself and retention receipts to avoid self-reference.",
+    "Failed attempts and failed numerical screens remain in the scientific inventory.",
+    "The compiler cache used by exact midpoint recovery is retained as an archive.",
+    "All inherited initial/checkpoint/data copies and unused prospective fixtures are retained.",
+    "The original parent manifest and archival receipt are included with an independent full local rehash audit.",
+    "Receipt files are uploaded and independently downloaded after this verification."
+  ],
+  "parent_manifest_sha256": "2a12323d78eec338aefbfc7d6acb6c471b5314678cb0ad6f077a578123f1960a",
+  "referenced_checkpoint_and_tensor_blobs_verified": 18,
+  "remote_files_including_manifest": 735,
+  "schema": "cdrm-tiled-pilot-retention-verification-v1",
+  "scientific_bytes": 2543621350,
+  "scientific_files": 734,
+  "source_archive_sha256": "0a1aa9916308240295c163834c75f64b10c2292a7cafaa442769f6da80ec3f7d",
+  "status": "complete",
+  "verified_at_utc": "2026-09-07T22:33:57.732577+00:00"
+}

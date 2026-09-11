@@ -24,6 +24,9 @@ REVISION = "0f49a452b84ca0d13f8eb9c1ffa649032376fb1b"
 GENERATOR_SHA256 = "d3b8e9ad8377344b59c073ac3649b4b4c8a47280aa75696ee967c5f96198b6f8"
 IGNORE_INDEX = -100
 TASKS = ("in-context-recall", "selective-copying")
+# Preserve the original preparation defaults and their frozen task identities.
+FUZZY_TASK = "fuzzy-in-context-recall"
+SUPPORTED_TASKS = TASKS + (FUZZY_TASK,)
 SPLIT_SEEDS = {"train": 12345, "dev": 23456, "final": 34567}
 SPLIT_SIZES = {"train": 12800, "dev": 1280, "final": 1280}
 SHUFFLE_SEED = 45678
@@ -60,8 +63,8 @@ def official_generators():
 
 def task_config(task, overrides=None):
     """Official baseline YAML plus relevant MADConfig defaults, explicitly resolved."""
-    if task not in TASKS:
-        raise ValueError(f"Unsupported task {task!r}; expected one of {TASKS}")
+    if task not in SUPPORTED_TASKS:
+        raise ValueError(f"Unsupported task {task!r}; expected one of {SUPPORTED_TASKS}")
     cfg = {
         "vocab_size": 16,
         "seq_len": 128 if task == "in-context-recall" else 256,
@@ -73,8 +76,10 @@ def task_config(task, overrides=None):
         "v_motif_size": 1,
         "target_ignore_idx": IGNORE_INDEX,
     }
+    if task == FUZZY_TASK:
+        cfg.update(seq_len=128, num_tokens_to_copy=0, k_motif_size=3, v_motif_size=3)
     if overrides:
-        allowed = {"vocab_size", "seq_len", "num_tokens_to_copy"}
+        allowed = {"seq_len"} if task == FUZZY_TASK else {"vocab_size", "seq_len", "num_tokens_to_copy"}
         if set(overrides) - allowed:
             raise ValueError(f"Unsupported MAD overrides: {set(overrides) - allowed}")
         if any(type(value) is not int for value in overrides.values()):
@@ -85,6 +90,10 @@ def task_config(task, overrides=None):
     if task == "in-context-recall":
         if cfg["vocab_size"] % 2 or cfg["seq_len"] % 2 or cfg["num_tokens_to_copy"] != 0:
             raise ValueError("Recall requires even vocabulary/length and no copying override")
+    elif task == FUZZY_TASK:
+        # Native probe placement needs room for two maximum-sized key/value pairs.
+        if cfg["seq_len"] <= 2 * (cfg["k_motif_size"] + cfg["v_motif_size"]):
+            raise ValueError("Fuzzy recall requires seq_len >12 with fixed V16/motifs3/3")
     elif cfg["num_tokens_to_copy"] < 1 or cfg["seq_len"] <= 2 * cfg["num_tokens_to_copy"] + 1:
         raise ValueError("Copying requires positive copy count and seq_len >2*copy_count+1")
     return cfg
@@ -105,6 +114,21 @@ def task_spec(task, overrides=None):
     cfg = task_config(task, overrides)
     recall = task == "in-context-recall"
     vocab = cfg["vocab_size"]
+    if task == FUZZY_TASK:
+        return {
+            "task": task, "config": cfg, "vocab_size": vocab,
+            "configured_sequence_length": cfg["seq_len"], "actual_sequence_length": cfg["seq_len"],
+            "input_id_range": [0, 15], "answer_id_range": [7, 14],
+            "reserved_symbols": {"left_padding": 15},
+            "labels_already_aligned_with_logits": True,
+            "native_training_objective": "dense_next_token_including_native_padding",
+            "native_evaluation_objective": "masked_repeated_key_value_tokens",
+            "key_motif_lengths": {"train": [1, 2, 3], "held_out": [3]},
+            "value_motif_lengths": [1, 2, 3], "motifs_are_permutations_without_replacement": True,
+            "teacher_forcing": "Previous value tokens, including earlier tokens of the current answer, are visible; no free-running generation is scored.",
+            "answer_mask_scope": "Input-run annotation locates repeated-value positions. Prefix lookup predicts their values conditional on being scored; the mask itself is not claimed causally inferable.",
+            "padding_attention_mask": "No extra padding attention mask; preserve native symbolic inputs.",
+        }
     return {
         "task": task, "config": cfg, "vocab_size": vocab,
         "configured_sequence_length": cfg["seq_len"],
@@ -153,6 +177,21 @@ class MadDataset:
     def __len__(self):
         return len(self.input_ids)
 
+    @property
+    def oracle_available_mask(self):
+        """Diagnostic retrieval coverage, never a replacement training/test mask."""
+        if self.manifest["task"] != FUZZY_TASK:
+            return self.answer_labels != IGNORE_INDEX
+        mask = np.zeros_like(self.answer_labels, dtype=bool)
+        for index, record in enumerate(self.metadata):
+            positions = record.get("oracle_available_positions")
+            if positions is None:
+                raise ValueError("Fuzzy dataset is missing explicit retrieval coverage")
+            mask[index, positions] = True
+        if np.any(mask & (self.answer_labels == IGNORE_INDEX)):
+            raise ValueError("Fuzzy oracle availability includes unscored positions")
+        return mask
+
     def take(self, indices):
         indices = np.atleast_1d(np.arange(len(self))[indices])
         return MadDataset(self.input_ids[indices], self.labels[indices], self.answer_labels[indices],
@@ -189,6 +228,125 @@ def recall_prefix_prediction(prefix, vocab_size=16):
     return prior.get(query, IGNORE_INDEX)
 
 
+def _fuzzy_runs(input_ids, cfg):
+    """Parse visible disjoint-alphabet runs; the last value may be incomplete.
+
+    Run boundaries annotate positions using the supplied input. This function is
+    not a causal prediction of whether a variable-length key has ended.
+    """
+    tokens = np.asarray(input_ids, dtype=np.int64)
+    if tokens.ndim != 1 or not len(tokens):
+        raise ValueError("Fuzzy parser requires a nonempty one-dimensional input")
+    pad, key_end = cfg["vocab_size"] - 1, (cfg["vocab_size"] - 1) // 2
+    if np.any((tokens < 0) | (tokens > pad)):
+        raise ValueError("Fuzzy input IDs outside the fixed vocabulary")
+    position = 0
+    while position < len(tokens) and tokens[position] == pad:
+        position += 1
+    left_padding = position
+    if np.any(tokens[position:] == pad):
+        raise ValueError("Fuzzy padding is only allowed on the left")
+    pairs = []
+    while position < len(tokens):
+        start = position
+        while position < len(tokens) and tokens[position] < key_end:
+            position += 1
+        key = tuple(map(int, tokens[start:position]))
+        if not 1 <= len(key) <= cfg["k_motif_size"] or len(set(key)) != len(key):
+            raise ValueError("Malformed fuzzy key motif")
+        value_start = position
+        while position < len(tokens) and key_end <= tokens[position] < pad:
+            position += 1
+        value = tuple(map(int, tokens[value_start:position]))
+        if len(value) > cfg["v_motif_size"] or len(set(value)) != len(value):
+            raise ValueError("Malformed fuzzy value motif")
+        if not value and position != len(tokens):
+            raise ValueError("An earlier fuzzy key is missing its value")
+        pairs.append({"key": key, "visible_value": value, "key_start": start,
+                      "value_start": value_start, "end": position})
+    return pairs, left_padding
+
+
+def _remember_fuzzy(prior, pair):
+    key, value = pair["key"], pair["visible_value"]
+    if not value or (key in prior and prior[key] != value):
+        raise ValueError("Incomplete or inconsistent earlier fuzzy mapping")
+    prior[key] = value
+
+
+def fuzzy_prefix_prediction(prefix, overrides=None):
+    """Retrieve the next value token using only this prefix and earlier pairs.
+
+    A short known key can also prefix a longer key. The return value is a lookup
+    prediction, not a claim that this position belongs to the native answer mask.
+    """
+    cfg = task_config(FUZZY_TASK, overrides)
+    pairs, _ = _fuzzy_runs(prefix, cfg)
+    if not pairs:
+        return IGNORE_INDEX
+    prior = {}
+    for pair in pairs[:-1]:
+        _remember_fuzzy(prior, pair)
+    current = pairs[-1]
+    value = prior.get(current["key"])
+    visible = current["visible_value"]
+    if value is None or len(visible) >= len(value):
+        return IGNORE_INDEX
+    if visible != value[:len(visible)]:
+        raise ValueError("Visible fuzzy answer prefix disagrees with the earlier mapping")
+    return value[len(visible)]
+
+
+def fuzzy_answer_annotation(input_ids, overrides=None, *, terminal_target=None):
+    """Annotate repeated-value positions; recover answers from earlier mappings.
+
+    Native complete inputs omit exactly the final value token after shifting.
+    Some native terminal queries have NO earlier presentation: the generator's
+    loop can finish before inserting its probe. With no terminal_target this
+    function returns only independently retrievable answers, leaving that whole
+    terminal value ignored. Supplying the native terminal target annotates all
+    native answer positions for reporting, never for oracle prediction.
+    """
+    cfg = task_config(FUZZY_TASK, overrides)
+    tokens = np.asarray(input_ids, dtype=np.int64)
+    pairs, padding = _fuzzy_runs(tokens, cfg)
+    if len(pairs) < 2:
+        raise ValueError("Fuzzy input must contain an earlier pair and terminal query")
+    labels = np.full(tokens.shape, IGNORE_INDEX, dtype=np.int64)
+    prior, records = {}, []
+    for index, pair in enumerate(pairs):
+        final = index == len(pairs) - 1
+        key, visible = pair["key"], pair["visible_value"]
+        remembered = prior.get(key)
+        if final:
+            if remembered is not None:
+                if visible != remembered[:-1]:
+                    raise ValueError("Terminal fuzzy query must omit exactly one previously presented value token")
+                if terminal_target is not None and terminal_target != remembered[-1]:
+                    raise ValueError("Native terminal target disagrees with earlier fuzzy mapping")
+                value = remembered
+            else:
+                value = visible + (terminal_target,)
+                known = [token for token in value if token is not None]
+                if (len(value) > cfg["v_motif_size"] or len(set(known)) != len(known) or
+                        any(not 7 <= token < 15 for token in known)):
+                    raise ValueError("Malformed unseen terminal fuzzy value")
+        else:
+            value = visible
+            if not value or (remembered is not None and remembered != value):
+                raise ValueError("Inconsistent fuzzy key/value mapping")
+        if remembered is not None or (final and terminal_target is not None):
+            start = pair["value_start"] - 1
+            labels[start:start + len(value)] = value
+        records.append({"key": list(key), "value": list(value),
+                        "key_start": pair["key_start"], "value_start": pair["value_start"],
+                        "visible_value_tokens": len(visible), "repeated": remembered is not None,
+                        "final_query": final, "retrievable_from_earlier_mapping": remembered is not None})
+        if not final:
+            prior[key] = value
+    return labels, {"left_padding": padding, "pairs": records}
+
+
 def answer_oracle(task, input_ids, overrides=None):
     """Independent parser; no targets, generator internals or future tokens used for answers."""
     cfg = task_config(task, overrides)
@@ -214,6 +372,8 @@ def answer_oracle(task, input_ids, overrides=None):
                 prior[key] = value
         if labels[-1] == IGNORE_INDEX:
             raise ValueError("Terminal recall key was never presented")
+    elif task == FUZZY_TASK:
+        labels, _ = fuzzy_answer_annotation(tokens, overrides)
     elif task == "selective-copying":
         markers = np.flatnonzero(tokens == vocab - 1)
         if len(markers) != 1:
@@ -252,11 +412,30 @@ def generate_dataset(task, split, seed, num_examples, overrides=None):
         try:
             for index in range(num_examples):
                 tokens, labels = function(**cfg, rng=rng, is_training=(split == "train"))
-                oracle = answer_oracle(task, tokens, overrides)
+                if task == FUZZY_TASK:
+                    # This is native answer annotation, not a prediction of an
+                    # unseen terminal value. Independent retrieval is audited below.
+                    oracle, fuzzy_metadata = fuzzy_answer_annotation(tokens, overrides,
+                                                                       terminal_target=int(labels[-1]))
+                    retrieval = answer_oracle(task, tokens, overrides)
+                    available = retrieval != IGNORE_INDEX
+                    if not np.array_equal(retrieval[available], oracle[available]):
+                        raise AssertionError("Causal fuzzy retrieval disagrees with native answer annotation")
+                    fuzzy_metadata["oracle_available_positions"] = np.flatnonzero(available).tolist()
+                    fuzzy_metadata["unretrievable_answer_positions"] = np.flatnonzero(
+                        (oracle != IGNORE_INDEX) & ~available).tolist()
+                else:
+                    oracle = answer_oracle(task, tokens, overrides)
                 if task == "in-context-recall":
                     check_tokens, check_labels = function(**cfg, rng=mask_rng, is_training=False)
                     if not np.array_equal(tokens, check_tokens) or not np.array_equal(oracle, check_labels):
                         raise AssertionError("Independent recall oracle disagrees with native evaluation mask")
+                elif task == FUZZY_TASK:
+                    if split != "train" and not np.array_equal(oracle, labels):
+                        raise AssertionError("Independent fuzzy annotation disagrees with native held-out targets")
+                    if split == "train" and (np.any(labels == IGNORE_INDEX) or
+                            not np.array_equal(labels[:-1], tokens[1:]) or labels[-1] != oracle[-1]):
+                        raise AssertionError("Native fuzzy dense next-token alignment changed")
                 elif not np.array_equal(oracle, labels):
                     raise AssertionError("Independent copy oracle disagrees with native targets")
                 if not np.array_equal(labels[oracle != IGNORE_INDEX], oracle[oracle != IGNORE_INDEX]):
@@ -266,6 +445,8 @@ def generate_dataset(task, split, seed, num_examples, overrides=None):
                 answers.append(oracle)
                 metadata.append({"example_index": index, "split": split,
                                  "answer_positions": np.flatnonzero(oracle != IGNORE_INDEX).tolist()})
+                if task == FUZZY_TASK:
+                    metadata[-1].update(fuzzy_metadata)
         finally:
             np.random.set_state(global_state)
     manifest = {
@@ -291,6 +472,21 @@ def generate_dataset(task, split, seed, num_examples, overrides=None):
         counts = (dataset.answer_labels != IGNORE_INDEX).sum(axis=1)
         manifest["answer_count_per_example"] = {"min": int(counts.min()), "max": int(counts.max()),
                                                 "mean": float(counts.mean())}
+    if task == FUZZY_TASK:
+        mask = dataset.oracle_available_mask
+        valid = dataset.answer_labels != IGNORE_INDEX
+        unavailable = valid & ~mask
+        unknown = [record for record in metadata if record["unretrievable_answer_positions"]]
+        manifest["oracle_coverage"] = {
+            "scored_tokens": int(valid.sum()), "available_tokens": int(mask.sum()),
+            "unavailable_tokens": int(unavailable.sum()),
+            "examples_with_unavailable_answers": len(unknown),
+            "terminal_unavailable_tokens": int(unavailable.sum()), "context_unavailable_tokens": 0,
+            "terminal_first_value_tokens_unavailable": len(unknown),
+            "terminal_continuation_tokens_unavailable": int(unavailable.sum()) - len(unknown),
+            "native_edge_case": "The probe placement loop can end before its sampled probe index, leaving a scored terminal key unseen. Preserve every native label and draw.",
+            "interpretation": "Exact earlier-mapping retrieval coverage, not a theoretical task accuracy ceiling; no training or primary evaluation mask is changed.",
+        }
     return dataset
 
 
@@ -317,8 +513,75 @@ def score_predictions(predictions, labels):
             "exact_sequences": int(exact.sum()), "examples": len(labels)}
 
 
+def fuzzy_baseline_audit(dataset):
+    """Causal shortcuts and retrieval coverage, with all native answers scored.
+
+    Terminal values whose key was never presented remain in the denominator.
+    Retrieval abstentions are counted as incorrect, not dropped or imputed.
+    """
+    overrides = dataset.manifest.get("task_overrides")
+    labels = dataset.answer_labels
+    modal = np.full(labels.shape, 7, dtype=np.int64)
+    prefix_guess = modal.copy()
+    retrieval = np.full(labels.shape, IGNORE_INDEX, dtype=np.int64)
+    terminal_unseen = 0
+    for row_index, tokens in enumerate(dataset.input_ids):
+        annotations, info = fuzzy_answer_annotation(tokens, overrides,
+                                                   terminal_target=int(dataset.labels[row_index, -1]))
+        if not np.array_equal(annotations, labels[row_index]):
+            raise ValueError("Stored fuzzy answer labels differ from native annotation")
+        retrieval[row_index] = answer_oracle(FUZZY_TASK, tokens, overrides)
+        terminal_unseen += int(not info["pairs"][-1]["repeated"])
+        votes = Counter()
+        for position, token in enumerate(tokens):
+            if 7 <= token < 15:
+                votes[int(token)] += 1
+            if votes:
+                modal[row_index, position] = min(votes, key=lambda value: (-votes[value], value))
+        prior = {}
+        for pair in info["pairs"]:
+            start = pair["value_start"]
+            for offset in range(len(pair["value"])):
+                # The suffix visible at this prediction position excludes the
+                # next token being guessed. Current query identity is unused.
+                visible = tuple(map(int, tokens[start:start + offset]))
+                options = Counter(value[offset] for value in prior.values()
+                                  if len(value) > offset and value[:offset] == visible)
+                prediction = (min(options, key=lambda value: (-options[value], value)) if options
+                              else next(value for value in range(7, 15) if value not in visible))
+                prefix_guess[row_index, start - 1 + offset] = prediction
+            if not pair["final_query"]:
+                prior[tuple(pair["key"])] = tuple(pair["value"])
+    available = retrieval != IGNORE_INDEX
+    valid = labels != IGNORE_INDEX
+    if np.any(available & ~valid) or not np.array_equal(retrieval[available], labels[available]):
+        raise AssertionError("Fuzzy prefix retrieval must agree wherever it has an earlier mapping")
+    answers = valid.sum(axis=1)
+    return {
+        "label_scope": "All native fuzzy answer positions, including unseen terminal queries; dense training objective is separate.",
+        "oracle": {**score_predictions(retrieval, labels),
+                   "available_answers": int(available.sum()),
+                   "coverage": float(available.sum() / valid.sum()),
+                   "available_answer_accuracy": 1.0 if available.any() else None,
+                   "unseen_terminal_query_examples": terminal_unseen,
+                   "unretrievable_answers": int((valid & ~available).sum()),
+                   "interpretation": "Prefix-only retrieval conditional on native scored positions; unavailable mappings abstain and count as errors. Coverage is not a statistical accuracy ceiling."},
+        "uniform_answer_vocabulary_token_chance": 1 / 8,
+        "uniform_full_vocabulary_token_chance": 1 / 16,
+        "independent_uniform_answer_guess_sequence_chance": float(np.mean((1 / 8) ** answers)),
+        "query_ignoring_modal": {**score_predictions(modal, labels),
+            "method": "Mode of all visible value-token occurrences through this position; smallest-value tie break, default7. Current key is ignored.",
+            "information_restriction": "Only input tokens at or before each prediction; targets never select predictions."},
+        "query_ignoring_answer_prefix": {**score_predictions(prefix_guess, labels),
+            "method": "Among values of distinct earlier completed keys matching the visible current value prefix, predict the modal next token. Ignore current query identity. Empty candidate set uses the smallest value symbol absent from the visible value prefix.",
+            "information_restriction": "Earlier completed mappings and the teacher-forced current answer prefix only; input-run annotation selects reporting positions, not answers."},
+    }
+
+
 def baseline_audit(dataset):
     task = dataset.manifest["task"]
+    if task == FUZZY_TASK:
+        return fuzzy_baseline_audit(dataset)
     overrides = dataset.manifest.get("task_overrides")
     vocab = int(dataset.manifest["vocab_size"])
     labels = dataset.answer_labels

@@ -74,9 +74,77 @@ def reconstruct_initial_weights(saved: dict) -> tuple[dict[str, torch.Tensor], d
     return reconstructed["naive"], audit
 
 
+def adapt_mixed_reference(source_report: dict, saved: dict) -> tuple[dict, dict, dict]:
+    """Map the two saved FP32 arms of a mixed audit to the original CE schema.
+
+    No values are cast or recomputed. BF16 arms are deliberately excluded from
+    the reference reconstruction. Preserve the original model/configuration and
+    fixture identities while supplying the legacy field names used below.
+    """
+    if source_report.get("schema") != "r3-mixed-validation-v1" or source_report.get("status") != "diagnostics_complete":
+        raise ValueError("Mixed reference must be a completed r3-mixed-validation-v1 diagnostic")
+    settings = source_report["settings"]
+    for key, expected in {"parameters": "FP32", "tf32": False, "sdpa": "math", "deterministic": True}.items():
+        if settings.get(key) != expected:
+            raise ValueError(f"Mixed reference uses incompatible {key}: {settings.get(key)!r}")
+    fixture = source_report["fixture"]
+    if fixture.get("alignment") != "Stage B aligned answer-only CE / total scored answers, no shift":
+        raise ValueError("Mixed reference does not declare the authoritative aligned answer-only mean CE")
+    if fixture.get("accumulation") is not False:
+        raise ValueError("Mixed reference must retain a physical batch without accumulation")
+    if not source_report.get("arguments", {}).get("include_tiled_fp32"):
+        raise ValueError("Mixed reference did not declare execution of a tiled FP32 arm")
+    if "model_config" not in saved:
+        raise ValueError("Mixed reference has no saved authoritative model configuration")
+    gradients, steps, contracts = {}, {}, {}
+    for backend in ("naive", "tiled"):
+        arm = backend + "_fp32"
+        if arm not in saved.get("packets", {}) or arm not in saved.get("steps", {}):
+            raise ValueError(f"Mixed reference lacks required saved arm: {arm}")
+        packet, step = saved["packets"][arm], saved["steps"][arm]
+        order = list(step["weights"])
+        if list(packet["parameters"]) != order:
+            raise AssertionError(f"{arm}: parameter-gradient order differs from saved weights")
+        if list(step["deltas"]) != order:
+            raise AssertionError(f"{arm}: saved parameter delta order differs from weights")
+        if set(packet["inputs"]) != {"embedding_output", "block3_input"}:
+            raise AssertionError(f"{arm}: expected the actual embedding and recurrent-block input gradients")
+        checks = {**packet["parameters"],
+                  **{f"input/{name}": value for name, value in packet["inputs"].items()},
+                  "logits": packet["logits"], "cotangent": packet["cotangent"]}
+        for name, value in checks.items():
+            if (not isinstance(value, torch.Tensor) or value.device.type != "cpu"
+                    or value.dtype != torch.float32 or not bool(torch.isfinite(value).all())):
+                raise AssertionError(f"{arm}/{name}: saved FP32 arm must be present, finite and FP32")
+        if packet.get("loss") is None or not isinstance(packet["loss"], (int, float)):
+            raise AssertionError(f"{arm}: missing actual mean CE")
+        gradients[backend] = {**packet, "parameter_order": order}
+        steps[backend] = step
+        contracts[arm] = {"parameter_tensors": len(order), "gradient_tensors_including_inputs": len(order) + len(packet["inputs"]),
+                          "parameters_inputs_logits_cotangent_finite_fp32": True,
+                          "canonical_order_matches_step_weights": True}
+    normalized_report = {**source_report,
+        "arguments": {**source_report["arguments"], "case": "ce"},
+        "settings": {**settings, "autocast": False},
+        "model_config": copy.deepcopy(saved["model_config"]),
+        "fixture": {**fixture, "answer_count": fixture["answers"], "used_batch_sha256": fixture["sha256"]}}
+    normalized_saved = {"tokens": saved["tokens"], "labels": saved["labels"],
+                        "gradients": gradients, "steps": steps}
+    audit = {"adapter": "r3-mixed-validation-v1 FP32 arms to retained CE reference schema",
+             "source_arms": {"naive": "naive_fp32", "tiled": "tiled_fp32"},
+             "source_autocast_description": settings.get("autocast"),
+             "reference_autocast": False,
+             "reference_autocast_basis": "The mixed validator's explicit *_fp32 arms plus verified saved FP32 logits, cotangents and all gradients; BF16 arms excluded.",
+             "fixture_aliases": {"answer_count": "answers", "used_batch_sha256": "sha256"},
+             "source_fixture": fixture, "arm_contracts": contracts}
+    return normalized_report, normalized_saved, audit
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference-run", type=Path, required=True)
+    parser.add_argument("--mixed-reference", action="store_true",
+                        help="Read tensors.pt from a completed mixed audit; use its naive_fp32 and tiled_fp32 arms only")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     if args.output_dir.exists():
@@ -89,13 +157,16 @@ def main() -> None:
               "scope": "Naive FP64 reference only; identical pre-step FP32-representable weights and saved CE fixture. No optimizer step, no research continuation, no tiled FP64 claim."}
     try:
         source_report_path = args.reference_run / "report.json"
-        source_tensor_path = args.reference_run / "ce-and-update-tensors.pt"
+        source_tensor_path = args.reference_run / ("tensors.pt" if args.mixed_reference else "ce-and-update-tensors.pt")
         source_report = json.loads(source_report_path.read_text())
+        saved = torch.load(source_tensor_path, map_location="cpu", weights_only=False)
+        if args.mixed_reference:
+            source_report, saved, adapter_audit = adapt_mixed_reference(source_report, saved)
+            report["mixed_reference_adapter"] = adapter_audit
         if source_report["arguments"]["case"] != "ce" or source_report["status"] != "diagnostics_complete":
             raise ValueError("Reference run must be a completed actual-CE diagnostic")
         if source_report["settings"]["parameters"] != "FP32" or source_report["settings"]["autocast"]:
             raise ValueError("Reference run must use FP32 weights and disabled autocast")
-        saved = torch.load(source_tensor_path, map_location="cpu", weights_only=False)
         initial_weights, reconstruction = reconstruct_initial_weights(saved)
         tokens, labels = saved["tokens"], saved["labels"]
         if tokens.dtype != torch.int64 or labels.dtype != torch.int64 or tokens.shape != labels.shape:
@@ -134,6 +205,10 @@ def main() -> None:
         if cfg["layer_norm_type"] != "default":
             raise ValueError("This FP64 fallback has only audited dtype-preserving default layer norm")
         cfg.update(init_device="cpu", recurrent_backend="naive", reference_eager=True)
+        if args.mixed_reference:
+            # Match build(..., backend, policy="legacy", bf16=False) used for
+            # both saved FP32 arms; do not inherit the opt-in BF16 state policy.
+            cfg.update(precision=None, recurrent_precision_policy="legacy")
         model = OLMo(ModelConfig(**cfg)).double().cuda().train()
         model.load_state_dict(initial_weights, strict=True)
         unique_parameters(model)

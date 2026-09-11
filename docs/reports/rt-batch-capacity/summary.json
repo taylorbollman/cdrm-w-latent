@@ -1,0 +1,92 @@
+{
+  "schema": "rt-capacity-summary-v1",
+  "rows": [
+    {
+      "batch": 32,
+      "updates": 5,
+      "measured_updates": 3,
+      "peak_allocated_GiB": 5.367149829864502,
+      "peak_reserved_GiB": 6.375,
+      "minimum_sampled_free_GiB": 72.12713623046875,
+      "median_update_seconds": 11.49038226200014,
+      "tokens_per_second": 1425.3346348962893,
+      "report": ".runtime/rt-batch-capacity/20260910T175700Z/profiles/b32/report.json",
+      "report_sha256": "a9b3c860a7d90eda668a2cefda821e1ca0c3f138b3c2469ce23ea268023fe10b",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/8wylcmwu"
+    },
+    {
+      "batch": 256,
+      "updates": 5,
+      "measured_updates": 3,
+      "peak_allocated_GiB": 24.19441843032837,
+      "peak_reserved_GiB": 28.220703125,
+      "minimum_sampled_free_GiB": 50.28143310546875,
+      "median_update_seconds": 12.256051384999864,
+      "tokens_per_second": 10682.484769318857,
+      "report": ".runtime/rt-batch-capacity/20260910T175700Z/profiles/b256/report.json",
+      "report_sha256": "d3b736bb6dbdcfd7c243492be320c4f54a05486535522f6ec853150e5e6aefde",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/duif9s2m"
+    },
+    {
+      "batch": 512,
+      "updates": 10,
+      "measured_updates": 8,
+      "peak_allocated_GiB": 45.71114635467529,
+      "peak_reserved_GiB": 56.658203125,
+      "minimum_sampled_free_GiB": 21.84393310546875,
+      "median_update_seconds": 13.211444743499897,
+      "tokens_per_second": 19817.48674729189,
+      "report": ".runtime/rt-batch-capacity/20260910T175700Z/profiles/b512-confirm/report.json",
+      "report_sha256": "51a2bd7d5caaa60a157512459a920df09340f0e9563a4206828b2cd23241411d",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/kxmathn5"
+    },
+    {
+      "batch": 640,
+      "updates": 10,
+      "measured_updates": 8,
+      "peak_allocated_GiB": 56.481285572052,
+      "peak_reserved_GiB": 67.029296875,
+      "minimum_sampled_free_GiB": 11.47283935546875,
+      "median_update_seconds": 14.228600240499986,
+      "tokens_per_second": 23004.817874600707,
+      "report": ".runtime/rt-batch-capacity/20260910T175700Z/profiles/b640-confirm/report.json",
+      "report_sha256": "e5eaf36d6a9242c30e3b5edcedd1d8bd287b0a0350e532845dfd99a2e016ae5d",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/x3x3qn5a"
+    },
+    {
+      "batch": 768,
+      "updates": 5,
+      "measured_updates": 3,
+      "peak_allocated_GiB": 67.246178150177,
+      "peak_reserved_GiB": 75.65625,
+      "minimum_sampled_free_GiB": 2.84588623046875,
+      "median_update_seconds": 15.118996595999988,
+      "tokens_per_second": 26021.684874071627,
+      "report": ".runtime/rt-batch-capacity/20260910T175700Z/profiles/b768/report.json",
+      "report_sha256": "fc83fb2e1bcd5be225ee65ebe3d7d3a566139d04dfe16a406e7b0bcbbede1d12",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/fk0i6woc"
+    }
+  ],
+  "recommended_physical_batch": 512,
+  "largest_tested_comfortable_batch": 640,
+  "batch512_throughput_fraction_of_batch640": 0.8614494083507652,
+  "selection_reason": "User requested the paper-aligned batch512 if reasonably efficient; report measured throughput tradeoff against640",
+  "length": 512,
+  "input_tokens_per_update": 262144,
+  "comfort_rule": "At least8GiB sampled post-update devicefree; bracketed by tested768 with less than8GiB",
+  "scope": "Short random-data complete training steps; supported compiled tiled helpers with FP32state and headchunks2; no CUDAwholegraphs or external loader/latent overhead",
+  "hard_oom_boundary_tested": false,
+  "wandb": {
+    "enabled": true,
+    "mode": "online",
+    "project": "recurrent-transformer-capacity",
+    "entity": "taylorbollman",
+    "group": "20260910T175700Z",
+    "name": "capacity-summary",
+    "system_stats": false,
+    "status": "synced",
+    "run_id": "r3f3gmsl",
+    "run_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/r3f3gmsl",
+    "project_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity"
+  }
+}

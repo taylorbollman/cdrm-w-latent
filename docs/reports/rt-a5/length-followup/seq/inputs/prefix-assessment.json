@@ -1,0 +1,71 @@
+{
+  "architecture": "seq",
+  "assessment_time": "2026-09-11T17:03:38.926561+00:00",
+  "checks": {
+    "12": {
+      "accuracy_counts_equal": true,
+      "ce_difference": 1.4318040530980625e-08,
+      "changed_prediction_details_first20": [],
+      "correctness_disagreements": 0,
+      "max_2error_over_margin": 0.705234169960022,
+      "max_probability_error": 1.0073184967041016e-05,
+      "max_total_variation": 1.0078216291731223e-05,
+      "min_top_two_margin": 2.028420567512512e-06,
+      "prediction_disagreements": 0,
+      "strict_logit_screen_passed": false,
+      "uncertified_argmax_positions": 0
+    },
+    "13": {
+      "accuracy_counts_equal": true,
+      "ce_difference": -3.585879593259733e-09,
+      "changed_prediction_details_first20": [
+        {
+          "label": 27,
+          "position": 13,
+          "reference_prediction": 13,
+          "reference_top_two_margin": 2.146698534488678e-07,
+          "row_index": 355,
+          "truncated_prediction": 32
+        }
+      ],
+      "correctness_disagreements": 0,
+      "max_2error_over_margin": 18.325380325317383,
+      "max_probability_error": 1.1682510375976562e-05,
+      "max_total_variation": 1.206071101478301e-05,
+      "min_top_two_margin": 2.146698534488678e-07,
+      "prediction_disagreements": 1,
+      "strict_logit_screen_passed": false,
+      "uncertified_argmax_positions": 2
+    }
+  },
+  "completed_updates": 10000,
+  "confirmation_evaluated": false,
+  "data_manifest_sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb",
+  "new_model_forwards": 0,
+  "new_training_updates": 0,
+  "original_logit_screen_passed": false,
+  "original_prefix_report": "/workspace/cdrm-w-latent/.runtime/rt-a5/20260911T165258Z-length/seq-prefix/report.json",
+  "original_prefix_report_sha256": "0a232c0ff27c7a136275f56ddf81e394bc82d572a636384845903e582bbaf5ef",
+  "qualification": "This post-run assessment accepts only the observed E/A/M length metrics: every per-word, per-position correct/incorrect indicator and every integer accuracy count agrees. Wrong-class predictions may differ; all such changes and their margins are reported. Original strict logit-screen and prediction-agreement failures remain failures. Probability/loss changes and margin certificates are descriptive; no numerical tolerance was changed. No claim about all inputs, backward gradients or mixed precision.",
+  "schema": "rt-a5-prefix-assessment-v1",
+  "source_files": {
+    "rt_a5_prefix_assess.py": "514fcbbcc3e0aa0acb0308c2acd554097eb4144387449d0b054bd37ea3697ebf",
+    "rt_a5_prefix_check.py": "c5c12ef7832b581b1357e7fc26a3e5ab7b350bf7a88c42e8484e10ca71b4b3c0"
+  },
+  "source_sha256": "6f9d55a957bf505aefa1a351c33f0bc76291ff63736bc28b1b618393f46ef6ea",
+  "status": "complete",
+  "usable_for_length_metrics": true,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260911T165258Z-length",
+    "mode": "online",
+    "name": "seq-prefix-metric-assessment",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "nz17s46c",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/nz17s46c",
+    "status": "synced",
+    "system_stats": false
+  }
+}

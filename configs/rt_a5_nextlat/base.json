@@ -1,0 +1,35 @@
+{
+  "schema": "rt-a5-nextlat-config-v1",
+  "reference_commit": "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9",
+  "backbone_config": "configs/rt_a5/base.json",
+  "latent": "post_final_layer_norm",
+  "prediction_horizon": 1,
+  "predictor": {
+    "projection_factor": 0.5,
+    "hidden_width_multiple": 128,
+    "input_order": ["next_operation_embedding", "current_latent"],
+    "normalization": "rms_norm",
+    "normalization_epsilon": 0.00001,
+    "linear_layers": 3,
+    "activation": "gelu",
+    "bias": false,
+    "dropout": 0.0,
+    "residual": true,
+    "output_normalization": false,
+    "initialization_std": 0.02
+  },
+  "objective": {
+    "state_ce_weight": 1.0,
+    "latent_weight": 1.0,
+    "latent_loss": "smooth_l1",
+    "smooth_l1_beta": 1.0,
+    "reduction": "mean_over_batch_transitions_latent_coordinates",
+    "stop_target_gradient": true,
+    "stop_source_gradient": false,
+    "stop_conditioning_embedding_gradient": false,
+    "auxiliary_kl_weight": 0.0,
+    "auxiliary_ce_weight": 0.0
+  },
+  "evaluation": "backbone_only",
+  "runtime": "fp32_eager"
+}

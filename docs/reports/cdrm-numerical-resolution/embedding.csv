@@ -1,0 +1,3 @@
+attempt,case,accepted_for_diagnostic_summary,incoming_adjoint_relative_l2,native_embedding_relative_l2,fp64_predicted_relative_l2
+embedding-accumulation-reference,seed7500-u1000-fp32,True,0.04897153589662691,0.050257054057979964,0.050256906397644935
+embedding-accumulation-reference,seed7500-u1000-bf16,True,0.03483636213821672,0.03249654650220137,0.0324964714777894

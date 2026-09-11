@@ -1,0 +1,80 @@
+{
+  "architecture": "rt",
+  "assessment_time": "2026-09-11T16:59:26.195485+00:00",
+  "checks": {
+    "12": {
+      "accuracy_counts_equal": true,
+      "ce_difference": -6.368927607525166e-11,
+      "max_2error_over_margin": 0.007944389246404171,
+      "max_probability_error": 8.761882781982422e-06,
+      "max_total_variation": 8.777726179687306e-06,
+      "min_top_two_margin": 0.00768280029296875,
+      "prediction_disagreements": 0,
+      "strict_logit_screen_passed": false,
+      "uncertified_argmax_positions": 0
+    },
+    "13": {
+      "accuracy_counts_equal": true,
+      "ce_difference": -9.227814123935474e-09,
+      "max_2error_over_margin": 0.004859611392021179,
+      "max_probability_error": 7.212162017822266e-06,
+      "max_total_variation": 7.231050403788686e-06,
+      "min_top_two_margin": 0.00768280029296875,
+      "prediction_disagreements": 0,
+      "strict_logit_screen_passed": false,
+      "uncertified_argmax_positions": 0
+    },
+    "14": {
+      "accuracy_counts_equal": true,
+      "ce_difference": -2.5272422654598614e-08,
+      "max_2error_over_margin": 0.013836197555065155,
+      "max_probability_error": 7.510185241699219e-06,
+      "max_total_variation": 7.454586466337787e-06,
+      "min_top_two_margin": 0.004273414611816406,
+      "prediction_disagreements": 0,
+      "strict_logit_screen_passed": false,
+      "uncertified_argmax_positions": 0
+    },
+    "16": {
+      "accuracy_counts_equal": true,
+      "ce_difference": 0.0,
+      "max_2error_over_margin": 0.0,
+      "max_probability_error": 0.0,
+      "max_total_variation": 0.0,
+      "min_top_two_margin": 0.0013546943664550781,
+      "prediction_disagreements": 0,
+      "strict_logit_screen_passed": true,
+      "uncertified_argmax_positions": 0
+    }
+  },
+  "completed_updates": 10000,
+  "confirmation_evaluated": false,
+  "data_manifest_sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb",
+  "new_model_forwards": 0,
+  "new_training_updates": 0,
+  "original_logit_screen_passed": false,
+  "original_prefix_report": "/workspace/cdrm-w-latent/.runtime/rt-a5/20260911T165258Z-length/rt-prefix/report.json",
+  "original_prefix_report_sha256": "1f4207fca60b2edd76e06f32a84239e81ffa8c9b7f015c95d207f4d70884fb48",
+  "qualification": "This post-run assessment accepts only the observed E/A/M length metrics: every prediction and integer accuracy count agrees, and each observed logit perturbation is smaller than half the winning margin. Original strict logit-screen failures remain failures. Probability/loss changes are descriptive; no numerical tolerance was changed. No claim about all inputs, backward gradients or mixed precision.",
+  "schema": "rt-a5-prefix-assessment-v1",
+  "source_files": {
+    "rt_a5_prefix_assess.py": "d8085ce77af94fa080c9ca3ee937f600b68bde01456dc3f3a9879ed71dcc631b",
+    "rt_a5_prefix_check.py": "c5c12ef7832b581b1357e7fc26a3e5ab7b350bf7a88c42e8484e10ca71b4b3c0"
+  },
+  "source_sha256": "6f9d55a957bf505aefa1a351c33f0bc76291ff63736bc28b1b618393f46ef6ea",
+  "status": "complete",
+  "usable_for_length_metrics": true,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260911T165258Z-length",
+    "mode": "online",
+    "name": "rt-prefix-metric-assessment",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "fbt0j9mf",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/fbt0j9mf",
+    "status": "synced",
+    "system_stats": false
+  }
+}

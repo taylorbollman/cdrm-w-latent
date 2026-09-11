@@ -1,0 +1,41 @@
+{
+  "archive_member_sha256_readbacks_verified": true,
+  "downloaded_archive_members_sha256_verified": true,
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/rt-batch-capacity/20260910T175700Z/",
+  "local_archive": "/home/taylorbollman/cdrm-w-latent/.runtime/rt-batch-capacity/20260910T175700Z/retention/evidence.tar.gz",
+  "local_manifest": "/home/taylorbollman/cdrm-w-latent/.runtime/rt-batch-capacity/20260910T175700Z/retention/member-manifest.json",
+  "member_count": 212,
+  "objects": [
+    {
+      "bytes": 1305737,
+      "download_sha256": "f43553f9430d6d2a3a4c18ef1299af5744c0b577e9221981a4aa43fe6acc54cf",
+      "exact_download_readback_verified": true,
+      "generation": "1789064021902606",
+      "sha256": "f43553f9430d6d2a3a4c18ef1299af5744c0b577e9221981a4aa43fe6acc54cf",
+      "uri": "gs://fast-chunks/cdrm-w-latent/rt-batch-capacity/20260910T175700Z/evidence.tar.gz"
+    },
+    {
+      "bytes": 50625,
+      "download_sha256": "e4feb7a92c5bee525f041ac3b40d142803061eadc8865feafd75f8ce677f58cb",
+      "exact_download_readback_verified": true,
+      "generation": "1789064025054330",
+      "sha256": "e4feb7a92c5bee525f041ac3b40d142803061eadc8865feafd75f8ce677f58cb",
+      "uri": "gs://fast-chunks/cdrm-w-latent/rt-batch-capacity/20260910T175700Z/member-manifest.json"
+    }
+  ],
+  "receipt_readback": {
+    "bytes": 1396,
+    "download_sha256": "56382b771a0d1c722c3cc00b939fc14000d7ef19d1c002366a6d3a58cac7fc18",
+    "exact_download_readback_verified": true,
+    "generation": "1789064028292216",
+    "sha256": "56382b771a0d1c722c3cc00b939fc14000d7ef19d1c002366a6d3a58cac7fc18",
+    "uri": "gs://fast-chunks/cdrm-w-latent/rt-batch-capacity/20260910T175700Z/storage-receipt.json"
+  },
+  "receipt_uri": "gs://fast-chunks/cdrm-w-latent/rt-batch-capacity/20260910T175700Z/storage-receipt.json",
+  "schema_version": 1,
+  "source_unchanged_after_upload": true,
+  "status": "verified",
+  "uncompressed_payload_bytes": 6505371,
+  "upload_precondition": "if-generation-match=0 (no overwrite)",
+  "verified_at_utc": "2026-09-10T18:13:47.405767+00:00"
+}

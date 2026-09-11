@@ -5,11 +5,12 @@ copying, vocabulary 16, T256, 96 copied tokens**, with zero-based early/late sit
 **1/3**. This follows the user's six-block screening update and the selection frozen
 at **2026-09-07 13:33:39 UTC** in
 [six-comparison-selection.json](../../../.runtime/cdrm-naive/20260907T123830Z/six-comparison-selection.json).
-Both SEQ/CDRM seed pairs now completed epoch 25 and passed the artifact/pairing
-audits. A [runtime-only decision](six-continuation-decision.json) at 14:53:44 UTC
-selected common epoch 45; those serial continuations and final evaluations remain
-pending. Epoch-25 development observations are reported below without a final
-learning-advantage claim.
+Both SEQ/CDRM seed pairs completed common epoch 45 and passed the full
+[artifact/pairing audit](e45-cohort-audit.json). The six unique final evaluations
+cover all eight frozen endpoint/best-dev roles and passed the
+[independent final audit](final-independent-audit.json). Results show mixed seed
+outcomes and no consistent CDRM advantage; complete final values are in
+[results.md](results.md).
 
 The earlier 12-block D128 profile, sites 3/8, and original baseline-task corpus are
 historical only. The old SEQ-12 run completed 50 epochs; no paired CDRM-12 run was
@@ -25,8 +26,8 @@ the current experiment or a substitute for six-block validation.
 | Selected difficulty | Copy count 96 is an official one-field change from baseline count 16; T256/vocabulary 16 remain fixed. | **Established MAD difficulty setting**, not a claim to match the paper's plotted setting. |
 | Optimizer | AdamW LR 5e-4, betas (0.9, 0.98), epsilon 1e-8, weight decay 0. | **One matched paper candidate**, not the tuned sweep. D.2 repeats 5e-4; only three LR values are distinct. |
 | Precision/clipping | FP32 parameters/computation; TF32/autocast/dropout off; no accumulation; clip norm 1. MAD defaults to BF16. | **Deliberate local profile**; clipping is unspecified in D.2. |
-| Data and batch | 12,800 fixed train and 1,280 dev examples. Selected B128 gives 100 updates/epoch; fresh 1,280-example final is reserved but absent. | Counts/B128 are **MAD defaults**, not verified authors' plotted-run settings. |
-| Duration/schedule | All four SEQ/CDRM seed trajectories completed epoch 25. Common epoch 45 is selected by the frozen runtime policy and continuations are active. Cosine horizon 200 epochs, minimum LR 1e-6, no warmup. | Horizon/minimum are **MAD defaults**; epoch stepping is an **adaptation**. Partial runs are not full tuned endpoints. |
+| Data and batch | 12,800 fixed train and 1,280 dev examples. Selected B128 gives 100 updates/epoch; fresh 1,280-example final was generated after role selection and evaluated. | Counts/B128 are **MAD defaults**, not verified authors' plotted-run settings. |
+| Duration/schedule | All four SEQ/CDRM seed trajectories completed common epoch 45, chosen by the frozen runtime policy. Cosine horizon 200 epochs, minimum LR 1e-6, no warmup. | Horizon/minimum are **MAD defaults**; epoch stepping is an **adaptation**. Partial runs are not full tuned endpoints. |
 | Metrics | Scored-token CE/accuracy and direct all-answer sequence exact match; native objective named separately when different. | Matches **metric types** in Figures 5/6; exact published harness details remain unavailable. |
 
 Depth, dimensions, optimizer, ALiBi and figure statements follow
@@ -41,8 +42,8 @@ underlying the published figures.
 
 **Native supervision is preserved.** Selected copying uses source IDs 0–13, blank 14,
 marker 15 at position 159, and 96 aligned targets at positions 160–255 whose inputs
-are blanks. Train/dev/eventual final use the same mask: **1,228,800 train targets**
-and **122,880 dev targets**. No copied answer is fed back. Copy 96 also reduces
+are blanks. Train/dev/final use the same mask: **1,228,800 train targets**
+and **122,880 targets each for dev and final**. No copied answer is fed back. Copy 96 also reduces
 inserted blanks to 63 at fixed T, so this is not a pure memory-length intervention.
 
 Deferred recall uses vocabulary 128 and configured T128: actual input length
@@ -97,7 +98,9 @@ After all four completed, epoch 50 required 5,561.22 seconds including 15% margi
 and did not fit the 5,085.70-second remaining window. Epoch 45 required 4,462.77
 seconds and was selected. The original 16:18:30 UTC cutoff and 20-minute finalization
 reserve remain fixed. The serial SEQ0/SEQ1/CDRM0/CDRM1 queue uses exact epoch-25
-checkpoints and the original 200-epoch schedule; its full completion is pending.
+checkpoints and the original 200-epoch schedule; all four continuations completed.
+The full cohort audit verifies exact inherited histories and all 4,500 ordered
+input/target/LR records, checkpoint payloads and initial backbone equality.
 No outcome-dependent subset receives extra training.
 
 Uniform answer-vocabulary chance is approximately 7.143% for selected copying and
@@ -109,7 +112,7 @@ sampling for expected accuracy. Both modal baselines score 0% dev exact match.
 **Pairing and holdout boundaries are explicit.** New train/dev seeds 112345/123456
 replace native MAD's shared advancing RNG with independent splits while retaining
 every draw. All examples passed the oracle; no within/cross-split exact input
-duplicates were found. Final seed 134567 is reserved. Model seeds **0 and 1** share
+duplicates were found. Final seed 134567 was used only after endpoint/checkpoint selection was frozen. Model seeds **0 and 1** share
 the fixed corpus and shuffle seed **45678**. CDRM starts from each corresponding
 fresh SEQ backbone initialization, not a trained SEQ checkpoint; compatible completed
 SEQ screens supply the baseline at common epochs. Adapters are nonzero with a
@@ -117,10 +120,17 @@ separate deterministic initialization. Gates remain epsilon 0.1, rho 1 and bridg
 lambda 0.01, distinct from weight decay. Sites 1/3 are a topology choice, not tuned
 against task outcomes.
 
-At this audit, **all three screening roots have no final split** and no final
-model evaluation has occurred. Final generation uses non-overwriting append only
-after the comparison is ready; endpoint/best-dev evaluations follow frozen
-training/continuation choices. Standalone evaluation code does not prove this
-controller ordering. Two paired seeds and development-based allocation support
-preliminary evidence, not a complete sweep, published-endpoint reproduction or
-broad training-seed uncertainty estimate.
+The selected copying final split was generated by non-overwriting append **after**
+all four epoch-45 completions and the immutable final role-selection plan. The
+[append verification](final-data-append-verification.json) and
+[final audit](final-independent-audit.json) verify unchanged pre-existing inputs,
+all 104 frozen file identities, four appended final files and six actual completed
+evaluations. The other screening settings were not promoted to final evaluation.
+Endpoint roles use epoch 45; best-dev roles use epochs 45/44 for SEQ/CDRM seed 0
+and 41/45 for seed 1, selected by minimum dev answer CE with earliest ties.
+Coincident roles share an evaluation; no checkpoint is selected using final scores.
+Final reports retain aggregate native/answer counts and metrics, not per-example
+predictions. Two paired seeds and development-based allocation support preliminary
+evidence, not a complete sweep, published-endpoint reproduction or broad
+training-seed uncertainty estimate. Later result-driven changes require fresh
+confirmatory data for new claims.

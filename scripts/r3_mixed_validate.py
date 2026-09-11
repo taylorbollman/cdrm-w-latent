@@ -3,12 +3,14 @@
 from __future__ import annotations
 import argparse
 import copy
+from contextlib import contextmanager, nullcontext
 import dataclasses
 import hashlib
 import json
 import os
 from pathlib import Path
 import time
+from types import SimpleNamespace
 
 os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
 import torch
@@ -16,7 +18,18 @@ from torch.nn.attention import SDPBackend, sdpa_kernel
 from r3_backward_validate import cpu, conversion, tensors, step_packet, adam_state
 from r3_validation_metrics import compare_tensors
 from stage_a_common import require_cuda_container, seed_all, configure_compiled_helpers, provenance
+from stage_a_common import rng_state, restore_rng
 from stage_b_train import aligned_ce_sum, compiler_audit, file_digest
+from experiment_tracking import OnlineTracker, add_wandb_arguments
+
+
+@contextmanager
+def preserve_tracking_rng():
+    state = rng_state()
+    try:
+        yield
+    finally:
+        restore_rng(state)
 
 
 def save_json(path, value):
@@ -107,7 +120,7 @@ class Observation:
             hook.remove()
 
 
-def graph(model, tokens, bf16):
+def graph(model, tokens, bf16, boundaries=None):
     captured = {}
     def capture_embed(module, inputs, output):
         output.retain_grad()
@@ -117,6 +130,12 @@ def graph(model, tokens, bf16):
         captured['block3_input'] = inputs[0]
     hooks = [model.transformer.wte.register_forward_hook(capture_embed),
              model.transformer.blocks[3].register_forward_pre_hook(capture_block)]
+    if boundaries is not None:
+        def capture_output(module, inputs, output):
+            value = output[0]
+            value.retain_grad()
+            boundaries['block3_output'] = value
+        hooks.append(model.transformer.blocks[3].register_forward_hook(capture_output))
     try:
         with torch.autocast('cuda', dtype=torch.bfloat16, enabled=bf16):
             logits = model(tokens).logits
@@ -172,8 +191,19 @@ def main():
     parser.add_argument('--scale-check',action='store_true')
     parser.add_argument('--fp32-reference',type=Path)
     parser.add_argument('--include-tiled-fp32',action='store_true')
+    parser.add_argument('--only-tiled',action='store_true',
+                        help='Run tiled FP32/BF16 only; requires --include-tiled-fp32.')
+    parser.add_argument('--no-observers',action='store_true',
+                        help='Disable module/helper dtype instrumentation for confirmation.')
+    parser.add_argument('--capture-block-boundaries',action='store_true',
+                        help='Retain recurrent input/output values and incoming output gradient for localization.')
+    parser.add_argument('--autocast-cache',choices=['on','off'],default='on')
+    parser.add_argument('--bf16-reduced-reduction',choices=['on','off'],default='on')
     parser.add_argument('--output-dir',type=Path,required=True)
+    add_wandb_arguments(parser)
     args=parser.parse_args()
+    if args.only_tiled and (not args.include_tiled_fp32 or args.fp32_reference):
+        parser.error('--only-tiled requires --include-tiled-fp32 and no reused naive reference')
     if args.output_dir.exists():
         raise FileExistsError('Use a new output directory')
     hardware=require_cuda_container()
@@ -181,6 +211,10 @@ def main():
     seed_all(937,deterministic=True)
     torch.set_num_threads(1)
     torch.set_float32_matmul_precision('highest')
+    # Set globally so the outer forward AND every nested replay context inherit
+    # the same choice. An override on graph() alone would end before backward.
+    torch.set_autocast_cache_enabled(args.autocast_cache == 'on')
+    torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction = args.bf16_reduced_reduction == 'on'
     torch._dynamo.reset();torch._dynamo.utils.counters.clear()
     configure_compiled_helpers(True)
     report={'schema':'r3-mixed-validation-v1','evidence':'NUM','status':'running',
@@ -192,11 +226,28 @@ def main():
                         'bf16_reduced_precision_reduction':torch.backends.cuda.matmul.allow_bf16_reduced_precision_reduction,
                         'math_sdpa_reduced_precision_reduction':torch.backends.cuda.fp16_bf16_reduction_math_sdp_allowed(),
                         'whole_model_compile':False,'cuda_graphs':False,'policy':args.policy}}
+    report['settings'].update(autocast_cache=torch.is_autocast_cache_enabled(),
+                              observers=not args.no_observers,
+                              block_boundary_capture=args.capture_block_boundaries)
     started=time.monotonic()
+    tracker = None
+    if args.wandb_project:
+        tracker = OnlineTracker(project=args.wandb_project, entity=args.wandb_entity,
+                                group=args.wandb_group, name=args.wandb_run_name,
+                                output_dir=args.output_dir, preserve_state=preserve_tracking_rng)
+        report['wandb'] = tracker.record
     try:
         from cdrm.synthetic.experiment import generate_training_batch
         plan=json.loads(args.plan.read_text())
         payload=torch.load(args.checkpoint,map_location='cpu',weights_only=False)
+        source_paths = set(payload['identity']['source_sha256']) | set(report['provenance']['source_sha256']) | {
+            'scripts/r3_mixed_validate.py', 'scripts/r3_backward_validate.py',
+            'scripts/r3_validation_metrics.py', 'scripts/experiment_tracking.py'}
+        report['validation_source_sha256']={name:file_digest(Path(name)) for name in sorted(source_paths)}
+        for name in sorted(source_paths):
+            destination=args.output_dir/'source'/name
+            destination.parent.mkdir(parents=True,exist_ok=True)
+            destination.write_bytes(Path(name).read_bytes())
         baseline=json.loads(args.baseline_source.read_text())['source_sha256']
         changes={}
         for name,expected in payload['identity']['source_sha256'].items():
@@ -225,10 +276,17 @@ def main():
                       fixture={'sha256':batch.sha256,'full_batch_sha256':full.sha256,'batch':args.batch,'shape':list(tokens.shape),
                                'data_counter':completed+args.data_offset,'batch_offset':args.batch_offset,'answers':int((labels!=-100).sum()),
                                'alignment':'Stage B aligned answer-only CE / total scored answers, no shift','accumulation':False})
+        if tracker:
+            tracker.start({'evidence_class':'NUM','fixture':report['fixture'],
+                           'checkpoint':report['checkpoint'],'settings':report['settings'],
+                           'source':report['provenance']['source_sha256']})
+            save_json(args.output_dir/'wandb-run.json',tracker.record)
+            print(json.dumps({'wandb_run_url':tracker.record['run_url']}),flush=True)
         settings=plan['training'];lr=settings['learning_rate']/settings['warmup_updates'] if completed==0 else payload['optimizer']['param_groups'][0]['lr']
         packets,steps,samples={},{},{};report['observed_dtypes']={};report['scaling']={}
         modes=[('naive_fp32','naive','legacy',False),('naive_bf16','naive',args.policy,True),('tiled_bf16','tiled',args.policy,True)]
         if args.include_tiled_fp32:modes.insert(1,('tiled_fp32','tiled','legacy',False))
+        if args.only_tiled:modes=[m for m in modes if m[0].startswith('tiled_')]
         if args.fp32_reference:
             prior=json.loads((args.fp32_reference/'report.json').read_text())
             if prior['fixture']['used_batch_sha256']!=batch.sha256 or prior['checkpoint']['sha256']!=report['checkpoint']['sha256']:
@@ -260,12 +318,21 @@ def main():
             opt=torch.optim.AdamW(model.parameters(),lr=lr,betas=tuple(settings['betas']),eps=settings['eps'],weight_decay=settings['weight_decay'],foreach=False,fused=False)
             opt.load_state_dict(copy.deepcopy(payload['optimizer']))
             for group in opt.param_groups:group['lr']=lr
-            with sdpa_kernel(SDPBackend.MATH),Observation(model) as observer:
-                retained=graph(model,tokens,bf16)
+            observation = (nullcontext(SimpleNamespace(rows={}, samples={})) if args.no_observers else Observation(model))
+            with sdpa_kernel(SDPBackend.MATH),observation as observer:
+                boundaries={} if args.capture_block_boundaries else None
+                retained=graph(model,tokens,bf16,boundaries)
                 observer.phase='backward/ce'
                 packets[name]=backward(model,retained,labels=labels,retain=args.scale_check)
                 if any(v is None or v.dtype!=torch.float32 or not torch.isfinite(v).all() for v in tensors(packets[name]).values()):
                     raise AssertionError('Every intended gradient must be present finite FP32')
+                boundary_packet = None
+                if boundaries is not None:
+                    value=boundaries['block3_output']
+                    boundary_packet={
+                        'block3_input':cpu(retained[1]['block3_input']),
+                        'block3_output':cpu(value),
+                        'block3_output_gradient':cpu(value.grad)}
                 if args.scale_check:
                     original=packets[name];report['scaling'][name]={}
                     for scale in [1/32,32.]:
@@ -276,6 +343,8 @@ def main():
                     # Restore the actual unscaled CE gradient for the optimizer.
                     observer.phase='backward/restored_ce'
                     packets[name]=backward(model,retained,labels=labels)
+                if boundary_packet is not None:
+                    packets[name]['boundaries']=boundary_packet
                 steps[name]=step_packet(model,opt,settings['gradient_clip'])
                 report['observed_dtypes'][name]=observer.rows
                 samples[name]=observer.samples
@@ -283,10 +352,15 @@ def main():
                 if any(v.dtype!=torch.float32 for v in state.values() if isinstance(v,torch.Tensor)):
                     raise AssertionError('Adam state must stay FP32')
             report['observed_dtypes'][name]['parameter_and_optimizer_contract']={'parameters':'torch.float32','gradients':'torch.float32','moments':'torch.float32','verified':True}
+            if tracker:
+                tracker.log({f'ce/{name}':packets[name]['loss'],
+                             f'clip_norm/{name}':steps[name]['clip_norm']})
             del model,opt,retained
         report['comparisons']={}
         pairs=[('naive_bf16','naive_fp32'),('tiled_bf16','naive_bf16'),('tiled_bf16','naive_fp32')]
         if args.include_tiled_fp32:pairs.append(('tiled_fp32','naive_fp32'))
+        if args.include_tiled_fp32:pairs.append(('tiled_bf16','tiled_fp32'))
+        pairs=[pair for pair in pairs if all(arm in packets for arm in pair)]
         for actual,reference in pairs:
             a,b=packets[reference],packets[actual]
             moment=lambda s:{f'{n}/{k}':v for n,st in s['state'].items() for k,v in st.items()}
@@ -304,12 +378,38 @@ def main():
         report['optimizer']={'lr':lr,'betas':settings['betas'],'eps':settings['eps'],'clip':settings['gradient_clip'],'weight_decay':settings['weight_decay'],'initial_steps':[completed],'initial_state':'Identical deep copies of authoritative checkpoint optimizer state; diagnostic LR override equal for every arm.'}
         report['compiler']=compiler_audit(True)
         report['status']='diagnostics_complete'
+        if tracker:
+            for label, pair in report['comparisons'].items():
+                rows=pair['gradients']['rows']
+                tracker.summary({f'{label}/worst_gradient_rel_l2':max(r['rel_l2'] for r in rows.values()),
+                                 f'{label}/ce_absolute_error':pair['losses']['absolute_error'],
+                                 f'{label}/all_gradients_finite':pair['gradients']['all_present_finite']})
+                for index,(name,row) in enumerate(rows.items()):
+                    tracker.log({'tensor_index':index,
+                                 f'{label}/gradient_rel_l2':row['rel_l2'],
+                                 f'{label}/gradient_maxerr_over_rms':row['maxerr_over_ref_rms']})
     except BaseException as exc:
         report.update(status='execution_failed',error_type=type(exc).__name__,error=str(exc));raise
     finally:
         report['elapsed_seconds']=time.monotonic()-started
         report['peak_allocated_bytes']=torch.cuda.max_memory_allocated()
+        if 'validation_source_sha256' in report:
+            report['source_changed_during_run']=[name for name,expected in report['validation_source_sha256'].items()
+                                                  if file_digest(Path(name)) != expected]
+            if report['source_changed_during_run']:
+                report.update(status='execution_failed',error_type='SourceChanged',
+                              error='Validation source changed during execution; do not clear this result.')
         save_json(args.output_dir/'report.json',report)
+        try:
+            if tracker:
+                tracker.finish(succeeded=report['status']=='diagnostics_complete')
+        except Exception as exc:
+            report.update(status='execution_failed',error_type=type(exc).__name__,error=str(exc))
+            raise
+        finally:
+            save_json(args.output_dir/'report.json',report)
+        if report.get('source_changed_during_run'):
+            raise RuntimeError(report['error'])
     print(json.dumps({'status':report['status'],'output':str(args.output_dir)}),flush=True)
 
 

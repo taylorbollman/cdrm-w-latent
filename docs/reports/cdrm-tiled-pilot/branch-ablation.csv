@@ -1,0 +1,3 @@
+seed,arm,available,endpoint,lambda_zero_minus_active_native_ce,active_minus_lambda_zero_token_accuracy,active_minus_lambda_zero_sequence_exact_match,interpretation
+7500,cdrm-fp32,True,1000,0.005998730659484863,0.0015869140625,0.0,Dependence of this trained CDRM on its branch; separately trained SEQ is the architecture comparison
+7500,cdrm-bf16,True,1000,-0.00807897249857592,-0.0009358723958333148,0.0,Dependence of this trained CDRM on its branch; separately trained SEQ is the architecture comparison

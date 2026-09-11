@@ -1,0 +1,33 @@
+{
+  "all_local_sha256_match_frozen_manifest": true,
+  "all_remote_size_and_md5_or_crc32c_match_local": true,
+  "checksum_dry_run_no_differences": true,
+  "checksum_record_sha256": "7aa479a10d557bb813becc409abd294fd408f932326adcac0698a6615a4d8ab3",
+  "checksum_record_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-bf16/20260907T191403Z/verification/checksums.json",
+  "compiler_cache_archive_sha256": "9816a743ffa425277bbc7a297683967d49fc8299fd07ff9ac619ee2ec6d91d26",
+  "composite_objects_verified_by_crc32c": [
+    "analysis/trained-head-localization-v2/tensors.pt",
+    "analysis/trained-head-localization/tensors.pt",
+    "confirm-init-b64/tensors.pt",
+    "confirm-trained-b64/tensors.pt"
+  ],
+  "exclusions": "Raw W&B service/cache files; raw compiler cache (retained as source/inductor-cache.tar.gz); verification paths and storage.json receipts; Python caches. Manifest excludes its own bytes.",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-bf16/20260907T191403Z/",
+  "manifest_readback_equal": true,
+  "manifest_sha256": "2a12323d78eec338aefbfc7d6acb6c471b5314678cb0ad6f077a578123f1960a",
+  "manifest_uri": "gs://fast-chunks/cdrm-w-latent/cdrm-tiled-bf16/20260907T191403Z/artifact-manifest.json",
+  "method": "Every local scientific file rehashed with SHA256; every remote size and MD5 (or CRC32C for composite objects) checked against local bytes. Manifest downloaded and matched exactly. Checksum-only rsync dry run reported zero changes. Large objects were not individually downloaded.",
+  "notes": [
+    "Scientific manifest excludes itself and retention receipts to avoid self-reference.",
+    "Failed attempts and failed numerical screens remain in the scientific inventory.",
+    "The compiler cache used by exact midpoint recovery is retained as an archive.",
+    "Receipt files are uploaded and independently downloaded after this verification."
+  ],
+  "remote_files_including_manifest": 658,
+  "schema": "cdrm-tiled-bf16-retention-verification-v1",
+  "scientific_bytes": 3658363529,
+  "scientific_files": 657,
+  "source_archive_sha256": "c5db9c6456f9d45e70e8712ac30238d5f045da7b245ffaeff7bb26afc104c663",
+  "status": "complete",
+  "verified_at_utc": "2026-09-07T20:09:06.449154+00:00"
+}

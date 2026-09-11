@@ -1,0 +1,56 @@
+{
+  "schema": "rt-cuda-graphs-summary-v1",
+  "rows": [
+    {
+      "mode": "CUDA graphs off",
+      "batch": 512,
+      "updates": 10,
+      "measured_updates": 8,
+      "mean_update_seconds": 13.227913475750029,
+      "median_update_seconds": 13.211444743499897,
+      "tokens_per_second": 19817.48674729189,
+      "peak_reserved_GiB": 56.658203125,
+      "minimum_post_update_free_GiB": 21.84393310546875,
+      "report": ".runtime/rt-cuda-graphs/20260910T182400Z/reference/b512-baseline-report.json",
+      "report_sha256": "51a2bd7d5caaa60a157512459a920df09340f0e9563a4206828b2cd23241411d",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/kxmathn5"
+    },
+    {
+      "mode": "CUDA graphs on",
+      "batch": 512,
+      "updates": 10,
+      "measured_updates": 8,
+      "mean_update_seconds": 6.139259463125086,
+      "median_update_seconds": 6.140385618500204,
+      "tokens_per_second": 42699.61248169173,
+      "peak_reserved_GiB": 49.07421875,
+      "minimum_post_update_free_GiB": 27.29901123046875,
+      "report": ".runtime/rt-cuda-graphs/20260910T182400Z/profiles/b512-graph-confirm/report.json",
+      "report_sha256": "f3bf3840f2fa7657a4f74f930371c4590cffbb3571f2002ce0d1a20832859417",
+      "wandb_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/njsmyuat"
+    }
+  ],
+  "speedup": 2.1546431707606284,
+  "recommended_physical_batch": 512,
+  "sequence_length": 512,
+  "input_tokens_per_update": 262144,
+  "comfort_rule_GiB": 8.0,
+  "comfort_passed": true,
+  "internal_tiled_checkpointing": true,
+  "additional_outer_checkpointing": false,
+  "scope": "Single H100, all12 recurrent layers, D1024, BF16 with FP32 recurrent state, headchunk2, complete Adam updates. Random fixed data, no data-loader/packing/evaluation/checkpoint overhead.",
+  "memory_qualification": "Reserved peaks include capture setup. Free memory is sampled after updates, not a continuous minimum. Replay-time allocated peaks do not retrace graph-private intermediate usage.",
+  "wandb": {
+    "enabled": true,
+    "mode": "online",
+    "project": "recurrent-transformer-capacity",
+    "entity": "taylorbollman",
+    "group": "20260910T182400Z",
+    "name": "cuda-graphs-summary",
+    "system_stats": false,
+    "status": "synced",
+    "run_id": "yxr2q9z8",
+    "run_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity/runs/yxr2q9z8",
+    "project_url": "https://wandb.ai/taylorbollman/recurrent-transformer-capacity"
+  }
+}

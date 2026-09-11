@@ -1,0 +1,41 @@
+{
+  "archive_member_sha256_readbacks_verified": true,
+  "downloaded_archive_members_sha256_verified": true,
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/rt-cuda-graphs/20260910T182400Z/",
+  "local_archive": "/home/taylorbollman/cdrm-w-latent/.runtime/rt-cuda-graphs/20260910T182400Z/retention/evidence.tar.gz",
+  "local_manifest": "/home/taylorbollman/cdrm-w-latent/.runtime/rt-cuda-graphs/20260910T182400Z/retention/member-manifest.json",
+  "member_count": 388,
+  "objects": [
+    {
+      "bytes": 2277687,
+      "download_sha256": "b07fbc962df686e78930902d53c001d3675e6638d82a936fed6926ffe3710c29",
+      "exact_download_readback_verified": true,
+      "generation": "1789066000387703",
+      "sha256": "b07fbc962df686e78930902d53c001d3675e6638d82a936fed6926ffe3710c29",
+      "uri": "gs://fast-chunks/cdrm-w-latent/rt-cuda-graphs/20260910T182400Z/evidence.tar.gz"
+    },
+    {
+      "bytes": 93570,
+      "download_sha256": "adfa05c450ad79a942ea8907a6e5eae9bc4dcc6cf83473f76b25fb798b005a62",
+      "exact_download_readback_verified": true,
+      "generation": "1789066003285349",
+      "sha256": "adfa05c450ad79a942ea8907a6e5eae9bc4dcc6cf83473f76b25fb798b005a62",
+      "uri": "gs://fast-chunks/cdrm-w-latent/rt-cuda-graphs/20260910T182400Z/member-manifest.json"
+    }
+  ],
+  "receipt_readback": {
+    "bytes": 1385,
+    "download_sha256": "6cf33760e3081cadc212047c24a9d2efc774356163fe02cceca1d645a4d91a3e",
+    "exact_download_readback_verified": true,
+    "generation": "1789066006467119",
+    "sha256": "6cf33760e3081cadc212047c24a9d2efc774356163fe02cceca1d645a4d91a3e",
+    "uri": "gs://fast-chunks/cdrm-w-latent/rt-cuda-graphs/20260910T182400Z/storage-receipt.json"
+  },
+  "receipt_uri": "gs://fast-chunks/cdrm-w-latent/rt-cuda-graphs/20260910T182400Z/storage-receipt.json",
+  "schema_version": 1,
+  "source_unchanged_after_upload": true,
+  "status": "verified",
+  "uncompressed_payload_bytes": 16892268,
+  "upload_precondition": "if-generation-match=0 (no overwrite)",
+  "verified_at_utc": "2026-09-10T18:46:45.622282+00:00"
+}

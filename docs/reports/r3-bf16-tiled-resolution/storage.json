@@ -1,0 +1,27 @@
+{
+  "schema": "r3-tiled-resolution-retention-verification-v1",
+  "verified_at_utc": "2026-09-07T18:25:59.797005+00:00",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/r3-bf16-tiled-resolution/20260907T173632Z/",
+  "manifest_sha256": "605e297edef1aa9e272493a099293ae6a05cb4170ee2f672e2f872f77870dc3a",
+  "manifest_readback_equal": true,
+  "scientific_files": 137,
+  "scientific_bytes": 6921610807,
+  "all_local_sha256_match_frozen_manifest": true,
+  "all_remote_size_and_md5_or_crc32c_match_local": true,
+  "checksum_dry_run_no_differences": true,
+  "remote_files_including_manifest": 138,
+  "method": "All local scientific files rehashed with SHA256; each remote GCS size and MD5 (or CRC32C for five composite objects) compared with local bytes. Manifest independently downloaded and matched byte for byte. Checksum-only rsync dry run reported zero transfers. Large objects were not individually downloaded.",
+  "status": "complete",
+  "manifest_uri": "gs://fast-chunks/cdrm-w-latent/r3-bf16-tiled-resolution/20260907T173632Z/artifact-manifest.json",
+  "checksum_record_uri": "gs://fast-chunks/cdrm-w-latent/r3-bf16-tiled-resolution/20260907T173632Z/verification/checksums.json",
+  "source_archive_sha256": "8344e9c89e1b95fd9b96857213a6613322250c55edb7b15513a114e892352c0b",
+  "compiler_cache_archive_sha256": "207696ff84ffc21d340918eb9874a45f5e23d8945ac28a003f0a684e0b0cd094",
+  "exclusions": "W&B service/cache files (online runs and standalone local records retained separately); raw compiler cache (retained as source/inductor-cache.tar.gz); verification receipts and storage.json; Python caches.",
+  "notes": [
+    "The immutable manifest covers 137 scientific artifacts; its own bytes and retention receipts are outside the manifest to avoid self-reference.",
+    "The compiler cache used in the successful recovery control is retained as source/inductor-cache.tar.gz.",
+    "The W&B SDK cache files are excluded; standalone reports, plots and online runs are retained.",
+    "All 136 manifest-listed historical BF16 artifacts were separately rehashed without changes.",
+    "This archive retains failed screens and the first failed cold-process recovery alongside successful confirmation and cache-control runs."
+  ]
+}

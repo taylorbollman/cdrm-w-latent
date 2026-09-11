@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+from contextlib import contextmanager
 import dataclasses
 import hashlib
 import json
@@ -27,6 +28,7 @@ from torch.nn.attention import SDPBackend, sdpa_kernel
 
 from cdrm.synthetic.common import SyntheticBatch
 from cdrm.synthetic.experiment import generate_training_batch
+from experiment_tracking import OnlineTracker, add_wandb_arguments, scalar_metrics
 from r3_validation_metrics import compare_tensors
 from stage_a_common import (configure_compiled_helpers, provenance, require_cuda_container,
                             restore_rng, rng_state, seed_all, tensor_bytes, unique_parameters)
@@ -37,6 +39,16 @@ from stage_b_train import (aligned_ce_sum, append_jsonl, atomic_json, compiler_a
 FORMAT = "r3-mixed-operational-v1"
 SOURCE_CHANGES = {"recurrent-transformer/olmo/model.py", "recurrent-transformer/olmo/config.py"}
 PROFILE_POLICY = {"fp32": "legacy", "bf16": "bf16_fp32_state"}
+
+
+@contextmanager
+def preserve_tracking_rng():
+    """Keep SDK activity outside the exact model/data/recovery RNG contract."""
+    state = rng_state()
+    try:
+        yield
+    finally:
+        restore_rng(state)
 
 
 def cpu_tree(value):
@@ -111,7 +123,13 @@ def execution_contract():
             "flash_sdpa_enabled": torch.backends.cuda.flash_sdp_enabled(),
             "memory_efficient_sdpa_enabled": torch.backends.cuda.mem_efficient_sdp_enabled(),
             "math_sdpa_enabled": torch.backends.cuda.math_sdp_enabled(),
-            "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG")}
+            "cublas_workspace_config": os.environ.get("CUBLAS_WORKSPACE_CONFIG"),
+            # Kernel selection can affect rounded results across cold processes.
+            # A shared cache is recorded as a runtime choice, never assumed to
+            # guarantee exact recovery merely because its directory matches.
+            "inductor_cache_directory": os.environ.get("TORCHINDUCTOR_CACHE_DIR"),
+            "inductor_cache_policy": "explicit_shared_directory" if os.environ.get("TORCHINDUCTOR_CACHE_DIR")
+                                     else "container_default"}
 
 
 def measured_compiler_audit(before, after):
@@ -263,6 +281,7 @@ def parse_args():
     parser.add_argument("--midpoint", type=int, default=50)
     parser.add_argument("--warmup", type=int, default=5)
     parser.add_argument("--steps", type=int, default=20)
+    add_wandb_arguments(parser)
     args = parser.parse_args()
     if args.stop != 100 or args.midpoint != 50:
         parser.error("This bounded protocol fixes stop=100 and midpoint=50")
@@ -274,10 +293,12 @@ def parse_args():
         parser.error("--reference-final is only for the independent resume command")
     if args.warmup < 2 or args.steps < 1 or args.warmup + args.steps > 100:
         parser.error("Bounded benchmark needs 2<=warmup and 1<=steps and total<=100")
+    if not args.wandb_project and (args.wandb_group or args.wandb_run_name):
+        parser.error("--wandb-group and --wandb-run-name require --wandb-project")
     return args
 
 
-def run(args, report):
+def run(args, report, tracker=None):
     hardware = require_cuda_container()
     torch.set_float32_matmul_precision("highest")
     seed_all(0, deterministic=True)
@@ -339,6 +360,7 @@ def run(args, report):
     current_sources = source_hashes()
     current_sources[str(Path(__file__).relative_to(Path.cwd()))] = file_digest(Path(__file__))
     current_sources["scripts/r3_validation_metrics.py"] = file_digest(Path("scripts/r3_validation_metrics.py"))
+    current_sources["scripts/experiment_tracking.py"] = file_digest(Path("scripts/experiment_tracking.py"))
     identity = {"schema": FORMAT, "parent_checkpoint_sha256": file_digest(args.parent_checkpoint),
                 "parent_identity_sha256": parent["identity_sha256"], "source_sha256": current_sources,
                 "declared_parent_source_changes": changed, "topology": args.topology,
@@ -374,6 +396,13 @@ def run(args, report):
     report["initial_state"] = initial
     atomic_json(args.output_dir / "resolved-config.json", {"identity": identity, "model": report["model_config"],
                                                           "profile": profile, "settings": settings})
+    if tracker:
+        tracker.start({"mode": args.mode, "topology": args.topology, "profile": profile,
+                       "identity_sha256": report["identity_sha256"], "schedule": settings,
+                       "model_config": report["model_config"], "execution_contract": report["execution_contract"],
+                       "data_policy": report["data_policy"], "evidence_class": "OPS"})
+        atomic_json(args.output_dir / "wandb-run.json", tracker.record)
+        print(json.dumps({"wandb_run_url": tracker.record["run_url"]}), flush=True)
     if args.mode == "benchmark":
         batch = batches[0]
         ids = torch.as_tensor(batch.input_ids, device="cuda")
@@ -409,6 +438,10 @@ def run(args, report):
                              "scored_answers_per_second": sum(row["supervised_targets"] for row in measured) / sum(times),
                              "memory_scope": "Steady updates after initialized Adam; reserved includes warmup allocator pool"}
         report["final_precision"] = effective_precision(model, optimizer, require_gradients=True)
+        if tracker:
+            # Keep metric submission outside the measured updates and peak capture.
+            for row in measured:
+                tracker.log({"update": row["update"], **scalar_metrics(row, "benchmark")})
     else:
         history, development, completed = [], {}, 0
         if args.mode == "resume":
@@ -443,6 +476,8 @@ def run(args, report):
         if completed == 0:
             report["checkpoints"]["init"] = retained_save(args.output_dir / "init.pt", snapshot())
             development["0"] = evaluate(model, dev, args.profile)
+        if tracker:
+            tracker.log({"update": completed, **scalar_metrics(development[str(completed)], "dev")})
         for index in range(completed, 100):
             batch = batches[index]
             ids = torch.as_tensor(batch.input_ids, device="cuda")
@@ -452,10 +487,14 @@ def run(args, report):
             history.append(row)
             append_jsonl(args.output_dir / "learning-curve.jsonl", row)
             completed = index + 1
+            tracked_metrics = {"update": completed, **scalar_metrics(row, "train")}
             if completed in {50, 100}:
                 development[str(completed)] = evaluate(model, dev, args.profile)
                 record = retained_save(args.output_dir / f"u{completed:04d}.pt", snapshot())
                 report["checkpoints"][str(completed)] = record
+                tracked_metrics.update(scalar_metrics(development[str(completed)], "dev"))
+            if tracker:
+                tracker.log(tracked_metrics)
             if completed % 10 == 0:
                 print(json.dumps({"update": completed, "loss": row["loss"], "profile": args.profile}), flush=True)
         report.update(development=development, completed_updates=completed,
@@ -471,8 +510,11 @@ def run(args, report):
             atomic_json(args.output_dir / "recovery-comparison.json", report["recovery_comparison"])
     report["compiler_audit"] = compiler_audit(compiled)
     if source_hashes() != {key: value for key, value in current_sources.items()
-                          if key not in {str(Path(__file__).relative_to(Path.cwd())), "scripts/r3_validation_metrics.py"}}:
+                          if key not in {str(Path(__file__).relative_to(Path.cwd())), "scripts/r3_validation_metrics.py",
+                                         "scripts/experiment_tracking.py"}}:
         raise RuntimeError("Runtime sources changed during execution")
+    if any(file_digest(Path(name)) != digest for name, digest in current_sources.items()):
+        raise RuntimeError("Runtime or tracking sources changed during execution")
     report["status"] = "complete"
 
 
@@ -489,15 +531,39 @@ def main():
               "command": shlex.join([sys.executable, *sys.argv]),
               "arguments": {key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()}}
     started = time.perf_counter()
+    tracker = None
+    if args.wandb_project:
+        tracker = OnlineTracker(project=args.wandb_project, entity=args.wandb_entity,
+                                group=args.wandb_group, name=args.wandb_run_name,
+                                output_dir=args.output_dir, preserve_state=preserve_tracking_rng)
+        report["wandb"] = tracker.record
     try:
         with sdpa_kernel(SDPBackend.MATH):
-            run(args, report)
+            run(args, report, tracker)
     except Exception as error:
         report.update(status="failed", error_type=type(error).__name__, error=str(error))
         raise
     finally:
         report["invocation_seconds"] = time.perf_counter() - started
-        atomic_json(args.output_dir / "report.json", report)
+        try:
+            if tracker and tracker.record["status"] == "running":
+                summary_keys = ("summary", "completed_updates", "training_seconds", "clipping_count",
+                                "peak_allocated_bytes", "peak_reserved_bytes", "invocation_seconds",
+                                "recovery_comparison")
+                tracker.summary({"experiment_status": report["status"],
+                                 **scalar_metrics({key: report[key] for key in summary_keys if key in report})})
+        except Exception as error:
+            report.update(status="failed", error_type=type(error).__name__, error=str(error))
+            raise
+        finally:
+            try:
+                if tracker:
+                    tracker.finish(succeeded=report["status"] == "complete")
+            except Exception as error:
+                report.update(status="failed", error_type=type(error).__name__, error=str(error))
+                raise
+            finally:
+                atomic_json(args.output_dir / "report.json", report)
 
 
 if __name__ == "__main__":

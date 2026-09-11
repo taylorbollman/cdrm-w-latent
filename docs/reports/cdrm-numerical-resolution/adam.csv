@@ -1,0 +1,13 @@
+attempt,case,policy,accepted_for_diagnostic_summary,relative_l2,original_screen_pass_if_applied,local_optimizer_checks_pass
+adam-reference-v1,seed7500-u1000-fp32,native,True,0.04632930916191016,False,True
+adam-reference-v1,seed7500-u1000-fp32,fp64_own_clip,True,0.046329290051301326,False,True
+adam-reference-v1,seed7500-u1000-fp32,fp64_common_clip,True,0.05405743424452268,False,True
+adam-reference-v1,seed7500-u1000-fp32,fp64_native_clipped,True,0.04632929719054945,False,True
+adam-reference-v1,seed7500-u1000-fp32,fp32_write_own_clip,True,0.04632929577499582,False,True
+adam-reference-v1,seed7500-u1000-fp32,fp32_write_common_clip,True,0.054057412690631086,False,True
+adam-reference-v1,seed7500-u1000-bf16,native,True,0.022058268275417084,False,True
+adam-reference-v1,seed7500-u1000-bf16,fp64_own_clip,True,0.022058057213064055,False,True
+adam-reference-v1,seed7500-u1000-bf16,fp64_common_clip,True,0.023992151133577645,False,True
+adam-reference-v1,seed7500-u1000-bf16,fp64_native_clipped,True,0.022058048552125228,False,True
+adam-reference-v1,seed7500-u1000-bf16,fp32_write_own_clip,True,0.02205828179337438,False,True
+adam-reference-v1,seed7500-u1000-bf16,fp32_write_common_clip,True,0.023992188153162834,False,True

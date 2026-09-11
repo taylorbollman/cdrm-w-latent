@@ -1,0 +1,102 @@
+{
+  "schema": "cdrm-tiled-pilot-reviewed-disposition-v1",
+  "status": "first_cohort_review_complete_paused_before_conditional_extensions",
+  "completed_model_seeds": [
+    7500
+  ],
+  "completed_updates_per_arm": 1000,
+  "completed_arms": [
+    "seq-fp32",
+    "cdrm-fp32",
+    "cdrm-bf16"
+  ],
+  "runs": {
+    "seq-fp32": {
+      "development": {
+        "ce_sum": 43722.2353515625,
+        "targets": 24576,
+        "correct": 7300,
+        "exact": 0,
+        "examples": 256,
+        "ce": 1.779062310854594,
+        "token_accuracy": 0.2970377604166667,
+        "sequence_exact_match": 0.0
+      },
+      "training_seconds": 23.150803721044213,
+      "mean_train_ce_last200": 1.740449903011322
+    },
+    "cdrm-fp32": {
+      "development": {
+        "ce_sum": 39015.6513671875,
+        "targets": 24576,
+        "correct": 8100,
+        "exact": 0,
+        "examples": 256,
+        "ce": 1.5875509182612102,
+        "token_accuracy": 0.32958984375,
+        "sequence_exact_match": 0.0
+      },
+      "training_seconds": 546.9298628809338,
+      "mean_train_ce_last200": 1.7170692491531372
+    },
+    "cdrm-bf16": {
+      "development": {
+        "ce_sum": 44838.3935546875,
+        "targets": 24576,
+        "correct": 6889,
+        "exact": 0,
+        "examples": 256,
+        "ce": 1.8244789044062297,
+        "token_accuracy": 0.2803141276041667,
+        "sequence_exact_match": 0.0
+      },
+      "training_seconds": 618.6486295660434,
+      "mean_train_ce_last200": 1.7919435787200928
+    }
+  },
+  "numerical": {
+    "fp32": {
+      "whole_gradient_relative_l2": 0.04442325926272351,
+      "adam_delta_relative_l2": 0.04632930916191016,
+      "isolated_side_gradient_relative_l2": 0.004402249293863707,
+      "isolated_side_pass": true,
+      "machine_screens_pass": false
+    },
+    "bf16": {
+      "whole_gradient_relative_l2": 0.02573699457590539,
+      "adam_delta_relative_l2": 0.02205826827541708,
+      "isolated_side_gradient_relative_l2": 0.004522697920965962,
+      "isolated_side_pass": true,
+      "machine_screens_pass": false
+    }
+  },
+  "input_reports": {
+    ".runtime/cdrm-tiled-pilot/20260907T212606Z/seed7500/seq-fp32-u1000/report.json": {
+      "sha256": "8804154cd5f1c126b52154a489621373f678b345f7eaad8d32e8b854c61689ee"
+    },
+    ".runtime/cdrm-tiled-pilot/20260907T212606Z/seed7500/cdrm-fp32-u1000/report.json": {
+      "sha256": "1dee773717a72c1b3d138b08938bc3158c832171294c4dd74e402cffe06ce8c1"
+    },
+    ".runtime/cdrm-tiled-pilot/20260907T212606Z/seed7500/cdrm-bf16-u1000/report.json": {
+      "sha256": "8f30bc51b82b22a93941e01e59da198ef670efaf0850be902d44bbc83674ef5c"
+    },
+    ".runtime/cdrm-tiled-pilot/20260907T212606Z/num/seed7500-u1000-fp32/report.json": {
+      "sha256": "7ef430e20f7ee2e354f499a25d76248d3c4d26633e6b97e7f67186ed91566d1f"
+    },
+    ".runtime/cdrm-tiled-pilot/20260907T212606Z/num/seed7500-u1000-bf16/report.json": {
+      "sha256": "7fed0af817dfc24aabebadb72766ef237fff2cd97a1e2016d4b1ba3eeacb9c6a"
+    }
+  },
+  "numerical_clearance": false,
+  "bf16_policy_promoted": false,
+  "architecture_changed": false,
+  "precision_policy_changed": false,
+  "frozen_criteria_changed": false,
+  "continue2500": false,
+  "train_seed7501": false,
+  "reason": "New material whole-model BF16 gradient and Adam failures recur at both trained trajectories. In the matched first seed, BF16 also shows persistent development degradation and a final last200 training-loss gap above the frozen review trigger. Controls support broader backbone AMP sensitivity; the isolated memory checks do not demonstrate a tiled temporal-gradient defect. The concerns are investigated but not sufficiently resolved to extend this pilot automatically.",
+  "qualification": "BF16 remains experimental. Operational continuity, finite intended gradients, and isolated memory checks are supported within this configuration; this does not mean every numerical screen passes. FP32 raw-side coordinate-rounding flags remain visible.",
+  "interpretation": "At equal updates FP32 CDRM beats FP32 SEQ in this one development comparison, with much larger measured update cost and no exact sequences. BF16 CDRM underperforms both endpoints here. One initialization does not establish robust architecture or precision effects across seeds/tasks.",
+  "next_milestone_recommendation": "Review the broader BF16 precision behavior and scope of any further opt-in use before longer training or additional initializations; retain FP32 as the reference. No production/model arithmetic changes are included in this pilot.",
+  "unused_scope": "No2500training, secondinitializationtraining, or finalresearchtest. Preparedseed7501andallunusedfreshfixturesretained."
+}

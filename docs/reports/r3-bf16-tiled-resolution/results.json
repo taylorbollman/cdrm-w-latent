@@ -1,0 +1,369 @@
+{
+  "schema": "r3-tiled-resolution-summary-v1",
+  "numerical_model_changed": false,
+  "formal_frozen_all_screens_pass": false,
+  "recommendation": "Reviewed bounded opt-in tiled BF16 use; retain failed FP32 scale screens and historical backend budgets. Shared compiler cache passed same-runtime exact recovery. No CDRM or cross-machine clearance.",
+  "confirmation": {
+    "confirm-init-b64": {
+      "summary_metrics": {
+        "gradient/global_relative_l2": 0.008360596249038763,
+        "gradient/worst_tensor_relative_l2": 0.01867882775130211,
+        "gradient/worst_maximum_over_reference_maximum": 0.021092375387028222,
+        "gradient/tensor_l2_failure_count": 0,
+        "gradient/tensor_maximum_failure_count": 0,
+        "historical/added_maximum_failure_count": 8,
+        "forward/logit_relative_l2": 0.007531762678718654,
+        "forward/ce_absolute_error": 5.3882598876953125e-05,
+        "optimizer/delta_relative_l2": 0.10881556120367131,
+        "optimizer/delta_cosine": 0.994079618222453,
+        "optimizer/near_zero_error_energy_fraction": 0.9820535508949524,
+        "optimizer/outside_near_zero_gradient_sign_flips": 550,
+        "screens/machine_b64_pass": true
+      },
+      "screen_summary": {
+        "actual_b64_t128_scope": true,
+        "per_tensor_l2_failures": [],
+        "per_tensor_maximum_failures": [],
+        "old_one_sided_available": true,
+        "old_added_l2_failures": [],
+        "old_added_maximum_failures": [
+          "transformer.blocks.3.ff_out.weight",
+          "transformer.blocks.3.ff_proj.weight",
+          "transformer.blocks.3.kv_proj.weight",
+          "transformer.blocks.6.att_proj.weight",
+          "transformer.blocks.7.attn_out.weight",
+          "transformer.blocks.8.ff_out.weight",
+          "transformer.blocks.9.attn_out.weight",
+          "transformer.blocks.11.ff_out.weight"
+        ],
+        "old_backend_relative_l2_failures": [],
+        "primary_numerical_screens_pass": true,
+        "optimizer_guardrail_pass": true,
+        "fp32_regression_pass": true
+      },
+      "fp32_elementwise_failures": [],
+      "fp32_scale_failures": [],
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "confirm-init-b64",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "qegp17f0",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/qegp17f0",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      }
+    },
+    "confirm-trained-b64": {
+      "summary_metrics": {
+        "gradient/global_relative_l2": 0.012816222113960716,
+        "gradient/worst_tensor_relative_l2": 0.03316056336818669,
+        "gradient/worst_maximum_over_reference_maximum": 0.056783093883835345,
+        "gradient/tensor_l2_failure_count": 0,
+        "gradient/tensor_maximum_failure_count": 0,
+        "historical/added_maximum_failure_count": 1,
+        "forward/logit_relative_l2": 0.0036455514915091883,
+        "forward/ce_absolute_error": 0.00010752677917480469,
+        "optimizer/delta_relative_l2": 0.0058208573551088065,
+        "optimizer/delta_cosine": 0.9999830587028454,
+        "optimizer/near_zero_error_energy_fraction": 0.06152896092399538,
+        "optimizer/outside_near_zero_gradient_sign_flips": 1657,
+        "screens/machine_b64_pass": false
+      },
+      "screen_summary": {
+        "actual_b64_t128_scope": true,
+        "per_tensor_l2_failures": [],
+        "per_tensor_maximum_failures": [],
+        "old_one_sided_available": true,
+        "old_added_l2_failures": [],
+        "old_added_maximum_failures": [
+          "transformer.blocks.3.ff_proj.weight"
+        ],
+        "old_backend_relative_l2_failures": [],
+        "primary_numerical_screens_pass": true,
+        "optimizer_guardrail_pass": true,
+        "fp32_regression_pass": false
+      },
+      "fp32_elementwise_failures": [],
+      "fp32_scale_failures": [
+        "transformer.wte.weight",
+        "transformer.blocks.3.ff_out.weight",
+        "input/embedding_output",
+        "input/block3_input"
+      ],
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "confirm-trained-b64",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "j76mcgxq",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/j76mcgxq",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      }
+    }
+  },
+  "fp64_reference": {
+    "naive": {
+      "all_elementwise_gradients_pass": true,
+      "scale_screen_failure_count": 29,
+      "worst_gradient_relative_l2": 6.397473160601555e-06,
+      "maximum_gradient_absolute_error": 1.1561467291344718e-07
+    },
+    "tiled": {
+      "all_elementwise_gradients_pass": true,
+      "scale_screen_failure_count": 30,
+      "worst_gradient_relative_l2": 4.515220162278489e-06,
+      "maximum_gradient_absolute_error": 1.1049239875306205e-07
+    }
+  },
+  "training": {
+    "updates": 100,
+    "same_order_and_schedule": true,
+    "mean_loss_gap": -0.000981459617614746,
+    "last50_mean_loss_gap": -0.0018801498413085938,
+    "max_absolute_update_loss_gap": 0.04545927047729492,
+    "development_ce_gaps": {
+      "0": -9.334087371826172e-05,
+      "50": -2.384185791015625e-05,
+      "100": 0.0012493133544921875
+    },
+    "review_guardrail_pass": true,
+    "clipping_counts": {
+      "fp32": 37,
+      "bf16": 37
+    },
+    "wandb": {
+      "fp32": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "train-tiled-fp32",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "4zxbgqvk",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/4zxbgqvk",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      },
+      "bf16": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "train-tiled-bf16",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "bq0pq0vt",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/bq0pq0vt",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      }
+    }
+  },
+  "recovery": {
+    "cold": {
+      "loaded_state_exact": true,
+      "bitwise_state_and_metrics_equal": false,
+      "difference_count": 558,
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "resume-tiled-bf16",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "igof93nd",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/igof93nd",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      },
+      "compiler_audit": {
+        "required": true,
+        "counters": {
+          "frames": {
+            "total": 10,
+            "ok": 10
+          },
+          "stats": {
+            "calls_captured": 304,
+            "unique_graphs": 13
+          },
+          "aot_autograd": {
+            "total": 13,
+            "autograd_cache_miss": 3,
+            "autograd_cache_saved": 3,
+            "ok": 13,
+            "autograd_cache_bypass": 10
+          },
+          "inductor": {
+            "pattern_matcher_count": 134,
+            "pattern_matcher_nodes": 153,
+            "fxgraph_cache_miss": 14,
+            "extern_calls": 33,
+            "async_compile_cache_miss": 127,
+            "triton_bundler_save_kernel": 1104,
+            "triton_bundler_save_static_autotuner": 14,
+            "benchmarking.InductorBenchmarker.benchmark": 112,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 112,
+            "removed_pointless_view_pair": 11,
+            "async_compile_cache_hit": 54,
+            "triton_bundler_load_static_autotuner": 5,
+            "fxgraph_cache_hit": 1
+          },
+          "graph_break": {},
+          "aten_mm_info": {
+            "aten.mm_8192_512_256": 2,
+            "aten.mm_8192_256_256": 4,
+            "aten.bmm_256_1_1_64": 1,
+            "aten.bmm_256_2_2_64": 1,
+            "aten.bmm_256_2_64_2": 1,
+            "aten.bmm_256_4_4_64": 1,
+            "aten.bmm_256_4_64_4": 1,
+            "aten.bmm_256_8_8_64": 1,
+            "aten.bmm_256_8_64_8": 1,
+            "aten.bmm_256_16_16_64": 1,
+            "aten.bmm_256_16_64_16": 1,
+            "aten.bmm_256_32_32_64": 1,
+            "aten.bmm_256_32_64_32": 1,
+            "aten.bmm_256_64_64_64": 2,
+            "aten.bmm_256_128_128_64": 1,
+            "aten.bmm_256_64_128_128": 1,
+            "aten.mm_256_256_8192": 2,
+            "aten.mm_512_256_8192": 1,
+            "aten.mm_8192_256_512": 1,
+            "aten.mm_8192_1024_256": 2,
+            "aten.mm_8192_256_1024": 2,
+            "aten.mm_256_1024_8192": 1,
+            "aten.mm_1024_256_8192": 1
+          }
+        },
+        "recompile_limit": 64,
+        "accumulated_recompile_limit": 256,
+        "fail_on_recompile_limit_hit": true
+      }
+    },
+    "shared_cache": {
+      "loaded_state_exact": true,
+      "bitwise_state_and_metrics_equal": true,
+      "difference_count": 0,
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "resume-bf16-shared-compiler-cache",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "nd8ojkja",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/nd8ojkja",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      },
+      "compiler_audit": {
+        "required": true,
+        "counters": {
+          "frames": {
+            "total": 10,
+            "ok": 10
+          },
+          "stats": {
+            "calls_captured": 304,
+            "unique_graphs": 13
+          },
+          "aot_autograd": {
+            "total": 13,
+            "autograd_cache_hit": 3,
+            "ok": 13,
+            "autograd_cache_bypass": 10
+          },
+          "inductor": {
+            "triton_bundler_load_static_autotuner": 73,
+            "async_compile_cache_miss": 195,
+            "async_compile_cache_hit": 122,
+            "extern_calls": 33,
+            "fxgraph_cache_hit": 15,
+            "pattern_matcher_count": 104,
+            "pattern_matcher_nodes": 121,
+            "removed_pointless_view_pair": 11
+          }
+        },
+        "recompile_limit": 64,
+        "accumulated_recompile_limit": 256,
+        "fail_on_recompile_limit_hit": true
+      }
+    }
+  },
+  "performance": {
+    "fp32": {
+      "mean_update_ms": 236.3443386508152,
+      "tokens_per_second": 34661.291430818645,
+      "peak_allocated_mib": 2135.08251953125,
+      "peak_reserved_mib": 2386.0,
+      "no_new_measurement_compilation": true,
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "benchmark-tiled-fp32",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "4oegmrq0",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/4oegmrq0",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      }
+    },
+    "bf16": {
+      "mean_update_ms": 290.9057117503835,
+      "tokens_per_second": 28160.3271063625,
+      "peak_allocated_mib": 1539.58251953125,
+      "peak_reserved_mib": 1716.0,
+      "no_new_measurement_compilation": true,
+      "wandb": {
+        "enabled": true,
+        "mode": "online",
+        "project": "r3-bf16-tiled-validation",
+        "entity": "taylorbollman",
+        "group": "20260907T173632Z",
+        "name": "benchmark-tiled-bf16",
+        "system_stats": false,
+        "status": "synced",
+        "run_id": "z03asmod",
+        "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/z03asmod",
+        "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+      }
+    },
+    "bf16_latency_change_fraction": 0.23085542649777402,
+    "bf16_allocated_memory_change_fraction": -0.27891193644859213
+  },
+  "prior_artifact_integrity": {
+    "prior_root": ".runtime/r3-bf16/20260906T225438Z",
+    "manifest_sha256": "5ea4c32cd9bdda2e4bed61092fc2fd516e48845e6555ae2f283ce4e416a3f461",
+    "files_checked": 136,
+    "mismatches": [],
+    "passed": true
+  },
+  "wandb_summary": {
+    "enabled": true,
+    "mode": "online",
+    "project": "r3-bf16-tiled-validation",
+    "entity": "taylorbollman",
+    "group": "20260907T173632Z",
+    "name": "milestone-summary",
+    "system_stats": false,
+    "status": "synced",
+    "run_id": "stxue79z",
+    "run_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation/runs/stxue79z",
+    "project_url": "https://wandb.ai/taylorbollman/r3-bf16-tiled-validation"
+  }
+}

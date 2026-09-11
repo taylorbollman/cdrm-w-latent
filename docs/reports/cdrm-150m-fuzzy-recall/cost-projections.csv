@@ -1,0 +1,5 @@
+batch,epochs,estimate,excludes,lengths,replicates,runs,training_hours,updates_total
+128,25,"T300 timing proxy for all four lengths; upper proxy, not a proven bound","Compilation, evaluation, W&B, checkpointing and calibration tuning cost","[64, 128, 256, 300]",3,24,13.236771314556487,60000
+128,25,Measured T256 calibration mean after first update; other three lengths use T300 proxy,"Compilation, evaluation, W&B, checkpointing and calibration tuning cost","[64, 128, 256, 300]",3,24,12.650067891194876,60000
+128,50,"T300 timing proxy for all four lengths; upper proxy, not a proven bound","Compilation, evaluation, W&B, checkpointing and calibration tuning cost","[64, 128, 256, 300]",3,24,26.473542629112973,120000
+128,50,Measured T256 calibration mean after first update; other three lengths use T300 proxy,"Compilation, evaluation, W&B, checkpointing and calibration tuning cost","[64, 128, 256, 300]",3,24,25.300135782389752,120000

@@ -1,0 +1,13 @@
+case,role,comparison,scope,global_parameter_relative_l2,global_parameter_l2_pass,global_relative_l2_limit_including_fp32_floor,worst_tensor_relative_l2,fp32_elementwise_failed_tensors,per_tensor_l2_failures,per_tensor_maximum_failures,pair_machine_screens_pass
+confirm-init-b64,confirmation,tiled_fp32_vs_naive_fp32,actual_ce_gradients,8.288949099967609e-08,True,,4.056384287054813e-07,0,0,0,False
+confirm-init-b64,confirmation,tiled_fp32_vs_naive_fp32,independent_side_gradients,5.14697082304316e-07,True,,1.0687843900819699e-06,8,0,0,False
+confirm-init-b64,confirmation,tiled_bf16_vs_tiled_fp32,actual_ce_gradients,0.006521745551644935,True,0.015782374922454333,0.012340619427030141,46,0,0,True
+confirm-init-b64,confirmation,tiled_bf16_vs_tiled_fp32,independent_side_gradients,0.004642041890550243,True,0.015645016273647675,0.0066285090829746734,11,0,0,True
+confirm-trained-b64,confirmation,tiled_fp32_vs_naive_fp32,actual_ce_gradients,1.7960157421442804e-07,True,,1.7894223599851185e-06,0,0,0,False
+confirm-trained-b64,confirmation,tiled_fp32_vs_naive_fp32,independent_side_gradients,4.812888034975096e-07,True,,2.773172128197934e-06,9,0,0,False
+confirm-trained-b64,confirmation,tiled_bf16_vs_tiled_fp32,actual_ce_gradients,0.02306453137290896,False,0.021481056994432052,0.03468694965274837,38,0,0,False
+confirm-trained-b64,confirmation,tiled_bf16_vs_tiled_fp32,independent_side_gradients,0.0040197519562757055,True,0.01564501414847982,0.012453500529094422,11,0,0,False
+diagnose-init-b2-v2,diagnostic,tiled_fp32_vs_naive_fp32,actual_ce_gradients,1.0781548168088358e-07,True,,5.064883565686907e-07,0,0,0,False
+diagnose-init-b2-v2,diagnostic,tiled_fp32_vs_naive_fp32,independent_side_gradients,3.975799333212563e-07,True,,1.2308243636120494e-06,7,0,0,False
+diagnose-init-b2-v2,diagnostic,tiled_bf16_vs_tiled_fp32,actual_ce_gradients,0.006708287355795524,True,0.015799923588021108,0.012155213694316923,48,0,0,True
+diagnose-init-b2-v2,diagnostic,tiled_bf16_vs_tiled_fp32,independent_side_gradients,0.004308756359435604,True,0.01564508571842899,0.007608398309392242,11,0,0,True

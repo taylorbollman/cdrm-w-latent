@@ -1,0 +1,10 @@
+role,comparison,accepted_for_diagnostic_summary,gradient_relative_l2,gradient_screen_pass,side_relative_l2,adam_relative_l2,adam_cosine,adam_guardrail,adam_guardrail_pass,comparison_machine_screens_pass,candidate_prospective_checks_pass,all_original_machine_screens_pass
+fp32_trained_u1000,tiled_fp32_vs_naive_fp32,True,1.632415692686862e-07,True,4.814419528906335e-07,6.429103248422599e-06,0.9999999999793332,trained delta relative L2 <=.015625,True,False,True,False
+fp32_trained_u1000,current_bf16_vs_tiled_fp32,True,0.04007446959513352,False,0.00452434068494013,0.04253589796241229,0.9992064136904942,trained delta relative L2 <=.015625,False,False,True,False
+fp32_trained_u1000,candidate_vs_tiled_fp32,True,0.004223359266660465,True,0.00452434068494013,0.00799435623024476,0.9999681402943496,trained delta relative L2 <=.015625,True,True,True,False
+bf16_trained_u1000,tiled_fp32_vs_naive_fp32,True,1.4908942141195234e-07,True,4.882679014251033e-07,3.4899247839709874e-06,0.9999999999939101,trained delta relative L2 <=.015625,True,False,True,False
+bf16_trained_u1000,current_bf16_vs_tiled_fp32,True,0.025185511827843232,False,0.004565434860897747,0.021670006643660127,0.9997681259331083,trained delta relative L2 <=.015625,False,False,True,False
+bf16_trained_u1000,candidate_vs_tiled_fp32,True,0.003121265626892578,True,0.004565434860897747,0.005339187375499765,0.9999858942193018,trained delta relative L2 <=.015625,True,True,True,False
+distinct_initialization,tiled_fp32_vs_naive_fp32,True,9.38718173027629e-08,True,4.992779440743357e-07,5.1804449087809485e-06,0.9999999999865813,initial delta cosine >=.99,True,False,True,False
+distinct_initialization,current_bf16_vs_tiled_fp32,True,0.008372257736248057,True,0.004446157343073064,0.11371680062341537,0.9935342493918499,initial delta cosine >=.99,True,True,True,False
+distinct_initialization,candidate_vs_tiled_fp32,True,0.004600049774648829,True,0.004446157343073064,0.07614649552173154,0.9971008534446006,initial delta cosine >=.99,True,True,True,False
