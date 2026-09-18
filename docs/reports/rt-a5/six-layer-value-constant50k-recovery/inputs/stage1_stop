@@ -1,0 +1,11 @@
+{
+  "schema": "rt-a5-user-authorized-stop-after-25k-v1",
+  "created_utc": "2026-09-15T19:52:18.419954+00:00",
+  "reason": "User changed positive continuations from 50k to 25k.",
+  "primary_checkpoint_update": 25000,
+  "actual_stop_update": "Recorded by trainer after completing its current update.",
+  "request_sha256": "4bc87c3cb33028a637f229362cdac2abba6f5fa66f4514f810368b64a607a338",
+  "protocol_sha256": "3c0b15f81c8fe33e0347ce8e332bf47afd68a4d0e77e57ef57897511d69dd2c4",
+  "watcher_sha256": "2ba30ca30bf002c28dcd2f6937519f2f641606d717b253b6678918177f606615",
+  "checkpoint_path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/checkpoints/step-025000.pt"
+}

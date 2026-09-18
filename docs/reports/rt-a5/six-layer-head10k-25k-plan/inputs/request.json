@@ -1,0 +1,30 @@
+{
+  "schema": "rt-a5-six-layer-head-request-v1",
+  "variant": "embedding_head",
+  "launch_authorized": true,
+  "fresh": true,
+  "total_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "full_rt_layers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "embedding_head_layer": 1,
+  "embedding_head_index": 7,
+  "additional_parameters": 0,
+  "initial_endpoint": 10000,
+  "conditional_endpoint": 25000,
+  "continuation_gate": "Completed/synced saved10k full102400-row ood_dev E36 >0 continues exact state to25k; zero stops this arm",
+  "baseline_initialization_seed": 1234,
+  "predictor_seed": 1235,
+  "reference_lineage": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k",
+  "execution_order": "Root runs this arm after the current constant-value run stops and the conditionally eligible new linear arm completes; no automatic stage beyond25k",
+  "scope": "One existing historical value head is reassigned to attached raw embedding values, using existing V rows; all61 parameters unchanged. No Pe or lambda.",
+  "no_automatic_extension_past25000": true,
+  "revision": "The user replaced all50k continuation endpoints with25k; architecture and both accuracy gates are unchanged.",
+  "supersedes_unlaunched_pilot": ".runtime/rt-a5/20260915T180000Z-six-layer-head10k"
+}

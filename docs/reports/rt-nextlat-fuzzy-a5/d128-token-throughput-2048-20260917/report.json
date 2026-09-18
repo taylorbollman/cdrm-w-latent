@@ -1,0 +1,100 @@
+{
+  "schema": "rt-nextlat-mixed-token-throughput-comparison-v1",
+  "status": "complete",
+  "current_runtime": ".runtime/rt-nextlat-fuzzy-a5/20260917T215714Z-d128-token-throughput-2048",
+  "previous_profile": ".runtime/rt-nextlat-fuzzy-a5/20260917T214443Z-d128-token-throughput-check/profile/report.json",
+  "current_profile_sha256": "5fde05c872aa49f48339001c82991113a2821371739ef3b738fe5c841b474fc3",
+  "previous_profile_sha256": "73b7faae4e1513cc6263969218e95113d80bf23e3b514fe8175e5117d5414505",
+  "contracts_match_except_batch_candidates": true,
+  "initializations_equal": true,
+  "same_physical_gpu": true,
+  "warmup_updates": 10,
+  "timed_updates": 30,
+  "tokens_definition": "Input positions including native Fuzzy padding; both task forward/backward plus NextLat compute counted in timing without duplicating input token count",
+  "throughput_ratio_2048_over_1024": 1.6755729505045545,
+  "throughput_ratio_2048_over_128": 11.60474613728232,
+  "update_time_ratio_2048_over_1024": 1.1936215605520206,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260917T215714Z-d128-token-throughput-2048",
+    "mode": "online",
+    "name": "d128-mixed-tokens-per-second-2048-per-task",
+    "project": "rt-nextlat-fuzzy-a5",
+    "project_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5",
+    "run_id": "3uyhzypr",
+    "run_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5/runs/3uyhzypr",
+    "status": "synced",
+    "system_stats": false
+  },
+  "previous_wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260917T214443Z-d128-token-throughput-check",
+    "mode": "online",
+    "name": "d128-mixed-tokens-per-second-128-vs-1024",
+    "project": "rt-nextlat-fuzzy-a5",
+    "project_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5",
+    "run_id": "v1nr4whu",
+    "run_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5/runs/v1nr4whu",
+    "status": "synced",
+    "system_stats": false
+  },
+  "measurements": [
+    {
+      "batch_per_task": 128,
+      "total_examples_per_update": 256,
+      "tokens_per_update": 52736,
+      "mean_seconds_per_update": 1.3475397331664378,
+      "tokens_per_second": 39135.02414958955,
+      "p10_seconds": 1.3236645158045577,
+      "p90_seconds": 1.3739267418000964,
+      "peak_allocated_gib": 3.110172748565674,
+      "peak_reserved_gib": 4.39453125,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 1024,
+      "total_examples_per_update": 2048,
+      "tokens_per_update": 421888,
+      "mean_seconds_per_update": 1.5565363342985317,
+      "tokens_per_second": 271042.8216185059,
+      "p10_seconds": 1.5413073111907578,
+      "p90_seconds": 1.5752836682004272,
+      "peak_allocated_gib": 23.39279842376709,
+      "peak_reserved_gib": 33.00390625,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 2048,
+      "total_examples_per_update": 4096,
+      "tokens_per_update": 843776,
+      "mean_seconds_per_update": 1.857915328401335,
+      "tokens_per_second": 454152.02033239964,
+      "p10_seconds": 1.8433931049046806,
+      "p90_seconds": 1.8760289198995452,
+      "peak_allocated_gib": 46.579989433288574,
+      "peak_reserved_gib": 64.94140625,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    }
+  ],
+  "learning_run_started": false
+}

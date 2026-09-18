@@ -1,0 +1,18 @@
+{
+  "schema": "rt-a5-l1r-depth-config-v1",
+  "variant": "rt_l1r_depth",
+  "backbone_base_config": "configs/rt_a5/base.json",
+  "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+  "architecture": "rt",
+  "n_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "position_encoding": "alibi",
+  "learned_position_parameters": false,
+  "initialization": "original_mitchell_at_actual_depth",
+  "initialization_pairing": "Fresh canonical Mitchell draw at the requested depth; no two-layer backbone identity claim; unchanged separately seeded NextLat predictor",
+  "precision": "fp32",
+  "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false
+}

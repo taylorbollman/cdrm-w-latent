@@ -1,0 +1,81 @@
+{
+  "all61_baseline_initial_tensors_bitwise_equal": true,
+  "checker_sha256": "dfed61d3b8e5ec700b6f9c092c65ef91dc70d43de6516e3f750bd0fdac0b0b33",
+  "checkpoint_inputs": {
+    "15000": {
+      "bytes": 243251275,
+      "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/train-injection/checkpoints/step-015000.pt",
+      "sha256": "74b3380e72583cf2dad102480ccbc9ba13ae729e1fe8816bb2a7dd0fec18f626"
+    },
+    "20000": {
+      "bytes": 243251275,
+      "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/train-injection/checkpoints/step-020000.pt",
+      "sha256": "9351bd2d8d60590ba2b23d84a723bec3b15fdd2feb2c42c19ff652eaf2f738e0"
+    }
+  },
+  "coefficient_learned": false,
+  "completed_updates": 20000,
+  "config": {
+    "bytes": 961,
+    "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/train-injection/config.json",
+    "sha256": "21f9af7c95135a7d9b8ed42fb449e4fa83a361b2c1e3d5355c570fc5679beeeb"
+  },
+  "created_utc": "2026-09-15T18:09:37.783469+00:00",
+  "final_active_adam_states": 62,
+  "history": {
+    "bytes": 4551771,
+    "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/train-injection/history.jsonl",
+    "sha256": "f199a9f58abac62b13f4c5bb1f1a0db985ddd0fcd20f0d3f74fcc9c492f0d91f"
+  },
+  "injection_coefficient": 0.01,
+  "matched_child_minibatch_order_hashes": 10000,
+  "matched_minibatch_order_hashes": 20000,
+  "model_parameter_tensors": 62,
+  "model_parameters": 20260352,
+  "parent_checkpoint": {
+    "bytes": 243248331,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/checkpoints/step-010000.pt",
+    "sha256": "bad220a59fbd70cfe020eebca3b78996c89032576299449e98515a1ebcbf6a85"
+  },
+  "parent_history": {
+    "bytes": 4490509,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/history.jsonl",
+    "sha256": "a035d8ecd5cb9c4c95f6462414356d251db11e604ae01c302e570f5f9544cc5f"
+  },
+  "parent_protocol": {
+    "bytes": 129934,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/protocol.json",
+    "sha256": "a37e476bf3f37266cce49803d0a849153dee3e80ee03b1d0a63b28c4d1807f64"
+  },
+  "parent_report": {
+    "bytes": 240776,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/report.json",
+    "sha256": "79b9c6e5a6fd5efd6a0cbe23cfb702e839aeff00e13f39fac5b06e225e6fb069"
+  },
+  "parent_saved_state_validation": {
+    "bytes": 4525,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/final-state-validation.json",
+    "sha256": "13c76accd8cf1945497d6fc6ab8462781d80daa9b0e15bc84f0de54842aa2e9d"
+  },
+  "passed": true,
+  "protocol": {
+    "bytes": 133305,
+    "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/protocol.json",
+    "sha256": "05b317a79e7e9a145e6c20612647183d957c8eb1e6e3dba9dfec9e2ae9dd12c1"
+  },
+  "report": {
+    "bytes": 239890,
+    "path": ".runtime/rt-a5/20260915T173000Z-six-layer-input001-20k/train-injection/report.json",
+    "sha256": "635ca67fbb831ebf976e7099dc15e20998fdcefa73ce7d37a365e5a4deb3eeeb"
+  },
+  "requested_endpoint": 20000,
+  "requested_endpoint_reached": true,
+  "schema": "rt-a5-six-layer-input-extension-final-state-validation-v1",
+  "scope": "Exact10k parent binding, finite62 model/Adam states and global counters, RNG structure and complete stitched histories. Baseline initialization proof inherited from the separately bound parent audit. No model construction/inference/GPU.",
+  "shared_six_layer_model_sha256": "73f83912e8daa3b8defdf05980ed6d4d6c7d6a9c9a579fb2bbd57e4b3785a239",
+  "source_sha256": "cb73ced068d1d01557251f2a7f5d43840fb9bfbcc0e05c6f7821e6ce35b7d877",
+  "start_update": 10000,
+  "status": "passed",
+  "stop_file": null,
+  "training_status": "complete"
+}

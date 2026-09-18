@@ -1,0 +1,119 @@
+{
+  "schema": "rt-nextlat-mixed-token-throughput-comparison-v1",
+  "status": "complete",
+  "runtime": ".runtime/rt-nextlat-fuzzy-a5/20260917T220428Z-d128-token-throughput-3072",
+  "profile_inputs": [
+    {
+      "path": ".runtime/rt-nextlat-fuzzy-a5/20260917T214443Z-d128-token-throughput-check/profile/report.json",
+      "sha256": "73b7faae4e1513cc6263969218e95113d80bf23e3b514fe8175e5117d5414505"
+    },
+    {
+      "path": ".runtime/rt-nextlat-fuzzy-a5/20260917T215714Z-d128-token-throughput-2048/profile/report.json",
+      "sha256": "5fde05c872aa49f48339001c82991113a2821371739ef3b738fe5c841b474fc3"
+    },
+    {
+      "path": ".runtime/rt-nextlat-fuzzy-a5/20260917T220428Z-d128-token-throughput-3072/profile/report.json",
+      "sha256": "11d3e1355dddc42f8e9041a0259b67c078a9f8d1bee96539cbc9d88675ab9a78"
+    }
+  ],
+  "contracts_match_except_candidate_batch_sizes": true,
+  "initializations_and_initial_row_prefixes_equal": true,
+  "warmup_updates": 10,
+  "timed_updates": 30,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260917T220428Z-d128-token-throughput-3072",
+    "mode": "online",
+    "name": "d128-mixed-tokens-per-second-3072-per-task",
+    "project": "rt-nextlat-fuzzy-a5",
+    "project_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5",
+    "run_id": "opdx9b15",
+    "run_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5/runs/opdx9b15",
+    "status": "synced",
+    "system_stats": false
+  },
+  "throughput_ratios_3072_over": {
+    "128": 15.167338347067764,
+    "1024": 2.189964482191493,
+    "2048": 1.306994411393454
+  },
+  "mean_update_ratio_3072_over_2048": 1.1476713189620853,
+  "tokens_definition": "Processed input positions including native Fuzzy padding; NextLat computation timed without counting input tokens twice",
+  "measurements": [
+    {
+      "batch_per_task": 128,
+      "total_examples_per_update": 256,
+      "tokens_per_update": 52736,
+      "tokens_per_second": 39135.02414958955,
+      "seconds_per_update": 1.3475397331664378,
+      "p10_seconds": 1.3236645158045577,
+      "p90_seconds": 1.3739267418000964,
+      "peak_allocated_gib": 3.110172748565674,
+      "peak_reserved_gib": 4.39453125,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 1024,
+      "total_examples_per_update": 2048,
+      "tokens_per_update": 421888,
+      "tokens_per_second": 271042.8216185059,
+      "seconds_per_update": 1.5565363342985317,
+      "p10_seconds": 1.5413073111907578,
+      "p90_seconds": 1.5752836682004272,
+      "peak_allocated_gib": 23.39279842376709,
+      "peak_reserved_gib": 33.00390625,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 2048,
+      "total_examples_per_update": 4096,
+      "tokens_per_update": 843776,
+      "tokens_per_second": 454152.02033239964,
+      "seconds_per_update": 1.857915328401335,
+      "p10_seconds": 1.8433931049046806,
+      "p90_seconds": 1.8760289198995452,
+      "peak_allocated_gib": 46.579989433288574,
+      "peak_reserved_gib": 64.94140625,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 3072,
+      "total_examples_per_update": 6144,
+      "tokens_per_update": 1265664,
+      "tokens_per_second": 593574.1524974926,
+      "seconds_per_update": 2.132276135466236,
+      "p10_seconds": 2.1146149955049625,
+      "p90_seconds": 2.1598476931874755,
+      "peak_allocated_gib": 69.77134609222412,
+      "peak_reserved_gib": 71.982421875,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    }
+  ],
+  "training_checkpoints_written": false,
+  "learning_run_started": false
+}

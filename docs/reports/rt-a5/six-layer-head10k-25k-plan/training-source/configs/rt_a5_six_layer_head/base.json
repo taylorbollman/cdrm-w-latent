@@ -1,0 +1,22 @@
+{
+  "schema": "rt-a5-six-layer-head-config-v1",
+  "architecture": "rt",
+  "n_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "embedding_head_layer": 1,
+  "embedding_head_selection": "last existing head",
+  "historical_value": "selected existing V rows applied to attached raw token embeddings; replaces contextual values",
+  "query": "existing query projection of current normalized lower-layer output",
+  "key": "existing contextual permanent key projection of normalized upper-layer output",
+  "provisional_self_kv": "unchanged original projection of normalized current lower-layer output",
+  "alibi": "unchanged per-head slopes",
+  "additional_parameters": 0,
+  "additional_kv_cache_dimensions": 0,
+  "coefficient": null,
+  "initialization_pairing": "All successful six-layer baseline backbone and predictor tensors exactly preserved; one head value input changes",
+  "precision": "fp32",
+  "execution": "eager, no outer activation checkpointing or KV-cache decoding",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false
+}

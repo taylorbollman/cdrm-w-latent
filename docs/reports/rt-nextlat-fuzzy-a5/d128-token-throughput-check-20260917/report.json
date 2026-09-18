@@ -1,0 +1,72 @@
+{
+  "schema": "rt-nextlat-mixed-token-throughput-comparison-v1",
+  "status": "complete",
+  "runtime": ".runtime/rt-nextlat-fuzzy-a5/20260917T214443Z-d128-token-throughput-check",
+  "profile_report_sha256": "73b7faae4e1513cc6263969218e95113d80bf23e3b514fe8175e5117d5414505",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260917T214443Z-d128-token-throughput-check",
+    "mode": "online",
+    "name": "d128-mixed-tokens-per-second-128-vs-1024",
+    "project": "rt-nextlat-fuzzy-a5",
+    "project_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5",
+    "run_id": "v1nr4whu",
+    "run_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5/runs/v1nr4whu",
+    "status": "synced",
+    "system_stats": false
+  },
+  "batch_sizes_per_task": [
+    128,
+    1024
+  ],
+  "warmup_updates": 10,
+  "timed_updates": 30,
+  "task_lengths": {
+    "a5": 12,
+    "fuzzy": 400
+  },
+  "tokens_definition": "Processed input positions including native Fuzzy padding; NextLat compute included without double counting tokens",
+  "throughput_ratio": 6.925837597096478,
+  "update_time_ratio": 1.155094945245878,
+  "measurements": [
+    {
+      "batch_per_task": 128,
+      "total_examples_per_update": 256,
+      "tokens_per_update": 52736,
+      "mean_seconds_per_update": 1.3475397331664378,
+      "tokens_per_second": 39135.02414958955,
+      "peak_allocated_gib": 3.110172748565674,
+      "peak_reserved_gib": 4.39453125,
+      "p10_seconds": 1.3236645158045577,
+      "p90_seconds": 1.3739267418000964,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    },
+    {
+      "batch_per_task": 1024,
+      "total_examples_per_update": 2048,
+      "tokens_per_update": 421888,
+      "mean_seconds_per_update": 1.5565363342985317,
+      "tokens_per_second": 271042.8216185059,
+      "peak_allocated_gib": 23.39279842376709,
+      "peak_reserved_gib": 33.00390625,
+      "p10_seconds": 1.5413073111907578,
+      "p90_seconds": 1.5752836682004272,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      }
+    }
+  ],
+  "training_checkpoints_written": false,
+  "larger_batch_learning_run_started": false
+}

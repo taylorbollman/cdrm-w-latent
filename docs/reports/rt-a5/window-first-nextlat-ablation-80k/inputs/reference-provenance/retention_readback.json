@@ -1,0 +1,59 @@
+{
+  "schema": "rt-a5-evidence-readback-v1",
+  "passed": true,
+  "created_utc": "2026-09-14T23:51:45.827128+00:00",
+  "lineage": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k",
+  "archive_sha256": "9e9a64eb0faf8650f04c36b21fb3c61bdf1751f36803c3e400f57f53d546c316",
+  "archive_bytes": 71348039,
+  "members_checked": 321,
+  "all_tar_members_and_current_files_match_manifest": true,
+  "storage_receipt_sha256": "e609f595a657aeaf5db7bee1f11f8386b1cdd4decff11db558c2507574f331a6",
+  "verifier_sha256": "d5a2e21ebdd6d75dba2ec2c901662da3d0c324f5fbb422e8d657dcc6f55c2119",
+  "remote_objects_checked": {
+    "archive": {
+      "url": "gs://fast-chunks/cdrm-w-latent/rt-a5/20260914T212935Z-nextlat-depth-order80k/evidence.tar.gz",
+      "generation": "1789429866255280",
+      "bytes": 71348039,
+      "sha256": "9e9a64eb0faf8650f04c36b21fb3c61bdf1751f36803c3e400f57f53d546c316",
+      "md5_base64": "1ZcqVDA68mK995yBMWF77w==",
+      "remote_md5_base64": "1ZcqVDA68mK995yBMWF77w==",
+      "remote_crc32c_base64": "sTDkGQ==",
+      "verification": "md5",
+      "verified_utc": "2026-09-14T23:51:43.334703+00:00"
+    },
+    "member_manifest": {
+      "url": "gs://fast-chunks/cdrm-w-latent/rt-a5/20260914T212935Z-nextlat-depth-order80k/evidence-members.json",
+      "generation": "1789429868617562",
+      "bytes": 69385,
+      "sha256": "7ca38c11bfcc65784c996a1c4db7908aec843a97610022f104a981cbdc7d9fc9",
+      "md5_base64": "18/Xo8oEPq2wKpngSRHVYw==",
+      "remote_md5_base64": "18/Xo8oEPq2wKpngSRHVYw==",
+      "remote_crc32c_base64": "9MYeLA==",
+      "verification": "md5",
+      "verified_utc": "2026-09-14T23:51:44.161692+00:00"
+    },
+    "checkpoints": {
+      "url": "gs://fast-chunks/cdrm-w-latent/rt-a5/20260914T212935Z-nextlat-depth-order80k/checkpoint-storage.json",
+      "generation": "1789429870875454",
+      "bytes": 18911,
+      "sha256": "de80cd9d4a0424cba36798ba40362b07f88eab646daf079381913656207f18c9",
+      "md5_base64": "3mo3pLLtDUAySkWDgG6Fsw==",
+      "remote_md5_base64": "3mo3pLLtDUAySkWDgG6Fsw==",
+      "remote_crc32c_base64": "09tDQQ==",
+      "verification": "md5",
+      "verified_utc": "2026-09-14T23:51:44.998213+00:00"
+    },
+    "protocol": {
+      "url": "gs://fast-chunks/cdrm-w-latent/rt-a5/20260914T212935Z-nextlat-depth-order80k/protocol.json",
+      "generation": "1789429442996556",
+      "bytes": 64495,
+      "sha256": "b036355978bac1c417a315b55f63fe7ab9661462cdfcf9d1d49b1454cf7d8f80",
+      "md5_base64": "L35rAsvI7f1n2UBPPkQ6YQ==",
+      "remote_md5_base64": "L35rAsvI7f1n2UBPPkQ6YQ==",
+      "remote_crc32c_base64": "Je2DHw==",
+      "verification": "md5",
+      "verified_utc": "2026-09-14T23:51:45.827102+00:00"
+    }
+  },
+  "scope": "Read every archived member; verify manifest and current file hashes. Revalidate remote checksums and generations for archive, manifest, checkpoint receipts and protocol. Companion written after archive, outside its membership."
+}

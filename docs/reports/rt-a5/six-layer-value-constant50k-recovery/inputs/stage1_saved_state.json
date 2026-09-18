@@ -1,0 +1,132 @@
+{
+  "all61_baseline_initial_tensors_bitwise_equal": true,
+  "backbone_parameter_tensors": 58,
+  "checker_sha256": "cb149fcd2ee98f5cb9c8662172a762144f0e5a60247377feeea639350dc3d3dd",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 81115259,
+      "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/train-value/checkpoints/step-000000.pt",
+      "sha256": "67932954589294ff01346b2d18aaf6a7bbe242b29c7e78cdc6f7a869097c5be1"
+    },
+    "1000": {
+      "bytes": 243251275,
+      "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/train-value/checkpoints/step-001000.pt",
+      "sha256": "e49a332c220846b5a04b31ef1b3c9ecdc2044af2f46a21024a44017a3bfb5171"
+    },
+    "10000": {
+      "bytes": 243251275,
+      "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/train-value/checkpoints/step-010000.pt",
+      "sha256": "20c2f96db145bd9fbd181526d9f498714c13d561e6cc423d2fe8b450449fcf98"
+    },
+    "15000": {
+      "bytes": 243254539,
+      "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/checkpoints/step-015000.pt",
+      "sha256": "99604cca052ee440e4c9cb36e03995a6b61f1e2188ee505dd0a741a222453787"
+    },
+    "20000": {
+      "bytes": 243254539,
+      "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/checkpoints/step-020000.pt",
+      "sha256": "0dd9816a81dc06aec16c57f793b02688997d7486e81136a14934ec38df931b5a"
+    },
+    "25000": {
+      "bytes": 243254539,
+      "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/checkpoints/step-025000.pt",
+      "sha256": "8683c419a1dd44d42e8db00d8b5ecb164ff690a07ebd300c3bf15b2abaee6d0d"
+    },
+    "25001": {
+      "bytes": 243254539,
+      "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/checkpoints/step-025001.pt",
+      "sha256": "cb1312d1c8ff74052d929db97a3c00718dd0a2eeab6d5928a559e01ac948b6b7"
+    },
+    "5000": {
+      "bytes": 243251275,
+      "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/train-value/checkpoints/step-005000.pt",
+      "sha256": "e06ba096877ea5d90cfd6de2571153ce24de1037bbae5369ae8c697365f316d7"
+    }
+  },
+  "coefficient_learned": false,
+  "completed_updates": 25001,
+  "config": {
+    "bytes": 1031,
+    "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/config.json",
+    "sha256": "4826d996594ad474d98b1656e6de58f45607ba516881a617191621c6aba4f955"
+  },
+  "created_utc": "2026-09-15T19:52:48.517225+00:00",
+  "data_manifest": {
+    "bytes": 7862,
+    "path": ".runtime/rt-a5/20260911T154748Z/data/manifest.json",
+    "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+  },
+  "final_active_adam_states": 62,
+  "history": {
+    "bytes": 6826106,
+    "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/history.jsonl",
+    "sha256": "c53e3f8812ae8883135962aa63bc88bfaa1f961cd92606da95c69c5bd82d286a"
+  },
+  "initial_model_sha256": "14d17f01b3da75442d2e04207a3e38d203c22ca453919bb64d5706613bd759c7",
+  "injection_coefficient": 0.01,
+  "matched_minibatch_order_hashes": 25001,
+  "model_parameter_tensors": 62,
+  "model_parameters": 20260352,
+  "order_reference_history": {
+    "bytes": 33116761,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/history.jsonl",
+    "sha256": "8a258b646d2449b428190732e6c9e1d1e0f9bb3db71fbf4916418da41c023107"
+  },
+  "order_reference_report": {
+    "bytes": 919902,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/report.json",
+    "sha256": "e72c7e7703aae9c20192e474b4929cdccd4737e8a88f47584310a2373ede19fd"
+  },
+  "parent_validation": {
+    "bytes": 4608,
+    "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/final-state-validation.json",
+    "sha256": "d88be5000a01ad46c298159b256742d4b9551320340915b97c1436ff30b358fd"
+  },
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "projection_initial_checkpoint": {
+    "bytes": 55919913,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-000000.pt",
+    "sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa"
+  },
+  "projection_initialization_bitwise_equal": true,
+  "protocol": {
+    "bytes": 137465,
+    "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/protocol.json",
+    "sha256": "3c0b15f81c8fe33e0347ce8e332bf47afd68a4d0e77e57ef57897511d69dd2c4"
+  },
+  "report": {
+    "bytes": 308418,
+    "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/train-value/report.json",
+    "sha256": "1175a98bccab17b10641476584827d5eac9952f32ba752064b47d44cb2d996bd"
+  },
+  "requested_endpoint": 50000,
+  "requested_endpoint_reached": false,
+  "schedule": {
+    "formula": "0.01",
+    "initial_coefficient": 0.01,
+    "kind": "constant",
+    "learned": false,
+    "maximum_coefficient": 0.01,
+    "timing": "same coefficient at initialization and every training/evaluation/checkpoint update"
+  },
+  "schema": "rt-a5-six-layer-value-final-state-validation-v1",
+  "scope": "Saved initial/parent/final model, Adam, RNG, source and exact combined history only. No model construction, inference or CUDA.",
+  "shared_six_layer_model_sha256": "73f83912e8daa3b8defdf05980ed6d4d6c7d6a9c9a579fb2bbd57e4b3785a239",
+  "six_layer_initial_checkpoint": {
+    "bytes": 80052026,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-000000.pt",
+    "sha256": "eabb1901ed866a499dc58d7a6594616ef749a03f3192ebd19975844d447619b8"
+  },
+  "source_sha256": "1564fc5c1d152fc1132e55083d18839a4ba175866a6c87a825d939cdea86e30e",
+  "start_update": 10000,
+  "status": "passed",
+  "stop_file": {
+    "bytes": 689,
+    "path": ".runtime/rt-a5/20260915T191000Z-six-layer-value-constant50k/STOP_AFTER_UPDATE",
+    "sha256": "e94333af8df98e6bc2c730bb79e8994ca59deaf8de653bff4f136d3a76c15f2f"
+  },
+  "training_status": "stopped",
+  "variant": "constant"
+}

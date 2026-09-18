@@ -1,0 +1,21 @@
+{
+  "schema": "rt-a5-window-control-config-v1",
+  "variant": "rt_window2_first_ce",
+  "reference_variant": "rt_window2_first",
+  "backbone_base_config": "configs/rt_a5/base.json",
+  "construction_reference": "configs/rt_a5_depth_order/base.json",
+  "architecture": "rt",
+  "n_layers": 2,
+  "window_layer": 0,
+  "window_length": 2,
+  "position_encoding": "alibi",
+  "learned_position_parameters": false,
+  "initialization": "original_mitchell",
+  "initialization_pairing": "Exact winning RT first-window/full backbone at the same seed; predictor removed, no backbone weights changed",
+  "precision": "fp32",
+  "nextlat_enabled": false,
+  "predictor_registered": false,
+  "objective": "same-position state CE only",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false
+}

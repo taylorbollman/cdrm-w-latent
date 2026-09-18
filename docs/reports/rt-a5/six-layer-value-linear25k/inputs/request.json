@@ -1,0 +1,17 @@
+{
+  "schema": "rt-a5-six-layer-value-extension-request-v1",
+  "variant": "linear",
+  "parent_request": {
+    "path": ".runtime/rt-a5/20260915T192500Z-six-layer-value-linear10k/request.json",
+    "sha256": "b78ee3b8326e7d625bc3552af46faa66aac1f3f6bef43180c9d883985055aa1f",
+    "bytes": 1910
+  },
+  "start_update": 10000,
+  "endpoint": 25000,
+  "continuation_decision": {
+    "path": ".runtime/rt-a5/20260915T192500Z-six-layer-value-linear10k/continuation-decision.json",
+    "sha256": "8059efa47224e36753fcfc93a742f64a08c3c7385b99e5983c6d23fc2c0408a7",
+    "bytes": 4217
+  },
+  "no_automatic_extension_past25000": true
+}

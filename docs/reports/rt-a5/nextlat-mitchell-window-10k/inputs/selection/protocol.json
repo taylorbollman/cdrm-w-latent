@@ -1,0 +1,125 @@
+{
+  "schema": "rt-a5-mitchell-position-window-pilot-protocol-v1",
+  "status": "frozen-before-training",
+  "scope": "Backbone-only evaluation; no latent recurrence experiments",
+  "question": "First compare fixed sinusoids against ALiBi under original Mitchell initialization; then test selected positions with window2 attention only in RT block2.",
+  "training_order": [
+    "sinusoidal_full",
+    "selected_position_window2"
+  ],
+  "new_arms": [
+    "train-sinusoidal",
+    "train-window2"
+  ],
+  "updates_per_new_arm": 10000,
+  "primary_endpoint": 10000,
+  "checkpoint_steps": [
+    0,
+    1000,
+    5000,
+    10000
+  ],
+  "model": {
+    "backbone_layers": 2,
+    "width": 512,
+    "heads": 8,
+    "ffn_width": 2048,
+    "activation": "gelu",
+    "position": "stage1 fixed unit sinusoidal, base10000, origin0, unscaled token embeddings; stage2 selected fixed sinusoidal or ALiBi",
+    "rt_backend": "tiled",
+    "rt_rho": 1,
+    "latent": "post_final_layernorm",
+    "backbone_parameters": 6357504,
+    "predictor_hidden_width": 512,
+    "predictor_parameters": 1049600,
+    "total_training_parameters": 7407104,
+    "predictor": "RMSNorm concat[e_next,h];3Linear2GELU;residual;nooutputnorm",
+    "predictor_eps": 1e-05,
+    "predictor_linear_init_std": 0.02
+  },
+  "objective": {
+    "state_ce": "mean over B*T; same-position A5 states",
+    "latent": "SmoothL1 beta1 mean over B*(T-1)*D; targetonlydetach",
+    "latent_weight": 1,
+    "horizon": 1,
+    "kl_weight": 0,
+    "aux_ce_weight": 0,
+    "mlp_inference": false
+  },
+  "precision": "full_fp32",
+  "tf32": false,
+  "compile": false,
+  "cuda_graphs": false,
+  "seed": 1234,
+  "predictor_seed": 1235,
+  "data_order_seed": 1234,
+  "batch_size": 1024,
+  "optimizer": "AdamW-lr1e-4-betas0.9,0.95-eps1e-8-wd0.01-matrices-clip1",
+  "data_dir": ".runtime/rt-a5/20260911T154748Z/data",
+  "data_manifest_sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb",
+  "existing_baselines": {
+    "alibi_full": ".runtime/rt-a5/20260911T191702Z-nextlat/train-rt-nextlat"
+  },
+  "historical_execution_source_sha256": "1e6d0c63289f01525bc0c19bba6b2646d61df10ddb815bc74f5c111b46f9f961",
+  "reference_nextlat_commit": "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9",
+  "paper_code_discrepancy": "A5 code proj_factor0.5 giveshidden512; Table5says1024. Usecode512.",
+  "evaluations": {
+    "roles": [
+      "dev",
+      "ood_dev"
+    ],
+    "every_updates": 500,
+    "routine_rows": 4096,
+    "checkpoint_rows": 102400,
+    "route": "backbone only",
+    "aux_diagnostics": "bounded teacher-conditioned one-step loss/scale only; no rollout"
+  },
+  "confirmation_evaluated": false,
+  "wandb_project": "rt-a5-state-tracking",
+  "wandb_entity": "taylorbollman",
+  "wandb_group": "20260914T175404Z-nextlat-mitchell-window",
+  "gcs_prefix": "gs://fast-chunks/cdrm-w-latent/rt-a5/20260914T175404Z-nextlat-mitchell-window/",
+  "stop": "Finish both authorized 10k pilots, compare, report and retain; no other arms or training extensions.",
+  "initialization": "Original canonical Mitchell backbone, seed1234, bitwise paired all learned tensors; original predictor seed1235. No identity-centered initialization. Both pilots start fresh.",
+  "position_selection": {
+    "checkpoint": 10000,
+    "role": "ood_dev",
+    "rows": 102400,
+    "primary": "mean cumulative-prefix exactness E(t) over t=13..36 inclusive",
+    "exact_tie": "alibi",
+    "rationale": "A5 length generalization beyond training length12; average E equals expected correct extension length divided by24, with zero contributions after first error. All words included, no conditioning on E12 success.",
+    "secondary_report_only": [
+      "E12",
+      "E13",
+      "E14",
+      "E16",
+      "E36",
+      "A36",
+      "M36",
+      "dev token/wholeword"
+    ],
+    "selection_record": "position-selection.json",
+    "qualification": "One-seed development selection; not a confirmed population ranking; confirmation untouched."
+  },
+  "window": {
+    "layers_one_based": [
+      2
+    ],
+    "length_including_self": 2,
+    "keys_at_query_t": [
+      "temporary self K/V from layer input x_t",
+      "permanent previous K/V from layer output z_(t-1), when t>0"
+    ],
+    "first_layer": "original full-prefix RT",
+    "gradient": "full attached recurrence; no detach or truncated BPTT",
+    "implementation": "Fixed additive attention mask in second block, composed with selected positional bias; dense tiled operations retained, no sparse speed claim."
+  },
+  "bounded_checks": [
+    "Original initialization identity/no learnedPE",
+    "independent two-record scan vs maskednaive/tiled at smallshapes",
+    "preserve temporal recurrent credit and first-token semantics",
+    "actual B1024/T12 FP32 joint updates",
+    "strict checkpoint resume and endpoint finiteAdam state"
+  ],
+  "pilot_qualification": "Two sequential one-seed development pilots at fixed10k, final window comparison against selected full-attention parent with matched initialization/order. No best-checkpoint selection."
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "rt-a5-six-layer-value-config-v1",
+  "architecture": "rt",
+  "n_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "injection_layer": 1,
+  "position_encoding": "alibi",
+  "learned_position_parameters": false,
+  "initialization": "original_mitchell_at_six_layers",
+  "initialization_pairing": "Exact shared successful six-layer first-window backbone and original independently seeded predictor; same independently seeded Pe; constant and linear variants share every initial learned tensor",
+  "projection_seed": 1236,
+  "projection": "learned bias-free D by D linear map; independent normal mean 0, standard deviation 1/sqrt(D)",
+  "coefficient_learned": false,
+  "embedding_source": "attached original raw token embedding lookup, without scaling, normalization, dropout or added positions",
+  "precision": "fp32",
+  "execution": "eager, no outer activation checkpointing or KV-cache decoding",
+  "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+  "nextlat_target": "final post-normalization backbone hidden states, unchanged target-only stop gradient",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false,
+  "full_recurrent_layers": 5,
+  "two_or_four_layer_backbone_initialization_paired": false,
+  "injection_routing": "value",
+  "schedules": {
+    "constant": {
+      "kind": "constant",
+      "maximum_coefficient": 0.01,
+      "initial_coefficient": 0.01,
+      "learned": false,
+      "formula": "0.01",
+      "timing": "same coefficient at initialization and every training/evaluation/checkpoint update"
+    },
+    "linear": {
+      "kind": "linear_completed_update",
+      "maximum_coefficient": 0.01,
+      "warmup_updates": 20000,
+      "power": 1,
+      "initial_coefficient": 0.0,
+      "learned": false,
+      "formula": "0.01 * min(max(completed_update, 0) / 20000, 1)",
+      "timing": "set lambda(s) before training update s; evaluation and checkpoint s use lambda(s)"
+    }
+  }
+}

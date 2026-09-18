@@ -1,0 +1,128 @@
+{
+  "analysis_source": {
+    "bytes": 16613,
+    "path": "scripts/rt_a5_input_bypass_strength.py",
+    "sha256": "228f8af03cc5fc201cfc27c58c9cb5293b09e34a4a51d257143de8abed6a56b4"
+  },
+  "contextual_hidden_input_ratio_measured": false,
+  "fixed_lambda": 0.02,
+  "inputs": {
+    "checkpoints": {
+      "0": {
+        "bytes": 55919913,
+        "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-000000.pt",
+        "sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa"
+      },
+      "1000": {
+        "bytes": 167674875,
+        "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-001000.pt",
+        "sha256": "3310bc754ced3e1a7f30dd9685167efc82a1a6c7d5ee3e1674545282e6fe426f"
+      },
+      "10000": {
+        "bytes": 167674875,
+        "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-010000.pt",
+        "sha256": "40006f4d6dd2d61407f609999aee0d8769fba544c5efd51b95b45157cb34af67"
+      },
+      "15000": {
+        "bytes": 167677691,
+        "path": ".runtime/rt-a5/20260915T153500Z-embedding-input20k/train-injection/checkpoints/step-015000.pt",
+        "sha256": "8fba655e99682d9fc2a5fd46a1147566cb5dd7247b6b43703909abdac0d4ffdc"
+      },
+      "20000": {
+        "bytes": 167677691,
+        "path": ".runtime/rt-a5/20260915T153500Z-embedding-input20k/train-injection/checkpoints/step-020000.pt",
+        "sha256": "238caf18d7b18a19dd5c116c651f7054685caf82c7ea586baf454cc0530fc397"
+      },
+      "5000": {
+        "bytes": 167674875,
+        "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-005000.pt",
+        "sha256": "1cfaae097a7ae8fb7095d8ef371b1f0cba4af2bec68dae9a7ebde4b0bb073efd"
+      }
+    },
+    "child_protocol": {
+      "bytes": 109418,
+      "path": ".runtime/rt-a5/20260915T153500Z-embedding-input20k/protocol.json",
+      "sha256": "0a5e9d4e9c2b2fca9dbc89cf62ff4a80d0923079006fc7a5c576ea790a321049"
+    },
+    "parent_protocol": {
+      "bytes": 107888,
+      "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/protocol.json",
+      "sha256": "89bb7047d64c1a83fff89b538d3675c2bf6aac1d317c3b95f34fdccc1673de07"
+    }
+  },
+  "lambda_learned": false,
+  "rows": [
+    {
+      "added_signal_rms": 0.0008782606048648488,
+      "added_to_raw_rms_ratio": 0.020076452109812286,
+      "checkpoint_sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04416822614400762,
+      "raw_embedding_rms": 0.04374580728014201,
+      "update": 0
+    },
+    {
+      "added_signal_rms": 0.0009360547687825104,
+      "added_to_raw_rms_ratio": 0.02134265308105205,
+      "checkpoint_sha256": "3310bc754ced3e1a7f30dd9685167efc82a1a6c7d5ee3e1674545282e6fe426f",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04444072175490737,
+      "raw_embedding_rms": 0.043858407163706245,
+      "update": 1000
+    },
+    {
+      "added_signal_rms": 0.001087240503541178,
+      "added_to_raw_rms_ratio": 0.023771355517815916,
+      "checkpoint_sha256": "1cfaae097a7ae8fb7095d8ef371b1f0cba4af2bec68dae9a7ebde4b0bb073efd",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04490011497084073,
+      "raw_embedding_rms": 0.04573742135682267,
+      "update": 5000
+    },
+    {
+      "added_signal_rms": 0.0012575358348737228,
+      "added_to_raw_rms_ratio": 0.02735985060139674,
+      "checkpoint_sha256": "40006f4d6dd2d61407f609999aee0d8769fba544c5efd51b95b45157cb34af67",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04561292767851092,
+      "raw_embedding_rms": 0.04596281804292911,
+      "update": 10000
+    },
+    {
+      "added_signal_rms": 0.0014044365316103278,
+      "added_to_raw_rms_ratio": 0.030420752046451293,
+      "checkpoint_sha256": "8fba655e99682d9fc2a5fd46a1147566cb5dd7247b6b43703909abdac0d4ffdc",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04621952666101847,
+      "raw_embedding_rms": 0.046167054958595646,
+      "update": 15000
+    },
+    {
+      "added_signal_rms": 0.0015200337251684182,
+      "added_to_raw_rms_ratio": 0.03278680726724041,
+      "checkpoint_sha256": "238caf18d7b18a19dd5c116c651f7054685caf82c7ea586baf454cc0530fc397",
+      "fixed_lambda": 0.02,
+      "projection_weight_rms": 0.04668196665440396,
+      "raw_embedding_rms": 0.046361138880612815,
+      "update": 20000
+    }
+  ],
+  "schema": "rt-a5-input-bypass-strength-v1",
+  "scope": "CPU saved projection/embedding arithmetic only; current weights at each checkpoint; no model/inference.",
+  "through_update": 20000,
+  "token_weighting": "uniform",
+  "vocabulary_rows": 60,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260915T153500Z-input-bypass-strength",
+    "mode": "online",
+    "name": "input-bypass-strength",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "ei1upnr1",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/ei1upnr1",
+    "status": "running",
+    "system_stats": false
+  }
+}

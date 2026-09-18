@@ -1,0 +1,113 @@
+{
+  "backbone_parameter_tensors": 40,
+  "checker_sha256": "d1b6990f16084b0df7a8148450dd1abd3bdc22dcb7c9fc41653da3b09373aad7",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 55938281,
+      "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/checkpoints/step-000000.pt",
+      "sha256": "2e7406da213b7058968d2623dd26c37aceb651a25f9f9e549a4c68901f48c530"
+    },
+    "1000": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/checkpoints/step-001000.pt",
+      "sha256": "0e0d966717f02f3435737ef5aa08a3639f86b22bdbf3a87cf9b01a4f7eba812f"
+    },
+    "10000": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/checkpoints/step-010000.pt",
+      "sha256": "92e6a52e6f47ef0a4e288241bcef65e755216e78efea2a982d3f7ae8870bc2b6"
+    },
+    "13181": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/checkpoints/step-013181.pt",
+      "sha256": "85c838a950623831037106974ac2557d31dafb973c0b58c06285a5327711c311"
+    },
+    "5000": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/checkpoints/step-005000.pt",
+      "sha256": "e4fde8e76cae8c6f9b38a05d20eb187615da7fe296cf295cae4372a9836ea889"
+    }
+  },
+  "completed_updates": 13181,
+  "config": {
+    "bytes": 941,
+    "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/config.json",
+    "sha256": "68bb9dac3682383bf437a4846d06521a96650aa8f90e8237a358750d0d06d4ab"
+  },
+  "created_utc": "2026-09-15T16:33:12.934438+00:00",
+  "data_manifest": {
+    "bytes": 7862,
+    "path": ".runtime/rt-a5/20260911T154748Z/data/manifest.json",
+    "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+  },
+  "final_active_adam_states": 44,
+  "fixed_input_initial_checkpoint": {
+    "bytes": 55919913,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-000000.pt",
+    "sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa"
+  },
+  "fixed_input_protocol": {
+    "bytes": 107888,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/protocol.json",
+    "sha256": "89bb7047d64c1a83fff89b538d3675c2bf6aac1d317c3b95f34fdccc1673de07"
+  },
+  "history": {
+    "bytes": 6103438,
+    "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/history.jsonl",
+    "sha256": "4b60c1d6613de4781008869756d40a9a290d2c46f70544b3ffc3fba23ae7d4d8"
+  },
+  "initial_model_sha256": "d9c659b2161eb45e81e648666cc42a48fa110b76f836e2a2ecd5008ca7d60f56",
+  "injection_coefficient": 0.0034747752200000002,
+  "matched_minibatch_order_hashes": 13181,
+  "model_parameter_tensors": 44,
+  "model_parameters": 13964800,
+  "order_reference_history": {
+    "bytes": 33116761,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/history.jsonl",
+    "sha256": "8a258b646d2449b428190732e6c9e1d1e0f9bb3db71fbf4916418da41c023107"
+  },
+  "order_reference_report": {
+    "bytes": 919902,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/report.json",
+    "sha256": "e72c7e7703aae9c20192e474b4929cdccd4737e8a88f47584310a2373ede19fd"
+  },
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "projection_statistics": {
+    "final_weight_rms": 0.04399324208498001,
+    "initial_weight_rms": 0.044168226420879364,
+    "weight_delta_l2": 3.073431968688965
+  },
+  "protocol": {
+    "bytes": 198747,
+    "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/protocol.json",
+    "sha256": "0c2d1d6bd51593a94698379f03b6d6b6ce60d1a9932f8449918ab85a575ae2d3"
+  },
+  "report": {
+    "bytes": 349564,
+    "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/train-quadratic/report.json",
+    "sha256": "28d72e048eaf0ee0fb1c892835908ca3fe7ac9f67e2a755f73b8a9e12a148bfe"
+  },
+  "requested_endpoint": 50000,
+  "requested_endpoint_reached": false,
+  "schedule": {
+    "formula": "0.05 * min(max(completed_update, 0) / 50000, 1) ** 2",
+    "initial_coefficient": 0.0,
+    "kind": "quadratic_completed_update",
+    "learned": false,
+    "maximum_coefficient": 0.05,
+    "power": 2,
+    "timing": "set to lambda(s) before training update s; evaluation and checkpoint s use lambda(s)",
+    "warmup_updates": 50000
+  },
+  "schema": "rt-a5-quadratic-input-final-state-validation-v1",
+  "scope": "Saved packets/history only; no model construction, training, inference or CUDA initialization.",
+  "source_sha256": "aea19cef549b65563fc9816ce68128520ca5f3a5eb3b829c0688753935b5c942",
+  "status": "passed",
+  "stop_file": {
+    "bytes": 169,
+    "path": ".runtime/rt-a5/20260915T160000Z-input-quadratic50k/STOP_AFTER_UPDATE",
+    "sha256": "4cfeff073fae8f36e3dc31a097d47e19726eaf955509bb03dd0b307fc69faf25"
+  },
+  "training_status": "stopped"
+}

@@ -1,0 +1,293 @@
+{
+  "confirmation_evaluated": false,
+  "files": {
+    "alphabet.npy": {
+      "bytes": 428,
+      "dtype": "uint8",
+      "sha256": "60a56534867010552438b77b2c33301a3ba862108f69dda9dfec0be74c1c1a7a",
+      "shape": [
+        60,
+        5
+      ]
+    },
+    "confirmation.indices.npy": {
+      "bytes": 819328,
+      "dtype": "int64",
+      "sha256": "3cf04017c171e6b820b993276168d0505d11711502650bdf2c96116b0e1d4533",
+      "shape": [
+        102400
+      ]
+    },
+    "confirmation.inputs.npy": {
+      "bytes": 3686528,
+      "dtype": "uint8",
+      "sha256": "bfd720b9b189024dc9538cb1bcdb543c6a9c1e2a2adb45319bd0b6154961f19f",
+      "shape": [
+        102400,
+        36
+      ]
+    },
+    "confirmation.labels.npy": {
+      "bytes": 3686528,
+      "dtype": "uint8",
+      "sha256": "b887f2586173d34fa9e8989d86d8920aac30e9a7ba5f2c6ef953460774f07589",
+      "shape": [
+        102400,
+        36
+      ]
+    },
+    "dev.indices.npy": {
+      "bytes": 1600128,
+      "dtype": "int64",
+      "sha256": "dc3df5b95041a0feae1ac81fe7ada8768dec050025f5896a71b58eea9f14df2e",
+      "shape": [
+        200000
+      ]
+    },
+    "dev.inputs.npy": {
+      "bytes": 2400128,
+      "dtype": "uint8",
+      "sha256": "48d621c81274a753a640dbdcbf61b934e7e26c6fec25a70006b9f6d048c5878f",
+      "shape": [
+        200000,
+        12
+      ]
+    },
+    "dev.labels.npy": {
+      "bytes": 2400128,
+      "dtype": "uint8",
+      "sha256": "642e8e4759612ff61d3625fea476ebe25a0f1e1b6809231810be0b91c3a5add4",
+      "shape": [
+        200000,
+        12
+      ]
+    },
+    "multiplication_table.npy": {
+      "bytes": 3728,
+      "dtype": "uint8",
+      "sha256": "f9aa60fe7269ac272bdaa044506cdb4705a42ab021f76119de58d2b7531f4282",
+      "shape": [
+        60,
+        60
+      ]
+    },
+    "ood_dev.indices.npy": {
+      "bytes": 1600128,
+      "dtype": "int64",
+      "sha256": "dc3df5b95041a0feae1ac81fe7ada8768dec050025f5896a71b58eea9f14df2e",
+      "shape": [
+        200000
+      ]
+    },
+    "ood_dev.inputs.npy": {
+      "bytes": 7200128,
+      "dtype": "uint8",
+      "sha256": "f59858f26f569f17ce8faa0bac34cf194b5d9a6cfcde019b0db88fc4d4a6df5a",
+      "shape": [
+        200000,
+        36
+      ]
+    },
+    "ood_dev.labels.npy": {
+      "bytes": 7200128,
+      "dtype": "uint8",
+      "sha256": "ed0423af378d1db643fca48a04aba0064c181594c193b8d5890b68d55d076189",
+      "shape": [
+        200000,
+        36
+      ]
+    },
+    "train.indices.npy": {
+      "bytes": 6400128,
+      "dtype": "int64",
+      "sha256": "55b11b7c0a131f1b919add0fb91704ba8aa249c687c76d04fb34f39743a49439",
+      "shape": [
+        800000
+      ]
+    },
+    "train.inputs.npy": {
+      "bytes": 9600128,
+      "dtype": "uint8",
+      "sha256": "10e25425435d999131f17d8fee0e8bed93e0c0a44d79153dd509344d79c5bcb0",
+      "shape": [
+        800000,
+        12
+      ]
+    },
+    "train.labels.npy": {
+      "bytes": 9600128,
+      "dtype": "uint8",
+      "sha256": "2d73e1e4951c07fa996bd01fb4466dd2af03997dbfea3ebb41d83819d2502939",
+      "shape": [
+        800000,
+        12
+      ]
+    },
+    "train36.indices.npy": {
+      "bytes": 6400128,
+      "dtype": "int64",
+      "sha256": "55b11b7c0a131f1b919add0fb91704ba8aa249c687c76d04fb34f39743a49439",
+      "shape": [
+        800000
+      ]
+    },
+    "train36.inputs.npy": {
+      "bytes": 28800128,
+      "dtype": "uint8",
+      "sha256": "8adbccb7e6d5ca4e6a23ab18c09c48a6493a248f677d80e789a04ac24152435f",
+      "shape": [
+        800000,
+        36
+      ]
+    },
+    "train36.labels.npy": {
+      "bytes": 28800128,
+      "dtype": "uint8",
+      "sha256": "337d106ae5d6e11b0a10c68c6aefdfd7d0ff70665f539b2148974fc6e64470c5",
+      "shape": [
+        800000,
+        36
+      ]
+    }
+  },
+  "generator_source_sha256": "dc857d457a70311899db4db7690a0d22e6f8a5c842341693b25fea9e16ffff23",
+  "generator_version": "native-a5-pcg64-v1",
+  "leakage_audit": {
+    "complete_word_intersections": {
+      "ood_dev__confirmation": 0,
+      "train36__confirmation": 0,
+      "train36__ood_dev": 0,
+      "train__dev": 0
+    },
+    "duplicate_words": {
+      "confirmation": 0,
+      "dev": 0,
+      "ood_dev": 0,
+      "train": 0,
+      "train36": 0
+    },
+    "prefix_intersections": {
+      "dev__confirmation": 0,
+      "dev__ood_dev": 0,
+      "dev__train36": 0,
+      "ood_dev__confirmation": 0,
+      "train36__confirmation": 0,
+      "train36__ood_dev": 0,
+      "train__confirmation": 0,
+      "train__dev": 0,
+      "train__ood_dev": 0,
+      "train__train36": 0
+    },
+    "prefix_length": 12,
+    "within_split_duplicate_prefixes": {
+      "confirmation": 0,
+      "dev": 0,
+      "ood_dev": 0,
+      "train": 0,
+      "train36": 0
+    }
+  },
+  "numpy_version": "1.26.4",
+  "references": {
+    "nextlat": "https://github.com/JaydenTeoh/NextLat/tree/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9",
+    "word_problem": "https://github.com/jopetty/word-problem/tree/8f910f92e1c70455dcd9376f56032dfc55126188"
+  },
+  "rng": "numpy.random.Generator(PCG64); uint8 uniform draws in retained draw order",
+  "roles": {
+    "confirmation": {
+      "allowed_use": "frozen_final_confirmation_only",
+      "inputs": "confirmation.inputs.npy",
+      "labels": "confirmation.labels.npy",
+      "length": 36,
+      "rows": 102400,
+      "source_indices": "confirmation.indices.npy",
+      "source_pool": "confirmation",
+      "stored_rows": 102400
+    },
+    "dev": {
+      "allowed_use": "dev",
+      "inputs": "dev.inputs.npy",
+      "labels": "dev.labels.npy",
+      "length": 12,
+      "rows": 200000,
+      "source_indices": "dev.indices.npy",
+      "source_pool": "short",
+      "stored_rows": 200000
+    },
+    "ood_dev": {
+      "allowed_use": "ood_dev",
+      "inputs": "ood_dev.inputs.npy",
+      "labels": "ood_dev.labels.npy",
+      "length": 36,
+      "rows": 102400,
+      "source_indices": "ood_dev.indices.npy",
+      "source_pool": "long",
+      "stored_rows": 200000
+    },
+    "train": {
+      "allowed_use": "train",
+      "inputs": "train.inputs.npy",
+      "labels": "train.labels.npy",
+      "length": 12,
+      "rows": 800000,
+      "source_indices": "train.indices.npy",
+      "source_pool": "short",
+      "stored_rows": 800000
+    },
+    "train36": {
+      "allowed_use": "reserved_train_at_36_control",
+      "inputs": "train36.inputs.npy",
+      "labels": "train36.labels.npy",
+      "length": 36,
+      "rows": 800000,
+      "source_indices": "train36.indices.npy",
+      "source_pool": "long",
+      "stored_rows": 800000
+    }
+  },
+  "sampling": {
+    "confirmation_prefix_exclusion": "all short-pool words and all long-pool short prefixes",
+    "confirmation_seed": 446,
+    "confirmation_size": 102400,
+    "draw_statistics": {
+      "confirmation": {
+        "drawn": 102400,
+        "duplicate_words_rejected": 0,
+        "forbidden_prefixes_rejected": 0
+      },
+      "long": {
+        "drawn": 1000000,
+        "duplicate_words_rejected": 0,
+        "forbidden_prefixes_rejected": 0
+      },
+      "short": {
+        "drawn": 1000000,
+        "duplicate_words_rejected": 0,
+        "forbidden_prefixes_rejected": 0
+      }
+    },
+    "long_length": 36,
+    "long_prefix_exclusion": "all short-pool complete words",
+    "pool_size": 1000000,
+    "seed12": 444,
+    "seed36": 445,
+    "short_length": 12
+  },
+  "schema": "rt-a5-data-v1",
+  "split": {
+    "algorithm": "RandomState(seed).permutation(pool_size); ceil((1-fraction)*N) dev first; rest train",
+    "ood_eval_size": 102400,
+    "ood_selection": "first ood_eval_size rows of shuffled long dev split",
+    "seed": 42,
+    "train_fraction": 0.8
+  },
+  "status": "complete",
+  "task": {
+    "alphabet_order": "lexicographic even permutations of (1,2,3,4,5)",
+    "composition": "p(q(i)); state_t = state_(t-1) compose input_t",
+    "group": "A5",
+    "identity_id": 0,
+    "label_alignment": "same position, after input operation; no BOS or shift",
+    "vocab_size": 60
+  }
+}

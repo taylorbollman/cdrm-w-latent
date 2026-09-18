@@ -1,0 +1,92 @@
+{
+  "additional_parameters": 0,
+  "all61_baseline_initial_tensors_bitwise_equal": true,
+  "backbone_parameter_tensors": 57,
+  "checker_sha256": "5facd0039398912dddfdf39e79c0fed5b18515657aa80fbc49eedfd0170899c2",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 80064634,
+      "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/checkpoints/step-000000.pt",
+      "sha256": "f9eee4522b4ac96573fa6046ed121266b3543c522d0c12c1ad366591abada5fa"
+    },
+    "1000": {
+      "bytes": 240101507,
+      "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/checkpoints/step-001000.pt",
+      "sha256": "d93ac248c53c4bdae3148e6aed51cb86ddd3e4095dd21f709af15fe9080b89f3"
+    },
+    "10000": {
+      "bytes": 240101507,
+      "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/checkpoints/step-010000.pt",
+      "sha256": "3efb96ef96ae0f36edf1f08f6e849bb328f812b4bdcb05eef8227ab5b3a97607"
+    },
+    "5000": {
+      "bytes": 240101507,
+      "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/checkpoints/step-005000.pt",
+      "sha256": "e81839e8b89620525121e574af5942775d9858854b1a6e24b3efbae4a05d7972"
+    }
+  },
+  "completed_updates": 10000,
+  "config": {
+    "bytes": 817,
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/config.json",
+    "sha256": "5622da489b91d4629d45098f95a293b7234e1bce6427a184080fbb04fe2b716e"
+  },
+  "created_utc": "2026-09-15T21:23:39.970587+00:00",
+  "data_manifest": {
+    "bytes": 7862,
+    "path": ".runtime/rt-a5/20260911T154748Z/data/manifest.json",
+    "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+  },
+  "embedding_head_enabled": true,
+  "embedding_head_index": 7,
+  "embedding_head_layer": 1,
+  "final_active_adam_states": 61,
+  "history": {
+    "bytes": 4501911,
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/history.jsonl",
+    "sha256": "da1d7fb776526d417aef89c4e8507fff6839ee7b2fa4fcb8d4fc5126cf1e3e94"
+  },
+  "initial_model_sha256": "73f83912e8daa3b8defdf05980ed6d4d6c7d6a9c9a579fb2bbd57e4b3785a239",
+  "matched_minibatch_order_hashes": 10000,
+  "model_parameter_tensors": 61,
+  "model_parameters": 19998208,
+  "order_reference_history": {
+    "bytes": 33116761,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/history.jsonl",
+    "sha256": "8a258b646d2449b428190732e6c9e1d1e0f9bb3db71fbf4916418da41c023107"
+  },
+  "order_reference_report": {
+    "bytes": 919902,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/report.json",
+    "sha256": "e72c7e7703aae9c20192e474b4929cdccd4737e8a88f47584310a2373ede19fd"
+  },
+  "parent_validation": null,
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "protocol": {
+    "bytes": 127405,
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/protocol.json",
+    "sha256": "d0e3a190748956719d6ef55d2a6858f5526a2fdf377134f4eb5d8c8d068447d3"
+  },
+  "report": {
+    "bytes": 236135,
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/train-head/report.json",
+    "sha256": "e498188be7d8d5c4b24bc2bf2c5393e0b65f4142462f0bf2a88375c7e4bd0e3e"
+  },
+  "requested_endpoint": 10000,
+  "requested_endpoint_reached": true,
+  "schema": "rt-a5-six-layer-head-final-state-validation-v1",
+  "scope": "Saved initial/parent/final model, Adam, RNG, source and exact combined history only. No model construction, inference or CUDA.",
+  "shared_six_layer_model_sha256": "73f83912e8daa3b8defdf05980ed6d4d6c7d6a9c9a579fb2bbd57e4b3785a239",
+  "six_layer_initial_checkpoint": {
+    "bytes": 80052026,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-000000.pt",
+    "sha256": "eabb1901ed866a499dc58d7a6594616ef749a03f3192ebd19975844d447619b8"
+  },
+  "source_sha256": "af1fae94e25dfc6982b549157d47ed9492e0e2896a368741a5ec6c39274a434f",
+  "start_update": 0,
+  "status": "passed",
+  "stop_file": null,
+  "training_status": "complete",
+  "variant": "embedding_head"
+}

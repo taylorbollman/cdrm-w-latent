@@ -1,0 +1,80 @@
+{
+  "backbone_parameter_tensors": 57,
+  "checker_dependency": {
+    "bytes": 13755,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/check_final_state.py",
+    "sha256": "4bca1fc3e75cc7f7162f92f69314f2edbc45e27ee7a019540b8c8fd8618dfcee"
+  },
+  "checker_sha256": "b6ac14d0ae180c12709d18ad1fe6b41455565e6f65c31f1fbe6e9f7affa1009a",
+  "checkpoint_inputs": {
+    "10000": {
+      "bytes": 240087811,
+      "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-010000.pt",
+      "sha256": "9f6e330741b5f363a46657df3f1bc34d1459e528e22dcd8d23b9c5753826ba6b"
+    },
+    "15000": {
+      "bytes": 240089667,
+      "path": ".runtime/rt-a5/20260915T144415Z-l1r-six-layer-nextlat20k/train-depth/checkpoints/step-015000.pt",
+      "sha256": "c0c0a584dca75bc5d5ba5f7533459241463ca945fa27c551a78c6f6210cc9092"
+    },
+    "20000": {
+      "bytes": 240089667,
+      "path": ".runtime/rt-a5/20260915T144415Z-l1r-six-layer-nextlat20k/train-depth/checkpoints/step-020000.pt",
+      "sha256": "4eba5fab4c84a10a2d7e2ec15af8db3763d22f8632a96f6bac6a09efc656864f"
+    }
+  },
+  "checks": {
+    "all61_adam_states_at10000_and20000": true,
+    "all_parent_and_child_checkpoint_hashes": true,
+    "complete_synced_20k_resume": true,
+    "consistent_model_optimizer_mapping": true,
+    "cuda_never_initialized": true,
+    "exact_parent_checkpoint_hash_and_protocol": true,
+    "finite_cpu_fp32_parent_and_child_models": true,
+    "original_initial_predictor_proof_preserved": true,
+    "same_contract_and_initialization": true
+  },
+  "completed_updates": 20000,
+  "config": {
+    "bytes": 858,
+    "path": ".runtime/rt-a5/20260915T144415Z-l1r-six-layer-nextlat20k/train-depth/config.json",
+    "sha256": "cf82a0507d1a5a407142762fbe6f29900f35cd3681f5727090249b1fcae1b0bb"
+  },
+  "created_utc": "2026-09-15T15:13:33.040483+00:00",
+  "final_active_adam_states": 61,
+  "model_parameter_tensors": 61,
+  "model_parameters": 19998208,
+  "parent_active_adam_states": 61,
+  "parent_protocol": {
+    "bytes": 71461,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/protocol.json",
+    "sha256": "bfa66d38f68594200c2232e8a614127f8a4220d463fbea238aebd9ab41656eca"
+  },
+  "parent_report": {
+    "bytes": 180455,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/report.json",
+    "sha256": "20245123212f21aca4b56ab24fe9b30ace20382a6a958984ef3992c2c6e8bb31"
+  },
+  "parent_validation": {
+    "bytes": 2994,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/final-state-validation.json",
+    "sha256": "34a5e72fd6a09abdacbd722b570e03fa95bbc0ebc08c070feefff14f9d1a9e14"
+  },
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "protocol": {
+    "bytes": 72827,
+    "path": ".runtime/rt-a5/20260915T144415Z-l1r-six-layer-nextlat20k/protocol.json",
+    "sha256": "11ebb4f1c094b29fd2ee54dd8204740303376ed306e90e3cab292aa06d069716"
+  },
+  "report": {
+    "bytes": 179666,
+    "path": ".runtime/rt-a5/20260915T144415Z-l1r-six-layer-nextlat20k/train-depth/report.json",
+    "sha256": "7d7a163f27d50799b1fa0270a26d70b35781865ff6a81467363f79d9f9b28c00"
+  },
+  "schema": "rt-a5-l1r-depth-extension-final-state-validation-v1",
+  "scope": "Saved 10k parent and 20k child tensors only. Original initial/predictor proof reused unchanged; reporter handles full source/history/order audits. No model construction, inference or training.",
+  "source_sha256": "04d3854620854130eb9a67093fd0538b5762ac870b9464291fde8a6899fbc78b",
+  "start_update": 10000,
+  "status": "passed"
+}

@@ -1,0 +1,98 @@
+{
+  "all61_baseline_initial_tensors_bitwise_equal": true,
+  "backbone_parameter_tensors": 58,
+  "checker_sha256": "298cfa9865d5178391128924dcca4a7482b64453452530c2d227bfb4a957ee14",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 81114043,
+      "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/checkpoints/step-000000.pt",
+      "sha256": "87020a52543d2bb893c3133c19a690790d7811f20623fb71e09e99c074512caa"
+    },
+    "1000": {
+      "bytes": 243248331,
+      "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/checkpoints/step-001000.pt",
+      "sha256": "f8c095e3245fc8ff169a2554185ea6226d96815af24368b6056cfcd730488ccf"
+    },
+    "10000": {
+      "bytes": 243248331,
+      "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/checkpoints/step-010000.pt",
+      "sha256": "bad220a59fbd70cfe020eebca3b78996c89032576299449e98515a1ebcbf6a85"
+    },
+    "5000": {
+      "bytes": 243248331,
+      "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/checkpoints/step-005000.pt",
+      "sha256": "a89302adca1c9a35081ab53f226e22aa4b8b8d76a20985214949c06c04deda83"
+    }
+  },
+  "coefficient_learned": false,
+  "completed_updates": 10000,
+  "config": {
+    "bytes": 862,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/config.json",
+    "sha256": "3818c1199ea63034ab61b71ad8c1a4f4bc3906fae180fb2bf02b5f132a581431"
+  },
+  "created_utc": "2026-09-15T17:42:58.373548+00:00",
+  "data_manifest": {
+    "bytes": 7862,
+    "path": ".runtime/rt-a5/20260911T154748Z/data/manifest.json",
+    "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+  },
+  "final_active_adam_states": 62,
+  "history": {
+    "bytes": 4490509,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/history.jsonl",
+    "sha256": "a035d8ecd5cb9c4c95f6462414356d251db11e604ae01c302e570f5f9544cc5f"
+  },
+  "initial_model_sha256": "14d17f01b3da75442d2e04207a3e38d203c22ca453919bb64d5706613bd759c7",
+  "injection_coefficient": 0.01,
+  "matched_minibatch_order_hashes": 10000,
+  "model_parameter_tensors": 62,
+  "model_parameters": 20260352,
+  "order_reference_history": {
+    "bytes": 4180966,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/history.jsonl",
+    "sha256": "20371e7ac1bea6eeaaa1d20bafd90865fa1ad9e4e5a5c317fd5092ae4ec78632"
+  },
+  "order_reference_report": {
+    "bytes": 180455,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/report.json",
+    "sha256": "20245123212f21aca4b56ab24fe9b30ace20382a6a958984ef3992c2c6e8bb31"
+  },
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "projection_initial_checkpoint": {
+    "bytes": 55919913,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-000000.pt",
+    "sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa"
+  },
+  "projection_initialization_bitwise_equal": true,
+  "protocol": {
+    "bytes": 129934,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/protocol.json",
+    "sha256": "a37e476bf3f37266cce49803d0a849153dee3e80ee03b1d0a63b28c4d1807f64"
+  },
+  "reference_six_layer_protocol": {
+    "bytes": 71461,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/protocol.json",
+    "sha256": "bfa66d38f68594200c2232e8a614127f8a4220d463fbea238aebd9ab41656eca"
+  },
+  "report": {
+    "bytes": 240776,
+    "path": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection/report.json",
+    "sha256": "79b9c6e5a6fd5efd6a0cbe23cfb702e839aeff00e13f39fac5b06e225e6fb069"
+  },
+  "requested_endpoint": 10000,
+  "requested_endpoint_reached": true,
+  "schema": "rt-a5-six-layer-input-final-state-validation-v1",
+  "scope": "Saved model/Adam/RNG metadata and history only; exact61 baseline tensors plus independent projection. No model construction, inference, training or CUDA initialization.",
+  "shared_six_layer_model_sha256": "73f83912e8daa3b8defdf05980ed6d4d6c7d6a9c9a579fb2bbd57e4b3785a239",
+  "six_layer_initial_checkpoint": {
+    "bytes": 80052026,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-000000.pt",
+    "sha256": "eabb1901ed866a499dc58d7a6594616ef749a03f3192ebd19975844d447619b8"
+  },
+  "source_sha256": "cb73ced068d1d01557251f2a7f5d43840fb9bfbcc0e05c6f7821e6ce35b7d877",
+  "status": "passed",
+  "stop_file": null,
+  "training_status": "complete"
+}

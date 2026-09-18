@@ -1,0 +1,44 @@
+{
+  "schema": "rt-a5-six-layer-value-request-v1",
+  "variant": "linear",
+  "fresh": true,
+  "total_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "full_rt_layers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "injection_layer": 1,
+  "injection_routing": "permanent_value_only",
+  "initial_endpoint": 10000,
+  "conditional_endpoint": 25000,
+  "continuation_gate": "Completed/synced saved10k full102400-row ood_dev E36 > 0; zero means stop this arm",
+  "baseline_initialization_seed": 1234,
+  "predictor_seed": 1235,
+  "projection_seed": 1236,
+  "reference_lineage": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k",
+  "execution_order": "After the current constant-value run has retained25k and stopped; then linear if eligible; then the separately authorized head experiment.",
+  "coefficient_learned": false,
+  "no_automatic_extension_past25000": true,
+  "implementation_plan": ".runtime/rt-a5/20260915T172920Z-six-layer-value-implementation/plan.md",
+  "launch_authorized": true,
+  "launch_prerequisite": {
+    "constant_pilot_lineage": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k",
+    "role": "ood_dev",
+    "checkpoint_update": 5000,
+    "full_rows": 102400,
+    "strict_E36_threshold": 0.5,
+    "otherwise": "skip linear and proceed to separately authorized head experiment",
+    "queue_order": "Root coordinator waits for the current constant arm to retain25k and finish its bound graceful stop before invoking linear preflight."
+  },
+  "launch_authorization": "conditional_user_authorization",
+  "supersedes_request": {
+    "path": ".runtime/rt-a5/20260915T175000Z-six-layer-value-linear10k/request.json",
+    "sha256": "30fc95d77ca5a1fc0a4624211ad702e30accb6a0677418cca109312c027af6be"
+  },
+  "endpoint_revision": "User reduced future positive-gate continuation endpoints to25k. The linear full5k >50% prerequisite and full10k >0 continuation rule are unchanged."
+}

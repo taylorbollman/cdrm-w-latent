@@ -1,0 +1,29 @@
+{
+  "schema": "rt-a5-six-layer-value-request-v1",
+  "variant": "constant",
+  "fresh": true,
+  "total_layers": 6,
+  "window_layer": 0,
+  "window_length": 2,
+  "full_rt_layers": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "injection_layer": 1,
+  "injection_routing": "permanent_value_only",
+  "initial_endpoint": 10000,
+  "conditional_endpoint": 50000,
+  "continuation_gate": "Completed/synced saved10k full102400-row ood_dev E36 > 0; zero means stop this arm",
+  "baseline_initialization_seed": 1234,
+  "predictor_seed": 1235,
+  "projection_seed": 1236,
+  "reference_lineage": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k",
+  "execution_order": "After current six-layer input20k; constant value then linear value; parent coordinates the separately specified third arm",
+  "coefficient_learned": false,
+  "no_automatic_extension_past50000": true,
+  "implementation_plan": ".runtime/rt-a5/20260915T172920Z-six-layer-value-implementation/plan.md",
+  "launch_authorized": true
+}

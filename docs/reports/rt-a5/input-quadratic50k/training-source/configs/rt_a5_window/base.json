@@ -1,0 +1,35 @@
+{
+  "schema": "rt-a5-window-config-v1",
+  "architecture": "rt",
+  "initialization": {
+    "kind": "original_mitchell",
+    "backbone": "Original canonical CPU SEQ Mitchell initialization followed by checked RT conversion",
+    "predictor": "Original NextLat predictor initialization with independent seed",
+    "identity_centered_overrides": false,
+    "learned_tensor_changes": 0
+  },
+  "position_options": {
+    "alibi": {
+      "kind": "alibi",
+      "alibi": true,
+      "rope": false,
+      "learned_position_parameters": false,
+      "nextlat_conditioning": "raw next-operation token embedding"
+    },
+    "sinusoidal": {
+      "kind": "fixed_sinusoidal",
+      "base": 10000.0,
+      "amplitude": 1.0,
+      "position_origin": 0,
+      "layout": "interleaved sin at 2i, cos at 2i+1",
+      "formula": "angle(position, i) = position / base^(2*i/width)",
+      "token_embedding_scale": 1.0,
+      "addition": "once at backbone input, before embedding dropout",
+      "alibi": false,
+      "rope": false,
+      "learned_position_parameters": false,
+      "persistent_position_buffers": false,
+      "nextlat_conditioning": "raw next-operation token embedding without positional addition"
+    }
+  }
+}

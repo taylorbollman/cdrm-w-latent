@@ -1,0 +1,81 @@
+{
+  "accepted_checkpoint": {
+    "bytes": 88939747,
+    "completed_updates": 80000,
+    "path": ".runtime/rt-a5/20260914T185736Z-rt-nextlat100k/train-rt-nextlat/checkpoints/step-080000.pt",
+    "sha256": "48de43b162f1dbfaeeb5a111f5786b0c0589d544ba02167769dccc672fdf075b"
+  },
+  "accepted_continuation": {
+    "first_update": 10001,
+    "last_update": 80000,
+    "order_chain": "a9217af0352a93505e23d88c9262cc2c964bd2eee61fde39710f4ad29380f6e3",
+    "training_seconds": 3784.4136585029205,
+    "updates": 70000
+  },
+  "accepted_endpoint": 80000,
+  "action": "stop_at_retained_checkpoint",
+  "closure_note": "Original100k protocol, failed raw report and original finalizer/retention status remain unchanged. New stopped-endpoint reports interpret the explicit user-directed stop; no training failure claim is inferred from intentional KeyboardInterrupt.",
+  "confirmation_evaluated": false,
+  "excluded_tail": {
+    "first_update": 80001,
+    "last_completed_update": 81607,
+    "scope": "Completed but uncheckpointed tail preserved in raw history and logs; excluded from accepted model results. Any interrupted in-flight step is also excluded.",
+    "training_seconds": 86.76570654199986,
+    "updates": 1607
+  },
+  "expected_new_checkpoints": [
+    20000,
+    25000,
+    30000,
+    40000,
+    50000,
+    60000,
+    70000,
+    80000
+  ],
+  "latent_rollout_evaluated": false,
+  "original_endpoint": 100000,
+  "protocol": {
+    "bytes": 13014,
+    "path": ".runtime/rt-a5/20260914T185736Z-rt-nextlat100k/protocol.json",
+    "sha256": "f554938a36c865c0c53a9f989f1a9136812c1aa0e3fb3be566c509526476c7ad"
+  },
+  "raw_history": {
+    "bytes": 30261358,
+    "first_update": 10001,
+    "last_update": 81607,
+    "path": ".runtime/rt-a5/20260914T185736Z-rt-nextlat100k/train-rt-nextlat/history.jsonl",
+    "sha256": "d26d0582dddb003b36d79d1084f8e21c30dc8cbb875d73c0b212aa461cb947f4",
+    "updates": 71607
+  },
+  "raw_training_report": {
+    "bytes": 826172,
+    "completed_updates": 81607,
+    "configured_endpoint": 100000,
+    "error_type": "KeyboardInterrupt",
+    "path": ".runtime/rt-a5/20260914T185736Z-rt-nextlat100k/train-rt-nextlat/report.json",
+    "sha256": "8645839b907fc04ec866e154f1ae6eab5ad4e3249c71efff9039d989e7f4ca25",
+    "status": "failed",
+    "wandb_status": "synced_failed_experiment"
+  },
+  "reason": "User requested stopping at the80k checkpoint after reviewing development curves.",
+  "recorded_utc": "2026-09-14T20:08:32.532795+00:00",
+  "report_directory": "docs/reports/rt-a5/nextlat-budget-80k",
+  "schema": "rt-a5-nextlat-endpoint-revision-v1",
+  "selection_kind": "user_selected_after_development_review",
+  "termination": {
+    "container_gone": true,
+    "container_id": "805a76909b883e398cd496e02a9fd867dff1a0488839525ee6a3b2ce24b6403f",
+    "container_pid": 1,
+    "exit_code": 1,
+    "exit_record": {
+      "bytes": 2,
+      "path": ".runtime/rt-a5/20260914T185736Z-rt-nextlat100k/training-exit-code.txt",
+      "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    "former_host_pid": 11051,
+    "signal": "SIGINT",
+    "trainer_process_gone": true
+  },
+  "user_instruction": "Ok. Please stop at the80k checkpoint."
+}

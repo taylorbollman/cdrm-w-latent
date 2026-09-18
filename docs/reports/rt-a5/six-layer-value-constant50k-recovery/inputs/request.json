@@ -1,0 +1,88 @@
+{
+  "schema": "rt-a5-six-layer-value-extension-request-v1",
+  "variant": "constant",
+  "parent_request": {
+    "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/request.json",
+    "sha256": "12985c91ef457c14211452ce7ad71e25d0f03577aa512adc9a1c26619200f09d",
+    "bytes": 986
+  },
+  "start_update": 10000,
+  "endpoint": 50000,
+  "continuation_decision": {
+    "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/continuation-decision.json",
+    "sha256": "40fe47af7c059226db20983051f61acff8fae58e47a2eeb769395044bebbd986",
+    "bytes": 4172
+  },
+  "no_automatic_extension_past50000": true,
+  "recovery": {
+    "schema": "rt-a5-six-layer-value-recovery-v1",
+    "reason": "Host restart interrupted the first50k continuation without a new retained checkpoint.",
+    "reported_restart_utc": "2026-09-15T19:03:57Z",
+    "abandoned_lineage": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k",
+    "abandoned_inputs": {
+      "protocol.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/protocol.json",
+        "sha256": "6b82219cd2bda356fd1bc3cfe6f76727142b0aefbe43c2d8dc414a66c82a8edd",
+        "bytes": 134151
+      },
+      "request.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/request.json",
+        "sha256": "93aec7f1276b4db3bb8c5221027aedd2bb40913ca3b0414fa509079cf9940532",
+        "bytes": 626
+      },
+      "launch-record.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/launch-record.json",
+        "sha256": "e42191b0dce0e74fb4bea1591c34a4c51b77489d637d06af99df79d87c5cb4be",
+        "bytes": 1136
+      },
+      "launch-status.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/launch-status.json",
+        "sha256": "41bba72abe4960fad167b8cf1e87b4e28a8d06da1dd79f6e5b94c69c8ab6d8ef",
+        "bytes": 152
+      },
+      "train-value/report.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/train-value/report.json",
+        "sha256": "977da8d426bce03e342d3a1df443402585f439577d7e5068666fdb1761ca1188",
+        "bytes": 121116
+      },
+      "train-value/config.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/train-value/config.json",
+        "sha256": "8f689e9f3365e39d30c15d15705705965710154524d7e44c9307b7fa1c5ac5ad",
+        "bytes": 1035
+      },
+      "train-value/history.jsonl": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/train-value/history.jsonl",
+        "sha256": "444a78bdfdc54b77d7fca5b3a7785c99037b6f356a60bd24595f51de6acf5db7",
+        "bytes": 266240
+      },
+      "retention.json": {
+        "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant50k/retention.json",
+        "sha256": "2cdb8b714c457b8ea937fb5aa437ac1a0c9b6dc3db56316767f176e43546d79b",
+        "bytes": 277
+      }
+    },
+    "abandoned_wandb_run": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/xw7h9zcf",
+    "excluded_unsaved_history": {
+      "valid_rows": 579,
+      "first_update": 10001,
+      "last_update": 10579,
+      "invalid_trailing_lines": [
+        {
+          "line": 580,
+          "bytes": 2566
+        }
+      ],
+      "nul_bytes": 2566,
+      "included_in_recovery_training_or_metrics": false
+    },
+    "restart_checkpoint": {
+      "path": ".runtime/rt-a5/20260915T174500Z-six-layer-value-constant10k/train-value/checkpoints/step-010000.pt",
+      "sha256": "20c2f96db145bd9fbd181526d9f498714c13d561e6cc423d2fe8b450449fcf98",
+      "bytes": 243251275
+    },
+    "restart_semantics": "Reload exactly the retained pilot10k model, Adam, RNG and data order; discard no retained checkpoint. Recompute updates after10k in a new run.",
+    "abandoned_files_preserved": true,
+    "original_10k_continuation_decision_preserved": true,
+    "no_training_or_gpu_execution_during_preparation": true
+  }
+}

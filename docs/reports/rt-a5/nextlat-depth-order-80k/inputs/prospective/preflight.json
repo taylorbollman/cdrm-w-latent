@@ -1,0 +1,2356 @@
+{
+  "actual_shape": {
+    "rt_window2_first": {
+      "batch": 1024,
+      "causal_length36": {
+        "actual_l2": 12.865340232849121,
+        "atol": 2e-06,
+        "coordinates": 2160,
+        "error_l2": 0.0,
+        "finite": true,
+        "max_absolute_error": 0.0,
+        "mismatched_coordinates": 0,
+        "passed": true,
+        "reference_l2": 12.865340232849121,
+        "relative_l2": 0.0,
+        "rtol": 2e-05
+      },
+      "discarded_updates": 10,
+      "experiment_config": {
+        "architecture": "rt",
+        "attention": {
+          "gradient_truncation": false,
+          "layer_indices": "zero based",
+          "layers": [
+            "self provisional K/V and immediately previous permanent output K/V",
+            "full causal recurrent attention"
+          ],
+          "recurrent_write_rho": 1.0,
+          "window_is_direct_read_limit_not_history_truncation": true
+        },
+        "backbone_base_config": "configs/rt_a5/base.json",
+        "evaluation_route": "backbone_only",
+        "initialization": "original_mitchell",
+        "initialization_pairing": "Every learned initial tensor equals the original two-layer RT + NextLat at the same seeds; only first-layer direct attention reads change",
+        "latent_rollout_evaluated": false,
+        "learned_position_parameters": false,
+        "mlp_hidden_size": 2048,
+        "n_heads": 8,
+        "n_layers": 2,
+        "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+        "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+        "position_encoding": "alibi",
+        "precision": "fp32",
+        "schema": "rt-a5-depth-order-config-v1",
+        "variant": "rt_window2_first",
+        "width": 512,
+        "window_layer": 0,
+        "window_length": 2
+      },
+      "finite_state": {
+        "missing_gradients": [],
+        "nonfinite": [],
+        "optimizer_state_count": 25,
+        "optimizer_steps": [
+          10
+        ],
+        "passed": true,
+        "wrong_dtype": []
+      },
+      "initialization": {
+        "architecture": "rt",
+        "backbone": {
+          "architecture": "rt",
+          "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+          "conversion": {
+            "copied": [
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.attn_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.attn_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.attn_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.attn_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_proj.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_proj.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.k_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.k_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.q_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.q_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.attn_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.attn_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.attn_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.attn_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_proj.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_proj.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.k_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.k_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.q_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.q_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.ln_f.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.ln_f.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.wte.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.wte.weight"
+                ]
+              }
+            ],
+            "missing": [],
+            "new": [],
+            "notes": [
+              "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+              "Optimizer state, training/data counters, and gate schedules are not converted."
+            ],
+            "parameter_mappings": [
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.attn_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.attn_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.attn_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.attn_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.ff_proj.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.ff_proj.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.k_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.k_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.0.q_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.0.q_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.attn_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.attn_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.attn_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.attn_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.ff_proj.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.ff_proj.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.k_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.k_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.blocks.1.q_norm.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.blocks.1.q_norm.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.ff_out.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.ff_out.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.ln_f.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.ln_f.weight"
+                ]
+              },
+              {
+                "operation": "copy",
+                "source_keys": [
+                  "transformer.wte.weight"
+                ],
+                "split_sizes": [],
+                "target_keys": [
+                  "transformer.wte.weight"
+                ]
+              },
+              {
+                "operation": "split",
+                "source_keys": [
+                  "transformer.blocks.0.att_proj.weight"
+                ],
+                "split_sizes": [
+                  512,
+                  1024
+                ],
+                "target_keys": [
+                  "transformer.blocks.0.q_proj.weight",
+                  "transformer.blocks.0.kv_proj.weight"
+                ]
+              },
+              {
+                "operation": "split",
+                "source_keys": [
+                  "transformer.blocks.1.att_proj.weight"
+                ],
+                "split_sizes": [
+                  512,
+                  1024
+                ],
+                "target_keys": [
+                  "transformer.blocks.1.q_proj.weight",
+                  "transformer.blocks.1.kv_proj.weight"
+                ]
+              }
+            ],
+            "semantics": "weights_only",
+            "source_key_count": 19,
+            "source_recurrent_layers": [],
+            "target_key_count": 21,
+            "target_recurrent_layers": [
+              0,
+              1
+            ],
+            "transformed": [
+              {
+                "operation": "split",
+                "source_keys": [
+                  "transformer.blocks.0.att_proj.weight"
+                ],
+                "split_sizes": [
+                  512,
+                  1024
+                ],
+                "target_keys": [
+                  "transformer.blocks.0.q_proj.weight",
+                  "transformer.blocks.0.kv_proj.weight"
+                ]
+              },
+              {
+                "operation": "split",
+                "source_keys": [
+                  "transformer.blocks.1.att_proj.weight"
+                ],
+                "split_sizes": [
+                  512,
+                  1024
+                ],
+                "target_keys": [
+                  "transformer.blocks.1.q_proj.weight",
+                  "transformer.blocks.1.kv_proj.weight"
+                ]
+              }
+            ],
+            "unexpected": []
+          },
+          "parameter_count": 6357504,
+          "rule": "CPU Mitchell SEQ initialization; checked weights-only conversion for RT",
+          "schema": "rt-a5-initialization-v1",
+          "seed": 1234,
+          "width": 512
+        },
+        "backbone_parameter_count": 6357504,
+        "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+        "changed_parameter_slices": [],
+        "exact_two_layer_learned_initialization": true,
+        "experiment_config": {
+          "architecture": "rt",
+          "attention": {
+            "gradient_truncation": false,
+            "layer_indices": "zero based",
+            "layers": [
+              "self provisional K/V and immediately previous permanent output K/V",
+              "full causal recurrent attention"
+            ],
+            "recurrent_write_rho": 1.0,
+            "window_is_direct_read_limit_not_history_truncation": true
+          },
+          "backbone_base_config": "configs/rt_a5/base.json",
+          "evaluation_route": "backbone_only",
+          "initialization": "original_mitchell",
+          "initialization_pairing": "Every learned initial tensor equals the original two-layer RT + NextLat at the same seeds; only first-layer direct attention reads change",
+          "latent_rollout_evaluated": false,
+          "learned_position_parameters": false,
+          "mlp_hidden_size": 2048,
+          "n_heads": 8,
+          "n_layers": 2,
+          "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+          "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+          "position_encoding": "alibi",
+          "precision": "fp32",
+          "schema": "rt-a5-depth-order-config-v1",
+          "variant": "rt_window2_first",
+          "width": 512,
+          "window_layer": 0,
+          "window_length": 2
+        },
+        "model_parameter_sha256": "11af70bd11692878e0b574211fbb5c058c340496429b4169b2375c4e0461b8a3",
+        "n_layers": 2,
+        "parameter_count": 7407104,
+        "predictor_config": {
+          "activation": "gelu",
+          "bias": false,
+          "dropout": 0.0,
+          "hidden_width": 512,
+          "hidden_width_multiple": 128,
+          "initialization_std": 0.02,
+          "input_order": [
+            "next_operation_embedding",
+            "current_latent"
+          ],
+          "input_width": 1024,
+          "linear_layers": 3,
+          "normalization": "rms_norm",
+          "normalization_epsilon": 1e-05,
+          "output_normalization": false,
+          "output_width": 512,
+          "projection_factor": 0.5,
+          "residual": true
+        },
+        "predictor_parameter_count": 1049600,
+        "predictor_seed": 1235,
+        "predictor_sha256": "3a1fccdd63a53e50328c010b03ecd81d7cf8782229b63cf1c843d1c658731e58",
+        "reference_two_layer_initialization": {
+          "architecture": "rt",
+          "backbone": {
+            "architecture": "rt",
+            "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+            "conversion": {
+              "copied": [
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.attn_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.attn_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.attn_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.attn_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_proj.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.k_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.k_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.q_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.q_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.attn_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.attn_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.attn_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.attn_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_proj.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.k_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.k_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.q_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.q_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.ln_f.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.ln_f.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.wte.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.wte.weight"
+                  ]
+                }
+              ],
+              "missing": [],
+              "new": [],
+              "notes": [
+                "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+                "Optimizer state, training/data counters, and gate schedules are not converted."
+              ],
+              "parameter_mappings": [
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.attn_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.attn_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.attn_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.attn_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.ff_proj.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.ff_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.k_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.k_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.0.q_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.0.q_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.attn_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.attn_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.attn_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.attn_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.ff_proj.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.ff_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.k_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.k_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.blocks.1.q_norm.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.blocks.1.q_norm.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.ff_out.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.ff_out.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.ln_f.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.ln_f.weight"
+                  ]
+                },
+                {
+                  "operation": "copy",
+                  "source_keys": [
+                    "transformer.wte.weight"
+                  ],
+                  "split_sizes": [],
+                  "target_keys": [
+                    "transformer.wte.weight"
+                  ]
+                },
+                {
+                  "operation": "split",
+                  "source_keys": [
+                    "transformer.blocks.0.att_proj.weight"
+                  ],
+                  "split_sizes": [
+                    512,
+                    1024
+                  ],
+                  "target_keys": [
+                    "transformer.blocks.0.q_proj.weight",
+                    "transformer.blocks.0.kv_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "split",
+                  "source_keys": [
+                    "transformer.blocks.1.att_proj.weight"
+                  ],
+                  "split_sizes": [
+                    512,
+                    1024
+                  ],
+                  "target_keys": [
+                    "transformer.blocks.1.q_proj.weight",
+                    "transformer.blocks.1.kv_proj.weight"
+                  ]
+                }
+              ],
+              "semantics": "weights_only",
+              "source_key_count": 19,
+              "source_recurrent_layers": [],
+              "target_key_count": 21,
+              "target_recurrent_layers": [
+                0,
+                1
+              ],
+              "transformed": [
+                {
+                  "operation": "split",
+                  "source_keys": [
+                    "transformer.blocks.0.att_proj.weight"
+                  ],
+                  "split_sizes": [
+                    512,
+                    1024
+                  ],
+                  "target_keys": [
+                    "transformer.blocks.0.q_proj.weight",
+                    "transformer.blocks.0.kv_proj.weight"
+                  ]
+                },
+                {
+                  "operation": "split",
+                  "source_keys": [
+                    "transformer.blocks.1.att_proj.weight"
+                  ],
+                  "split_sizes": [
+                    512,
+                    1024
+                  ],
+                  "target_keys": [
+                    "transformer.blocks.1.q_proj.weight",
+                    "transformer.blocks.1.kv_proj.weight"
+                  ]
+                }
+              ],
+              "unexpected": []
+            },
+            "parameter_count": 6357504,
+            "rule": "CPU Mitchell SEQ initialization; checked weights-only conversion for RT",
+            "schema": "rt-a5-initialization-v1",
+            "seed": 1234,
+            "width": 512
+          },
+          "backbone_parameter_count": 6357504,
+          "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+          "parameter_count": 7407104,
+          "predictor_config": {
+            "activation": "gelu",
+            "bias": false,
+            "dropout": 0.0,
+            "hidden_width": 512,
+            "hidden_width_multiple": 128,
+            "initialization_std": 0.02,
+            "input_order": [
+              "next_operation_embedding",
+              "current_latent"
+            ],
+            "input_width": 1024,
+            "linear_layers": 3,
+            "normalization": "rms_norm",
+            "normalization_epsilon": 1e-05,
+            "output_normalization": false,
+            "output_width": 512,
+            "projection_factor": 0.5,
+            "residual": true
+          },
+          "predictor_parameter_count": 1049600,
+          "predictor_seed": 1235,
+          "predictor_sha256": "3a1fccdd63a53e50328c010b03ecd81d7cf8782229b63cf1c843d1c658731e58",
+          "rule": "Original canonical SEQ/RT initialization; separate CPU predictor RNG scope",
+          "schema": "rt-a5-nextlat-initialization-v1",
+          "seed": 1234,
+          "width": 512
+        },
+        "rule": "Every learned initial tensor equals the original two-layer RT + NextLat at the same seeds; only first-layer direct attention reads change",
+        "schema": "rt-a5-depth-order-initialization-v1",
+        "seed": 1234,
+        "variant": "rt_window2_first",
+        "width": 512
+      },
+      "length": 12,
+      "parameter_count": 7407104,
+      "parameter_tensors": 25,
+      "passed": true,
+      "peak_allocated_bytes": 825036800,
+      "peak_reserved_bytes": 1073741824,
+      "rows": [
+        {
+          "grad_norm": 2.4494521617889404,
+          "latent_cosine": 0.23943376541137695,
+          "latent_loss": 0.5875365734100342,
+          "latent_relative_l2": 1.2336865663528442,
+          "latent_rms": 0.9999930262565613,
+          "latent_variation_rms": 0.9240792989730835,
+          "loss": 5.166003227233887,
+          "predicted_latent_rms": 1.000557780265808,
+          "predicted_state_ce": 4.584332466125488,
+          "seconds": 0.06800846300029662,
+          "state_loss": 4.578466415405273,
+          "teacher_predicted_kl": 0.7363290190696716,
+          "token_accuracy": 0.017578125,
+          "update": 1,
+          "weighted_latent_loss": 0.5875365734100342,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 2.0555031299591064,
+          "latent_loss": 0.5456347465515137,
+          "loss": 4.980127811431885,
+          "seconds": 0.0550628829987545,
+          "state_loss": 4.434493064880371,
+          "token_accuracy": 0.01668294332921505,
+          "update": 2,
+          "weighted_latent_loss": 0.5456347465515137,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 2.0642168521881104,
+          "latent_loss": 0.4725503623485565,
+          "loss": 4.78249979019165,
+          "seconds": 0.05399551499976951,
+          "state_loss": 4.3099493980407715,
+          "token_accuracy": 0.02303059957921505,
+          "update": 3,
+          "weighted_latent_loss": 0.4725503623485565,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.8248409032821655,
+          "latent_loss": 0.3887394666671753,
+          "loss": 4.589697360992432,
+          "seconds": 0.0545487969993701,
+          "state_loss": 4.200957775115967,
+          "token_accuracy": 0.0426432304084301,
+          "update": 4,
+          "weighted_latent_loss": 0.3887394666671753,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.5265358686447144,
+          "latent_loss": 0.3071487247943878,
+          "loss": 4.4184088706970215,
+          "seconds": 0.056029266999757965,
+          "state_loss": 4.111259937286377,
+          "token_accuracy": 0.0673014372587204,
+          "update": 5,
+          "weighted_latent_loss": 0.3071487247943878,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.2505552768707275,
+          "latent_loss": 0.23661479353904724,
+          "loss": 4.2578582763671875,
+          "seconds": 0.05557216600027459,
+          "state_loss": 4.021243572235107,
+          "token_accuracy": 0.0843912810087204,
+          "update": 6,
+          "weighted_latent_loss": 0.23661479353904724,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.1010565757751465,
+          "latent_loss": 0.18398849666118622,
+          "loss": 4.159537315368652,
+          "seconds": 0.05550753599891323,
+          "state_loss": 3.9755489826202393,
+          "token_accuracy": 0.093505859375,
+          "update": 7,
+          "weighted_latent_loss": 0.18398849666118622,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.914909839630127,
+          "latent_loss": 0.14221437275409698,
+          "loss": 4.078449726104736,
+          "seconds": 0.05589583399887488,
+          "state_loss": 3.9362354278564453,
+          "token_accuracy": 0.0957845076918602,
+          "update": 8,
+          "weighted_latent_loss": 0.14221437275409698,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.7946217060089111,
+          "latent_loss": 0.11299111694097519,
+          "loss": 4.011574745178223,
+          "seconds": 0.055415844999515684,
+          "state_loss": 3.8985836505889893,
+          "token_accuracy": 0.099365234375,
+          "update": 9,
+          "weighted_latent_loss": 0.11299111694097519,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.675018310546875,
+          "latent_cosine": 0.9052130579948425,
+          "latent_loss": 0.09153026342391968,
+          "latent_relative_l2": 0.4363786280155182,
+          "latent_rms": 0.9993311762809753,
+          "latent_variation_rms": 0.36218318343162537,
+          "loss": 3.964714527130127,
+          "predicted_latent_rms": 1.0055490732192993,
+          "predicted_state_ce": 4.179821968078613,
+          "seconds": 0.05579794700133789,
+          "state_loss": 3.8731842041015625,
+          "teacher_predicted_kl": 0.09670769423246384,
+          "token_accuracy": 0.0985514372587204,
+          "update": 10,
+          "weighted_latent_loss": 0.09153026342391968,
+          "whole_word_exact": 0.0
+        }
+      ],
+      "variant": "rt_window2_first",
+      "width": 512
+    },
+    "seq4_alibi": {
+      "batch": 1024,
+      "causal_length36": {
+        "actual_l2": 15.789649963378906,
+        "atol": 2e-06,
+        "coordinates": 2160,
+        "error_l2": 0.0,
+        "finite": true,
+        "max_absolute_error": 0.0,
+        "mismatched_coordinates": 0,
+        "passed": true,
+        "reference_l2": 15.789649963378906,
+        "relative_l2": 0.0,
+        "rtol": 2e-05
+      },
+      "discarded_updates": 10,
+      "experiment_config": {
+        "architecture": "seq",
+        "attention": {
+          "gradient_truncation": false,
+          "layer_indices": "zero based",
+          "layers": [
+            "ordinary full causal attention",
+            "ordinary full causal attention",
+            "ordinary full causal attention",
+            "ordinary full causal attention"
+          ],
+          "recurrent_write_rho": null,
+          "window_is_direct_read_limit_not_history_truncation": false
+        },
+        "backbone_base_config": "configs/rt_a5/base.json",
+        "evaluation_route": "backbone_only",
+        "initialization": "original_mitchell",
+        "initialization_pairing": "Fresh canonical four-layer Mitchell initialization; same seed does not imply identical two-layer backbone tensors",
+        "latent_rollout_evaluated": false,
+        "learned_position_parameters": false,
+        "mlp_hidden_size": 2048,
+        "n_heads": 8,
+        "n_layers": 4,
+        "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+        "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+        "position_encoding": "alibi",
+        "precision": "fp32",
+        "schema": "rt-a5-depth-order-config-v1",
+        "variant": "seq4_alibi",
+        "width": 512,
+        "window_layer": null,
+        "window_length": null
+      },
+      "finite_state": {
+        "missing_gradients": [],
+        "nonfinite": [],
+        "optimizer_state_count": 39,
+        "optimizer_steps": [
+          10
+        ],
+        "passed": true,
+        "wrong_dtype": []
+      },
+      "initialization": {
+        "architecture": "seq",
+        "backbone": {
+          "architecture": "seq",
+          "canonical_sha256": "b83e889febd1bd030f092322659bc1ccfe4f39add3ba3bd58b7ee1e0d7554a48",
+          "conversion": null,
+          "n_layers": 4,
+          "parameter_count": 12653056,
+          "rule": "Canonical four-layer CPU Mitchell initialization from original A5 config with n_layers=4",
+          "schema": "rt-a5-depth-initialization-v1",
+          "seed": 1234,
+          "two_layer_initialization_identity_claimed": false,
+          "width": 512
+        },
+        "backbone_parameter_count": 12653056,
+        "canonical_sha256": "b83e889febd1bd030f092322659bc1ccfe4f39add3ba3bd58b7ee1e0d7554a48",
+        "changed_parameter_slices": null,
+        "exact_two_layer_learned_initialization": false,
+        "experiment_config": {
+          "architecture": "seq",
+          "attention": {
+            "gradient_truncation": false,
+            "layer_indices": "zero based",
+            "layers": [
+              "ordinary full causal attention",
+              "ordinary full causal attention",
+              "ordinary full causal attention",
+              "ordinary full causal attention"
+            ],
+            "recurrent_write_rho": null,
+            "window_is_direct_read_limit_not_history_truncation": false
+          },
+          "backbone_base_config": "configs/rt_a5/base.json",
+          "evaluation_route": "backbone_only",
+          "initialization": "original_mitchell",
+          "initialization_pairing": "Fresh canonical four-layer Mitchell initialization; same seed does not imply identical two-layer backbone tensors",
+          "latent_rollout_evaluated": false,
+          "learned_position_parameters": false,
+          "mlp_hidden_size": 2048,
+          "n_heads": 8,
+          "n_layers": 4,
+          "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+          "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+          "position_encoding": "alibi",
+          "precision": "fp32",
+          "schema": "rt-a5-depth-order-config-v1",
+          "variant": "seq4_alibi",
+          "width": 512,
+          "window_layer": null,
+          "window_length": null
+        },
+        "model_parameter_sha256": "af4413aeff9a58639b058f6bba5e887b73fca522c3dbcf56553fde307799da09",
+        "n_layers": 4,
+        "parameter_count": 13702656,
+        "predictor_config": {
+          "activation": "gelu",
+          "bias": false,
+          "dropout": 0.0,
+          "hidden_width": 512,
+          "hidden_width_multiple": 128,
+          "initialization_std": 0.02,
+          "input_order": [
+            "next_operation_embedding",
+            "current_latent"
+          ],
+          "input_width": 1024,
+          "linear_layers": 3,
+          "normalization": "rms_norm",
+          "normalization_epsilon": 1e-05,
+          "output_normalization": false,
+          "output_width": 512,
+          "projection_factor": 0.5,
+          "residual": true
+        },
+        "predictor_parameter_count": 1049600,
+        "predictor_seed": 1235,
+        "predictor_sha256": "3a1fccdd63a53e50328c010b03ecd81d7cf8782229b63cf1c843d1c658731e58",
+        "reference_two_layer_initialization": {
+          "architecture": "seq",
+          "backbone": {
+            "architecture": "seq",
+            "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+            "conversion": null,
+            "parameter_count": 6357504,
+            "rule": "CPU Mitchell SEQ initialization; checked weights-only conversion for RT",
+            "schema": "rt-a5-initialization-v1",
+            "seed": 1234,
+            "width": 512
+          },
+          "backbone_parameter_count": 6357504,
+          "canonical_sha256": "0380e2fd4cdd4db63ce6d732a0834ad054e185c2276da55d733839276d8c55ad",
+          "parameter_count": 7407104,
+          "predictor_config": {
+            "activation": "gelu",
+            "bias": false,
+            "dropout": 0.0,
+            "hidden_width": 512,
+            "hidden_width_multiple": 128,
+            "initialization_std": 0.02,
+            "input_order": [
+              "next_operation_embedding",
+              "current_latent"
+            ],
+            "input_width": 1024,
+            "linear_layers": 3,
+            "normalization": "rms_norm",
+            "normalization_epsilon": 1e-05,
+            "output_normalization": false,
+            "output_width": 512,
+            "projection_factor": 0.5,
+            "residual": true
+          },
+          "predictor_parameter_count": 1049600,
+          "predictor_seed": 1235,
+          "predictor_sha256": "3a1fccdd63a53e50328c010b03ecd81d7cf8782229b63cf1c843d1c658731e58",
+          "rule": "Original canonical SEQ/RT initialization; separate CPU predictor RNG scope",
+          "schema": "rt-a5-nextlat-initialization-v1",
+          "seed": 1234,
+          "width": 512
+        },
+        "rule": "Fresh canonical four-layer Mitchell initialization; same seed does not imply identical two-layer backbone tensors",
+        "schema": "rt-a5-depth-order-initialization-v1",
+        "seed": 1234,
+        "variant": "seq4_alibi",
+        "width": 512
+      },
+      "length": 12,
+      "parameter_count": 13702656,
+      "parameter_tensors": 39,
+      "passed": true,
+      "peak_allocated_bytes": 2708521984,
+      "peak_reserved_bytes": 2858418176,
+      "rows": [
+        {
+          "grad_norm": 2.8567824363708496,
+          "latent_cosine": 0.7221416234970093,
+          "latent_loss": 0.2570341229438782,
+          "latent_relative_l2": 0.7457829713821411,
+          "latent_rms": 0.9999945759773254,
+          "latent_variation_rms": 0.8959115743637085,
+          "loss": 4.780588626861572,
+          "predicted_latent_rms": 1.0008453130722046,
+          "predicted_state_ce": 4.542667865753174,
+          "seconds": 0.645870375999948,
+          "state_loss": 4.52355432510376,
+          "teacher_predicted_kl": 0.2565375864505768,
+          "token_accuracy": 0.01668294332921505,
+          "update": 1,
+          "weighted_latent_loss": 0.2570341229438782,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 3.336442470550537,
+          "latent_loss": 0.22461770474910736,
+          "loss": 4.630170822143555,
+          "seconds": 0.03410887899917725,
+          "state_loss": 4.405553340911865,
+          "token_accuracy": 0.027587890625,
+          "update": 2,
+          "weighted_latent_loss": 0.22461770474910736,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 2.24711012840271,
+          "latent_loss": 0.1818738728761673,
+          "loss": 4.431585311889648,
+          "seconds": 0.03345179999996617,
+          "state_loss": 4.249711513519287,
+          "token_accuracy": 0.05517578125,
+          "update": 3,
+          "weighted_latent_loss": 0.1818738728761673,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.7488371133804321,
+          "latent_loss": 0.14568699896335602,
+          "loss": 4.26007080078125,
+          "seconds": 0.03305197100053192,
+          "state_loss": 4.114383697509766,
+          "token_accuracy": 0.0810546875,
+          "update": 4,
+          "weighted_latent_loss": 0.14568699896335602,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.4385696649551392,
+          "latent_loss": 0.114456407725811,
+          "loss": 4.155598163604736,
+          "seconds": 0.03310423400034779,
+          "state_loss": 4.041141986846924,
+          "token_accuracy": 0.0992838591337204,
+          "update": 5,
+          "weighted_latent_loss": 0.114456407725811,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.110481858253479,
+          "latent_loss": 0.09100242704153061,
+          "loss": 4.077087879180908,
+          "seconds": 0.03346726000017952,
+          "state_loss": 3.9860856533050537,
+          "token_accuracy": 0.0996907576918602,
+          "update": 6,
+          "weighted_latent_loss": 0.09100242704153061,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 1.061577558517456,
+          "latent_loss": 0.07423484325408936,
+          "loss": 4.039656639099121,
+          "seconds": 0.033285749001152,
+          "state_loss": 3.965421676635742,
+          "token_accuracy": 0.0978190153837204,
+          "update": 7,
+          "weighted_latent_loss": 0.07423484325408936,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.9161503911018372,
+          "latent_loss": 0.0615931861102581,
+          "loss": 4.003316879272461,
+          "seconds": 0.033082199001000845,
+          "state_loss": 3.941723585128784,
+          "token_accuracy": 0.0990397185087204,
+          "update": 8,
+          "weighted_latent_loss": 0.0615931861102581,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.8281448483467102,
+          "latent_loss": 0.05237096548080444,
+          "loss": 3.9792540073394775,
+          "seconds": 0.03313841700037301,
+          "state_loss": 3.9268829822540283,
+          "token_accuracy": 0.0975748747587204,
+          "update": 9,
+          "weighted_latent_loss": 0.05237096548080444,
+          "whole_word_exact": 0.0
+        },
+        {
+          "grad_norm": 0.767961859703064,
+          "latent_cosine": 0.9548022747039795,
+          "latent_loss": 0.04543652758002281,
+          "latent_relative_l2": 0.30177924036979675,
+          "latent_rms": 0.9994975924491882,
+          "latent_variation_rms": 0.3717699348926544,
+          "loss": 3.9606804847717285,
+          "predicted_latent_rms": 1.0066304206848145,
+          "predicted_state_ce": 4.192311763763428,
+          "seconds": 0.033518610000101035,
+          "state_loss": 3.9152438640594482,
+          "teacher_predicted_kl": 0.05023304000496864,
+          "token_accuracy": 0.0979817733168602,
+          "update": 10,
+          "weighted_latent_loss": 0.04543652758002281,
+          "whole_word_exact": 0.0
+        }
+      ],
+      "variant": "seq4_alibi",
+      "width": 512
+    }
+  },
+  "confirmation_evaluated": false,
+  "first_window_oracle": {
+    "12": {
+      "batch": 2,
+      "gradients": {
+        "backbone.transformer.blocks.0.attn_norm.weight": {
+          "actual_l2": 0.313763827085495,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 2.569333332758106e-07,
+          "finite": true,
+          "max_absolute_error": 5.587935447692871e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.3137638568878174,
+          "relative_l2": 8.188748564742245e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.attn_out.weight": {
+          "actual_l2": 4.710466384887695,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 3.1745621527079493e-06,
+          "finite": true,
+          "max_absolute_error": 1.2665987014770508e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 4.7104668617248535,
+          "relative_l2": 6.739379016765878e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_norm.weight": {
+          "actual_l2": 0.19460171461105347,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.4439336837313022e-07,
+          "finite": true,
+          "max_absolute_error": 4.0978193283081055e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.19460172951221466,
+          "relative_l2": 7.419942707347162e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_out.weight": {
+          "actual_l2": 6.032835006713867,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 4.124931820115307e-06,
+          "finite": true,
+          "max_absolute_error": 9.685754776000977e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 6.032834529876709,
+          "relative_l2": 6.837468854295938e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_proj.weight": {
+          "actual_l2": 2.1675398349761963,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 1.5518377267653705e-06,
+          "finite": true,
+          "max_absolute_error": 3.3527612686157227e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.1675400733947754,
+          "relative_l2": 7.159441921343123e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.k_norm.weight": {
+          "actual_l2": 0.12324996292591095,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.1038012814879039e-07,
+          "finite": true,
+          "max_absolute_error": 3.5390257835388184e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.12324997037649155,
+          "relative_l2": 8.955793483082579e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.kv_proj.weight": {
+          "actual_l2": 3.5398941040039062,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 2.5099420781771187e-06,
+          "finite": true,
+          "max_absolute_error": 8.195638656616211e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 3.5398941040039062,
+          "relative_l2": 7.090443963671601e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.q_norm.weight": {
+          "actual_l2": 0.12324995547533035,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.0970406805199673e-07,
+          "finite": true,
+          "max_absolute_error": 3.818422555923462e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.12324997782707214,
+          "relative_l2": 8.900940185637906e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.q_proj.weight": {
+          "actual_l2": 1.2622270584106445,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 1.179112700810947e-06,
+          "finite": true,
+          "max_absolute_error": 4.936009645462036e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.262227177619934,
+          "relative_l2": 9.34152521604147e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.attn_norm.weight": {
+          "actual_l2": 0.092124342918396,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 6.511764638617024e-08,
+          "finite": true,
+          "max_absolute_error": 1.7869751900434494e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.092124342918396,
+          "relative_l2": 7.068451651682512e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.attn_out.weight": {
+          "actual_l2": 2.046415090560913,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 9.356550094707927e-07,
+          "finite": true,
+          "max_absolute_error": 4.470348358154297e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.046415090560913,
+          "relative_l2": 4.572166291122951e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_norm.weight": {
+          "actual_l2": 0.07895085960626602,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 5.93423621353395e-08,
+          "finite": true,
+          "max_absolute_error": 2.514570951461792e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.07895085960626602,
+          "relative_l2": 7.516366817446244e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_out.weight": {
+          "actual_l2": 3.5897915363311768,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 1.8641162569110747e-06,
+          "finite": true,
+          "max_absolute_error": 6.705522537231445e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 3.5897912979125977,
+          "relative_l2": 5.192826273758662e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_proj.weight": {
+          "actual_l2": 0.9371445178985596,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 5.292908440424071e-07,
+          "finite": true,
+          "max_absolute_error": 1.6763806343078613e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.9371446371078491,
+          "relative_l2": 5.647909864542018e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.k_norm.weight": {
+          "actual_l2": 0.03544003143906593,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 3.14925010513889e-08,
+          "finite": true,
+          "max_absolute_error": 8.847564458847046e-09,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.03544003143906593,
+          "relative_l2": 8.886138011907736e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.kv_proj.weight": {
+          "actual_l2": 1.105330228805542,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 5.652124173138873e-07,
+          "finite": true,
+          "max_absolute_error": 2.2351741790771484e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.1053301095962524,
+          "relative_l2": 5.113516879770372e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.q_norm.weight": {
+          "actual_l2": 0.03544003143906593,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 3.193047248828407e-08,
+          "finite": true,
+          "max_absolute_error": 1.0710209608078003e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.03544003143906593,
+          "relative_l2": 9.009719007496918e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.q_proj.weight": {
+          "actual_l2": 0.41865789890289307,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 3.5790029073723417e-07,
+          "finite": true,
+          "max_absolute_error": 1.5366822481155396e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.41865789890289307,
+          "relative_l2": 8.548752852272077e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.ff_out.weight": {
+          "actual_l2": 2.3791987895965576,
+          "atol": 2e-06,
+          "coordinates": 7680,
+          "error_l2": 8.964156563706638e-07,
+          "finite": true,
+          "max_absolute_error": 9.685754776000977e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.3791987895965576,
+          "relative_l2": 3.767720714596823e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.ln_f.weight": {
+          "actual_l2": 0.241762176156044,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 9.036855175281744e-08,
+          "finite": true,
+          "max_absolute_error": 2.0023435354232788e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.2417622059583664,
+          "relative_l2": 3.7379106214963854e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.wte.weight": {
+          "actual_l2": 2.8157079219818115,
+          "atol": 2e-06,
+          "coordinates": 7680,
+          "error_l2": 2.1216180812189123e-06,
+          "finite": true,
+          "max_absolute_error": 2.2351741790771484e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.8157083988189697,
+          "relative_l2": 7.534935372245261e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.0.weight": {
+          "actual_l2": 0.0030811221804469824,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 2.176155478039732e-09,
+          "finite": true,
+          "max_absolute_error": 9.458744898438454e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.0030811219476163387,
+          "relative_l2": 7.062867082308378e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.2.weight": {
+          "actual_l2": 0.003002936951816082,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 2.0957844348856725e-09,
+          "finite": true,
+          "max_absolute_error": 1.255102688446641e-10,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.003002936951816082,
+          "relative_l2": 6.97911567413431e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.4.weight": {
+          "actual_l2": 0.0028074667789041996,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 1.9930110894961217e-09,
+          "finite": true,
+          "max_absolute_error": 8.003553375601768e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.002807466546073556,
+          "relative_l2": 7.098966476674464e-07,
+          "rtol": 2e-05
+        },
+        "predictor.norm_x.weight": {
+          "actual_l2": 6.96022980264388e-05,
+          "atol": 2e-06,
+          "coordinates": 256,
+          "error_l2": 4.462691674533836e-11,
+          "finite": true,
+          "max_absolute_error": 1.6370904631912708e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 6.960227619856596e-05,
+          "relative_l2": 6.411703637108613e-07,
+          "rtol": 2e-05
+        }
+      },
+      "length": 12,
+      "outputs": {
+        "latent_loss": {
+          "actual_l2": 0.5290846824645996,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 0.0,
+          "finite": true,
+          "max_absolute_error": 0.0,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.5290846824645996,
+          "relative_l2": 0.0,
+          "rtol": 2e-05
+        },
+        "logits": {
+          "actual_l2": 37.22870635986328,
+          "atol": 2e-06,
+          "coordinates": 1440,
+          "error_l2": 1.4498074961011298e-05,
+          "finite": true,
+          "max_absolute_error": 1.6689300537109375e-06,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 37.22870635986328,
+          "relative_l2": 3.8943268188985067e-07,
+          "rtol": 2e-05
+        },
+        "loss": {
+          "actual_l2": 4.872222423553467,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_absolute_error": 4.76837158203125e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 4.872221946716309,
+          "relative_l2": 9.786852147088558e-08,
+          "rtol": 2e-05
+        },
+        "state_loss": {
+          "actual_l2": 4.343137741088867,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_absolute_error": 4.76837158203125e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 4.343137264251709,
+          "relative_l2": 1.0979094815353035e-07,
+          "rtol": 2e-05
+        }
+      },
+      "passed": true,
+      "scope": "Existing FP32 atol2e-6/rtol2e-5; independent first-window scan and ordinary-autograd full second layer",
+      "width": 128
+    },
+    "36": {
+      "batch": 2,
+      "gradients": {
+        "backbone.transformer.blocks.0.attn_norm.weight": {
+          "actual_l2": 0.1955549120903015,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.6519678069926158e-07,
+          "finite": true,
+          "max_absolute_error": 3.91155481338501e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.1955549120903015,
+          "relative_l2": 8.447590445745416e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.attn_out.weight": {
+          "actual_l2": 2.6946215629577637,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 2.0029374354635365e-06,
+          "finite": true,
+          "max_absolute_error": 7.078051567077637e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.6946218013763428,
+          "relative_l2": 7.433092964810454e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_norm.weight": {
+          "actual_l2": 0.11576292663812637,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 9.099343856178166e-08,
+          "finite": true,
+          "max_absolute_error": 2.421438694000244e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.11576294153928757,
+          "relative_l2": 7.860325364218596e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_out.weight": {
+          "actual_l2": 3.4544565677642822,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 2.517983375582844e-06,
+          "finite": true,
+          "max_absolute_error": 5.587935447692871e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 3.4544568061828613,
+          "relative_l2": 7.28908629303485e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.ff_proj.weight": {
+          "actual_l2": 1.245641827583313,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 9.724647043185541e-07,
+          "finite": true,
+          "max_absolute_error": 2.2584572434425354e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.245641827583313,
+          "relative_l2": 7.806936815900334e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.k_norm.weight": {
+          "actual_l2": 0.08004436641931534,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 6.896392079625002e-08,
+          "finite": true,
+          "max_absolute_error": 2.0023435354232788e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.08004438132047653,
+          "relative_l2": 8.615710391980759e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.kv_proj.weight": {
+          "actual_l2": 2.045496702194214,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 1.554694563310477e-06,
+          "finite": true,
+          "max_absolute_error": 5.21540641784668e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.045496702194214,
+          "relative_l2": 7.600572328680602e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.q_norm.weight": {
+          "actual_l2": 0.08004436641931534,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 6.7743840759249e-08,
+          "finite": true,
+          "max_absolute_error": 2.1653249859809875e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.08004438132047653,
+          "relative_l2": 8.46328494788667e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.0.q_proj.weight": {
+          "actual_l2": 0.8849160671234131,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 7.586613719468005e-07,
+          "finite": true,
+          "max_absolute_error": 3.119930624961853e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.8849161267280579,
+          "relative_l2": 8.573257386006974e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.attn_norm.weight": {
+          "actual_l2": 0.06225969269871712,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 3.175114571263293e-08,
+          "finite": true,
+          "max_absolute_error": 1.1175870895385742e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.06225969269871712,
+          "relative_l2": 5.099791588480998e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.attn_out.weight": {
+          "actual_l2": 1.2457915544509888,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 5.15536214606982e-07,
+          "finite": true,
+          "max_absolute_error": 2.9802322387695312e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.2457915544509888,
+          "relative_l2": 4.1382221027672244e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_norm.weight": {
+          "actual_l2": 0.04696127772331238,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 2.807952625971666e-08,
+          "finite": true,
+          "max_absolute_error": 6.51925802230835e-09,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.04696127399802208,
+          "relative_l2": 5.979293973349044e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_out.weight": {
+          "actual_l2": 2.1855993270874023,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 1.1073540235884138e-06,
+          "finite": true,
+          "max_absolute_error": 3.3527612686157227e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 2.1855995655059814,
+          "relative_l2": 5.066591525113401e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.ff_proj.weight": {
+          "actual_l2": 0.5410355925559998,
+          "atol": 2e-06,
+          "coordinates": 65536,
+          "error_l2": 3.2528794235986425e-07,
+          "finite": true,
+          "max_absolute_error": 1.1175870895385742e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.5410355925559998,
+          "relative_l2": 6.012320572536e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.k_norm.weight": {
+          "actual_l2": 0.018867293372750282,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.47478473877527e-08,
+          "finite": true,
+          "max_absolute_error": 3.725290298461914e-09,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.018867291510105133,
+          "relative_l2": 7.816621362877602e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.kv_proj.weight": {
+          "actual_l2": 0.6431950926780701,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 3.001147490522271e-07,
+          "finite": true,
+          "max_absolute_error": 1.1175870895385742e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.6431950926780701,
+          "relative_l2": 4.665998737686881e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.q_norm.weight": {
+          "actual_l2": 0.018867293372750282,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 1.481146583159898e-08,
+          "finite": true,
+          "max_absolute_error": 3.6670826375484467e-09,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.018867291510105133,
+          "relative_l2": 7.850340269384245e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.blocks.1.q_proj.weight": {
+          "actual_l2": 0.21146415174007416,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 1.7778172889393318e-07,
+          "finite": true,
+          "max_absolute_error": 8.614733815193176e-09,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.21146415174007416,
+          "relative_l2": 8.407180480995073e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.ff_out.weight": {
+          "actual_l2": 1.443532109260559,
+          "atol": 2e-06,
+          "coordinates": 7680,
+          "error_l2": 5.370829398998467e-07,
+          "finite": true,
+          "max_absolute_error": 3.4458935260772705e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.4435322284698486,
+          "relative_l2": 3.720616203139138e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.ln_f.weight": {
+          "actual_l2": 0.1721242070198059,
+          "atol": 2e-06,
+          "coordinates": 128,
+          "error_l2": 5.2543434492235974e-08,
+          "finite": true,
+          "max_absolute_error": 1.1175870895385742e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.1721242070198059,
+          "relative_l2": 3.052646423300003e-07,
+          "rtol": 2e-05
+        },
+        "backbone.transformer.wte.weight": {
+          "actual_l2": 1.7046030759811401,
+          "atol": 2e-06,
+          "coordinates": 7680,
+          "error_l2": 1.291298303840449e-06,
+          "finite": true,
+          "max_absolute_error": 1.0803341865539551e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 1.7046031951904297,
+          "relative_l2": 7.575360104239343e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.0.weight": {
+          "actual_l2": 0.0020379582419991493,
+          "atol": 2e-06,
+          "coordinates": 32768,
+          "error_l2": 1.2176644137440462e-09,
+          "finite": true,
+          "max_absolute_error": 4.729372449219227e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.0020379582419991493,
+          "relative_l2": 5.974923276885054e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.2.weight": {
+          "actual_l2": 0.0019417389994487166,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 1.1927705489966911e-09,
+          "finite": true,
+          "max_absolute_error": 5.547917680814862e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.0019417388830333948,
+          "relative_l2": 6.142795817805011e-07,
+          "rtol": 2e-05
+        },
+        "predictor.mlp.4.weight": {
+          "actual_l2": 0.0019572495948523283,
+          "atol": 2e-06,
+          "coordinates": 16384,
+          "error_l2": 1.1921539311288143e-09,
+          "finite": true,
+          "max_absolute_error": 4.001776687800884e-11,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.0019572495948523283,
+          "relative_l2": 6.09096527220771e-07,
+          "rtol": 2e-05
+        },
+        "predictor.norm_x.weight": {
+          "actual_l2": 3.846568870358169e-05,
+          "atol": 2e-06,
+          "coordinates": 256,
+          "error_l2": 2.2832185794796622e-11,
+          "finite": true,
+          "max_absolute_error": 5.9117155615240335e-12,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 3.8465681427624077e-05,
+          "relative_l2": 5.935728927032531e-07,
+          "rtol": 2e-05
+        }
+      },
+      "length": 36,
+      "outputs": {
+        "latent_loss": {
+          "actual_l2": 0.5032608509063721,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 5.960464477539063e-08,
+          "finite": true,
+          "max_absolute_error": 5.960464477539063e-08,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 0.5032609105110168,
+          "relative_l2": 1.1843686551150454e-07,
+          "rtol": 2e-05
+        },
+        "logits": {
+          "actual_l2": 63.23575210571289,
+          "atol": 2e-06,
+          "coordinates": 4320,
+          "error_l2": 2.533983024477493e-05,
+          "finite": true,
+          "max_absolute_error": 1.7881393432617188e-06,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 63.235755920410156,
+          "relative_l2": 4.0071997046525656e-07,
+          "rtol": 2e-05
+        },
+        "loss": {
+          "actual_l2": 5.182241439819336,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_absolute_error": 4.76837158203125e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 5.182240962982178,
+          "relative_l2": 9.201369863139745e-08,
+          "rtol": 2e-05
+        },
+        "state_loss": {
+          "actual_l2": 4.678980350494385,
+          "atol": 2e-06,
+          "coordinates": 1,
+          "error_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_absolute_error": 4.76837158203125e-07,
+          "mismatched_coordinates": 0,
+          "passed": true,
+          "reference_l2": 4.678979873657227,
+          "relative_l2": 1.0191049568042172e-07,
+          "rtol": 2e-05
+        }
+      },
+      "passed": true,
+      "scope": "Existing FP32 atol2e-6/rtol2e-5; independent first-window scan and ordinary-autograd full second layer",
+      "width": 128
+    }
+  },
+  "hardware": {
+    "capability": [
+      9,
+      0
+    ],
+    "device": "cuda:0",
+    "name": "NVIDIA H100 80GB HBM3",
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-4dc91c86-80e3-5bdd-e590-dde0380a8c57, 81559 MiB, 580.173.02",
+    "total_memory_bytes": 85017493504,
+    "used_gpu_count": 1,
+    "visible_gpu_count": 1
+  },
+  "latent_rollout_evaluated": false,
+  "runtime": {
+    "autocast": false,
+    "compile": false,
+    "cuda": "13.3",
+    "cuda_graphs": false,
+    "deterministic_algorithms": true,
+    "float32_matmul_precision": "highest",
+    "ordinary_attention_backend": "math",
+    "precision": "fp32",
+    "reference_eager": true,
+    "tf32": false,
+    "torch": "2.13.0a0+8145d630e8.nv26.06"
+  },
+  "schema": "rt-a5-depth-order-validation-v1",
+  "scope": "Discarded synthetic fixtures; bounded FP32 checks only",
+  "source_files": {
+    "configs/rt_a5/base.json": "c397c666829e85d03a604745aa4315fa6b47e8796b421266bb1a53b9578d7f5e",
+    "configs/rt_a5/rt_d128.json": "74fd42bfc6f14157cd94c27f8b055e4ad7731b70028fd7625758b619814804f7",
+    "configs/rt_a5/rt_d256.json": "db54f2dc138662e3359b4e0aa335f0b9c98b1eb70a21d4f411c3d5e6f678c2f0",
+    "configs/rt_a5/rt_d512.json": "8cfa77a67a208948069dd7df1effcd474f9325027774645534e3e6472379c920",
+    "configs/rt_a5/seq_d128.json": "a59d8a9a8c48578917eabde8536d6045baec41dfaa8cdc422821a34a04b5e1e4",
+    "configs/rt_a5/seq_d256.json": "ee849ad7fe6ca2290e477db5c6db23340de8494186a5ba7297b2349da156e176",
+    "configs/rt_a5/seq_d512.json": "f98d4f1df3c3d960d9f3fa116e524c76db4bb562c1ee4e9df36f55ec4c78710f",
+    "configs/rt_a5_depth_order/base.json": "49edf25d27d9ea9c44591fb329d9aa5b4396aba1d37eabf9b87d0ce8644a5ee2",
+    "configs/rt_a5_nextlat/base.json": "ac77763625a23820aa2e23e5522ac5a860f912e2b06a453e6d1e84653b44f91e",
+    "configs/rt_a5_nextlat_variant/base.json": "fe8aa00ca53db359dc31c66472ee498fcb828c8b83660aca995c87b97301a6e2",
+    "configs/rt_a5_window/base.json": "4abe5c2407c8db69155ae8f18dcc8061fa2aeadf3c6a6482d64f093b390274a4",
+    "recurrent-transformer/olmo/__init__.py": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2",
+    "recurrent-transformer/olmo/aliases.py": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744",
+    "recurrent-transformer/olmo/beam_search.py": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3",
+    "recurrent-transformer/olmo/cdrm.py": "010945a5af59bad50736b1a7b8848d6e84109f7f900d280294b919e3d8c4f002",
+    "recurrent-transformer/olmo/cdrm_tiled.py": "51f9f7dc6fbb0f278989abe3b0c4e3ef02e09eec6b16eb070684adea99b02662",
+    "recurrent-transformer/olmo/checkpoint.py": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d",
+    "recurrent-transformer/olmo/checkpoint_conversion.py": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d",
+    "recurrent-transformer/olmo/config.py": "c019ee9fb70e47d778f652ed7b410984bc65a75a6f829dc23a460a8d9262e904",
+    "recurrent-transformer/olmo/data/__init__.py": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041",
+    "recurrent-transformer/olmo/data/collator.py": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b",
+    "recurrent-transformer/olmo/data/custom_datasets.py": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223",
+    "recurrent-transformer/olmo/data/iterable_dataset.py": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5",
+    "recurrent-transformer/olmo/data/memmap_dataset.py": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81",
+    "recurrent-transformer/olmo/data/named_data_mixes.py": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c",
+    "recurrent-transformer/olmo/data/util.py": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b",
+    "recurrent-transformer/olmo/efficient_utils.py": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260",
+    "recurrent-transformer/olmo/eval/__init__.py": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a",
+    "recurrent-transformer/olmo/eval/downstream.py": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f",
+    "recurrent-transformer/olmo/eval/evaluator.py": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2",
+    "recurrent-transformer/olmo/exceptions.py": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679",
+    "recurrent-transformer/olmo/initialization.py": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e",
+    "recurrent-transformer/olmo/model.py": "dfc37f10c8da1480265e8b90c9245a5120c8e596d6550057d9769c588eb2c9f5",
+    "recurrent-transformer/olmo/optim.py": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487",
+    "recurrent-transformer/olmo/ortho_basis.py": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d",
+    "recurrent-transformer/olmo/safetensors_util.py": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c",
+    "recurrent-transformer/olmo/tokenizer.py": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e",
+    "recurrent-transformer/olmo/torch_util.py": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc",
+    "recurrent-transformer/olmo/train.py": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c",
+    "recurrent-transformer/olmo/util.py": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c",
+    "recurrent-transformer/olmo/version.py": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b",
+    "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+    "scripts/rt_a5_common.py": "e3a86a9d81b2b141d040594f8039f5615d80ed1649bef6c28b1f3f2ccf406f0c",
+    "scripts/rt_a5_data.py": "dc857d457a70311899db4db7690a0d22e6f8a5c842341693b25fea9e16ffff23",
+    "scripts/rt_a5_depth_order.py": "a977e90b6facdd093feb3a126800dcc8df42c0121a66b7daa6dbed6bc36ef0ba",
+    "scripts/rt_a5_depth_order_train.py": "b788a31b49a3c661df7e0c6f6ad3c61c3cb02e18b80e1a15b86da6298d10fc76",
+    "scripts/rt_a5_depth_order_validate.py": "6fac1fc22b062fb4903456a90cb518981c35227452f2097a2beae0f55e6a1a83",
+    "scripts/rt_a5_eval.py": "347ca00b36732b3aa4e651f65ee604aa3f7ad27d843159152239e61fecfd6587",
+    "scripts/rt_a5_nextlat.py": "342345de0bb4bfe0fcdda17145dadcd34a5e2ad9f548af687d688edebf394324",
+    "scripts/rt_a5_nextlat_train.py": "3b299c7baa9cccde485dba5f805d1d519db2910b77f7af03306860b0e89c8265",
+    "scripts/rt_a5_nextlat_variant.py": "14ca791eea32edf3e56ede9aa5a896229830c0e33cde2c62aad02bdab920a64a",
+    "scripts/rt_a5_nextlat_variant_train.py": "8b506fb182c824c7598182859cec11e60ce1ff7ba28fa9f9603a5f6aa2846f63",
+    "scripts/rt_a5_train.py": "235881bb7ecf4f64a799117940b7913b913e89e745888b7f99e93d2dc69844dc",
+    "scripts/rt_a5_validate.py": "db7f3aa9a5604fdceb0a7132293b8b4d85a012e7d4293274ee955898be6a744c",
+    "scripts/rt_a5_window.py": "17203d3751aa07f08c3b72852c56e86142378874aef5e722f3b11da11de5e8a2",
+    "scripts/rt_a5_window_reference.py": "9e20ff28f449343873510c62f44a3ecfb5bd8df7ff2a855237ce8d5de47db6c8",
+    "scripts/rt_a5_window_train.py": "c4836b33bcf2f3201510dcdd8cc63a2a4a0464ce94744fe29a8c9a9b041332d8",
+    "scripts/stage_a_common.py": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8"
+  },
+  "source_sha256": "b98ec245b855bac2c82c86a33a4a1f21ec41d61b4d807254a005d6356a2f39e2",
+  "status": "passed",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260914T212935Z-nextlat-depth-order80k",
+    "mode": "online",
+    "name": "nextlat-depth-order-bounded-preflight",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "p0oew0p5",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/p0oew0p5",
+    "status": "synced",
+    "system_stats": false
+  }
+}

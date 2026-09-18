@@ -1,0 +1,116 @@
+{
+  "artifacts": {
+    "length-boundary.pdf": {
+      "bytes": 22680,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/length-boundary.pdf",
+      "sha256": "996f3006e865b8e4c1b015c7e0944154f01681ab4d9262e7a61b7b237affaa4f"
+    },
+    "length-boundary.png": {
+      "bytes": 99803,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/length-boundary.png",
+      "sha256": "02ed77a6c32bcb0eb975564a445a4b65d7f2c5a7ad1e48dda9c64926f56e88bc"
+    },
+    "length-full.pdf": {
+      "bytes": 22839,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/length-full.pdf",
+      "sha256": "18e58e53d4062e412ba3fe02e4b61d28db94d913e45741ec2c425570df36da56"
+    },
+    "length-full.png": {
+      "bytes": 111762,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/length-full.png",
+      "sha256": "6862570aed0b71bcf1fa42558ee6230baea2a57f7fe27a7ac320d51d0bd3c2b4"
+    },
+    "metrics.csv": {
+      "bytes": 75123,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/metrics.csv",
+      "sha256": "d7fdbe5b80aa8ecee299153b07228639b97616da6270e526e1a5ac4aaf6c353a"
+    },
+    "outcome.md": {
+      "bytes": 1722,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/outcome.md",
+      "sha256": "02bae68f5b0cc7e47f6273d9eab731ed02a685b8c3006ba900afa9b038ebf491"
+    },
+    "report.md": {
+      "bytes": 2459,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/report.md",
+      "sha256": "47ac08ce44b5a6b349d59f09d3eb9f3f043812813c1c084c5eedc56f5b7fe89a"
+    },
+    "source/scripts/experiment_tracking.py": {
+      "bytes": 4662,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/experiment_tracking.py",
+      "sha256": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc"
+    },
+    "source/scripts/rt_a5_l1r_depth_extension_report.py": {
+      "bytes": 21090,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/rt_a5_l1r_depth_extension_report.py",
+      "sha256": "ab887d7025b8331e02478444ea8e4492a53429add93006a05fa0288152a2a580"
+    },
+    "source/scripts/rt_a5_l1r_depth_report.py": {
+      "bytes": 23216,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/rt_a5_l1r_depth_report.py",
+      "sha256": "6d46e33fa27038c33ab305bef67bb4cf3b329bbdd31b373dc410b5ddd152d280"
+    },
+    "source/scripts/rt_a5_length_report.py": {
+      "bytes": 22784,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/rt_a5_length_report.py",
+      "sha256": "7ed4e00462f742de2403d499aea58c2d5a61005cf788afa52e8b2c8273862a9e"
+    },
+    "source/scripts/rt_a5_nextlat_report.py": {
+      "bytes": 33272,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/rt_a5_nextlat_report.py",
+      "sha256": "b3c2d616decbcc4915b9b349265d59c96c1b40694265bfa2002cdcd3934b3903"
+    },
+    "source/scripts/rt_a5_report.py": {
+      "bytes": 18609,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/source/scripts/rt_a5_report.py",
+      "sha256": "7148bca5f736d924ca5e61880c4855d8a6b255504473af8c15fc8578054e196c"
+    },
+    "summary.json": {
+      "bytes": 818416,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/summary.json",
+      "sha256": "9d9eacf1fe06cc3f884ab72a5e146fe9de55b9af1bfb9b4070c3e5ddf376ab28"
+    },
+    "training-state-ce.pdf": {
+      "bytes": 16735,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/training-state-ce.pdf",
+      "sha256": "723f1b61bcb836778ce4b288b540e79d94e8562be15c1e19890a0abdb6efd007"
+    },
+    "training-state-ce.png": {
+      "bytes": 85381,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/training-state-ce.png",
+      "sha256": "8b1f8fbb5ce00c6bf4279958cffd7775a4b53274d14376596d89e5dd55bedb87"
+    },
+    "whole-word-vs-updates.pdf": {
+      "bytes": 17502,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/whole-word-vs-updates.pdf",
+      "sha256": "ea510f774b96852753cc5874578f56767121421154ce41eb23f5e24607b36b16"
+    },
+    "whole-word-vs-updates.png": {
+      "bytes": 95448,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat20k/whole-word-vs-updates.png",
+      "sha256": "0af5688dd1d3e0ce406fc49e91d85a6c21705e5e4f304a6ea1b1eca3bfe5f13b"
+    }
+  },
+  "figures": [
+    "length-full",
+    "length-boundary",
+    "whole-word-vs-updates",
+    "training-state-ce"
+  ],
+  "primary_update": 20000,
+  "schema": "rt-a5-l1r-depth-extension-comparison-v1",
+  "status": "complete",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260915T144415Z-l1r-six-layer-nextlat20k",
+    "mode": "online",
+    "name": "first-window-rt-nextlat-six-vs-two-layers-20k-extension",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "pmajaq1r",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/pmajaq1r",
+    "status": "synced",
+    "system_stats": false
+  }
+}

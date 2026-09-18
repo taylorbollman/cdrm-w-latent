@@ -1,0 +1,21 @@
+{
+  "schema": "rt-a5-linear-input-config-v1",
+  "variant": "input",
+  "n_layers": 4,
+  "injection_layer": 1,
+  "coefficient_learned": false,
+  "schedule": {
+    "kind": "linear_completed_update",
+    "maximum_coefficient": 0.01,
+    "warmup_updates": 50000,
+    "power": 1,
+    "formula": "0.01 * min(max(completed_update, 0) / 50000, 1)",
+    "timing": "set to lambda(s) before training update s; evaluation and checkpoint s use lambda(s)",
+    "initial_coefficient": 0.0,
+    "learned": false
+  },
+  "initialization_pairing": "Exact original four-layer input-injection backbone, predictor and independently seeded projection; only the nonlearned linear coefficient schedule changes",
+  "initialization_metadata": "immutable construction-time provenance; checkpoint records current schedule position separately",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false
+}

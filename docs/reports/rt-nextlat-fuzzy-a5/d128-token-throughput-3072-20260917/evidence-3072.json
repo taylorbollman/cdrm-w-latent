@@ -1,0 +1,2460 @@
+{
+  "candidates": [
+    {
+      "batch_per_task": 3072,
+      "checkpoint_written": false,
+      "completed_timed_updates": 30,
+      "completed_updates": 40,
+      "completed_warmup_updates": 10,
+      "examples_seen_per_task": 122880,
+      "finite_state": {
+        "adam_finite_fp32": true,
+        "adam_parameter_states": 25,
+        "gradients_finite_fp32": true,
+        "parameter_tensors": 25,
+        "parameters_finite_fp32": true
+      },
+      "first_128_ordered_rows_sha256": {
+        "a5": "4c46b756838708262d84fa69598680def85484fdd887223d0039c12da7856cc1",
+        "fuzzy": "9e5c29b6eaa6c9acdece3f21fdb634605c8b3f83a660be8ee35676b6c1b43fc1"
+      },
+      "history": [
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 1,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 3072,
+          "examples_total": 6144,
+          "grad_norm": 2.203343629837036,
+          "loss": 4.409699887037277,
+          "order_chains": {
+            "a5": "b39ce3bd2ff3a1ae7bf8a0b4d54451fd78537073d0b9ac791f0b859ada7d9bae",
+            "fuzzy": "49329825b6550f10bb3936fc65b9e6bc609053b246818dea393a02bdc582bd75"
+          },
+          "phase": "warmup",
+          "phase_update": 1,
+          "seconds": 3.5739026049996028,
+          "tasks": {
+            "a5": {
+              "ce": 4.555212020874023,
+              "examples": 3072,
+              "latent": 0.5388489365577698,
+              "loss": 5.094060957431793,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016737196180555556,
+              "weighted_latent": 0.5388489365577698
+            },
+            "fuzzy": {
+              "ce": 3.206894874572754,
+              "examples": 3072,
+              "latent": 0.5184439420700073,
+              "loss": 3.7253388166427612,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.06998372395833333,
+              "weighted_latent": 0.5184439420700073
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 2,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 6144,
+          "examples_total": 6144,
+          "grad_norm": 1.6381713151931763,
+          "loss": 4.340426325798035,
+          "order_chains": {
+            "a5": "cab90c8d4d78ebc01701690d12d7a0cea9549d13eb78b98eccfac5938a6e95be",
+            "fuzzy": "69c3072814f6a8fd277285352e9f7a8c21632f59aa56fc31041fb874457bcdab"
+          },
+          "phase": "warmup",
+          "phase_update": 2,
+          "seconds": 2.150739759003045,
+          "tasks": {
+            "a5": {
+              "ce": 4.540500640869141,
+              "examples": 3072,
+              "latent": 0.5280699133872986,
+              "loss": 5.068570554256439,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016737196180555556,
+              "weighted_latent": 0.5280699133872986
+            },
+            "fuzzy": {
+              "ce": 3.1070451736450195,
+              "examples": 3072,
+              "latent": 0.5052369236946106,
+              "loss": 3.61228209733963,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.06958414713541666,
+              "weighted_latent": 0.5052369236946106
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 3,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 9216,
+          "examples_total": 6144,
+          "grad_norm": 1.4799612760543823,
+          "loss": 4.280440554022789,
+          "order_chains": {
+            "a5": "7e56f7071297c569513772cb9340b76a21f1d51727391c8b0de434f8ae040492",
+            "fuzzy": "152128cdd22a71ca84a6cf5538cc812713441a15c3763e10a982449f586cbfa8"
+          },
+          "phase": "warmup",
+          "phase_update": 3,
+          "seconds": 2.187926421989687,
+          "tasks": {
+            "a5": {
+              "ce": 4.520734786987305,
+              "examples": 3072,
+              "latent": 0.5151401162147522,
+              "loss": 5.035874903202057,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016872829861111112,
+              "weighted_latent": 0.5151401162147522
+            },
+            "fuzzy": {
+              "ce": 3.0432467460632324,
+              "examples": 3072,
+              "latent": 0.4817594587802887,
+              "loss": 3.525006204843521,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.06949055989583333,
+              "weighted_latent": 0.4817594587802887
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 4,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 12288,
+          "examples_total": 6144,
+          "grad_norm": 1.4586905241012573,
+          "loss": 4.2293170392513275,
+          "order_chains": {
+            "a5": "b2c82c2ac1bc9897cd20ae3fb4082eac89a9b201a149c45a5a8dda2f9300f592",
+            "fuzzy": "b7db9f0e327781e14bf7620b741336a2f4523a72c339dd8c99ac4fab48e1b7f4"
+          },
+          "phase": "warmup",
+          "phase_update": 4,
+          "seconds": 2.1154741589998594,
+          "tasks": {
+            "a5": {
+              "ce": 4.511711597442627,
+              "examples": 3072,
+              "latent": 0.4978782832622528,
+              "loss": 5.00958988070488,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016465928819444444,
+              "weighted_latent": 0.4978782832622528
+            },
+            "fuzzy": {
+              "ce": 2.9950666427612305,
+              "examples": 3072,
+              "latent": 0.4539775550365448,
+              "loss": 3.4490441977977753,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07018636067708334,
+              "weighted_latent": 0.4539775550365448
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 5,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 15360,
+          "examples_total": 6144,
+          "grad_norm": 1.429190993309021,
+          "loss": 4.17181171476841,
+          "order_chains": {
+            "a5": "0b474aa7c58031e81f1828f8abad5bb4470fc2f26a6bb126d3948709c4a6cea6",
+            "fuzzy": "da15cd76b1af28651450df0b03a730912bbfa46ff1c60b1a9b06f2fed8bd5f52"
+          },
+          "phase": "warmup",
+          "phase_update": 5,
+          "seconds": 2.1246774699975504,
+          "tasks": {
+            "a5": {
+              "ce": 4.488124370574951,
+              "examples": 3072,
+              "latent": 0.4775293171405792,
+              "loss": 4.96565368771553,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016194661458333332,
+              "weighted_latent": 0.4775293171405792
+            },
+            "fuzzy": {
+              "ce": 2.9533605575561523,
+              "examples": 3072,
+              "latent": 0.4246091842651367,
+              "loss": 3.377969741821289,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07228190104166667,
+              "weighted_latent": 0.4246091842651367
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 6,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 18432,
+          "examples_total": 6144,
+          "grad_norm": 1.3754163980484009,
+          "loss": 4.115487888455391,
+          "order_chains": {
+            "a5": "24faf98cc1228244bae423ecca3c39068b5acd711be8e26163563934dff588b3",
+            "fuzzy": "dadbd038f5f1cb17ff8c7b208c728e58434eebd2416788b4a1e1de034b4826bd"
+          },
+          "phase": "warmup",
+          "phase_update": 6,
+          "seconds": 2.121983270000783,
+          "tasks": {
+            "a5": {
+              "ce": 4.464345455169678,
+              "examples": 3072,
+              "latent": 0.4573161005973816,
+              "loss": 4.921661555767059,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016248914930555556,
+              "weighted_latent": 0.4573161005973816
+            },
+            "fuzzy": {
+              "ce": 2.9143171310424805,
+              "examples": 3072,
+              "latent": 0.39499709010124207,
+              "loss": 3.3093142211437225,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07389567057291667,
+              "weighted_latent": 0.39499709010124207
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 7,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 21504,
+          "examples_total": 6144,
+          "grad_norm": 1.3022356033325195,
+          "loss": 4.067663490772247,
+          "order_chains": {
+            "a5": "2718fe204eee8fcf77c29eddf6a44128184c94c6e155a1f9dc16e8887fa6c88d",
+            "fuzzy": "e63042ac0955dc91f3bfabf94564a719245fa54b221bd81e0ada36437c5b4d40"
+          },
+          "phase": "warmup",
+          "phase_update": 7,
+          "seconds": 2.1152886689960724,
+          "tasks": {
+            "a5": {
+              "ce": 4.455546855926514,
+              "examples": 3072,
+              "latent": 0.4359254240989685,
+              "loss": 4.891472280025482,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016221788194444444,
+              "weighted_latent": 0.4359254240989685
+            },
+            "fuzzy": {
+              "ce": 2.8794429302215576,
+              "examples": 3072,
+              "latent": 0.36441177129745483,
+              "loss": 3.2438547015190125,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07557373046875,
+              "weighted_latent": 0.36441177129745483
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 8,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 24576,
+          "examples_total": 6144,
+          "grad_norm": 1.2081822156906128,
+          "loss": 4.016202136874199,
+          "order_chains": {
+            "a5": "d1c10eff036e6dbf2aa3fe47bc394fd573c24f003ff4d4c354f1f8d03034c926",
+            "fuzzy": "7a506f2ee9b7b3b37729b95d026d313d07bcd6b9118742cbf1fe37ca48b7c683"
+          },
+          "phase": "warmup",
+          "phase_update": 8,
+          "seconds": 2.1571354210027494,
+          "tasks": {
+            "a5": {
+              "ce": 4.433825969696045,
+              "examples": 3072,
+              "latent": 0.41432058811187744,
+              "loss": 4.848146557807922,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.016547309027777776,
+              "weighted_latent": 0.41432058811187744
+            },
+            "fuzzy": {
+              "ce": 2.8488402366638184,
+              "examples": 3072,
+              "latent": 0.3354174792766571,
+              "loss": 3.1842577159404755,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07662353515625,
+              "weighted_latent": 0.3354174792766571
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 9,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 27648,
+          "examples_total": 6144,
+          "grad_norm": 1.1476490497589111,
+          "loss": 3.9725027084350586,
+          "order_chains": {
+            "a5": "9f6073bdc160cccc1f38a041b6d57368dd3fff6a90ed5a5868affa429c72a2a1",
+            "fuzzy": "e6b86e12e65388777020ec4d7080ab2b5f9e419de01abec9021862bbf3bbc4e4"
+          },
+          "phase": "warmup",
+          "phase_update": 9,
+          "seconds": 2.0952374799962854,
+          "tasks": {
+            "a5": {
+              "ce": 4.421965599060059,
+              "examples": 3072,
+              "latent": 0.3913519084453583,
+              "loss": 4.813317507505417,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.018663194444444444,
+              "weighted_latent": 0.3913519084453583
+            },
+            "fuzzy": {
+              "ce": 2.8249576091766357,
+              "examples": 3072,
+              "latent": 0.3067303001880646,
+              "loss": 3.1316879093647003,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07784423828125,
+              "weighted_latent": 0.3067303001880646
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 10,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 30720,
+          "examples_total": 6144,
+          "grad_norm": 1.090532660484314,
+          "loss": 3.924266040325165,
+          "order_chains": {
+            "a5": "7052509c4438945035e0931a08264d063da03fa63631498dff57a461447f639c",
+            "fuzzy": "873b0721784f79ea3916c4b0104a7c6ba0e51251a66f2b04365afc53469d3119"
+          },
+          "phase": "warmup",
+          "phase_update": 10,
+          "seconds": 2.075332405001973,
+          "tasks": {
+            "a5": {
+              "ce": 4.396853923797607,
+              "examples": 3072,
+              "latent": 0.36721813678741455,
+              "loss": 4.764072060585022,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.018581814236111112,
+              "weighted_latent": 0.36721813678741455
+            },
+            "fuzzy": {
+              "ce": 2.8048415184020996,
+              "examples": 3072,
+              "latent": 0.279618501663208,
+              "loss": 3.0844600200653076,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07785970052083334,
+              "weighted_latent": 0.279618501663208
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 11,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 33792,
+          "examples_total": 6144,
+          "grad_norm": 1.037261962890625,
+          "loss": 3.8856794387102127,
+          "order_chains": {
+            "a5": "eb6832b6630dce0b80778c0d02323ae88249d22202c5de39842606b3440fe2a0",
+            "fuzzy": "8aeca36e0473659f9f9edc76e702355fa57aeb6d74b77332386485e53d607b51"
+          },
+          "phase": "timed",
+          "phase_update": 1,
+          "seconds": 2.114742574005504,
+          "tasks": {
+            "a5": {
+              "ce": 4.386764049530029,
+              "examples": 3072,
+              "latent": 0.34506699442863464,
+              "loss": 4.731831043958664,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.020372178819444444,
+              "weighted_latent": 0.34506699442863464
+            },
+            "fuzzy": {
+              "ce": 2.7854011058807373,
+              "examples": 3072,
+              "latent": 0.25412672758102417,
+              "loss": 3.0395278334617615,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07862467447916667,
+              "weighted_latent": 0.25412672758102417
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 12,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 36864,
+          "examples_total": 6144,
+          "grad_norm": 0.9836616516113281,
+          "loss": 3.8438417613506317,
+          "order_chains": {
+            "a5": "77d865a39f2ad69554c5a57992aef224f62647d2e65af2118f0b285b3d84e71b",
+            "fuzzy": "50e34ec3afcdd858ec0d9ec22d2690393dd4e7669caf19a0efd3961b5bbaeea2"
+          },
+          "phase": "timed",
+          "phase_update": 2,
+          "seconds": 2.1144506780110532,
+          "tasks": {
+            "a5": {
+              "ce": 4.365851402282715,
+              "examples": 3072,
+              "latent": 0.3213072419166565,
+              "loss": 4.687158644199371,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.020589192708333332,
+              "weighted_latent": 0.3213072419166565
+            },
+            "fuzzy": {
+              "ce": 2.7704434394836426,
+              "examples": 3072,
+              "latent": 0.2300814390182495,
+              "loss": 3.000524878501892,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07890950520833333,
+              "weighted_latent": 0.2300814390182495
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 13,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 39936,
+          "examples_total": 6144,
+          "grad_norm": 0.9189157485961914,
+          "loss": 3.8064738139510155,
+          "order_chains": {
+            "a5": "dc3c4c3f2821d22a27ba1e71f49d83073897fa95cf61acf15fd925755dde3c4b",
+            "fuzzy": "e4a0b8138b4815851a59bc066ea59cea8a938fcb3e4a5a5a14fa3d3df663cd6b"
+          },
+          "phase": "timed",
+          "phase_update": 3,
+          "seconds": 2.1324053799908143,
+          "tasks": {
+            "a5": {
+              "ce": 4.350111961364746,
+              "examples": 3072,
+              "latent": 0.2982010245323181,
+              "loss": 4.648312985897064,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.019802517361111112,
+              "weighted_latent": 0.2982010245323181
+            },
+            "fuzzy": {
+              "ce": 2.756074905395508,
+              "examples": 3072,
+              "latent": 0.20855973660945892,
+              "loss": 2.9646346420049667,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07902913411458333,
+              "weighted_latent": 0.20855973660945892
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 14,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 43008,
+          "examples_total": 6144,
+          "grad_norm": 0.8498528599739075,
+          "loss": 3.7668196111917496,
+          "order_chains": {
+            "a5": "a7f9749dbc0ba68c8dba881d2c53f2956053a6ee49ba5d488a34ce73f3a7c24e",
+            "fuzzy": "aad1102dd533c318826cbd3abcb3f1bf3d5f6788d255c7ccc50453e547665a72"
+          },
+          "phase": "timed",
+          "phase_update": 4,
+          "seconds": 2.126738270992064,
+          "tasks": {
+            "a5": {
+              "ce": 4.3224005699157715,
+              "examples": 3072,
+              "latent": 0.27813297510147095,
+              "loss": 4.600533545017242,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.022352430555555556,
+              "weighted_latent": 0.27813297510147095
+            },
+            "fuzzy": {
+              "ce": 2.744460344314575,
+              "examples": 3072,
+              "latent": 0.18864533305168152,
+              "loss": 2.9331056773662567,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.07959309895833333,
+              "weighted_latent": 0.18864533305168152
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 15,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 46080,
+          "examples_total": 6144,
+          "grad_norm": 0.79761803150177,
+          "loss": 3.736657127737999,
+          "order_chains": {
+            "a5": "c72b0811b2de6d3f2dbd28a09968257464b23f87b4c8487293dda7d27ae4c576",
+            "fuzzy": "20e1bae2dfdb7dfadaf740d8d00628af712d19256a44d591fdd3247e7271d5ab"
+          },
+          "phase": "timed",
+          "phase_update": 5,
+          "seconds": 2.1202552580070915,
+          "tasks": {
+            "a5": {
+              "ce": 4.30708122253418,
+              "examples": 3072,
+              "latent": 0.2596810758113861,
+              "loss": 4.566762298345566,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.023111979166666668,
+              "weighted_latent": 0.2596810758113861
+            },
+            "fuzzy": {
+              "ce": 2.735907793045044,
+              "examples": 3072,
+              "latent": 0.17064416408538818,
+              "loss": 2.906551957130432,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.0801025390625,
+              "weighted_latent": 0.17064416408538818
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 16,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 49152,
+          "examples_total": 6144,
+          "grad_norm": 0.7471628785133362,
+          "loss": 3.7074354514479637,
+          "order_chains": {
+            "a5": "f84fc416b8c6bd26b466637719680ec80a0501e1fc93c8bd4d0b87f6da87f7ec",
+            "fuzzy": "4a33c8161330e36c8ae651b83d2f545eb3bb3d33efeb931b088f41d15e667b24"
+          },
+          "phase": "timed",
+          "phase_update": 6,
+          "seconds": 2.111922501004301,
+          "tasks": {
+            "a5": {
+              "ce": 4.292265892028809,
+              "examples": 3072,
+              "latent": 0.24080878496170044,
+              "loss": 4.533074676990509,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.021511501736111112,
+              "weighted_latent": 0.24080878496170044
+            },
+            "fuzzy": {
+              "ce": 2.727327585220337,
+              "examples": 3072,
+              "latent": 0.15446864068508148,
+              "loss": 2.8817962259054184,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08113199869791667,
+              "weighted_latent": 0.15446864068508148
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 17,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 52224,
+          "examples_total": 6144,
+          "grad_norm": 0.696830689907074,
+          "loss": 3.680341310799122,
+          "order_chains": {
+            "a5": "38fad8510fac8899a2633df8cb57f283fff9a535d77341bf5343c20c3957765b",
+            "fuzzy": "202984f3aa4ebadf2b433246c81f65cd45ccf5e4facf69219f46a230edb58090"
+          },
+          "phase": "timed",
+          "phase_update": 7,
+          "seconds": 2.123109256004682,
+          "tasks": {
+            "a5": {
+              "ce": 4.274343013763428,
+              "examples": 3072,
+              "latent": 0.22546760737895966,
+              "loss": 4.499810621142387,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.024115668402777776,
+              "weighted_latent": 0.22546760737895966
+            },
+            "fuzzy": {
+              "ce": 2.720566749572754,
+              "examples": 3072,
+              "latent": 0.14030525088310242,
+              "loss": 2.8608720004558563,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08141520182291667,
+              "weighted_latent": 0.14030525088310242
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 18,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 55296,
+          "examples_total": 6144,
+          "grad_norm": 0.6603060364723206,
+          "loss": 3.6543318405747414,
+          "order_chains": {
+            "a5": "2e14a88263aeda8a06e8f9697c9313478aee9f08831441426d7f105aa422648e",
+            "fuzzy": "1637b9df4a8fd9c9ff747fe1a185ed33097c8a33250cf6f3c88a7752ab4a0c83"
+          },
+          "phase": "timed",
+          "phase_update": 8,
+          "seconds": 2.1239783789933426,
+          "tasks": {
+            "a5": {
+              "ce": 4.257075786590576,
+              "examples": 3072,
+              "latent": 0.20853979885578156,
+              "loss": 4.465615585446358,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.025526258680555556,
+              "weighted_latent": 0.20853979885578156
+            },
+            "fuzzy": {
+              "ce": 2.715275526046753,
+              "examples": 3072,
+              "latent": 0.12777256965637207,
+              "loss": 2.843048095703125,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08209879557291666,
+              "weighted_latent": 0.12777256965637207
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 19,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 58368,
+          "examples_total": 6144,
+          "grad_norm": 0.6319176554679871,
+          "loss": 3.635727535933256,
+          "order_chains": {
+            "a5": "891db94e6087f0b960939d8a5d391aee7e4c755be9e2e87b2c062227530810c2",
+            "fuzzy": "1cd730411f20eea62f1fe827584123efb022f64ca818ea22655cf875e5c131be"
+          },
+          "phase": "timed",
+          "phase_update": 9,
+          "seconds": 2.1200761610089103,
+          "tasks": {
+            "a5": {
+              "ce": 4.249325275421143,
+              "examples": 3072,
+              "latent": 0.1946418583393097,
+              "loss": 4.443967133760452,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.027289496527777776,
+              "weighted_latent": 0.1946418583393097
+            },
+            "fuzzy": {
+              "ce": 2.7109642028808594,
+              "examples": 3072,
+              "latent": 0.11652373522520065,
+              "loss": 2.82748793810606,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08243001302083333,
+              "weighted_latent": 0.11652373522520065
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 20,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 61440,
+          "examples_total": 6144,
+          "grad_norm": 0.5875064730644226,
+          "loss": 3.6095838993787766,
+          "order_chains": {
+            "a5": "fda9487a73f76ca7f3663fd0187aec9d27db74982096470b73b4a522388d7b22",
+            "fuzzy": "c08d757e7e5a81afa2f92070a56c95b32d20720cec6e0078efcf9794a1e64fbd"
+          },
+          "phase": "timed",
+          "phase_update": 10,
+          "seconds": 2.11221699899761,
+          "tasks": {
+            "a5": {
+              "ce": 4.22265625,
+              "examples": 3072,
+              "latent": 0.1821146011352539,
+              "loss": 4.404770851135254,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.028184678819444444,
+              "weighted_latent": 0.1821146011352539
+            },
+            "fuzzy": {
+              "ce": 2.7078073024749756,
+              "examples": 3072,
+              "latent": 0.10658964514732361,
+              "loss": 2.814396947622299,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08344156901041666,
+              "weighted_latent": 0.10658964514732361
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 21,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 64512,
+          "examples_total": 6144,
+          "grad_norm": 0.557029664516449,
+          "loss": 3.5942306853830814,
+          "order_chains": {
+            "a5": "46ba456614bf3f07dd58add38d97ea1921b0dc21103f0cba2a7f34a85c0776ae",
+            "fuzzy": "7c4a11e2f14730b029a1bcba12d08f9da4de620f1994d8e154034df845f8961d"
+          },
+          "phase": "timed",
+          "phase_update": 11,
+          "seconds": 2.126152110999101,
+          "tasks": {
+            "a5": {
+              "ce": 4.215139389038086,
+              "examples": 3072,
+              "latent": 0.1715625822544098,
+              "loss": 4.386701971292496,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.028700086805555556,
+              "weighted_latent": 0.1715625822544098
+            },
+            "fuzzy": {
+              "ce": 2.7037694454193115,
+              "examples": 3072,
+              "latent": 0.09798995405435562,
+              "loss": 2.801759399473667,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08373779296875,
+              "weighted_latent": 0.09798995405435562
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 22,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 67584,
+          "examples_total": 6144,
+          "grad_norm": 0.5153016448020935,
+          "loss": 3.570888452231884,
+          "order_chains": {
+            "a5": "f304cd3ce2736fdc4e72837edfefa95014577b9e9a326550784d9b091f7a5050",
+            "fuzzy": "ad47215acb403392617f9bdc524bb6aaa2066697113c2590f4b8e40fa889f909"
+          },
+          "phase": "timed",
+          "phase_update": 12,
+          "seconds": 2.1146332530042855,
+          "tasks": {
+            "a5": {
+              "ce": 4.1900153160095215,
+              "examples": 3072,
+              "latent": 0.1603221595287323,
+              "loss": 4.350337475538254,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.03125,
+              "weighted_latent": 0.1603221595287323
+            },
+            "fuzzy": {
+              "ce": 2.7011666297912598,
+              "examples": 3072,
+              "latent": 0.09027279913425446,
+              "loss": 2.791439428925514,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08649088541666666,
+              "weighted_latent": 0.09027279913425446
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 23,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 70656,
+          "examples_total": 6144,
+          "grad_norm": 0.4835203289985657,
+          "loss": 3.5568303763866425,
+          "order_chains": {
+            "a5": "b8473b98ad9cde5e757eaaf5f24bb682475ebfb1f3384b6817a17a7e9c2daac9",
+            "fuzzy": "2daf3089ce80bb464df59a5bc6c95f09ac3f52ab666f1c53d350dfd8b3927be2"
+          },
+          "phase": "timed",
+          "phase_update": 13,
+          "seconds": 2.1192186859989306,
+          "tasks": {
+            "a5": {
+              "ce": 4.180397987365723,
+              "examples": 3072,
+              "latent": 0.1509755551815033,
+              "loss": 4.331373542547226,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.03244357638888889,
+              "weighted_latent": 0.1509755551815033
+            },
+            "fuzzy": {
+              "ce": 2.6987390518188477,
+              "examples": 3072,
+              "latent": 0.0835481584072113,
+              "loss": 2.782287210226059,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08704020182291666,
+              "weighted_latent": 0.0835481584072113
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 24,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 73728,
+          "examples_total": 6144,
+          "grad_norm": 0.45287051796913147,
+          "loss": 3.543656099587679,
+          "order_chains": {
+            "a5": "32e0ffc706dad14cf7883013a0154b1782ea19fa9244d83def650506c653cd4b",
+            "fuzzy": "7c9f44fdbe7e225b2726f48fef3c4e98c723e919d98c954e98bab5f1ea804db9"
+          },
+          "phase": "timed",
+          "phase_update": 14,
+          "seconds": 2.1352814889978617,
+          "tasks": {
+            "a5": {
+              "ce": 4.170501708984375,
+              "examples": 3072,
+              "latent": 0.14303644001483917,
+              "loss": 4.313538148999214,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.029242621527777776,
+              "weighted_latent": 0.14303644001483917
+            },
+            "fuzzy": {
+              "ce": 2.6962337493896484,
+              "examples": 3072,
+              "latent": 0.07754030078649521,
+              "loss": 2.7737740501761436,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.0871533203125,
+              "weighted_latent": 0.07754030078649521
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 25,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 76800,
+          "examples_total": 6144,
+          "grad_norm": 0.42927369475364685,
+          "loss": 3.5291094072163105,
+          "order_chains": {
+            "a5": "6cb926f2ad14515cca70e979d114faf4c39eb6c47243441198cae792a4c008dc",
+            "fuzzy": "bbca851db7aaddfcbfa547861c0bde579faf44cfe416538c9c35ac65b410140c"
+          },
+          "phase": "timed",
+          "phase_update": 15,
+          "seconds": 2.125612725998508,
+          "tasks": {
+            "a5": {
+              "ce": 4.157395362854004,
+              "examples": 3072,
+              "latent": 0.13427358865737915,
+              "loss": 4.291668951511383,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.031331380208333336,
+              "weighted_latent": 0.13427358865737915
+            },
+            "fuzzy": {
+              "ce": 2.6942875385284424,
+              "examples": 3072,
+              "latent": 0.07226232439279556,
+              "loss": 2.766549862921238,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08648518880208333,
+              "weighted_latent": 0.07226232439279556
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 26,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 79872,
+          "examples_total": 6144,
+          "grad_norm": 0.4028039872646332,
+          "loss": 3.5167457908391953,
+          "order_chains": {
+            "a5": "15165ada650ded3b001b1b5128247d373597fbfb63cf19502fd8a0f0c50abdd8",
+            "fuzzy": "4bca177adc957644257eabd89966b41c4b4c620c62704e7beb322a4d7c538ff7"
+          },
+          "phase": "timed",
+          "phase_update": 16,
+          "seconds": 2.1384004449937493,
+          "tasks": {
+            "a5": {
+              "ce": 4.145605087280273,
+              "examples": 3072,
+              "latent": 0.1278982311487198,
+              "loss": 4.273503318428993,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.03455946180555555,
+              "weighted_latent": 0.1278982311487198
+            },
+            "fuzzy": {
+              "ce": 2.692495822906494,
+              "examples": 3072,
+              "latent": 0.06749244034290314,
+              "loss": 2.7599882632493973,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08670654296875,
+              "weighted_latent": 0.06749244034290314
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 27,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 82944,
+          "examples_total": 6144,
+          "grad_norm": 0.37661686539649963,
+          "loss": 3.501849863678217,
+          "order_chains": {
+            "a5": "0bfe06c389c75abcf7737d8510877b832beae2812da29f74db05702f1e2fa52c",
+            "fuzzy": "d38c734f189f05612eaf8ccf032918903df0402c5e1d8e69a45e9cc5f42b260d"
+          },
+          "phase": "timed",
+          "phase_update": 17,
+          "seconds": 2.1235238820081577,
+          "tasks": {
+            "a5": {
+              "ce": 4.128045082092285,
+              "examples": 3072,
+              "latent": 0.12134439498186111,
+              "loss": 4.249389477074146,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.035725911458333336,
+              "weighted_latent": 0.12134439498186111
+            },
+            "fuzzy": {
+              "ce": 2.6910181045532227,
+              "examples": 3072,
+              "latent": 0.06329214572906494,
+              "loss": 2.7543102502822876,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08655192057291666,
+              "weighted_latent": 0.06329214572906494
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 28,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 86016,
+          "examples_total": 6144,
+          "grad_norm": 0.3602503538131714,
+          "loss": 3.4927417747676373,
+          "order_chains": {
+            "a5": "ebe8bb2d10d19fbfdae8240a4c81bfa682d28b1441a035b6ae511fd88b552952",
+            "fuzzy": "693c57cafcea98e758e2c52a46f37feb94d03b494aa454fc0a60236981976ae1"
+          },
+          "phase": "timed",
+          "phase_update": 18,
+          "seconds": 2.1314399349939777,
+          "tasks": {
+            "a5": {
+              "ce": 4.121005535125732,
+              "examples": 3072,
+              "latent": 0.11551011353731155,
+              "loss": 4.236515648663044,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.035970052083333336,
+              "weighted_latent": 0.11551011353731155
+            },
+            "fuzzy": {
+              "ce": 2.689450979232788,
+              "examples": 3072,
+              "latent": 0.059516921639442444,
+              "loss": 2.7489679008722305,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08609537760416666,
+              "weighted_latent": 0.059516921639442444
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 29,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 89088,
+          "examples_total": 6144,
+          "grad_norm": 0.3456272780895233,
+          "loss": 3.482710240408778,
+          "order_chains": {
+            "a5": "1731f980f2f949ed5ecf3bcbd4d3d49a2c83606126dd7e68fc8e8dbd578c6975",
+            "fuzzy": "c6a366dcaa419e8b2a2981500e3d9fbe12a272345b8c3e93a4ac78795b238029"
+          },
+          "phase": "timed",
+          "phase_update": 19,
+          "seconds": 2.1244669599982444,
+          "tasks": {
+            "a5": {
+              "ce": 4.111659526824951,
+              "examples": 3072,
+              "latent": 0.10964234918355942,
+              "loss": 4.221301876008511,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.03599717881944445,
+              "weighted_latent": 0.10964234918355942
+            },
+            "fuzzy": {
+              "ce": 2.6879236698150635,
+              "examples": 3072,
+              "latent": 0.056194934993982315,
+              "loss": 2.744118604809046,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08582600911458334,
+              "weighted_latent": 0.056194934993982315
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 30,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 92160,
+          "examples_total": 6144,
+          "grad_norm": 0.3204802870750427,
+          "loss": 3.472225559875369,
+          "order_chains": {
+            "a5": "9d3e413765665ff7fc032321c56ea82c86b042d3d1bac7af94f0da6d16797a50",
+            "fuzzy": "64e82f43687ca94450fd31701149362b2eff755aecc7b648519441b2e101e173"
+          },
+          "phase": "timed",
+          "phase_update": 20,
+          "seconds": 2.118152071008808,
+          "tasks": {
+            "a5": {
+              "ce": 4.099820613861084,
+              "examples": 3072,
+              "latent": 0.10476760566234589,
+              "loss": 4.20458821952343,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.03895399305555555,
+              "weighted_latent": 0.10476760566234589
+            },
+            "fuzzy": {
+              "ce": 2.6867220401763916,
+              "examples": 3072,
+              "latent": 0.05314086005091667,
+              "loss": 2.7398629002273083,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08556233723958333,
+              "weighted_latent": 0.05314086005091667
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 31,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 95232,
+          "examples_total": 6144,
+          "grad_norm": 0.31545448303222656,
+          "loss": 3.4652285650372505,
+          "order_chains": {
+            "a5": "5db89cb2f97a8a4a53f66ddd264effc97905d55185d665dfd9c05d62729a6e6a",
+            "fuzzy": "983ad373975c236bb7511ad7ea11108e911821b5d49f9b317af30f7811256d01"
+          },
+          "phase": "timed",
+          "phase_update": 21,
+          "seconds": 2.1467510660004336,
+          "tasks": {
+            "a5": {
+              "ce": 4.09428071975708,
+              "examples": 3072,
+              "latent": 0.10062731057405472,
+              "loss": 4.194908030331135,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.042426215277777776,
+              "weighted_latent": 0.10062731057405472
+            },
+            "fuzzy": {
+              "ce": 2.685115337371826,
+              "examples": 3072,
+              "latent": 0.05043376237154007,
+              "loss": 2.7355490997433662,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08550699869791667,
+              "weighted_latent": 0.05043376237154007
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 32,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 98304,
+          "examples_total": 6144,
+          "grad_norm": 0.2912852168083191,
+          "loss": 3.454693853855133,
+          "order_chains": {
+            "a5": "a94b49c553d6942a2c6b7081ff4684386b398b091306e953f6cc0c1e6d79940a",
+            "fuzzy": "a9aa5a846a372b713451f817d2dd388c269fde8a08e5bb7a2e1877960e160232"
+          },
+          "phase": "timed",
+          "phase_update": 22,
+          "seconds": 2.163074833995779,
+          "tasks": {
+            "a5": {
+              "ce": 4.081305503845215,
+              "examples": 3072,
+              "latent": 0.09661035984754562,
+              "loss": 4.1779158636927605,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.042887369791666664,
+              "weighted_latent": 0.09661035984754562
+            },
+            "fuzzy": {
+              "ce": 2.683452606201172,
+              "examples": 3072,
+              "latent": 0.04801923781633377,
+              "loss": 2.7314718440175056,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08562255859375,
+              "weighted_latent": 0.04801923781633377
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 33,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 101376,
+          "examples_total": 6144,
+          "grad_norm": 0.27757519483566284,
+          "loss": 3.4461872689425945,
+          "order_chains": {
+            "a5": "585c2c74530aace769e4fa8f527abda617b1af66a1f20031725d6434d5950a4a",
+            "fuzzy": "195d1868251cafdf45f2626a2fd429b300148338317764adf49bc6e99e74d50e"
+          },
+          "phase": "timed",
+          "phase_update": 23,
+          "seconds": 2.135721498998464,
+          "tasks": {
+            "a5": {
+              "ce": 4.071907043457031,
+              "examples": 3072,
+              "latent": 0.09248106926679611,
+              "loss": 4.164388112723827,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.044623480902777776,
+              "weighted_latent": 0.09248106926679611
+            },
+            "fuzzy": {
+              "ce": 2.6821460723876953,
+              "examples": 3072,
+              "latent": 0.04584035277366638,
+              "loss": 2.7279864251613617,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08745035807291666,
+              "weighted_latent": 0.04584035277366638
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 34,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 104448,
+          "examples_total": 6144,
+          "grad_norm": 0.27249857783317566,
+          "loss": 3.440082758665085,
+          "order_chains": {
+            "a5": "371adfca11d75c046e3f89a831fe8437e79f0f7b80245886c15f960a9d822467",
+            "fuzzy": "c46530cfd9255f98c54cf88dcca98da289950a31072c17eb86d190ef6f29edc2"
+          },
+          "phase": "timed",
+          "phase_update": 24,
+          "seconds": 2.1469905319972895,
+          "tasks": {
+            "a5": {
+              "ce": 4.066919326782227,
+              "examples": 3072,
+              "latent": 0.08910569548606873,
+              "loss": 4.156025022268295,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.045003255208333336,
+              "weighted_latent": 0.08910569548606873
+            },
+            "fuzzy": {
+              "ce": 2.680255651473999,
+              "examples": 3072,
+              "latent": 0.043884843587875366,
+              "loss": 2.7241404950618744,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08696370442708333,
+              "weighted_latent": 0.043884843587875366
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 35,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 107520,
+          "examples_total": 6144,
+          "grad_norm": 0.26212260127067566,
+          "loss": 3.4346150122582912,
+          "order_chains": {
+            "a5": "73dd7769783107d970f587bb4bfd9202ca4575133cd1712a7feddcee985d5172",
+            "fuzzy": "554a87f72fa001691e4f17bf5fa568238bd4d02ef16829a0e3608e99722f6ad6"
+          },
+          "phase": "timed",
+          "phase_update": 25,
+          "seconds": 2.159489121986553,
+          "tasks": {
+            "a5": {
+              "ce": 4.06243896484375,
+              "examples": 3072,
+              "latent": 0.08588526397943497,
+              "loss": 4.148324228823185,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.04836697048611111,
+              "weighted_latent": 0.08588526397943497
+            },
+            "fuzzy": {
+              "ce": 2.678804636001587,
+              "examples": 3072,
+              "latent": 0.04210115969181061,
+              "loss": 2.7209057956933975,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08908854166666667,
+              "weighted_latent": 0.04210115969181061
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 36,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 110592,
+          "examples_total": 6144,
+          "grad_norm": 0.2495151162147522,
+          "loss": 3.428601246327162,
+          "order_chains": {
+            "a5": "3237191af44e974e36595c9e934473256bb11528634b86ba3cd587c5c4cb617e",
+            "fuzzy": "6e1d895772705bf002db1fa47d9350d90212ba557cb6bfbfbf68e872dc441bd4"
+          },
+          "phase": "timed",
+          "phase_update": 26,
+          "seconds": 2.1149761689885054,
+          "tasks": {
+            "a5": {
+              "ce": 4.056369781494141,
+              "examples": 3072,
+              "latent": 0.08286450058221817,
+              "loss": 4.139234282076359,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.052734375,
+              "weighted_latent": 0.08286450058221817
+            },
+            "fuzzy": {
+              "ce": 2.677492380142212,
+              "examples": 3072,
+              "latent": 0.04047583043575287,
+              "loss": 2.717968210577965,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08906819661458333,
+              "weighted_latent": 0.04047583043575287
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 37,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 113664,
+          "examples_total": 6144,
+          "grad_norm": 0.2400958389043808,
+          "loss": 3.4198926612734795,
+          "order_chains": {
+            "a5": "a9ff71a5512c360d1e49945aca27b6001ba00a9dc489594b82a6f0eed0cc0bf3",
+            "fuzzy": "c5f5618546bda0d6c53c0148a97d411fdebedefa3aacc8205406aee6557f50fa"
+          },
+          "phase": "timed",
+          "phase_update": 27,
+          "seconds": 2.151562218001345,
+          "tasks": {
+            "a5": {
+              "ce": 4.045446395874023,
+              "examples": 3072,
+              "latent": 0.07969174534082413,
+              "loss": 4.125138141214848,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.057074652777777776,
+              "weighted_latent": 0.07969174534082413
+            },
+            "fuzzy": {
+              "ce": 2.67557692527771,
+              "examples": 3072,
+              "latent": 0.0390702560544014,
+              "loss": 2.7146471813321114,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.08948893229166667,
+              "weighted_latent": 0.0390702560544014
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 38,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 116736,
+          "examples_total": 6144,
+          "grad_norm": 0.23970846831798553,
+          "loss": 3.417068611830473,
+          "order_chains": {
+            "a5": "07ac07525ca5748e822bf6f85fdce6a1eaac02ea6e012b8dd80b27db09e7261b",
+            "fuzzy": "6450dca2c15226640c7deeec4586e2d303024376cfe7b91b21cd18609c03a43a"
+          },
+          "phase": "timed",
+          "phase_update": 28,
+          "seconds": 2.1851069160038605,
+          "tasks": {
+            "a5": {
+              "ce": 4.044005393981934,
+              "examples": 3072,
+              "latent": 0.07798995822668076,
+              "loss": 4.121995352208614,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.056477864583333336,
+              "weighted_latent": 0.07798995822668076
+            },
+            "fuzzy": {
+              "ce": 2.674354314804077,
+              "examples": 3072,
+              "latent": 0.037787556648254395,
+              "loss": 2.7121418714523315,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.0907373046875,
+              "weighted_latent": 0.037787556648254395
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 39,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 119808,
+          "examples_total": 6144,
+          "grad_norm": 0.2274819016456604,
+          "loss": 3.4106182046234608,
+          "order_chains": {
+            "a5": "5da61c424c597224f2488f976df8c3087b085f77fa3a6cb450b7ec23ef332d1d",
+            "fuzzy": "8af5f0f29301f6d49e93a59d973a4949fbd6851d98b6fdffbd74dd67a3e6f266"
+          },
+          "phase": "timed",
+          "phase_update": 29,
+          "seconds": 2.172944585996447,
+          "tasks": {
+            "a5": {
+              "ce": 4.036735534667969,
+              "examples": 3072,
+              "latent": 0.07563548535108566,
+              "loss": 4.112371020019054,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.058186848958333336,
+              "weighted_latent": 0.07563548535108566
+            },
+            "fuzzy": {
+              "ce": 2.672255277633667,
+              "examples": 3072,
+              "latent": 0.036610111594200134,
+              "loss": 2.708865389227867,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.09312174479166667,
+              "weighted_latent": 0.036610111594200134
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        },
+        {
+          "candidate_batch_per_task": 3072,
+          "completed_update": 40,
+          "examples_per_task": 3072,
+          "examples_seen_per_task": 122880,
+          "examples_total": 6144,
+          "grad_norm": 0.2223639190196991,
+          "loss": 3.404835844412446,
+          "order_chains": {
+            "a5": "ffe7e0c7262e4e989ebceaa1948adf90171e54e53036db828fe1d7ce1872ddce",
+            "fuzzy": "9d63c0976a16a11b55aa8d4993cf7921c01bbdef3e2b1e421d9b51d580da9383"
+          },
+          "phase": "timed",
+          "phase_update": 30,
+          "seconds": 2.134890107001411,
+          "tasks": {
+            "a5": {
+              "ce": 4.030553817749023,
+              "examples": 3072,
+              "latent": 0.0730786919593811,
+              "loss": 4.1036325097084045,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 36864,
+              "token_accuracy": 0.060248480902777776,
+              "weighted_latent": 0.0730786919593811
+            },
+            "fuzzy": {
+              "ce": 2.6705057621002197,
+              "examples": 3072,
+              "latent": 0.035533417016267776,
+              "loss": 2.7060391791164875,
+              "scored_sequence_exact": 0.0,
+              "scored_tokens": 1228800,
+              "token_accuracy": 0.09319498697916667,
+              "weighted_latent": 0.035533417016267776
+            }
+          },
+          "tokens_per_task": {
+            "a5": 36864,
+            "fuzzy": 1228800
+          }
+        }
+      ],
+      "initialization": {
+        "backbone_parameter_count": 413824,
+        "canonical_sha256": "70797d977485f1750d590cd3057a3536dd4b556d5428862fb1ce828c81b21018",
+        "canonical_v60_sha256": "3774bbdb714ed1d22dec7838e384ca680fb2123a59842344ef2cb104897b7e8c",
+        "conversion": {
+          "copied": [
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.attn_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.attn_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.attn_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.attn_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_proj.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_proj.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.k_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.k_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.q_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.q_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.attn_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.attn_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.attn_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.attn_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_proj.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_proj.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.k_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.k_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.q_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.q_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.ln_f.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.ln_f.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.wte.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.wte.weight"
+              ]
+            }
+          ],
+          "missing": [],
+          "new": [],
+          "notes": [
+            "Functional equivalence requires separate endpoint tests; weight copying alone does not establish it.",
+            "Optimizer state, training/data counters, and gate schedules are not converted."
+          ],
+          "parameter_mappings": [
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.attn_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.attn_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.attn_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.attn_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.ff_proj.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.ff_proj.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.k_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.k_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.0.q_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.0.q_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.attn_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.attn_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.attn_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.attn_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.ff_proj.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.ff_proj.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.k_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.k_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.blocks.1.q_norm.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.blocks.1.q_norm.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.ff_out.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.ff_out.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.ln_f.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.ln_f.weight"
+              ]
+            },
+            {
+              "operation": "copy",
+              "source_keys": [
+                "transformer.wte.weight"
+              ],
+              "split_sizes": [],
+              "target_keys": [
+                "transformer.wte.weight"
+              ]
+            },
+            {
+              "operation": "split",
+              "source_keys": [
+                "transformer.blocks.0.att_proj.weight"
+              ],
+              "split_sizes": [
+                128,
+                256
+              ],
+              "target_keys": [
+                "transformer.blocks.0.q_proj.weight",
+                "transformer.blocks.0.kv_proj.weight"
+              ]
+            },
+            {
+              "operation": "split",
+              "source_keys": [
+                "transformer.blocks.1.att_proj.weight"
+              ],
+              "split_sizes": [
+                128,
+                256
+              ],
+              "target_keys": [
+                "transformer.blocks.1.q_proj.weight",
+                "transformer.blocks.1.kv_proj.weight"
+              ]
+            }
+          ],
+          "semantics": "weights_only",
+          "source_key_count": 19,
+          "source_recurrent_layers": [],
+          "target_key_count": 21,
+          "target_recurrent_layers": [
+            0,
+            1
+          ],
+          "transformed": [
+            {
+              "operation": "split",
+              "source_keys": [
+                "transformer.blocks.0.att_proj.weight"
+              ],
+              "split_sizes": [
+                128,
+                256
+              ],
+              "target_keys": [
+                "transformer.blocks.0.q_proj.weight",
+                "transformer.blocks.0.kv_proj.weight"
+              ]
+            },
+            {
+              "operation": "split",
+              "source_keys": [
+                "transformer.blocks.1.att_proj.weight"
+              ],
+              "split_sizes": [
+                128,
+                256
+              ],
+              "target_keys": [
+                "transformer.blocks.1.q_proj.weight",
+                "transformer.blocks.1.kv_proj.weight"
+              ]
+            }
+          ],
+          "unexpected": []
+        },
+        "fuzzy_seed": 1236,
+        "model_parameter_sha256": "83bb26323d86ace7f5b0273237eb646eda847aa7d43492ebb130e681f8614ea0",
+        "nextlat_config": {
+          "backbone_config": "configs/rt_a5/base.json",
+          "backbone_width": 128,
+          "evaluation": "backbone_only",
+          "latent": "post_final_layer_norm",
+          "objective": {
+            "auxiliary_ce_weight": 0.0,
+            "auxiliary_kl_weight": 0.0,
+            "latent_loss": "smooth_l1",
+            "latent_weight": 1.0,
+            "reduction": "mean_over_batch_transitions_latent_coordinates",
+            "smooth_l1_beta": 1.0,
+            "state_ce_weight": 1.0,
+            "stop_conditioning_embedding_gradient": false,
+            "stop_source_gradient": false,
+            "stop_target_gradient": true
+          },
+          "prediction_horizon": 1,
+          "predictor": {
+            "activation": "gelu",
+            "bias": false,
+            "dropout": 0.0,
+            "hidden_width": 128,
+            "hidden_width_multiple": 128,
+            "initialization_std": 0.02,
+            "input_order": [
+              "next_operation_embedding",
+              "current_latent"
+            ],
+            "input_width": 256,
+            "linear_layers": 3,
+            "normalization": "rms_norm",
+            "normalization_epsilon": 1e-05,
+            "output_normalization": false,
+            "output_width": 128,
+            "projection_factor": 0.5,
+            "residual": true
+          },
+          "reference_commit": "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9",
+          "runtime": "fp32_eager",
+          "schema": "rt-a5-nextlat-config-v1"
+        },
+        "parameter_count": 479616,
+        "predictor_parameter_count": 65792,
+        "predictor_seed": 1235,
+        "predictor_sha256": "b1f43012571863d81c4ec06b16f8d014fe35f42553bf67f8504ade190ce6c124",
+        "rule": "Canonical V60 CPU Mitchell SEQ; independently appended Mitchell Fuzzy rows; exhaustive RT conversion; parameter-preserving first-layer window; isolated NextLat RNG",
+        "schema": "rt-nextlat-tasks-initialization-v1",
+        "seed": 1234,
+        "task_config": {
+          "backbone": {
+            "activation_type": "gelu",
+            "alibi": true,
+            "attention_dropout": 0.0,
+            "attention_layer_norm": true,
+            "attention_layer_norm_with_affine": true,
+            "bias_for_layer_norm": false,
+            "block_group_size": 1,
+            "block_type": "recurrent",
+            "bwd_mlp_chunks": 4,
+            "cdrm_enabled": false,
+            "d_model": 128,
+            "embedding_dropout": 0.0,
+            "embedding_layer_norm": false,
+            "embedding_size": null,
+            "eos_token_id": 0,
+            "flash_attention": false,
+            "include_bias": false,
+            "init_device": "cpu",
+            "init_fn": "mitchell",
+            "layer_norm_eps": 1e-05,
+            "layer_norm_type": "default",
+            "layer_norm_with_affine": true,
+            "max_sequence_length": 1024,
+            "mlp_hidden_size": 512,
+            "mlp_ratio": 4,
+            "n_heads": 16,
+            "n_kv_heads": 16,
+            "n_layers": 2,
+            "norm_after": false,
+            "ordinary_attention_precision_policy": "legacy",
+            "pad_token_id": 75,
+            "precision": "fp32",
+            "recurrent_backend": "tiled",
+            "recurrent_layers": null,
+            "recurrent_precision_policy": "legacy",
+            "recurrent_write_rho": 1.0,
+            "reference_eager": true,
+            "residual_dropout": 0.0,
+            "rope": false,
+            "vocab_size": 76,
+            "weight_tying": false
+          },
+          "evaluation": "backbone_only",
+          "latent_transitions": "all within-example transitions, including native MAD padding",
+          "latent_weight": 1.0,
+          "predictor_hidden_width": 128,
+          "runtime": "fp32_eager",
+          "schema": "rt-nextlat-tasks-model-v1",
+          "task_ranges": {
+            "a5": [
+              0,
+              60
+            ],
+            "fuzzy": [
+              60,
+              76
+            ]
+          },
+          "window_layer": 0,
+          "window_size": 2
+        }
+      },
+      "microbatch": 3072,
+      "order_chains": {
+        "a5": "ffe7e0c7262e4e989ebceaa1948adf90171e54e53036db828fe1d7ce1872ddce",
+        "fuzzy": "9d63c0976a16a11b55aa8d4993cf7921c01bbdef3e2b1e421d9b51d580da9383"
+      },
+      "ordered_rows_sha256": {
+        "a5": "1a4219b0de8739feae258fd78627ed07c4b098e39f0ff5563a7c3f3a96449b1d",
+        "fuzzy": "a657948899c0722d4de255b3e2a94b4fe60a98af0a2598de1c06bf270aebe83d"
+      },
+      "peak_allocated_bytes": 74916412416,
+      "peak_allocated_gib": 69.77134609222412,
+      "peak_reserved_bytes": 77290536960,
+      "peak_reserved_gib": 71.982421875,
+      "phase": "complete",
+      "requested_timed_updates": 30,
+      "requested_warmup_updates": 10,
+      "status": "complete",
+      "summary": {
+        "mean_seconds": 2.132276135466236,
+        "median_seconds": 2.1258824184988043,
+        "p10_seconds": 2.1146149955049625,
+        "p90_seconds": 2.1598476931874755,
+        "per_task": {
+          "a5": {
+            "examples": 92160,
+            "examples_per_second": 1440.713962372555,
+            "tokens": 1105920,
+            "tokens_per_second": 17288.56754847066
+          },
+          "fuzzy": {
+            "examples": 92160,
+            "examples_per_second": 1440.713962372555,
+            "tokens": 36864000,
+            "tokens_per_second": 576285.584949022
+          }
+        },
+        "quantile_method": "linear interpolation (NumPy method=linear)",
+        "throughput_reduction": "sum of measured work / sum of measured elapsed seconds",
+        "timed_seconds": 63.968284063987085,
+        "timed_updates": 30,
+        "total_examples_per_second": 2881.42792474511,
+        "total_tokens_per_second": 593574.1524974926
+      },
+      "total_batch_size": 6144,
+      "warmup_peak_allocated_bytes": 74916412416,
+      "warmup_peak_reserved_bytes": 77290536960,
+      "weights_discarded": true
+    }
+  ],
+  "checkpoint_written": false,
+  "confirmation_evaluated": false,
+  "contract": {
+    "batches_per_task": [
+      3072
+    ],
+    "checkpoint_written": false,
+    "configuration_file_sha256": "e77eb47d03d27d6cb7b0a3b9654f708332c30e0ecb48eb2251b38cf55d64d8ea",
+    "data_sha256": "52e963f07d4cb3af029581b75de41d06c549edb4bd9c312b41d85226dd80f0a4",
+    "excluded_from_timing": [
+      "data verification",
+      "model/optimizer construction",
+      "W&B/local logging",
+      "finite-state endpoint audit",
+      "cache cleanup"
+    ],
+    "hardware": {
+      "capability": [
+        9,
+        0
+      ],
+      "device": "cuda:0",
+      "name": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, GPU-692c1897-cec3-7622-5475-6629b4cbb356, 81559 MiB, 580.173.02",
+      "total_memory_bytes": 85017493504,
+      "used_gpu_count": 1,
+      "visible_gpu_count": 1
+    },
+    "initialization_seeds": {
+      "backbone": 1234,
+      "fuzzy_rows": 1236,
+      "predictor": 1235
+    },
+    "learning_comparison": false,
+    "mode": "mixed",
+    "model_config": {
+      "backbone": {
+        "activation_type": "gelu",
+        "alibi": true,
+        "attention_dropout": 0.0,
+        "attention_layer_norm": true,
+        "attention_layer_norm_with_affine": true,
+        "bias_for_layer_norm": false,
+        "block_group_size": 1,
+        "block_type": "recurrent",
+        "bwd_mlp_chunks": 4,
+        "cdrm_enabled": false,
+        "d_model": 128,
+        "embedding_dropout": 0.0,
+        "embedding_layer_norm": false,
+        "embedding_size": null,
+        "eos_token_id": 0,
+        "flash_attention": false,
+        "include_bias": false,
+        "init_device": "cpu",
+        "init_fn": "mitchell",
+        "layer_norm_eps": 1e-05,
+        "layer_norm_type": "default",
+        "layer_norm_with_affine": true,
+        "max_sequence_length": 1024,
+        "mlp_hidden_size": 512,
+        "mlp_ratio": 4,
+        "n_heads": 16,
+        "n_kv_heads": 16,
+        "n_layers": 2,
+        "norm_after": false,
+        "ordinary_attention_precision_policy": "legacy",
+        "pad_token_id": 75,
+        "precision": "fp32",
+        "recurrent_backend": "tiled",
+        "recurrent_layers": null,
+        "recurrent_precision_policy": "legacy",
+        "recurrent_write_rho": 1.0,
+        "reference_eager": true,
+        "residual_dropout": 0.0,
+        "rope": false,
+        "vocab_size": 76,
+        "weight_tying": false
+      },
+      "evaluation": "backbone_only",
+      "latent_transitions": "all within-example transitions, including native MAD padding",
+      "latent_weight": 1.0,
+      "predictor_hidden_width": 128,
+      "runtime": "fp32_eager",
+      "schema": "rt-nextlat-tasks-model-v1",
+      "task_ranges": {
+        "a5": [
+          0,
+          60
+        ],
+        "fuzzy": [
+          60,
+          76
+        ]
+      },
+      "window_layer": 0,
+      "window_size": 2
+    },
+    "objective": "equal task-local means of CE + NextLat(weight1); one clip and Adam step",
+    "optimizer": {
+      "betas": [
+        0.9,
+        0.95
+      ],
+      "clip_norm": 1.0,
+      "eps": 1e-08,
+      "lr": 0.0001,
+      "matrix_decay": 0.01,
+      "type": "AdamW",
+      "vector_decay": 0.0
+    },
+    "order_seeds": {
+      "a5": 5432,
+      "fuzzy": 2026091604
+    },
+    "runtime": {
+      "autocast": false,
+      "compile": false,
+      "cuda": "13.3",
+      "cuda_graphs": false,
+      "deterministic_algorithms": true,
+      "float32_matmul_precision": "highest",
+      "ordinary_attention_backend": "math",
+      "precision": "fp32",
+      "reference_eager": true,
+      "tf32": false,
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "rt-nextlat-a5-fuzzy-batch-profile-v1",
+    "source_sha256": "a622967a728a8ff9c504e8163ddc67b557ae80477b6230f8981c741900c217c1",
+    "streams": {
+      "a5": {
+        "length": 12,
+        "order_seed": 5432,
+        "train_rows": 800000
+      },
+      "fuzzy": {
+        "length": 400,
+        "order_seed": 2026091604,
+        "train_rows": 12800
+      }
+    },
+    "task_lengths": {
+      "a5": 12,
+      "fuzzy": 400
+    },
+    "timed_updates": 30,
+    "timing_scope": "synchronized full update including row selection/order hashes, host-to-device copies, input encoding, both tasks' forward/backward, diagnostics, clipping and Adam",
+    "trial_semantics": "fresh identical initial weights and ordered stream prefixes; variable batch sizes consume different total examples and do not match learning trajectories",
+    "warmup_updates": 10
+  },
+  "elapsed_seconds": 93.16101378000167,
+  "oom_candidates": 0,
+  "phase": "complete",
+  "schema": "rt-nextlat-a5-fuzzy-batch-profile-v1",
+  "status": "complete",
+  "successful_candidates": 1,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260917T220428Z-d128-token-throughput-3072",
+    "mode": "online",
+    "name": "d128-mixed-tokens-per-second-3072-per-task",
+    "project": "rt-nextlat-fuzzy-a5",
+    "project_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5",
+    "run_id": "opdx9b15",
+    "run_url": "https://wandb.ai/taylorbollman/rt-nextlat-fuzzy-a5/runs/opdx9b15",
+    "status": "synced",
+    "system_stats": false
+  }
+}

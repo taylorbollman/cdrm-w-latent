@@ -1,0 +1,30 @@
+{
+  "architecture": "rt",
+  "batch_size": 1024,
+  "checkpoint_steps": [
+    1000,
+    5000,
+    10000
+  ],
+  "data_dir": ".runtime/rt-a5/20260911T154748Z/data",
+  "data_order_seed": 1234,
+  "diagnostic_rows": 1024,
+  "eval_every": 500,
+  "eval_rows": 4096,
+  "full_eval_rows": 102400,
+  "latent_weight": 1.0,
+  "log_every": 25,
+  "output_dir": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/train-injection",
+  "predictor_hidden_width": null,
+  "predictor_seed": 1235,
+  "projection_seed": 1236,
+  "resume": null,
+  "seed": 1234,
+  "stop_file": ".runtime/rt-a5/20260915T171500Z-six-layer-input001-10k/STOP_AFTER_UPDATE",
+  "updates": 10000,
+  "variant": "input",
+  "wandb_group": "20260915T171500Z-six-layer-input001-10k",
+  "wandb_project": "rt-a5-state-tracking",
+  "wandb_run_name": "l1r-rt6-nextlat-input-fixed-lambda001-d512-10k",
+  "width": 512
+}

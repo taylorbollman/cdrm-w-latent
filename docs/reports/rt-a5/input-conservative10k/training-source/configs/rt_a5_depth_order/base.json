@@ -1,0 +1,28 @@
+{
+  "schema": "rt-a5-depth-order-config-v1",
+  "backbone_base_config": "configs/rt_a5/base.json",
+  "nextlat_base_config": "configs/rt_a5_nextlat/base.json",
+  "position_encoding": "alibi",
+  "learned_position_parameters": false,
+  "initialization": "original_mitchell",
+  "precision": "fp32",
+  "nextlat_objective": "unchanged original state CE plus weight-one latent SmoothL1",
+  "evaluation_route": "backbone_only",
+  "latent_rollout_evaluated": false,
+  "variants": {
+    "seq4_alibi": {
+      "architecture": "seq",
+      "n_layers": 4,
+      "window_layer": null,
+      "window_length": null,
+      "initialization_pairing": "Fresh canonical four-layer Mitchell initialization; same seed does not imply identical two-layer backbone tensors"
+    },
+    "rt_window2_first": {
+      "architecture": "rt",
+      "n_layers": 2,
+      "window_layer": 0,
+      "window_length": 2,
+      "initialization_pairing": "Every learned initial tensor equals the original two-layer RT + NextLat at the same seeds; only first-layer direct attention reads change"
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "rt-a5-nextlat-variant-config-v1",
+  "name": "value-identity-sinusoidal",
+  "architecture": "rt",
+  "initialization": {
+    "kind": "value_path_identity",
+    "matrices": ["value_projection", "attention_output_projection"],
+    "layers": "both recurrent blocks",
+    "distribution": "I + independent Normal(0, noise_multiplier^2 / width)",
+    "noise_multiplier": 1.0,
+    "noise_seed": 1236,
+    "draw_order": "layer order; value projection then attention output projection",
+    "interpretation": "Identity-centered RT value-path heuristic; not an IDS4 input-dependent transition or a guarantee of near-identity recurrent dynamics"
+  },
+  "position_encoding": {
+    "kind": "fixed_sinusoidal",
+    "base": 10000.0,
+    "amplitude": 1.0,
+    "position_origin": 0,
+    "layout": "interleaved sin at 2i, cos at 2i+1",
+    "formula": "angle(position, i) = position / base^(2*i/width)",
+    "token_embedding_scale": 1.0,
+    "addition": "once at backbone input, before embedding dropout",
+    "alibi": false,
+    "rope": false,
+    "learned_position_parameters": false,
+    "persistent_position_buffers": false,
+    "nextlat_conditioning": "raw next-operation token embedding without positional addition"
+  }
+}

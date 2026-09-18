@@ -1,0 +1,121 @@
+{
+  "artifacts": {
+    "length-boundary.pdf": {
+      "bytes": 21902,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/length-boundary.pdf",
+      "sha256": "da99cfb89bacd6e2fc720279cce6e0f17c8920a175cb0e49dc5381f1a3d61c5e"
+    },
+    "length-boundary.png": {
+      "bytes": 166957,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/length-boundary.png",
+      "sha256": "80fe1068915b81c030cb1dca6ec788f7f472428798fafb54340f9b16037b9198"
+    },
+    "length-full.pdf": {
+      "bytes": 22065,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/length-full.pdf",
+      "sha256": "b8303a94f0149b7db94c451368a0019a92ff9071c9201d4426d46e65f3608ef7"
+    },
+    "length-full.png": {
+      "bytes": 148173,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/length-full.png",
+      "sha256": "3aadda34795bd9a931ab8ae5f430f9bcb953774db9e642542b83517a99fcca11"
+    },
+    "metrics.csv": {
+      "bytes": 45716,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/metrics.csv",
+      "sha256": "2d5904427224525f3a13e5a9a9c3ec3bda4bed365a8f64b26eabc5ed4aebb91a"
+    },
+    "report.md": {
+      "bytes": 2341,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/report.md",
+      "sha256": "ed9d2b867d24ebbc78c420dc60090fd25cf421f6f59c86146e380deec8028307"
+    },
+    "source/scripts/experiment_tracking.py": {
+      "bytes": 4662,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/experiment_tracking.py",
+      "sha256": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc"
+    },
+    "source/scripts/rt_a5_embedding_injection_extension_report.py": {
+      "bytes": 17249,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_embedding_injection_extension_report.py",
+      "sha256": "8abb8286784b7f857685d00020b5a82acdbd3a71e17ea5708a8bde176f604ebf"
+    },
+    "source/scripts/rt_a5_embedding_injection_report.py": {
+      "bytes": 24761,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_embedding_injection_report.py",
+      "sha256": "6c89fa986c0d191e7323ff3849757c37501aec20fbc2c284c16394757bbf8c0a"
+    },
+    "source/scripts/rt_a5_l1r_depth_extension_report.py": {
+      "bytes": 21090,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_l1r_depth_extension_report.py",
+      "sha256": "ab887d7025b8331e02478444ea8e4492a53429add93006a05fa0288152a2a580"
+    },
+    "source/scripts/rt_a5_l1r_depth_report.py": {
+      "bytes": 23216,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_l1r_depth_report.py",
+      "sha256": "6d46e33fa27038c33ab305bef67bb4cf3b329bbdd31b373dc410b5ddd152d280"
+    },
+    "source/scripts/rt_a5_length_report.py": {
+      "bytes": 22784,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_length_report.py",
+      "sha256": "7ed4e00462f742de2403d499aea58c2d5a61005cf788afa52e8b2c8273862a9e"
+    },
+    "source/scripts/rt_a5_nextlat_report.py": {
+      "bytes": 33272,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_nextlat_report.py",
+      "sha256": "b3c2d616decbcc4915b9b349265d59c96c1b40694265bfa2002cdcd3934b3903"
+    },
+    "source/scripts/rt_a5_report.py": {
+      "bytes": 18609,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/source/scripts/rt_a5_report.py",
+      "sha256": "7148bca5f736d924ca5e61880c4855d8a6b255504473af8c15fc8578054e196c"
+    },
+    "summary.json": {
+      "bytes": 767889,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/summary.json",
+      "sha256": "c596e80959a6aaac82ad8db1cbe7f9168c8edf709adc32879c32860d65c7fd9b"
+    },
+    "training-losses.pdf": {
+      "bytes": 18938,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/training-losses.pdf",
+      "sha256": "3d49e4ed99da096bef4a33475a2c22ec7be9e02b3f2a4ba5f14b8e72892f0031"
+    },
+    "training-losses.png": {
+      "bytes": 107785,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/training-losses.png",
+      "sha256": "426d0a889cd42df206168f65e53048175b4b47298073744beb38d6102e2b77c9"
+    },
+    "whole-word-vs-updates.pdf": {
+      "bytes": 15859,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/whole-word-vs-updates.pdf",
+      "sha256": "0d364b6420fcfb412c957bf731ef4ab6ea61c037e3e777e3427c85116de03ac6"
+    },
+    "whole-word-vs-updates.png": {
+      "bytes": 64723,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/embedding-input20k/whole-word-vs-updates.png",
+      "sha256": "93c4fcaf6b953f64299d383faa9ba3e35ff3563b89139823eeb86e66254a6186"
+    }
+  },
+  "figures": [
+    "length-full",
+    "length-boundary",
+    "whole-word-vs-updates",
+    "training-losses"
+  ],
+  "primary_update": 20000,
+  "schema": "rt-a5-embedding-input-extension-comparison-v1",
+  "status": "complete",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260915T153500Z-embedding-input20k",
+    "mode": "online",
+    "name": "input-injection-nextlat-own10k-to20k",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "2caw0d4k",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/2caw0d4k",
+    "status": "synced",
+    "system_stats": false
+  }
+}

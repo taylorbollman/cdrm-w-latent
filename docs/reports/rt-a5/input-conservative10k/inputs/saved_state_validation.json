@@ -1,0 +1,110 @@
+{
+  "backbone_parameter_tensors": 40,
+  "checker_sha256": "a3b9abc5bdb9b60e86fd4442a17e244f8c5a666ea0ac701e35bba1cfa6dbe349",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 55938281,
+      "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/checkpoints/step-000000.pt",
+      "sha256": "9fda2a59c8ebfdc22bf0984375466d33ea8a38ba98814c4ce3235ac65ad00e28"
+    },
+    "1000": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/checkpoints/step-001000.pt",
+      "sha256": "64e222f80d570a68c607bd60f3144a1ef43d397122d74f88c87ed39fc665db84"
+    },
+    "5000": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/checkpoints/step-005000.pt",
+      "sha256": "5db4613819f25ae3e3165c14e90c9ad242cc01db318082614b67484670a9e6d0"
+    },
+    "9665": {
+      "bytes": 167694395,
+      "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/checkpoints/step-009665.pt",
+      "sha256": "75644b2fbf8531c27a8b5d00f9fd2bc7e95ff7af9e174117f5929266181814ba"
+    }
+  },
+  "completed_updates": 9665,
+  "config": {
+    "bytes": 878,
+    "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/config.json",
+    "sha256": "7677f796537ff800a12affdb1061f7b82faccf18a2c35d161045b4398c5d5991"
+  },
+  "created_utc": "2026-09-15T16:55:50.649629+00:00",
+  "data_manifest": {
+    "bytes": 7862,
+    "path": ".runtime/rt-a5/20260911T154748Z/data/manifest.json",
+    "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+  },
+  "final_active_adam_states": 44,
+  "fixed_input_initial_checkpoint": {
+    "bytes": 55919913,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/train-injection/checkpoints/step-000000.pt",
+    "sha256": "2a109f5996719a80069fa2d8524d42a8729588427e3818363df3dcc9647fe4fa"
+  },
+  "fixed_input_protocol": {
+    "bytes": 107888,
+    "path": ".runtime/rt-a5/20260915T150000Z-embedding-input10k/protocol.json",
+    "sha256": "89bb7047d64c1a83fff89b538d3675c2bf6aac1d317c3b95f34fdccc1673de07"
+  },
+  "history": {
+    "bytes": 4459552,
+    "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/history.jsonl",
+    "sha256": "23a5997b020c05188894f0d2998860a01ca045297fa991a6082872355c54dcb2"
+  },
+  "initial_model_sha256": "d9c659b2161eb45e81e648666cc42a48fa110b76f836e2a2ecd5008ca7d60f56",
+  "injection_coefficient": 3.736489e-05,
+  "matched_minibatch_order_hashes": 9665,
+  "model_parameter_tensors": 44,
+  "model_parameters": 13964800,
+  "order_reference_history": {
+    "bytes": 33116761,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/history.jsonl",
+    "sha256": "8a258b646d2449b428190732e6c9e1d1e0f9bb3db71fbf4916418da41c023107"
+  },
+  "order_reference_report": {
+    "bytes": 919902,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/report.json",
+    "sha256": "e72c7e7703aae9c20192e474b4929cdccd4737e8a88f47584310a2373ede19fd"
+  },
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "projection_statistics": {
+    "final_weight_rms": 0.043737903237342834,
+    "initial_weight_rms": 0.044168226420879364,
+    "weight_delta_l2": 0.24298439919948578
+  },
+  "protocol": {
+    "bytes": 199164,
+    "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/protocol.json",
+    "sha256": "80e9551936f4fa646e1c3b4c179a81b9b934c97e898bd3a5521908d0a461a426"
+  },
+  "report": {
+    "bytes": 308013,
+    "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/train-conservative/report.json",
+    "sha256": "86af8d968bc30bc3b4aee5fdeb4d44bed2f66739c37b0a7fd41f844c86086408"
+  },
+  "requested_endpoint": 10000,
+  "requested_endpoint_reached": false,
+  "schedule": {
+    "formula": "0.001 * min(max(completed_update, 0) / 50000, 1) ** 2",
+    "initial_coefficient": 0.0,
+    "kind": "quadratic_completed_update",
+    "learned": false,
+    "maximum_coefficient": 0.001,
+    "power": 2,
+    "timing": "set to lambda(s) before training update s; evaluation and checkpoint s use lambda(s)",
+    "warmup_updates": 50000
+  },
+  "schema": "rt-a5-conservative-input-final-state-validation-v1",
+  "scope": "Saved packets/history only; no model construction, training, inference or CUDA initialization.",
+  "source_sha256": "7e9da2bf91ee61991ee3b05d0f81287db13d72199fa74898c8a1dde78413804d",
+  "status": "passed",
+  "stop_file": {
+    "bytes": 82,
+    "path": ".runtime/rt-a5/20260915T163300Z-input-conservative10k/STOP_AFTER_UPDATE",
+    "sha256": "a39384138eed3e1ddcf9e4c6e2e03bff7118c59138a091f058bc6906242d5dfb"
+  },
+  "training_status": "stopped",
+  "warmup_complete": false,
+  "warmup_updates": 50000
+}

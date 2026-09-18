@@ -1,0 +1,111 @@
+{
+  "artifacts": {
+    "length-boundary.pdf": {
+      "bytes": 22626,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/length-boundary.pdf",
+      "sha256": "1fd8084e6b33f0162a00770666ff4674b622e71f1d82199442986bc42707916e"
+    },
+    "length-boundary.png": {
+      "bytes": 104083,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/length-boundary.png",
+      "sha256": "b082b60bce40e9ba2ad674fcf3a89ec9243fc46b04593a119546820bb0d582b0"
+    },
+    "length-full.pdf": {
+      "bytes": 22846,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/length-full.pdf",
+      "sha256": "accc063d3341786d40209f7507826bcb30a97fda5c7834d26ed89524db860c66"
+    },
+    "length-full.png": {
+      "bytes": 120059,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/length-full.png",
+      "sha256": "32f273f39e26cf4c6a9004df90e1c6f49f6ee6b10760191c6333ffc94f4dec36"
+    },
+    "metrics.csv": {
+      "bytes": 56486,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/metrics.csv",
+      "sha256": "0a1f0090d29247dbc7c80c5a6bec72b2c4057fadea45b2f62e9a24351b75a55e"
+    },
+    "outcome.md": {
+      "bytes": 1336,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/outcome.md",
+      "sha256": "edb04b5ede3eed95aac307b6a404c554d267e30288fa8c6e37990197d6d794db"
+    },
+    "report.md": {
+      "bytes": 2456,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/report.md",
+      "sha256": "eea69655e82ceca124b42846a74376cf8a1903dbb812f0daa33baefcdbd8123e"
+    },
+    "source/scripts/experiment_tracking.py": {
+      "bytes": 4662,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/source/scripts/experiment_tracking.py",
+      "sha256": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc"
+    },
+    "source/scripts/rt_a5_l1r_depth_report.py": {
+      "bytes": 23216,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/source/scripts/rt_a5_l1r_depth_report.py",
+      "sha256": "6d46e33fa27038c33ab305bef67bb4cf3b329bbdd31b373dc410b5ddd152d280"
+    },
+    "source/scripts/rt_a5_length_report.py": {
+      "bytes": 22784,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/source/scripts/rt_a5_length_report.py",
+      "sha256": "7ed4e00462f742de2403d499aea58c2d5a61005cf788afa52e8b2c8273862a9e"
+    },
+    "source/scripts/rt_a5_nextlat_report.py": {
+      "bytes": 33272,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/source/scripts/rt_a5_nextlat_report.py",
+      "sha256": "b3c2d616decbcc4915b9b349265d59c96c1b40694265bfa2002cdcd3934b3903"
+    },
+    "source/scripts/rt_a5_report.py": {
+      "bytes": 18609,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/source/scripts/rt_a5_report.py",
+      "sha256": "7148bca5f736d924ca5e61880c4855d8a6b255504473af8c15fc8578054e196c"
+    },
+    "summary.json": {
+      "bytes": 583542,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/summary.json",
+      "sha256": "090d6154e105f1abf5afc7a005b3118b635158e58dc6ccec9665007f7a8ced60"
+    },
+    "training-state-ce.pdf": {
+      "bytes": 17540,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/training-state-ce.pdf",
+      "sha256": "14e62dc78c77a4f09aa113a116deb7ce5df363fb0c19fa1295c72b7d5055bd7c"
+    },
+    "training-state-ce.png": {
+      "bytes": 79623,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/training-state-ce.png",
+      "sha256": "68304f140d6d9117f465518786a3b77bd54bb0a4bed861d536459152707dae00"
+    },
+    "whole-word-vs-updates.pdf": {
+      "bytes": 16994,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/whole-word-vs-updates.pdf",
+      "sha256": "e594406e19ec006e30fa2a47d130af400f1b9690d4908ffc30d6721c73de8c16"
+    },
+    "whole-word-vs-updates.png": {
+      "bytes": 90803,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/l1r-six-layer-nextlat10k/whole-word-vs-updates.png",
+      "sha256": "edeefe8d45fadaaea87663bb38a95414f513c108ed4c8e6348ccdc5e9d034861"
+    }
+  },
+  "figures": [
+    "length-full",
+    "length-boundary",
+    "whole-word-vs-updates",
+    "training-state-ce"
+  ],
+  "primary_update": 10000,
+  "schema": "rt-a5-l1r-depth-comparison-v1",
+  "status": "complete",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260915T141414Z-l1r-six-layer-nextlat10k",
+    "mode": "online",
+    "name": "first-window-rt-nextlat-six-vs-two-layers-10k",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "8ymcev0t",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/8ymcev0t",
+    "status": "synced",
+    "system_stats": false
+  }
+}

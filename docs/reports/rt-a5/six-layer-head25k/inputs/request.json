@@ -1,0 +1,17 @@
+{
+  "schema": "rt-a5-six-layer-head-extension-request-v1",
+  "variant": "embedding_head",
+  "parent_request": {
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/request.json",
+    "sha256": "dd7bfbea7ede30c8d75a7813c8e3ea187a0c963e24f22b7eee029746d47fe7a4",
+    "bytes": 1275
+  },
+  "start_update": 10000,
+  "endpoint": 25000,
+  "continuation_decision": {
+    "path": ".runtime/rt-a5/20260915T193000Z-six-layer-head10k/continuation-decision.json",
+    "sha256": "f3574b84184ea0eabaa9de34aa97a6ccd7d4a399d6aafd565b3d575997c8e42e",
+    "bytes": 4154
+  },
+  "no_automatic_extension_past25000": true
+}

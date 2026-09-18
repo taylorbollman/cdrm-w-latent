@@ -1,0 +1,477 @@
+{
+  "artifacts": {
+    "README.md": {
+      "bytes": 1210,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/README.md",
+      "sha256": "c193b8d0a8aa0f18860ac5770919cef986669437d8cb890be091e50616311c5a"
+    },
+    "inputs/data_manifest.json": {
+      "bytes": 7862,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/data_manifest.json",
+      "sha256": "944c7a2e86a9329611c0fee74aaad59dfec1e77604c58a7ae7a465c8d529f9eb"
+    },
+    "inputs/order_reference_history.jsonl": {
+      "bytes": 33116761,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/order_reference_history.jsonl",
+      "sha256": "8a258b646d2449b428190732e6c9e1d1e0f9bb3db71fbf4916418da41c023107"
+    },
+    "inputs/order_reference_report.json": {
+      "bytes": 919902,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/order_reference_report.json",
+      "sha256": "e72c7e7703aae9c20192e474b4929cdccd4737e8a88f47584310a2373ede19fd"
+    },
+    "inputs/preflight.json": {
+      "bytes": 189484,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/preflight.json",
+      "sha256": "657342f5b6901b6c3e198fa6a1597f98e3fea207faaba85f021f27fa3c51a3f8"
+    },
+    "inputs/protocol.json": {
+      "bytes": 198747,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/protocol.json",
+      "sha256": "0c2d1d6bd51593a94698379f03b6d6b6ce60d1a9932f8449918ab85a575ae2d3"
+    },
+    "inputs/training_config.json": {
+      "bytes": 941,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/training_config.json",
+      "sha256": "68bb9dac3682383bf437a4846d06521a96650aa8f90e8237a358750d0d06d4ab"
+    },
+    "inputs/training_history.jsonl": {
+      "bytes": 2490150,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/training_history.jsonl",
+      "sha256": "4ba3b619277af510797ffbc86afacf71d895901e357d4dc1a1896ff95caace11"
+    },
+    "inputs/training_report.json": {
+      "bytes": 248590,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/inputs/training_report.json",
+      "sha256": "4c326a0e786afe77138710b499325f7fa44df063d3adc39dbce58c62a364134b"
+    },
+    "length-boundary.pdf": {
+      "bytes": 20562,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length-boundary.pdf",
+      "sha256": "5702f4eed942a5f166f04c967b8031425c84b6749a267b78dc42334541bf37d3"
+    },
+    "length-boundary.png": {
+      "bytes": 134763,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length-boundary.png",
+      "sha256": "3d224d7960bb3facdd9574b8e808487ef0f889db2fb471f50d9c941c210da627"
+    },
+    "length-full.pdf": {
+      "bytes": 20797,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length-full.pdf",
+      "sha256": "e92471c84d090f3574e3c232153eda77e3825c7535fb7c9de480c7e527ae873e"
+    },
+    "length-full.png": {
+      "bytes": 142036,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length-full.png",
+      "sha256": "9b813aaf9fe4b95205f4cda7744cb0b7b1b2b7169e7cafce68b9d858031525b8"
+    },
+    "length36-vs-updates.pdf": {
+      "bytes": 17047,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length36-vs-updates.pdf",
+      "sha256": "e2d37484873b9f17d402d2da00b8ce7c85857758c768ffcd270850829f1cd32f"
+    },
+    "length36-vs-updates.png": {
+      "bytes": 70132,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/length36-vs-updates.png",
+      "sha256": "ab58b48e12c493591803ae5ce0b30f0d6ef124e520be4cb9bb1353fd0ac23efd"
+    },
+    "metrics.csv": {
+      "bytes": 95631,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/metrics.csv",
+      "sha256": "1ac0c7d2517d503aa13609c04e3273de53092a1a91e5100f1305bbb7465322ba"
+    },
+    "reporting-source/scripts/experiment_tracking.py": {
+      "bytes": 4662,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/reporting-source/scripts/experiment_tracking.py",
+      "sha256": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc"
+    },
+    "reporting-source/scripts/rt_a5_length_report.py": {
+      "bytes": 22784,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/reporting-source/scripts/rt_a5_length_report.py",
+      "sha256": "7ed4e00462f742de2403d499aea58c2d5a61005cf788afa52e8b2c8273862a9e"
+    },
+    "reporting-source/scripts/rt_a5_nextlat_report.py": {
+      "bytes": 33272,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/reporting-source/scripts/rt_a5_nextlat_report.py",
+      "sha256": "b3c2d616decbcc4915b9b349265d59c96c1b40694265bfa2002cdcd3934b3903"
+    },
+    "reporting-source/scripts/rt_a5_quadratic_input_report.py": {
+      "bytes": 23206,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/reporting-source/scripts/rt_a5_quadratic_input_report.py",
+      "sha256": "f9aaec7b3fba52849049a82a77cdd688372f0c432ae2b039aa3d160a6c26a44b"
+    },
+    "reporting-source/scripts/rt_a5_report.py": {
+      "bytes": 18609,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/reporting-source/scripts/rt_a5_report.py",
+      "sha256": "7148bca5f736d924ca5e61880c4855d8a6b255504473af8c15fc8578054e196c"
+    },
+    "summary.json": {
+      "bytes": 598962,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/summary.json",
+      "sha256": "6b262e34206d3d64b8097a0281e3f4d17c490077a675368a75a4a504459536c4"
+    },
+    "training-and-schedule.pdf": {
+      "bytes": 19321,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-and-schedule.pdf",
+      "sha256": "3103bca4d0ffc0a5b5c7a56601e000d881828805044c09927fd3a1c0e3ed9500"
+    },
+    "training-and-schedule.png": {
+      "bytes": 114193,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-and-schedule.png",
+      "sha256": "a1dce8adaf83f860ef313906d6faf7a479710008c1929b4e912433c72f5482cf"
+    },
+    "training-curve.csv": {
+      "bytes": 14253,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-curve.csv",
+      "sha256": "f8caea1add80d2f9eef5af2ea04c0663a37e8b2d4b5c9296d8be3b150a09dab7"
+    },
+    "training-source/configs/rt_a5/base.json": {
+      "bytes": 1103,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/base.json",
+      "sha256": "c397c666829e85d03a604745aa4315fa6b47e8796b421266bb1a53b9578d7f5e"
+    },
+    "training-source/configs/rt_a5/rt_d128.json": {
+      "bytes": 1099,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/rt_d128.json",
+      "sha256": "74fd42bfc6f14157cd94c27f8b055e4ad7731b70028fd7625758b619814804f7"
+    },
+    "training-source/configs/rt_a5/rt_d256.json": {
+      "bytes": 1100,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/rt_d256.json",
+      "sha256": "db54f2dc138662e3359b4e0aa335f0b9c98b1eb70a21d4f411c3d5e6f678c2f0"
+    },
+    "training-source/configs/rt_a5/rt_d512.json": {
+      "bytes": 1100,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/rt_d512.json",
+      "sha256": "8cfa77a67a208948069dd7df1effcd474f9325027774645534e3e6472379c920"
+    },
+    "training-source/configs/rt_a5/seq_d128.json": {
+      "bytes": 1100,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/seq_d128.json",
+      "sha256": "a59d8a9a8c48578917eabde8536d6045baec41dfaa8cdc422821a34a04b5e1e4"
+    },
+    "training-source/configs/rt_a5/seq_d256.json": {
+      "bytes": 1101,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/seq_d256.json",
+      "sha256": "ee849ad7fe6ca2290e477db5c6db23340de8494186a5ba7297b2349da156e176"
+    },
+    "training-source/configs/rt_a5/seq_d512.json": {
+      "bytes": 1101,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5/seq_d512.json",
+      "sha256": "f98d4f1df3c3d960d9f3fa116e524c76db4bb562c1ee4e9df36f55ec4c78710f"
+    },
+    "training-source/configs/rt_a5_depth_order/base.json": {
+      "bytes": 1064,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_depth_order/base.json",
+      "sha256": "49edf25d27d9ea9c44591fb329d9aa5b4396aba1d37eabf9b87d0ce8644a5ee2"
+    },
+    "training-source/configs/rt_a5_embedding_injection/base.json": {
+      "bytes": 1213,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_embedding_injection/base.json",
+      "sha256": "cb116c65b795256999f4e145754f8bbb59c5be11f295871fec71d3e6374a7208"
+    },
+    "training-source/configs/rt_a5_l1r_depth/base.json": {
+      "bytes": 753,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_l1r_depth/base.json",
+      "sha256": "78f9df12d0b0ffe81ba11074fa2381f10cea24f2022a7a9b3a7cbd1d5095801b"
+    },
+    "training-source/configs/rt_a5_nextlat/base.json": {
+      "bytes": 1066,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_nextlat/base.json",
+      "sha256": "ac77763625a23820aa2e23e5522ac5a860f912e2b06a453e6d1e84653b44f91e"
+    },
+    "training-source/configs/rt_a5_nextlat_variant/base.json": {
+      "bytes": 1222,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_nextlat_variant/base.json",
+      "sha256": "fe8aa00ca53db359dc31c66472ee498fcb828c8b83660aca995c87b97301a6e2"
+    },
+    "training-source/configs/rt_a5_quadratic_input/base.json": {
+      "bytes": 895,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_quadratic_input/base.json",
+      "sha256": "d9f1dcda43c032d675760230e578a700f060aed3e87e023974a81bc21e8008d3"
+    },
+    "training-source/configs/rt_a5_window/base.json": {
+      "bytes": 1204,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/configs/rt_a5_window/base.json",
+      "sha256": "4abe5c2407c8db69155ae8f18dcc8061fa2aeadf3c6a6482d64f093b390274a4"
+    },
+    "training-source/recurrent-transformer/olmo/__init__.py": {
+      "bytes": 314,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/__init__.py",
+      "sha256": "5c7b879c4205b344396a28281000d890c122ae196f3e7b953ee1bbb488c493c2"
+    },
+    "training-source/recurrent-transformer/olmo/aliases.py": {
+      "bytes": 109,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/aliases.py",
+      "sha256": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744"
+    },
+    "training-source/recurrent-transformer/olmo/beam_search.py": {
+      "bytes": 46609,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/beam_search.py",
+      "sha256": "8a79065039b17677a8e01e9f332cc72f1dd1924d5681f3ae0dd72403b24bd1d3"
+    },
+    "training-source/recurrent-transformer/olmo/cdrm.py": {
+      "bytes": 11629,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/cdrm.py",
+      "sha256": "010945a5af59bad50736b1a7b8848d6e84109f7f900d280294b919e3d8c4f002"
+    },
+    "training-source/recurrent-transformer/olmo/cdrm_tiled.py": {
+      "bytes": 17410,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/cdrm_tiled.py",
+      "sha256": "51f9f7dc6fbb0f278989abe3b0c4e3ef02e09eec6b16eb070684adea99b02662"
+    },
+    "training-source/recurrent-transformer/olmo/checkpoint.py": {
+      "bytes": 88510,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/checkpoint.py",
+      "sha256": "9689890df87329aff8bbed16acca7ce378937d1a8f5e09af588ee8142bec925d"
+    },
+    "training-source/recurrent-transformer/olmo/checkpoint_conversion.py": {
+      "bytes": 13458,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/checkpoint_conversion.py",
+      "sha256": "dafe7aca5f26005fdefd3212f45e0464aa2700ae6f93220395b6bf3ea64dcc1d"
+    },
+    "training-source/recurrent-transformer/olmo/config.py": {
+      "bytes": 53127,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/config.py",
+      "sha256": "c019ee9fb70e47d778f652ed7b410984bc65a75a6f829dc23a460a8d9262e904"
+    },
+    "training-source/recurrent-transformer/olmo/data/__init__.py": {
+      "bytes": 7929,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/__init__.py",
+      "sha256": "fd8e2cd86b3ff403f22ea1b423de64e59c946daa98c48ffd382cee2ba4ce4041"
+    },
+    "training-source/recurrent-transformer/olmo/data/collator.py": {
+      "bytes": 6896,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/collator.py",
+      "sha256": "73d62ae457f97790ce0c23f57921c9458507b183420aed603f47b82743dee67b"
+    },
+    "training-source/recurrent-transformer/olmo/data/custom_datasets.py": {
+      "bytes": 2494,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/custom_datasets.py",
+      "sha256": "1d96ef2294c17c5958930e6f85a387ea79f69b5b837f75963da11056acf08223"
+    },
+    "training-source/recurrent-transformer/olmo/data/iterable_dataset.py": {
+      "bytes": 9597,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/iterable_dataset.py",
+      "sha256": "92bf8927ffd1a87cffb165b4acb857d434f7ce9623f91446072a6ca11b912ac5"
+    },
+    "training-source/recurrent-transformer/olmo/data/memmap_dataset.py": {
+      "bytes": 10837,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/memmap_dataset.py",
+      "sha256": "8e28ccd88eaaa80ffc0e89d197faf015fe0a676af01c9479d0ceb709feba8b81"
+    },
+    "training-source/recurrent-transformer/olmo/data/named_data_mixes.py": {
+      "bytes": 384860,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/named_data_mixes.py",
+      "sha256": "086cb22ec09775c942da223993c21ab253f9a8088f65c581cf8b9f419ce1081c"
+    },
+    "training-source/recurrent-transformer/olmo/data/util.py": {
+      "bytes": 5570,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/data/util.py",
+      "sha256": "3b2bfe2fc77feb4d6de227b324dd831ca9b88a06042459a1835339a01de1636b"
+    },
+    "training-source/recurrent-transformer/olmo/efficient_utils.py": {
+      "bytes": 7033,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/efficient_utils.py",
+      "sha256": "f3a7ae5531febe040f5ee58ded85169abac5a9867da53d087803daece3c4c260"
+    },
+    "training-source/recurrent-transformer/olmo/eval/__init__.py": {
+      "bytes": 3923,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/eval/__init__.py",
+      "sha256": "c8048bf3eed06854a9f3b95cd760b76f3f569cae01800d133e18e1b88ee2086a"
+    },
+    "training-source/recurrent-transformer/olmo/eval/downstream.py": {
+      "bytes": 88879,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/eval/downstream.py",
+      "sha256": "1958d0b4a3e8548d8b74f1897901cbebeb0a4f12dfdb04299c8a35ccb834483f"
+    },
+    "training-source/recurrent-transformer/olmo/eval/evaluator.py": {
+      "bytes": 3545,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/eval/evaluator.py",
+      "sha256": "92f8a678cd57a73a4ae5ed6d056f0ca76b6b36b2524dea9014d90f290a0734d2"
+    },
+    "training-source/recurrent-transformer/olmo/exceptions.py": {
+      "bytes": 838,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/exceptions.py",
+      "sha256": "599ad92119ad1de0efcef65e1858a720e7f0f5151896ba89a880a1b2a855d679"
+    },
+    "training-source/recurrent-transformer/olmo/initialization.py": {
+      "bytes": 597,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/initialization.py",
+      "sha256": "95553742a8b470ec135e3ed8d7ab5ce6a80ace64d54a709b978432c79de06b3e"
+    },
+    "training-source/recurrent-transformer/olmo/model.py": {
+      "bytes": 130032,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/model.py",
+      "sha256": "dfc37f10c8da1480265e8b90c9245a5120c8e596d6550057d9769c588eb2c9f5"
+    },
+    "training-source/recurrent-transformer/olmo/optim.py": {
+      "bytes": 64399,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/optim.py",
+      "sha256": "e6bd369009c9967880199e310b013c001f494c5e3801fe2da730c5c52f77b487"
+    },
+    "training-source/recurrent-transformer/olmo/ortho_basis.py": {
+      "bytes": 9948,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/ortho_basis.py",
+      "sha256": "2f136d4a6fbf4f986c6ea16f84008c770d74e6f809a037432b53940496909c8d"
+    },
+    "training-source/recurrent-transformer/olmo/safetensors_util.py": {
+      "bytes": 2448,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/safetensors_util.py",
+      "sha256": "f6ec5b40f24932a13067373abc292e4fb4aa0b88124c32269e381469d58bbf3c"
+    },
+    "training-source/recurrent-transformer/olmo/tokenizer.py": {
+      "bytes": 8034,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/tokenizer.py",
+      "sha256": "242d76ac9a028dd026d98c926057f6b7730085c26cd7cbfaf75b1fceb929214e"
+    },
+    "training-source/recurrent-transformer/olmo/torch_util.py": {
+      "bytes": 5105,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/torch_util.py",
+      "sha256": "b6a0765e79e91139ed81e0d0a9705c5ac4d2e3858c4e7e9594bf21454a70b3cc"
+    },
+    "training-source/recurrent-transformer/olmo/train.py": {
+      "bytes": 69205,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/train.py",
+      "sha256": "b3b7757b8cd002cf6652de8b82e5e925a960787e476470d83f59e9314c4a075c"
+    },
+    "training-source/recurrent-transformer/olmo/util.py": {
+      "bytes": 34093,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/util.py",
+      "sha256": "485edc25c1a53d4dec3742d76771d8b41c5413cffb87a26e0756aaf1650c477c"
+    },
+    "training-source/recurrent-transformer/olmo/version.py": {
+      "bytes": 407,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/recurrent-transformer/olmo/version.py",
+      "sha256": "a58f867212f863764425a9ba09be38e0f84756c3081c6919032c17b5a08bca2b"
+    },
+    "training-source/scripts/experiment_tracking.py": {
+      "bytes": 4662,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/experiment_tracking.py",
+      "sha256": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc"
+    },
+    "training-source/scripts/rt_a5_common.py": {
+      "bytes": 9627,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_common.py",
+      "sha256": "e3a86a9d81b2b141d040594f8039f5615d80ed1649bef6c28b1f3f2ccf406f0c"
+    },
+    "training-source/scripts/rt_a5_data.py": {
+      "bytes": 19461,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_data.py",
+      "sha256": "dc857d457a70311899db4db7690a0d22e6f8a5c842341693b25fea9e16ffff23"
+    },
+    "training-source/scripts/rt_a5_depth_order.py": {
+      "bytes": 6826,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_depth_order.py",
+      "sha256": "a977e90b6facdd093feb3a126800dcc8df42c0121a66b7daa6dbed6bc36ef0ba"
+    },
+    "training-source/scripts/rt_a5_depth_order_train.py": {
+      "bytes": 16263,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_depth_order_train.py",
+      "sha256": "b788a31b49a3c661df7e0c6f6ad3c61c3cb02e18b80e1a15b86da6298d10fc76"
+    },
+    "training-source/scripts/rt_a5_embedding_injection.py": {
+      "bytes": 10633,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_embedding_injection.py",
+      "sha256": "441d3cf0b42c994671760c411692a2c188559579a5c7afc79692f62a58e47216"
+    },
+    "training-source/scripts/rt_a5_embedding_injection_train.py": {
+      "bytes": 16629,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_embedding_injection_train.py",
+      "sha256": "2c5ca3968cf7a9be741f4043dea954f9dd34ade82cc68129b13b99598737b027"
+    },
+    "training-source/scripts/rt_a5_eval.py": {
+      "bytes": 4057,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_eval.py",
+      "sha256": "347ca00b36732b3aa4e651f65ee604aa3f7ad27d843159152239e61fecfd6587"
+    },
+    "training-source/scripts/rt_a5_l1r_depth.py": {
+      "bytes": 6856,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_l1r_depth.py",
+      "sha256": "b48ed2352640b21bff0091bb87c86e3544a19a3c8bb36719932b024d67284b05"
+    },
+    "training-source/scripts/rt_a5_l1r_depth_train.py": {
+      "bytes": 16228,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_l1r_depth_train.py",
+      "sha256": "54ee7f470e7f43e0e4a36be6d6d32aca3ad27593e9bd7fcbc2dcad6767b24d9d"
+    },
+    "training-source/scripts/rt_a5_nextlat.py": {
+      "bytes": 10561,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_nextlat.py",
+      "sha256": "342345de0bb4bfe0fcdda17145dadcd34a5e2ad9f548af687d688edebf394324"
+    },
+    "training-source/scripts/rt_a5_nextlat_train.py": {
+      "bytes": 21929,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_nextlat_train.py",
+      "sha256": "3b299c7baa9cccde485dba5f805d1d519db2910b77f7af03306860b0e89c8265"
+    },
+    "training-source/scripts/rt_a5_nextlat_variant.py": {
+      "bytes": 7455,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_nextlat_variant.py",
+      "sha256": "14ca791eea32edf3e56ede9aa5a896229830c0e33cde2c62aad02bdab920a64a"
+    },
+    "training-source/scripts/rt_a5_nextlat_variant_train.py": {
+      "bytes": 15772,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_nextlat_variant_train.py",
+      "sha256": "8b506fb182c824c7598182859cec11e60ce1ff7ba28fa9f9603a5f6aa2846f63"
+    },
+    "training-source/scripts/rt_a5_quadratic_input.py": {
+      "bytes": 1889,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_quadratic_input.py",
+      "sha256": "5ca23924479fb88a6758911174d9cd1c92f61b55e3d7a588d36da7c862f1ac5c"
+    },
+    "training-source/scripts/rt_a5_quadratic_input_train.py": {
+      "bytes": 19235,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_quadratic_input_train.py",
+      "sha256": "cf60964aba494a1cd0e2968b9ef21b4f0b34f5cc5d2698846753363dc0fa4c5b"
+    },
+    "training-source/scripts/rt_a5_train.py": {
+      "bytes": 19475,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_train.py",
+      "sha256": "235881bb7ecf4f64a799117940b7913b913e89e745888b7f99e93d2dc69844dc"
+    },
+    "training-source/scripts/rt_a5_value_bypass.py": {
+      "bytes": 8753,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_value_bypass.py",
+      "sha256": "3b9bfe70134f8b12a6ba6bc1e030e24d35c1cd91fb023453c073720560b396ca"
+    },
+    "training-source/scripts/rt_a5_window.py": {
+      "bytes": 8307,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_window.py",
+      "sha256": "17203d3751aa07f08c3b72852c56e86142378874aef5e722f3b11da11de5e8a2"
+    },
+    "training-source/scripts/rt_a5_window_train.py": {
+      "bytes": 16273,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/rt_a5_window_train.py",
+      "sha256": "c4836b33bcf2f3201510dcdd8cc63a2a4a0464ce94744fe29a8c9a9b041332d8"
+    },
+    "training-source/scripts/stage_a_common.py": {
+      "bytes": 14959,
+      "path": "/workspace/cdrm-w-latent/docs/reports/rt-a5/input-quadratic50k-through5k/training-source/scripts/stage_a_common.py",
+      "sha256": "aa2c01ea70411511c0479d2e5397b0b0179010e2ba0a82edae9ac848754305d8"
+    }
+  },
+  "figures": [
+    "length-full",
+    "length-boundary",
+    "length36-vs-updates",
+    "training-and-schedule"
+  ],
+  "partial": true,
+  "schema": "rt-a5-quadratic-input-report-v1",
+  "status": "complete",
+  "through_update": 5000,
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "20260915T160000Z-input-quadratic50k",
+    "mode": "online",
+    "name": "quadratic-input-report-through-005000",
+    "project": "rt-a5-state-tracking",
+    "project_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking",
+    "run_id": "tly43tdj",
+    "run_url": "https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/tly43tdj",
+    "status": "synced",
+    "system_stats": false
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "backbone_parameter_tensors": 57,
+  "backbone_parameters": 18948608,
+  "checker_sha256": "4bca1fc3e75cc7f7162f92f69314f2edbc45e27ee7a019540b8c8fd8618dfcee",
+  "checkpoint_inputs": {
+    "0": {
+      "bytes": 80052026,
+      "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-000000.pt",
+      "sha256": "eabb1901ed866a499dc58d7a6594616ef749a03f3192ebd19975844d447619b8"
+    },
+    "1000": {
+      "bytes": 240087811,
+      "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-001000.pt",
+      "sha256": "bf872e37d65ebaac2a3e53a07bc76963e74ed91a9fa801d552879a27075040db"
+    },
+    "10000": {
+      "bytes": 240087811,
+      "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-010000.pt",
+      "sha256": "9f6e330741b5f363a46657df3f1bc34d1459e528e22dcd8d23b9c5753826ba6b"
+    },
+    "5000": {
+      "bytes": 240087811,
+      "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/checkpoints/step-005000.pt",
+      "sha256": "7703d7949a2662227fe30221d0987a862cfb975aec633e1a90ef269bd52c845e"
+    }
+  },
+  "checks": {
+    "all_four_checkpoint_hashes": true,
+    "complete_fresh_synced_10k": true,
+    "consistent_complete_model_optimizer_mapping": true,
+    "cuda_never_initialized": true,
+    "exact_original_predictor_initialization": true,
+    "finite_cpu_fp32_final_adam_at_10k": true,
+    "finite_cpu_fp32_initial_and_final_models": true,
+    "initial_adam_empty": true,
+    "initial_metadata_and_tensor_digest_bound_to_protocol": true,
+    "no_two_layer_backbone_identity_claim": true,
+    "source_identity_bound": true
+  },
+  "completed_updates": 10000,
+  "created_utc": "2026-09-15T14:47:11.442100+00:00",
+  "final_active_adam_states": 61,
+  "model_parameter_tensors": 61,
+  "model_parameters": 19998208,
+  "passed": true,
+  "predictor_parameter_tensors": 4,
+  "predictor_parameters": 1049600,
+  "protocol": {
+    "bytes": 71461,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/protocol.json",
+    "sha256": "bfa66d38f68594200c2232e8a614127f8a4220d463fbea238aebd9ab41656eca"
+  },
+  "reference_initial_checkpoint": {
+    "bytes": 29666838,
+    "path": ".runtime/rt-a5/20260914T212935Z-nextlat-depth-order80k/train-window-first/checkpoints/step-000000.pt",
+    "sha256": "9ef67f1d02d614516feea997d905efc483ddfd1dca3a735e79a09dd3dcc8c735"
+  },
+  "report": {
+    "bytes": 180455,
+    "path": ".runtime/rt-a5/20260915T141414Z-l1r-six-layer-nextlat10k/train-depth/report.json",
+    "sha256": "20245123212f21aca4b56ab24fe9b30ace20382a6a958984ef3992c2c6e8bb31"
+  },
+  "schema": "rt-a5-l1r-depth-final-state-validation-v1",
+  "scope": "Saved initial/final packets and reference initial tensors only; no model construction, inference or training. Reporter handles source-file and full history/order audits.",
+  "source_sha256": "04d3854620854130eb9a67093fd0538b5762ac870b9464291fde8a6899fbc78b",
+  "status": "passed"
+}

@@ -1,0 +1,8 @@
+{
+  "status": "complete",
+  "updated_utc": "2026-09-15T18:09:33.096555+00:00",
+  "start_update": 10000,
+  "endpoint": 20000,
+  "completed_updates": 20000,
+  "no_automatic_followup": true
+}
