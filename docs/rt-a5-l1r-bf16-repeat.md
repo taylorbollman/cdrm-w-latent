@@ -1,13 +1,50 @@
 # A5-only L1R RT + NextLat: matched BF16 repeat
 
-**Running:** the fresh BF16 repeat launched on 2026-09-18, supervised by host
-PID **438766**. [Training W&B](https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/w9jalp09).
-The first 721 updates were verified finite with data-order hashes matching the
-FP32 reference exactly; initialization metadata and all non-precision training
-settings match. This is launch evidence, not a completed BF16 result. Read
-runtime `status.json`, `train/report.json`, and `train/history.jsonl` for progress.
-The fixed target is 80,000 updates, followed automatically by paired reporting
-and GCS retention. No other embedding variants remain queued.
+**Complete and reviewed:** both precision arms reached 80,000 updates. The
+BF16 run, paired report and verified GCS retention finished on 2026-09-18.
+At 80k both arms have **100% token and whole-word accuracy at lengths 12 and
+36**, on 102,400 development words per length. The two initializations and
+all 80,000 data-order records match. Final BF16 model/Adam tensors are finite
+FP32, all Adam counters are 80,000, and the checkpoint matches its retained
+archive member. No following experiment is queued; the user will provide
+next directions.
+
+[Completed comparison](reports/rt-a5/l1r-nextlat-bf16-repeat80k/README.md) ·
+[Training W&B](https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/w9jalp09) ·
+[Comparison W&B](https://wandb.ai/taylorbollman/rt-a5-state-tracking/runs/p4un9rd1).
+
+| Full checkpoint | FP32 length-36 whole word | BF16 length-36 whole word |
+|---:|---:|---:|
+| 5,000 | 74.0674% | 72.8818% |
+| 10,000 | 85.7910% | 86.2666% |
+| 20,000 | 96.3369% | 97.4062% |
+| 25,000 | 96.2090% | 97.6084% |
+| 30,000 through 80,000 | 100% | 100% |
+
+The full checkpoints do not imply uninterrupted perfection. BF16's routine
+4,096-word evaluations had an additional dip at 51.5k–56k, reaching **97.6318%**
+length-36 whole-word accuracy at 51.5k. This coincided with a finite training
+spike (update 51,270: loss 0.01943, pre-clipping gradient norm 3.79; clip bound
+one). Every BF16 evaluation from 56.5k through 80k was perfect. FP32 also
+fluctuated earlier, but its last nonperfect evaluation was at 37k. All logged
+training values in both runs are finite. This supports preserved learning and
+final state tracking under the protected BF16 recipe, with some additional
+transient variation; it does not establish multi-seed precision equivalence.
+
+BF16 took **79.63 training-loop minutes** versus FP32 **74.48** (+6.92%);
+total times were **82.33 versus 76.74 minutes** (+7.29%). This small T12 model
+did not demonstrate a BF16 speedup; the historical runs are not a replicated
+throughput benchmark. The result applies to protected `bf16_fp32_state`, not
+released-style `legacy` BF16 or a mixed A5/Fuzzy training experiment.
+
+Final checkpoint SHA256:
+`ccd393ae2e30398ddfa7e519de298fcdc8b268a147a1746e5cc52918ff0a42f1`.
+Verified archive:
+`gs://fast-chunks/cdrm-w-latent/rt-a5/20260918T175000Z-l1r-nextlat-bf16-repeat/final-evidence.tar.gz`
+(SHA256 `0d88f7f95a93de282ed63e9b12c3dd556c4f2fd1490753aebad38c1a8d4566f2`).
+The subsequent read-only endpoint/trajectory audit is recorded locally as
+`completion-review.json` in the runtime. The original archived report remains
+unchanged.
 
 **First full checkpoint, 1,000 updates:** on the same 102,400-word pools,
 BF16 length-12 whole-word accuracy is **95.1260%** versus FP32 **95.6348%**;
@@ -23,8 +60,8 @@ at width 512**. It is larger than the width-128 model in the recent mixed-task
 experiments. The longest width-128 A5-only lineage reached 20,000 global updates
 (10,000 initial updates plus a 10,000-update A5-only control continuation).
 
-The BF16 run should repeat the selected 80k experiment from its original
-initial tensors and fresh Adam state. It is not a continuation from the trained
+The BF16 run repeated the selected 80k experiment from its original
+initial tensors and fresh Adam state. It was not a continuation from the trained
 80k checkpoint. Implementation and launch records live in
 `.runtime/rt-a5/20260918T175000Z-l1r-nextlat-bf16-repeat/`.
 
