@@ -17,6 +17,8 @@ google-cloud-storage==3.12.0
 lightning==2.6.0
 deepspeed==0.19.0
 sentencepiece==0.2.1
+# Preserve OpenELM's native text cleanup before SentencePiece encoding.
+ftfy==6.3.1
 
 # Repository test runner.
 pytest==9.1.1

@@ -1,0 +1,38 @@
+{
+  "objects": [
+    {
+      "generation": "1790015661728396",
+      "md5_base64": "L7etcnviBNe9rtUAbRjRNg==",
+      "sha256": "0e79fef600d022da33111f86dae4e7f4a4fd1d2e9045364c5ccd4c2283c4d9c6",
+      "size_bytes": 4320718260,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-import/20260921T182701Z/checkpoint/checkpoint_epoch_0_iter_299999.pt",
+      "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+    },
+    {
+      "generation": "1790015662058355",
+      "md5_base64": "Iju1ZGA2Lz8R2S6L3/AJAg==",
+      "sha256": "9746ff5008cbae5995d19f2bfef69ffe0411b3d5243bb805a4aae2c5a86a465e",
+      "size_bytes": 349729,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-import/20260921T182701Z/evidence.tar.gz",
+      "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+    },
+    {
+      "generation": "1790015662275240",
+      "md5_base64": "8JzAKd8r65aJxqPmrqi79w==",
+      "sha256": "1c5797b04b0a85dd75db3e2997ccfadfa54a23ed4c1d2829d0a66ce3ae49bc35",
+      "size_bytes": 17827,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-import/20260921T182701Z/retention-manifest.json",
+      "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+    }
+  ],
+  "receipt_object": {
+    "generation": "1790015662497886",
+    "md5_base64": "1FSAnLFJMkfi9/MyoiE6og==",
+    "sha256": "ec66c189531590c5bdf3badaf4ff8b99ba24a457f718dceefe69b5d7bc980897",
+    "size_bytes": 1398,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-import/20260921T182701Z/storage-receipt.json",
+    "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+  },
+  "schema": "openelm-import-storage-receipt-v1",
+  "status": "verified"
+}

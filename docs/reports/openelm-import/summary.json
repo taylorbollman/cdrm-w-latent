@@ -1,0 +1,468 @@
+{
+  "attention_dispatch": {
+    "events": [
+      "aten::_scaled_dot_product_cudnn_attention",
+      "aten::scaled_dot_product_attention",
+      "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_1_64x128x64_4x1x1_cga1x1x1_kernel0_0"
+    ],
+    "flash_observed": true,
+    "fused_vs_math": {
+      "difference_l2": 45.81285858154297,
+      "finite": true,
+      "loss": 3.1765661239624023,
+      "math_loss": 3.1740615367889404,
+      "max_abs": 0.25,
+      "reference_l2": 12920.90625,
+      "relative_l2": 0.0035456381847475266
+    },
+    "scope": "one ordinary BF16 forward; no throughput or recurrent claim",
+    "sdpa_backend": "cudnn"
+  },
+  "cache_causality": {
+    "adapter_cached_vs_native": {
+      "atol": 0.0001,
+      "difference_l2": 0.0012334026396274567,
+      "finite": true,
+      "max_abs": 1.33514404296875e-05,
+      "passed": true,
+      "reference_l2": 6521.21044921875,
+      "relative_l2": 1.891370703693852e-07,
+      "rtol": 5e-05
+    },
+    "chunked_vs_full": {
+      "atol": 0.0001,
+      "difference_l2": 0.005095330998301506,
+      "finite": true,
+      "max_abs": 6.866455078125e-05,
+      "passed": true,
+      "reference_l2": 6521.21142578125,
+      "relative_l2": 7.813473088999071e-07,
+      "rtol": 5e-05
+    },
+    "future_token_isolation": {
+      "atol": 0,
+      "difference_l2": 0.0,
+      "finite": true,
+      "max_abs": 0.0,
+      "passed": true,
+      "reference_l2": 4546.90771484375,
+      "relative_l2": 0.0,
+      "rtol": 0
+    },
+    "native_cached_vs_full": {
+      "atol": 0.0001,
+      "difference_l2": 0.004895175341516733,
+      "finite": true,
+      "max_abs": 6.29425048828125e-05,
+      "passed": true,
+      "reference_l2": 6521.21142578125,
+      "relative_l2": 7.506542913428519e-07,
+      "rtol": 5e-05
+    },
+    "native_kv_head_counts": true,
+    "passed": true
+  },
+  "cases": [
+    {
+      "backend": "math",
+      "fixture": 0,
+      "gradients": {
+        "failed": [],
+        "max_abs": 0.0,
+        "missing": [],
+        "parameter_tensors": 226,
+        "passed": true,
+        "relative_l2": 0.0
+      },
+      "hidden": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 403.8902587890625,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "logits": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 12916.9287109375,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "loss": 3.174386978149414,
+      "loss_comparison": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 3.174386978149414,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "passed": true,
+      "precision": "fp32",
+      "reference_loss": 3.174386978149414,
+      "tokens": 44
+    },
+    {
+      "backend": "math",
+      "fixture": 1,
+      "hidden": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 768.1846923828125,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "logits": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 25252.833984375,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "loss": 1.462590217590332,
+      "loss_comparison": {
+        "atol": 3e-05,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 1.462590217590332,
+        "relative_l2": 0.0,
+        "rtol": 3e-05
+      },
+      "passed": true,
+      "precision": "fp32",
+      "reference_loss": 1.462590217590332,
+      "tokens": 64
+    },
+    {
+      "backend": "math",
+      "fixture": 0,
+      "gradients": {
+        "failed": [],
+        "max_abs": 0.0,
+        "missing": [],
+        "parameter_tensors": 226,
+        "passed": true,
+        "relative_l2": 0.0
+      },
+      "hidden": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 404.0174560546875,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "logits": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 12920.90625,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "loss": 3.1740615367889404,
+      "loss_comparison": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 3.1740615367889404,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "passed": true,
+      "precision": "bf16_mixed",
+      "reference_loss": 3.1740615367889404,
+      "tokens": 44
+    },
+    {
+      "backend": "math",
+      "fixture": 1,
+      "hidden": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 768.6500854492188,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "logits": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 25273.26953125,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "loss": 1.4620964527130127,
+      "loss_comparison": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 1.4620964527130127,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "passed": true,
+      "precision": "bf16_mixed",
+      "reference_loss": 1.4620964527130127,
+      "tokens": 64
+    },
+    {
+      "backend": "default",
+      "fixture": 0,
+      "gradients": {
+        "failed": [],
+        "max_abs": 1.4901161193847656e-08,
+        "missing": [],
+        "parameter_tensors": 226,
+        "passed": true,
+        "relative_l2": 2.0727908803127686e-09
+      },
+      "hidden": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 404.0981750488281,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "logits": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 12920.4990234375,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "loss": 3.1765661239624023,
+      "loss_comparison": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 3.1765661239624023,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "passed": true,
+      "precision": "bf16_mixed",
+      "reference_loss": 3.1765661239624023,
+      "tokens": 44
+    },
+    {
+      "backend": "default",
+      "fixture": 1,
+      "hidden": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 767.9085083007812,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "logits": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 25237.244140625,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "loss": 1.4641940593719482,
+      "loss_comparison": {
+        "atol": 0.002,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 1.4641940593719482,
+        "relative_l2": 0.0,
+        "rtol": 0.002
+      },
+      "passed": true,
+      "precision": "bf16_mixed",
+      "reference_loss": 1.4641940593719482,
+      "tokens": 64
+    }
+  ],
+  "checkpoint": {
+    "etag": "\"6c5c660dc5521124bcd60e68f0bb4a32-258\"",
+    "last_modified": "Tue, 23 Apr 2024 03:36:52 GMT",
+    "path": "checkpoint/checkpoint_epoch_0_iter_299999.pt",
+    "sha256": "0e79fef600d022da33111f86dae4e7f4a4fd1d2e9045364c5ccd4c2283c4d9c6",
+    "size_bytes": 4320718260,
+    "url": "https://docs-assets.developer.apple.com/ml-research/models/corenet/v0.1.0/openelm/pretrained/1.1B/checkpoint_epoch_0_iter_299999.pt"
+  },
+  "config": {
+    "ffn_intermediate_sizes": [
+      1024,
+      1280,
+      1536,
+      1792,
+      2048,
+      2304,
+      2560,
+      2816,
+      3072,
+      3328,
+      3584,
+      3840,
+      4096,
+      4608,
+      4608,
+      5120,
+      5376,
+      5632,
+      5888,
+      6144,
+      6400,
+      6656,
+      6912,
+      7168,
+      7424,
+      7680,
+      7936,
+      8192
+    ],
+    "head_dim": 64,
+    "max_context_length": 2048,
+    "model_dim": 2048,
+    "num_kv_heads": [
+      4,
+      4,
+      4,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      5,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      6,
+      7,
+      7,
+      7,
+      7,
+      7,
+      7,
+      8,
+      8,
+      8,
+      8
+    ],
+    "num_query_heads": [
+      16,
+      16,
+      16,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      20,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      24,
+      28,
+      28,
+      28,
+      28,
+      28,
+      28,
+      32,
+      32,
+      32,
+      32
+    ],
+    "padding_idx": 32000,
+    "rms_norm_eps": 1e-06,
+    "rope_freq_constant": 10000.0,
+    "vocab_size": 32128
+  },
+  "elapsed_seconds": 22.988167163999606,
+  "finished_utc": "2026-09-21T18:27:25.371240+00:00",
+  "memory_scope": "paired reference+adapter validation with gradients; not single-model training",
+  "peak_allocated_gib": 17.509698390960693,
+  "peak_reserved_gib": 18.513671875,
+  "runtime": {
+    "cuda": "13.3",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+    "torch": "2.13.0a0+8145d630e8.nv26.06"
+  },
+  "source_hashes": {
+    "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+    "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+    "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+    "scripts/openelm_validate.py": "27757308a0f83883b925aab0907f5b2199c67692e691faaef8d6c030642476cf"
+  },
+  "started_utc": "2026-09-21T18:27:01.732194+00:00",
+  "state": {
+    "parameter_count": 1080153600,
+    "tensor_count": 226
+  },
+  "status": "passed",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "openelm-import",
+    "mode": "online",
+    "name": "openelm-1.1b-native300k-import",
+    "project": "pretrained-fbt-rt-nextlat",
+    "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+    "run_id": "z4jzbq02",
+    "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/z4jzbq02",
+    "status": "synced",
+    "system_stats": false
+  }
+}

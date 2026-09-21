@@ -1,5 +1,11 @@
 # Pretrained feedback and RT research: checkpoint choice, intermediate experiments, and multi-GPU
 
+**Implementation status:** the user approved Stage A on2026-09-21. Its ordinary
+OpenELM import is implemented and validated; see the
+[implementation handoff](fbt-rt-nextlat-handoff.md) and
+[first-PR results](reports/openelm-import/results.md). Subsequent milestones
+below remain staged research plans.
+
 Revised 2026-09-21, including the follow-up on weight tying, early RT+NextLat,
 the author's Nanochat reproduction, public checkpoints, upstream feature
 provenance, OpenELM attention/layer geometry, and feature-matching/STP follow-ups. **Planning only; no model changes or

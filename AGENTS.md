@@ -29,6 +29,15 @@ without printing them, and include the project or run URLs in progress updates
 and results. Keep the existing local records and GCS artifact retention alongside
 W&B tracking.
 
+# Pretrained OpenELM handoff
+
+For pretrained OpenELM / RT / FBT / NextLat work, first read
+`docs/fbt-rt-nextlat-handoff.md`, then the current research plan and attention
+audit linked there. It records the user's staged authorization, selected native
+checkpoint and current implementation status across compactions. The first PR
+establishes ordinary OpenELM fidelity; do not infer authorization for later long
+learning runs from platform implementation work.
+
 # RT numerical handoff
 
 For future changes to the base Recurrent Transformer or its numerical tests,

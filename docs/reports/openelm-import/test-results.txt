@@ -1,0 +1,7 @@
+Intentional CPU unit tests inside rebuilt project Docker image.
+python -m pytest -q tests/test_openelm_model.py tests/test_openelm_reference.py tests/test_openelm_artifacts.py tests/test_openelm_retain.py tests/test_experiment_tracking.py
+
+60 passed, 3 warnings in 6.21s
+
+Warnings: upstream SentencePiece SWIG deprecations and Google API dependency notice.
+Actual-checkpoint GPU checks are reported separately in results.md and summary.json.
