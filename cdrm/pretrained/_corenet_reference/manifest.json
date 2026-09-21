@@ -1,0 +1,62 @@
+{
+  "repository": "https://github.com/apple/corenet",
+  "revision": "f9f83e616a34d02c422733a06a3fe5bde63ae575",
+  "files": [
+    {
+      "path": "LICENSE",
+      "file": "LICENSE",
+      "sha256": "21a6551d1f8f851d2d10b5c6cc56535956b983c3cb997d25f3db4dd6f59ef99f",
+      "bytes": 2672,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/LICENSE"
+    },
+    {
+      "path": "corenet/modeling/models/language_modeling/general_gpt.py",
+      "file": "general_gpt.py",
+      "sha256": "733f91f1af5154fa8886ddd1b95be61ec202318d9ec8b12be9698969820789bb",
+      "bytes": 36091,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/models/language_modeling/general_gpt.py"
+    },
+    {
+      "path": "corenet/modeling/layers/normalization/rms_norm.py",
+      "file": "rms_norm.py",
+      "sha256": "4ce0fe0a219e034e1c2ea929a8f76a23bdb40d7eef999b6228da3fdc6b8f243a",
+      "bytes": 2151,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/layers/normalization/rms_norm.py"
+    },
+    {
+      "path": "corenet/modeling/layers/rotary_embeddings.py",
+      "file": "rotary_embeddings.py",
+      "sha256": "fd8a1d2d144e3c9f7a2f926c99ad6b5b0e3b482c73ff2111eea292da66e501b0",
+      "bytes": 7428,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/layers/rotary_embeddings.py"
+    },
+    {
+      "path": "corenet/modeling/layers/embedding.py",
+      "file": "embedding.py",
+      "sha256": "42b58ad7f16ac3e63687017569900c6c24cea578bd92007226e2262ec9b3fbd4",
+      "bytes": 1956,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/layers/embedding.py"
+    },
+    {
+      "path": "corenet/modeling/layers/linear_layer.py",
+      "file": "linear_layer.py",
+      "sha256": "516b262bbb526f90fd210fb10dbf23bf9b9f4cbd6649ddf7bdae0dd0204cd3a4",
+      "bytes": 7349,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/layers/linear_layer.py"
+    },
+    {
+      "path": "corenet/modeling/layers/activation/swish.py",
+      "file": "swish.py",
+      "sha256": "6c833c076cf7ceef87686ccbd3efe4cc897b8d0fa58b45ae9981143fcfe059d7",
+      "bytes": 514,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/modeling/layers/activation/swish.py"
+    },
+    {
+      "path": "corenet/utils/math_utils.py",
+      "file": "math_utils.py",
+      "sha256": "c96f0e9ca00f44d9ba5a3a37f617a77524f4120a9c302442b505a715c0af57e0",
+      "bytes": 1057,
+      "url": "https://raw.githubusercontent.com/apple/corenet/f9f83e616a34d02c422733a06a3fe5bde63ae575/corenet/utils/math_utils.py"
+    }
+  ]
+}

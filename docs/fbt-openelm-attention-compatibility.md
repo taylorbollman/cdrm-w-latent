@@ -1,5 +1,9 @@
 # OpenELM-1.1B: attention backends and layer-wise scaling
 
+Follow-up: the [ordinary import milestone](reports/openelm-import/results.md)
+now validates the native1.1B checkpoint, including the container's cuDNN fused
+attention path. RT/FBT implementation remains subsequent work.
+
 Source audit and planning decision, 2026-09-21. No model changes, dependency
 installation, checkpoint download or GPU execution accompanied this review.
 The [research plan](fbt-rt-nextlat-research-plan-v2.md) is authoritative for
