@@ -29,14 +29,17 @@ without printing them, and include the project or run URLs in progress updates
 and results. Keep the existing local records and GCS artifact retention alongside
 W&B tracking.
 
-# Pretrained OpenELM handoff
+# Pretrained model handoff
 
-For pretrained OpenELM / RT / FBT / NextLat work, first read
-`docs/fbt-rt-nextlat-handoff.md`, then the current research plan and attention
-audit linked there. It records the user's staged authorization, selected native
-checkpoint and current implementation status across compactions. The first PR
-establishes ordinary OpenELM fidelity; do not infer authorization for later long
-learning runs from platform implementation work.
+For pretrained OLMo / RT / FBT / NextLat work, first read
+`docs/fbt-rt-nextlat-handoff.md`, then
+`docs/fbt-rt-nextlat-research-plan-v3.md`. Original OLMo-1B at step 60,000
+(approximately 252B tokens) is the selected primary model; its native checkpoint,
+source candidate and tokenizer pins are in the handoff and selection audit.
+The next milestone is native ordinary fidelity followed by a sequential RT
+reference, pending the user's review of the revised plan. Do not infer long-run
+authorization from platform work. Completed OpenELM code/results are historical
+reference evidence; do not resume its superseded next milestone by default.
 
 # RT numerical handoff
 

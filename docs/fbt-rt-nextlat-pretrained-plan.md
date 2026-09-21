@@ -1,15 +1,13 @@
 # Pretrained OLMo with FBT feedback, selected RT layers, and optional NextLat
 
-**Superseded in part by the [revised research plan](fbt-rt-nextlat-research-plan-v2.md).**
-The user's final selection is OpenELM-1.1B as the primary model, with 450M an
-optional fallback and Nanochat deprioritized. The revision adds an early RT x
-NextLat comparison and
-multi-GPU stages, and records the author-maintained Nanochat reproduction's
-provenance and training budgets. Feature matching is retained as a late or
-post-main diagnostic; Semantic Tube Prediction is future work, not a queued
-ablation. The original
-OLMo-specific dimensions and milestone order below are retained as proposal history,
-not the current model selection.
+**Historical initial proposal.** The authoritative
+[v3 plan](fbt-rt-nextlat-research-plan-v3.md) now selects original OLMo-1B at
+step 60,000 (approximately 252B tokens), after the intervening OpenELM work.
+Returning to the OLMo family does **not** reactivate this document's late
+checkpoint choice, old milestone order or original conditional approach to
+fractional-alpha support. Read the [current handoff](fbt-rt-nextlat-handoff.md).
+The equations and design history below remain reference material, subject to
+the current plan's explicit decisions.
 
 Prepared 2026-09-21. **Proposal only:** this task investigated sources and code;
 it did not download model weights, modify model/training code, or launch training.

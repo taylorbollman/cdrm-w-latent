@@ -2,7 +2,7 @@
 
 Checked 2026-09-21. Planning evidence only: no weights downloaded, model code
 changed, or GPU jobs launched. The current decisions are in the
-[research plan](fbt-rt-nextlat-research-plan-v2.md).
+[research plan](fbt-rt-nextlat-research-plan-v3.md).
 
 **Availability update:** the [public-checkpoint follow-up](fbt-pretrained-nanochat-options.md)
 verified usable older Nanochat base-d20 and d34 weights, plus OpenELM-450M.
