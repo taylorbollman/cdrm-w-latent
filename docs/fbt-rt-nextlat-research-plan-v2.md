@@ -1,10 +1,12 @@
 # Pretrained feedback and RT research: checkpoint choice, intermediate experiments, and multi-GPU
 
-**Implementation status:** the user approved Stage A on2026-09-21. Its ordinary
-OpenELM import is implemented and validated; see the
+**Implementation status:** the user approved Stages A and B on2026-09-21.
+Ordinary OpenELM import and the native sequential RT reference are implemented
+and validated; see the
 [implementation handoff](fbt-rt-nextlat-handoff.md) and
-[first-PR results](reports/openelm-import/results.md). Subsequent milestones
-below remain staged research plans.
+[Stage B results](reports/openelm-rt-reference/results.md). Subsequent milestones
+below remain staged research plans; BF16 training is not cleared by the short
+reference smoke check.
 
 Revised 2026-09-21, including the follow-up on weight tying, early RT+NextLat,
 the author's Nanochat reproduction, public checkpoints, upstream feature

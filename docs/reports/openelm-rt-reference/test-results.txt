@@ -1,0 +1,20 @@
+........................................................................ [ 52%]
+................................................................         [100%]
+=============================== warnings summary ===============================
+tests/test_openelm_artifacts.py::test_real_tokenizer_contract_when_prepared
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+tests/test_openelm_artifacts.py::test_real_tokenizer_contract_when_prepared
+  <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+tests/test_openelm_retain.py::test_upload_verifies_remote_identity_and_reuses_only_exact_objects
+  /usr/local/lib/python3.12/dist-packages/google/api_core/_python_package_support.py:206: FutureWarning: Package google.api_core depends on grpcio, currently installed at version 1.81.0. grpcio < 1.83.0 does not support Post-Quantum Cryptography (PQC). Support for non-PQC environments is deprecated. In October 2026, Google Cloud Python packages will raise their minimum requirements (including google-api-core, grpcio, and grpcio-status) to enforce grpcio >= 1.83.0. For more details on Google Cloud's post-quantum security migration, visit: https://cloud.google.com/security/resources/post-quantum-cryptography
+    warnings.warn(
+
+tests/test_openelm_rt_retain.py::test_complete_retention_uploads_only_new_evidence_and_reuses_checkpoint
+  /usr/local/lib/python3.12/dist-packages/google/auth/transport/grpc.py:44: FutureWarning: grpcio < 1.83.0 does not support Post-Quantum Cryptography (PQC). Support for non-PQC environments is deprecated. In October 2026, google-auth will raise its minimum requirements to enforce grpcio >= 1.83.0. For more details on Google Cloud's post-quantum security migration, visit: https://cloud.google.com/security/resources/post-quantum-cryptography
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+136 passed, 4 warnings in 8.03s
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

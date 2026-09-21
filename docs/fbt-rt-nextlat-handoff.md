@@ -4,11 +4,28 @@ Updated 2026-09-21. Read this first after compaction or interruption.
 
 ## Current authorization and scope
 
-The user approved the staged research plan and asked us to implement the first
-planned PR. The delivered milestone is **A: native OpenELM-1.1B checkpoint import
-and ordinary-model fidelity**. The implementation and validation are complete.
-The subsequent RT, FBT, NextLat and learning milestones remain staged; do not
-start a long learning experiment simply because the platform is being built.
+The user approved the staged research plan, reviewed Stage A, authorized direct
+PR closure/merges and asked us to proceed to the **next review milestone**.
+Stages **A: native import** and **B: native-block sequential RT reference** are
+implemented and validated. Stop at this review point; tiled execution, FBT,
+NextLat and learning remain staged. Do not start a long learning experiment
+simply because the platform is being built.
+
+**Current milestone: Stage B complete.** See
+[RT reference results](reports/openelm-rt-reference/results.md) and
+[equations/API/usage](openelm-rt-reference-usage.md). Selected GPU evidence is
+`.runtime/openelm-rt-reference/validation-final/report.json`, W&B
+[`uowl622p`](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/uowl622p).
+The actual native 1.1B checkpoint, B1/T16, layer 0 only, passes FP32 output and
+all-226-parameter/input gradient comparisons at alpha 0, 0.37 and 1, plus
+cache/causality checks. The scoped CPU suite passes 136 tests. BF16 is a finite
+smoke test and descriptive observation: alpha 1 gradient differences versus
+FP32 are 3.859% math / 4.842% default. **No BF16 training clearance.**
+The worst individual tensor differs by 25.83% / 29.87% respectively
+(`layers.16.attn_norm.weight`); the global norm must not obscure this scope.
+There is no GPU or learning job to resume. The next code milestone is native
+tiled execution/backward against this reference, followed by planned platform
+and early-learning comparisons.
 
 **Stage A implementation and validation are complete.** See
 [first-PR results](reports/openelm-import/results.md) and
@@ -18,14 +35,16 @@ start a long learning experiment simply because the platform is being built.
 The actual checkpoint matches the independent native reference exactly in
 FP32 and BF16 math-backend outputs and all 226 parameter gradients. Default
 cuDNN fused BF16 source parity also passes (global gradient relative L2
-2.07e-9). There is no training job to resume. The next research code milestone
-is the native-block RT reference after review of this first PR.
+2.07e-9). Its validated source files and reference snapshot were not modified
+by Stage B.
 
-Branch: `feat/openelm-checkpoint-import`, based on `330a310` (`Pre-OpenELM dev`).
-Review: [draft PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1).
-Implementation commit: `b24abd8`; subsequent documentation commits do not change
-the tested model or validation source hashes. The PR is open and unmerged.
-The working tree was clean at the start. Preserve subsequent user changes.
+Stage A: [PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1) merged at
+`959c225`, including implementation commit `b24abd8` and documentation followup
+`ad86d71`. Stage B branch: `feat/openelm-rt-reference`, based on that merge.
+Stage B: [PR #2](https://github.com/taylorbollman/cdrm-w-latent/pull/2),
+implementation/evidence commit `6603521`. Subsequent documentation-only
+changes do not alter the source hashes in the validated/retained report.
+The working tree was clean at the start of Stage B. Preserve subsequent user changes.
 Model source for this new lineage belongs in `cdrm/pretrained/`; the historical
 Recurrent OLMo/synthetic implementations remain their own reference lineage.
 
@@ -97,6 +116,41 @@ tests cover this. This is native parity, not an extra precision policy.
 This PR does not claim RT, FBT or NextLat compatibility has already been tested
 in OpenELM. It establishes the unchanged pretrained function they will extend.
 
+## Stage B implementation contracts and retained scope
+
+- `cdrm/pretrained/recurrent.py`: native parameter layout unchanged; selected
+  layers execute attached sequential scans. `RTMode` is immutable per call.
+  Alpha 0 exercises the scan instead of bypassing it.
+- `cdrm/pretrained/recurrent_oracle.py`: pinned original CoreNet primitives,
+  independent history reconstruction and explicit FP32 attention. This is the
+  oracle for semantics, not a fast training path or bitwise BF16 oracle.
+- `scripts/openelm_rt_validate.py`: actual 1.1B alpha 0 ordinary equivalence,
+  alpha 0/.37/1 independent-oracle comparisons, all parameter/input gradients,
+  cache/causality, and descriptive BF16 comparisons. Exact hashes and fixture
+  are in the report; no optimizer steps were performed.
+- Initial elementwise FP32 gradient checks flagged a near-zero cancellation
+  coordinate at alpha .37. Final acceptance requires both per-tensor L2 and
+  tensor-scaled maximum error; original diagnostics are preserved in the
+  report/calibration summary. Largest tensor relative L2 was below 9.4e-6.
+  Do not relabel the original attempt as passing or BF16 as cleared.
+- Caches are a separate type from ordinary caches and store normalized,
+  unrotated native KV heads. They reject another model/mode, weight update,
+  model conversion (including dtype roundtrip), autocast/grad/inference or
+  configured-backend change. Cached metadata is copied; KV tensors must not
+  be mutated. Unsupported `.data` writes remain outside the contract.
+- Tiny checks include attached chunked training gradients and composed shared
+  forwards with different modes. This verifies gradient ownership but is not
+  an FBT implementation or validation of the planned FBT gate/loss design.
+
+Stage B retention prefix:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-rt-reference/20260921T190151Z/`.
+Local evidence: `.runtime/openelm-rt-reference/retention-verified/`; receipt in
+`docs/reports/openelm-rt-reference/storage-receipt.json`. Reuse the Stage A
+native checkpoint by its verified URI/generation/hash; do not upload it again.
+An initial failed elementwise diagnostic is retained under `validation-01`;
+`validation-final` is the selected record. CPU CLI-import test collection was
+fixed in test setup; the final 136-test record is authoritative.
+
 ## Architectural contracts for subsequent PRs
 
 - Keep independent FBT, RT and NextLat switches, supporting all eight modes.
@@ -120,14 +174,15 @@ in OpenELM. It establishes the unchanged pretrained function they will extend.
   unrotated in cache; avoid accidental double rotation or cached causal shifts.
 - Ordinary OpenELM/FBT attention can use SDPA fused kernels. Exact RT remains
   a distinct schedule and backward. The FA4 dependency is not evidence of use.
-- Current RT autograd accumulates hidden block-parameter gradients internally;
+- The historical OLMo tiled RT autograd accumulates hidden block-parameter
+  gradients internally (the new sequential reference uses ordinary autograd);
   DDP/FSDP compatibility must be established separately. Start with the planned
   explicit gradient synchronization baseline before more elaborate sharding.
 
 ## Experiment order after the platform work
 
-1. Native import/fidelity (current PR).
-2. Native-block RT reference, then tiled backward and cached decoding, including
+1. Native import/fidelity (complete).
+2. Native-block RT reference (complete), then tiled backward and cached decoding, including
    shared-pass gradient ownership and independently checked NextLat losses.
 3. Bounded physical-batch/throughput checks; two-GPU checks when available.
 4. Paired ordinary / ordinary+NextLat / RT / RT+NextLat with FBT off. RT alone
