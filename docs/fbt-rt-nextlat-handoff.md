@@ -30,7 +30,9 @@ retained and adjudicated with an independent FP64 oracle; see details below.
 BF16 differences and eager H100 performance are measured, not training clearance.
 The user reviewed O2 and authorized **O3 language-model objectives/platform**.
 O3 is complete on `feat/olmo1b-nextlat-platform`, based on O2 merge
-`ef3380f1beb41642150c693c33ca2558365e4f84`. See
+`ef3380f1beb41642150c693c33ca2558365e4f84`. Implementation/evidence commit:
+`40290357aff82f0caa40f9deff79c90412758faa`,
+[PR #6](https://github.com/taylorbollman/cdrm-w-latent/pull/6). See
 [O3 results](reports/olmo1b-o3/results.md), [usage](olmo1b-nextlat-platform-usage.md)
 and [protocol](reports/olmo1b-o3/protocol.md). The scoped CPU suite passes
 **326 tests**; actual-checkpoint FP32 objective/gradient checks and exact full

@@ -12,6 +12,9 @@ See the [protocol](protocol.md), [usage/API guide](../../olmo1b-nextlat-platform
 [machine-readable summary](validation-summary.json), and [CPU test record](test-results.txt).
 Online records are [validation](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/r0zqx75g)
 and [profiling](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zbrcek8g).
+Implementation/evidence commit: `40290357aff82f0caa40f9deff79c90412758faa`,
+[PR #6](https://github.com/taylorbollman/cdrm-w-latent/pull/6). Subsequent
+documentation records this link; tested source hashes are in the raw reports.
 
 ## Fixed model and implementation
 
