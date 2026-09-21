@@ -22,6 +22,9 @@ cuDNN fused BF16 source parity also passes (global gradient relative L2
 is the native-block RT reference after review of this first PR.
 
 Branch: `feat/openelm-checkpoint-import`, based on `330a310` (`Pre-OpenELM dev`).
+Review: [draft PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1).
+Implementation commit: `b24abd8`; subsequent documentation commits do not change
+the tested model or validation source hashes. The PR is open and unmerged.
 The working tree was clean at the start. Preserve subsequent user changes.
 Model source for this new lineage belongs in `cdrm/pretrained/`; the historical
 Recurrent OLMo/synthetic implementations remain their own reference lineage.

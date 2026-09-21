@@ -4,6 +4,9 @@ Validated 2026-09-21 on the H100 80GB in the project Docker container. This
 milestone establishes faithful ordinary-model loading before RT/FBT/NextLat
 modifications. No research training run was started.
 
+Reviewable implementation: [draft PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1),
+code commit `b24abd8` on `feat/openelm-checkpoint-import`.
+
 The final diagnostic is [W&B run z4jzbq02](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/z4jzbq02).
 The complete local evidence is
 [report.json](../../../.runtime/openelm-import/validation-final/report.json).
