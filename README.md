@@ -3,14 +3,16 @@
 Research workspace with a persistent Docker environment and an editable local
 checkout of Recurrent OLMo.
 
-The current pretrained-model plan selects original **OLMo-1B at step 60,000**
-(approximately 252B training tokens). See the
+The current pretrained-model work validates original **OLMo-1B at step 60,000**
+(approximately 252B training tokens), including native import and a
+[sequential RT reference](docs/olmo1b-native-rt-usage.md).
+See the [O1 results](docs/reports/olmo1b-o1/results.md),
 [implementation handoff](docs/fbt-rt-nextlat-handoff.md) for current status and
 recovery, and the [staged research plan](docs/fbt-rt-nextlat-research-plan-v3.md)
-for the next native-import/RT-reference milestone and subsequent FBT/NextLat
+for the next tiled-backend milestone and subsequent FBT/NextLat
 comparisons. Completed OpenELM import and sequential RT validation are retained
 as [historical implementation evidence](docs/fbt-openelm-implementation-handoff.md);
-OLMo migration is planned, not yet implemented.
+OLMo ordinary fidelity and bounded FP32 recurrence checks pass; learning remains staged.
 
 ## Clone and open the environment
 

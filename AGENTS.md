@@ -36,8 +36,9 @@ For pretrained OLMo / RT / FBT / NextLat work, first read
 `docs/fbt-rt-nextlat-research-plan-v3.md`. Original OLMo-1B at step 60,000
 (approximately 252B tokens) is the selected primary model; its native checkpoint,
 source candidate and tokenizer pins are in the handoff and selection audit.
-The next milestone is native ordinary fidelity followed by a sequential RT
-reference, pending the user's review of the revised plan. Do not infer long-run
+O1 native ordinary fidelity and the sequential RT reference are complete; the
+next review milestone is O2, native tiled execution/backward. Read the handoff
+for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical
 reference evidence; do not resume its superseded next milestone by default.
 

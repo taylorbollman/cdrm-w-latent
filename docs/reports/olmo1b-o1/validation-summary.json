@@ -1,0 +1,1383 @@
+{
+  "cpu_tests": {
+    "passed": 148,
+    "scope": "tests/test_olmo_*.py",
+    "seconds": 6.0
+  },
+  "full_reports": {
+    "ordinary": ".runtime/olmo1b-step60000/ordinary-validation-01/report.json",
+    "rt": ".runtime/olmo1b-step60000/rt-validation-01/report.json"
+  },
+  "ordinary": {
+    "attention_dispatch": {
+      "events": [
+        "aten::_scaled_dot_product_cudnn_attention",
+        "aten::scaled_dot_product_attention",
+        "cudnn_generated_fort_native_sdpa_sm90_flash_fprop_wgmma_f16_knob_1_64x128x128_4x1x1_cga1x1x1_kernel0_0"
+      ],
+      "flash_observed": true,
+      "fused_vs_math": {
+        "difference_l2": 19.24365997314453,
+        "finite": true,
+        "loss": 3.2513601779937744,
+        "math_loss": 3.2520229816436768,
+        "max_abs": 0.09375,
+        "reference_l2": 4841.06787109375,
+        "relative_l2": 0.003975085763215458
+      },
+      "scope": "one ordinary BF16 forward; no throughput or recurrent claim",
+      "sdpa_backend": "cudnn"
+    },
+    "cache_causality": {
+      "adapter_cached_vs_native": {
+        "atol": 0.0001,
+        "difference_l2": 0.0016716012032702565,
+        "finite": true,
+        "max_abs": 3.266334533691406e-05,
+        "passed": true,
+        "reference_l2": 2593.562255859375,
+        "relative_l2": 6.445194054986633e-07,
+        "rtol": 5e-05
+      },
+      "chunked_vs_full": {
+        "atol": 0.0001,
+        "difference_l2": 0.0026237915735691786,
+        "finite": true,
+        "max_abs": 2.765655517578125e-05,
+        "passed": true,
+        "reference_l2": 2593.562255859375,
+        "relative_l2": 1.0116555203722252e-06,
+        "rtol": 5e-05
+      },
+      "future_token_isolation": {
+        "atol": 0,
+        "difference_l2": 0.0,
+        "finite": true,
+        "max_abs": 0.0,
+        "passed": true,
+        "reference_l2": 1787.9254150390625,
+        "relative_l2": 0.0,
+        "rtol": 0
+      },
+      "native_cached_vs_full": {
+        "atol": 0.0001,
+        "difference_l2": 0.002842376474291086,
+        "finite": true,
+        "max_abs": 3.933906555175781e-05,
+        "passed": true,
+        "reference_l2": 2593.562255859375,
+        "relative_l2": 1.0959353174845101e-06,
+        "rtol": 5e-05
+      },
+      "native_kv_head_counts": true,
+      "passed": true
+    },
+    "cases": [
+      {
+        "backend": "math",
+        "fixture": 0,
+        "gradients": {
+          "failed": [],
+          "max_abs": 0.0,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 0.0,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.att_proj.weight",
+            "relative_l2": 0.0
+          }
+        },
+        "hidden": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 293.2842712402344,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "input_gradient": {
+          "atol": 2e-06,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.8658626079559326,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "logits": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 4840.71484375,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "loss": 3.2486305236816406,
+        "loss_comparison": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 3.2486305236816406,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference_loss": 3.2486305236816406,
+        "tokens": 42
+      },
+      {
+        "backend": "math",
+        "fixture": 1,
+        "hidden": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 362.0375671386719,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "logits": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 5428.2109375,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "loss": 1.7494920492172241,
+        "loss_comparison": {
+          "atol": 3e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.7494920492172241,
+          "relative_l2": 0.0,
+          "rtol": 3e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference_loss": 1.7494920492172241,
+        "tokens": 64
+      },
+      {
+        "backend": "math",
+        "fixture": 0,
+        "gradients": {
+          "failed": [],
+          "max_abs": 0.0,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 0.0,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.att_proj.weight",
+            "relative_l2": 0.0
+          }
+        },
+        "hidden": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 293.2842712402344,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "input_gradient": {
+          "atol": 0.0002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.8661946058273315,
+          "relative_l2": 0.0,
+          "rtol": 0.003
+        },
+        "logits": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 4841.06787109375,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "loss": 3.2520229816436768,
+        "loss_comparison": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 3.2520229816436768,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference_loss": 3.2520229816436768,
+        "tokens": 42,
+        "versus_fp32": {
+          "finite": true,
+          "fp32_loss": 3.2486305236816406,
+          "gradients": {
+            "max_abs": 0.1314370334148407,
+            "missing": [],
+            "parameter_tensors": 65,
+            "relative_l2": 0.015455509693799383,
+            "worst_tensor_relative_l2": {
+              "name": "transformer.blocks.5.ff_proj.weight",
+              "relative_l2": 0.034712776691663685
+            }
+          },
+          "input_gradient": {
+            "difference_l2": 0.039555806666612625,
+            "finite": true,
+            "max_abs": 0.0026628635823726654,
+            "reference_l2": 1.8658615350723267,
+            "relative_l2": 0.021199754602947703
+          },
+          "logits": {
+            "difference_l2": 20.213712692260742,
+            "finite": true,
+            "max_abs": 0.19060873985290527,
+            "reference_l2": 4840.5859375,
+            "relative_l2": 0.004175881381562755
+          },
+          "loss": 3.2520229816436768,
+          "scope": "descriptive BF16-versus-FP32 observation, not training acceptance",
+          "top_token_disagreement_fraction": 0.0
+        }
+      },
+      {
+        "backend": "math",
+        "fixture": 1,
+        "hidden": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 362.0375671386719,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "logits": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 5427.72314453125,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "loss": 1.7509194612503052,
+        "loss_comparison": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.7509194612503052,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference_loss": 1.7509194612503052,
+        "tokens": 64
+      },
+      {
+        "backend": "default",
+        "fixture": 0,
+        "gradients": {
+          "failed": [],
+          "max_abs": 0.0,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 0.0,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.att_proj.weight",
+            "relative_l2": 0.0
+          }
+        },
+        "hidden": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 293.2842712402344,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "input_gradient": {
+          "atol": 0.0002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.8655023574829102,
+          "relative_l2": 0.0,
+          "rtol": 0.003
+        },
+        "logits": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 4841.47119140625,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "loss": 3.2491767406463623,
+        "loss_comparison": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 3.2491767406463623,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference_loss": 3.2491767406463623,
+        "tokens": 42,
+        "versus_fp32": {
+          "finite": true,
+          "fp32_loss": 3.2486305236816406,
+          "gradients": {
+            "max_abs": 0.1392495334148407,
+            "missing": [],
+            "parameter_tensors": 65,
+            "relative_l2": 0.016250279963604966,
+            "worst_tensor_relative_l2": {
+              "name": "transformer.blocks.5.ff_proj.weight",
+              "relative_l2": 0.036728231474875174
+            }
+          },
+          "input_gradient": {
+            "difference_l2": 0.04620882496237755,
+            "finite": true,
+            "max_abs": 0.003081781789660454,
+            "reference_l2": 1.8658615350723267,
+            "relative_l2": 0.02476540948714415
+          },
+          "logits": {
+            "difference_l2": 20.356760025024414,
+            "finite": true,
+            "max_abs": 0.18112027645111084,
+            "reference_l2": 4840.5859375,
+            "relative_l2": 0.004205433038037952
+          },
+          "loss": 3.2491767406463623,
+          "scope": "descriptive BF16-versus-FP32 observation, not training acceptance",
+          "top_token_disagreement_fraction": 0.0
+        }
+      },
+      {
+        "backend": "default",
+        "fixture": 1,
+        "hidden": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 362.0375671386719,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "logits": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 5429.1416015625,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "loss": 1.7485692501068115,
+        "loss_comparison": {
+          "atol": 0.002,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1.7485692501068115,
+          "relative_l2": 0.0,
+          "rtol": 0.002
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference_loss": 1.7485692501068115,
+        "tokens": 64
+      }
+    ],
+    "checkpoint": {
+      "hash_basis": "Hub LFS SHA256",
+      "path": "native/model.safetensors",
+      "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+      "size_bytes": 4707065440,
+      "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+    },
+    "config": {
+      "eos_token_id": 50279,
+      "layer_norm_eps": 1e-05,
+      "max_context_length": 2048,
+      "mlp_intermediate_size": 8192,
+      "model_dim": 2048,
+      "num_heads": 16,
+      "num_layers": 16,
+      "pad_token_id": 1,
+      "rope_freq_constant": 10000.0,
+      "tokenizer_vocab_size": 50280,
+      "vocab_size": 50304
+    },
+    "elapsed_seconds": 35.064489233999666,
+    "finished_utc": "2026-09-21T20:17:14.937481+00:00",
+    "memory_scope": "paired reference+adapter validation with gradients; not single-model training",
+    "peak_allocated_gib": 19.54403257369995,
+    "peak_reserved_gib": 20.462890625,
+    "protocol": {
+      "bf16_source": "same precision/backend source parity; outputs atol/rtol 2e-3; gradients atol 2e-4, rtol 3e-3",
+      "bf16_vs_fp32": "descriptive, not training acceptance",
+      "fp32": "TF32 disabled; source outputs atol/rtol 3e-5; gradients atol 2e-6, rtol 3e-5",
+      "not_tested": [
+        "training",
+        "long contexts",
+        "large batches",
+        "RT",
+        "FBT",
+        "NextLat"
+      ]
+    },
+    "runtime": {
+      "cuda": "13.3",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "olmo-import-validation-v1",
+    "scope": "original OLMo-1B step60000 (~252B), ordinary import; no recurrence or training run",
+    "source_hashes": {
+      "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+      "cdrm/pretrained/olmo.py": "53f1f812007d0fa5c90d93a026ff80fc32c138632d08dfcc92689a51c3db9667",
+      "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+      "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+      "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+      "scripts/olmo_validate.py": "98a16d96949bb29358ea6f170597afa29a0ac596b91c317f333306f1b3fc62f3",
+      "scripts/olmo_validation.py": "7d1d945201cda0f1bccbd2d6f190f0b9ef5126c2abbf88b9d6b117bc4504bbae"
+    },
+    "started_utc": "2026-09-21T20:16:23.006443+00:00",
+    "state": {
+      "parameter_count": 1176764416,
+      "tensor_count": 65
+    },
+    "status": "passed",
+    "wandb": {
+      "enabled": true,
+      "entity": "taylorbollman",
+      "group": "olmo1b-step60000-import",
+      "mode": "online",
+      "name": "olmo-1b-step60000-import",
+      "project": "pretrained-fbt-rt-nextlat",
+      "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+      "run_id": "td5cce3w",
+      "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/td5cce3w",
+      "status": "synced",
+      "system_stats": false
+    }
+  },
+  "recurrent": {
+    "cache_causality": [
+      {
+        "alpha": 0,
+        "causality": {
+          "atol": 0,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1787.9254150390625,
+          "relative_l2": 0.0,
+          "rtol": 0
+        },
+        "chunked_vs_full": {
+          "atol": 0.0001,
+          "difference_l2": 0.0026496704667806625,
+          "finite": true,
+          "max_abs": 3.24249267578125e-05,
+          "passed": true,
+          "reference_l2": 2593.56201171875,
+          "relative_l2": 1.0216337434032393e-06,
+          "rtol": 0.0001
+        },
+        "native_kv_heads": true,
+        "passed": true,
+        "temporary_self_first_token": {
+          "atol": 0.0001,
+          "difference_l2": 0.0011718017049133778,
+          "finite": true,
+          "max_abs": 2.2649765014648438e-05,
+          "passed": true,
+          "reference_l2": 507.77392578125,
+          "relative_l2": 2.3077232709625037e-06,
+          "rtol": 0.0001
+        },
+        "wrong_mode_rejected": true
+      },
+      {
+        "alpha": 0.37,
+        "causality": {
+          "atol": 0,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1760.027587890625,
+          "relative_l2": 0.0,
+          "rtol": 0
+        },
+        "chunked_vs_full": {
+          "atol": 0.0001,
+          "difference_l2": 0.003033347660675645,
+          "finite": true,
+          "max_abs": 4.458427429199219e-05,
+          "passed": true,
+          "reference_l2": 2528.718017578125,
+          "relative_l2": 1.1995594762206138e-06,
+          "rtol": 0.0001
+        },
+        "native_kv_heads": true,
+        "passed": true,
+        "temporary_self_first_token": {
+          "atol": 0.0001,
+          "difference_l2": 0.0011718017049133778,
+          "finite": true,
+          "max_abs": 2.2649765014648438e-05,
+          "passed": true,
+          "reference_l2": 507.77392578125,
+          "relative_l2": 2.3077232709625037e-06,
+          "rtol": 0.0001
+        },
+        "wrong_mode_rejected": true
+      },
+      {
+        "alpha": 1,
+        "causality": {
+          "atol": 0,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 1759.4512939453125,
+          "relative_l2": 0.0,
+          "rtol": 0
+        },
+        "chunked_vs_full": {
+          "atol": 0.0001,
+          "difference_l2": 0.0023251730017364025,
+          "finite": true,
+          "max_abs": 2.4080276489257812e-05,
+          "passed": true,
+          "reference_l2": 2518.444091796875,
+          "relative_l2": 9.232577404874705e-07,
+          "rtol": 0.0001
+        },
+        "native_kv_heads": true,
+        "passed": true,
+        "temporary_self_first_token": {
+          "atol": 0.0001,
+          "difference_l2": 0.0011718017049133778,
+          "finite": true,
+          "max_abs": 2.2649765014648438e-05,
+          "passed": true,
+          "reference_l2": 507.77392578125,
+          "relative_l2": 2.3077232709625037e-06,
+          "rtol": 0.0001
+        },
+        "wrong_mode_rejected": true
+      }
+    ],
+    "cases": [
+      {
+        "alpha": 0,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [
+            "transformer.blocks.1.ff_out.weight"
+          ],
+          "failed": [],
+          "max_abs": 3.075599670410156e-05,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 2.2855802938379855e-06,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.5.ff_proj.weight",
+            "relative_l2": 4.880069698667117e-06
+          }
+        },
+        "hidden": {
+          "atol": 0.0001,
+          "difference_l2": 0.00015736061322968453,
+          "finite": true,
+          "max_abs": 3.4749507904052734e-05,
+          "passed": true,
+          "reference_l2": 181.01901245117188,
+          "relative_l2": 8.693043404605416e-07,
+          "rtol": 0.0001
+        },
+        "input_gradient": {
+          "atol": 2e-06,
+          "difference_l2": 1.0492881301615853e-05,
+          "finite": true,
+          "max_abs": 4.6938657760620117e-07,
+          "passed": true,
+          "reference_l2": 4.140691757202148,
+          "relative_l2": 2.534088967952026e-06,
+          "rtol": 0.0003
+        },
+        "logits": {
+          "atol": 0.0001,
+          "difference_l2": 0.002144145080819726,
+          "finite": true,
+          "max_abs": 1.6689300537109375e-05,
+          "passed": true,
+          "reference_l2": 2892.973876953125,
+          "relative_l2": 7.411560463442331e-07,
+          "rtol": 0.0001
+        },
+        "loss": 3.9440999031066895,
+        "loss_comparison": {
+          "atol": 1e-05,
+          "difference_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_abs": 4.76837158203125e-07,
+          "passed": true,
+          "reference_l2": 3.9441003799438477,
+          "relative_l2": 1.208988393469625e-07,
+          "rtol": 1e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference": "native_ordinary",
+        "reference_loss": 3.9441003799438477
+      },
+      {
+        "alpha": 0,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [],
+          "failed": [],
+          "max_abs": 4.410743713378906e-06,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 1.6598301405572916e-06,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.4.ff_out.weight",
+            "relative_l2": 2.2533379364491435e-06
+          }
+        },
+        "hidden": {
+          "atol": 0.0001,
+          "difference_l2": 0.0001291375665459782,
+          "finite": true,
+          "max_abs": 1.9609928131103516e-05,
+          "passed": true,
+          "reference_l2": 181.01901245117188,
+          "relative_l2": 7.13392282928357e-07,
+          "rtol": 0.0001
+        },
+        "input_gradient": {
+          "atol": 2e-06,
+          "difference_l2": 8.009431439859327e-06,
+          "finite": true,
+          "max_abs": 3.8743019104003906e-07,
+          "passed": true,
+          "reference_l2": 4.140690803527832,
+          "relative_l2": 1.9343225128124424e-06,
+          "rtol": 0.0003
+        },
+        "logits": {
+          "atol": 0.0001,
+          "difference_l2": 0.0018916709814220667,
+          "finite": true,
+          "max_abs": 1.5735626220703125e-05,
+          "passed": true,
+          "reference_l2": 2892.9736328125,
+          "relative_l2": 6.538846258280675e-07,
+          "rtol": 0.0001
+        },
+        "loss": 3.9440999031066895,
+        "loss_comparison": {
+          "atol": 1e-05,
+          "difference_l2": 1.1920928955078125e-06,
+          "finite": true,
+          "max_abs": 1.1920928955078125e-06,
+          "passed": true,
+          "reference_l2": 3.944101095199585,
+          "relative_l2": 3.022470435554311e-07,
+          "rtol": 1e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference": "independent_recomputed_history_oracle",
+        "reference_loss": 3.944101095199585
+      },
+      {
+        "alpha": 0.37,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [
+            "transformer.blocks.1.ff_proj.weight"
+          ],
+          "failed": [],
+          "max_abs": 9.000301361083984e-06,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 1.6486318187980295e-06,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.ff_proj.weight",
+            "relative_l2": 2.5042410494711577e-06
+          }
+        },
+        "hidden": {
+          "atol": 0.0001,
+          "difference_l2": 0.00011479711247375235,
+          "finite": true,
+          "max_abs": 2.9802322387695312e-05,
+          "passed": true,
+          "reference_l2": 181.01904296875,
+          "relative_l2": 6.341714694269498e-07,
+          "rtol": 0.0001
+        },
+        "input_gradient": {
+          "atol": 2e-06,
+          "difference_l2": 1.576983413542621e-05,
+          "finite": true,
+          "max_abs": 1.125037670135498e-06,
+          "passed": true,
+          "reference_l2": 7.54973030090332,
+          "relative_l2": 2.08879436839477e-06,
+          "rtol": 0.0003
+        },
+        "logits": {
+          "atol": 0.0001,
+          "difference_l2": 0.0017111764755100012,
+          "finite": true,
+          "max_abs": 1.430511474609375e-05,
+          "passed": true,
+          "reference_l2": 2824.939208984375,
+          "relative_l2": 6.057392208893603e-07,
+          "rtol": 0.0001
+        },
+        "loss": 4.5625786781311035,
+        "loss_comparison": {
+          "atol": 1e-05,
+          "difference_l2": 4.76837158203125e-07,
+          "finite": true,
+          "max_abs": 4.76837158203125e-07,
+          "passed": true,
+          "reference_l2": 4.562579154968262,
+          "relative_l2": 1.0451044069753613e-07,
+          "rtol": 1e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference": "independent_recomputed_history_oracle",
+        "reference_loss": 4.562579154968262
+      },
+      {
+        "alpha": 1,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [],
+          "failed": [],
+          "max_abs": 1.049041748046875e-05,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 1.8386700521039882e-06,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.2.ff_out.weight",
+            "relative_l2": 2.3044069622587118e-06
+          }
+        },
+        "hidden": {
+          "atol": 0.0001,
+          "difference_l2": 0.00011494397767819464,
+          "finite": true,
+          "max_abs": 2.1457672119140625e-05,
+          "passed": true,
+          "reference_l2": 181.01904296875,
+          "relative_l2": 6.349827940369669e-07,
+          "rtol": 0.0001
+        },
+        "input_gradient": {
+          "atol": 2e-06,
+          "difference_l2": 1.8638247638591565e-05,
+          "finite": true,
+          "max_abs": 1.0132789611816406e-06,
+          "passed": true,
+          "reference_l2": 9.987085342407227,
+          "relative_l2": 1.866234942386015e-06,
+          "rtol": 0.0003
+        },
+        "logits": {
+          "atol": 0.0001,
+          "difference_l2": 0.0016718320548534393,
+          "finite": true,
+          "max_abs": 1.621246337890625e-05,
+          "passed": true,
+          "reference_l2": 2810.550048828125,
+          "relative_l2": 5.948415882330647e-07,
+          "rtol": 0.0001
+        },
+        "loss": 4.683502674102783,
+        "loss_comparison": {
+          "atol": 1e-05,
+          "difference_l2": 1.430511474609375e-06,
+          "finite": true,
+          "max_abs": 1.430511474609375e-06,
+          "passed": true,
+          "reference_l2": 4.683504104614258,
+          "relative_l2": 3.054361526447716e-07,
+          "rtol": 1e-05
+        },
+        "passed": true,
+        "precision": "fp32",
+        "reference": "independent_recomputed_history_oracle",
+        "reference_loss": 4.683504104614258
+      },
+      {
+        "acceptance_scope": "finite output/backward and complete gradient ownership only",
+        "alpha": 0,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [
+            "transformer.wte.weight",
+            "transformer.blocks.0.att_proj.weight",
+            "transformer.blocks.0.attn_out.weight",
+            "transformer.blocks.0.ff_proj.weight",
+            "transformer.blocks.0.ff_out.weight",
+            "transformer.blocks.1.att_proj.weight",
+            "transformer.blocks.1.attn_out.weight",
+            "transformer.blocks.1.ff_proj.weight",
+            "transformer.blocks.1.ff_out.weight",
+            "transformer.blocks.2.att_proj.weight",
+            "transformer.blocks.2.attn_out.weight",
+            "transformer.blocks.2.ff_proj.weight",
+            "transformer.blocks.2.ff_out.weight",
+            "transformer.blocks.3.att_proj.weight",
+            "transformer.blocks.3.attn_out.weight",
+            "transformer.blocks.3.ff_proj.weight",
+            "transformer.blocks.3.ff_out.weight",
+            "transformer.blocks.4.att_proj.weight",
+            "transformer.blocks.4.attn_out.weight",
+            "transformer.blocks.4.ff_proj.weight",
+            "transformer.blocks.4.ff_out.weight",
+            "transformer.blocks.5.att_proj.weight",
+            "transformer.blocks.5.attn_out.weight",
+            "transformer.blocks.5.ff_proj.weight",
+            "transformer.blocks.5.ff_out.weight",
+            "transformer.blocks.6.att_proj.weight",
+            "transformer.blocks.6.attn_out.weight",
+            "transformer.blocks.6.ff_proj.weight",
+            "transformer.blocks.6.ff_out.weight",
+            "transformer.blocks.7.att_proj.weight",
+            "transformer.blocks.7.attn_out.weight",
+            "transformer.blocks.7.ff_proj.weight",
+            "transformer.blocks.7.ff_out.weight",
+            "transformer.blocks.8.att_proj.weight",
+            "transformer.blocks.8.attn_out.weight",
+            "transformer.blocks.8.ff_proj.weight",
+            "transformer.blocks.8.ff_out.weight",
+            "transformer.blocks.9.att_proj.weight",
+            "transformer.blocks.9.attn_out.weight",
+            "transformer.blocks.9.ff_proj.weight",
+            "transformer.blocks.9.ff_out.weight",
+            "transformer.blocks.10.att_proj.weight",
+            "transformer.blocks.10.attn_out.weight",
+            "transformer.blocks.10.ff_proj.weight",
+            "transformer.blocks.10.ff_out.weight",
+            "transformer.blocks.11.att_proj.weight",
+            "transformer.blocks.11.attn_out.weight",
+            "transformer.blocks.11.ff_proj.weight",
+            "transformer.blocks.11.ff_out.weight",
+            "transformer.blocks.12.att_proj.weight",
+            "transformer.blocks.12.attn_out.weight",
+            "transformer.blocks.12.ff_proj.weight",
+            "transformer.blocks.12.ff_out.weight",
+            "transformer.blocks.13.att_proj.weight",
+            "transformer.blocks.13.attn_out.weight",
+            "transformer.blocks.13.ff_proj.weight",
+            "transformer.blocks.13.ff_out.weight",
+            "transformer.blocks.14.att_proj.weight",
+            "transformer.blocks.14.attn_out.weight",
+            "transformer.blocks.14.ff_proj.weight",
+            "transformer.blocks.14.ff_out.weight",
+            "transformer.blocks.15.att_proj.weight",
+            "transformer.blocks.15.attn_out.weight",
+            "transformer.blocks.15.ff_proj.weight",
+            "transformer.blocks.15.ff_out.weight"
+          ],
+          "max_abs": 0.02734375,
+          "missing": [],
+          "parameter_tensors": 65,
+          "relative_l2": 0.010836687404585075,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.ff_proj.weight",
+            "relative_l2": 0.014301236968240335
+          }
+        },
+        "hidden": {
+          "difference_l2": 0.6176204681396484,
+          "finite": true,
+          "max_abs": 0.045551300048828125,
+          "reference_l2": 181.01901245117188,
+          "relative_l2": 0.003411909388834201
+        },
+        "input_gradient": {
+          "difference_l2": 0.05229463428258896,
+          "finite": true,
+          "max_abs": 0.0018182247877120972,
+          "reference_l2": 4.131659984588623,
+          "relative_l2": 0.012657051760709147
+        },
+        "logits": {
+          "difference_l2": 8.76488208770752,
+          "finite": true,
+          "max_abs": 0.0625,
+          "reference_l2": 2893.13916015625,
+          "relative_l2": 0.0030295404411981876
+        },
+        "loss": 3.953580141067505,
+        "loss_comparison": {
+          "difference_l2": 0.005702972412109375,
+          "finite": true,
+          "max_abs": 0.005702972412109375,
+          "reference_l2": 3.9478771686553955,
+          "relative_l2": 0.0014445668313565454
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference": "native_ordinary",
+        "reference_loss": 3.9478771686553955
+      },
+      {
+        "acceptance_scope": "finite output/backward and complete gradient ownership only",
+        "alpha": 1,
+        "backend": "math",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [
+            "transformer.wte.weight",
+            "transformer.blocks.0.att_proj.weight",
+            "transformer.blocks.0.attn_out.weight",
+            "transformer.blocks.0.ff_proj.weight",
+            "transformer.blocks.0.ff_out.weight",
+            "transformer.blocks.1.att_proj.weight",
+            "transformer.blocks.1.attn_out.weight",
+            "transformer.blocks.1.ff_proj.weight",
+            "transformer.blocks.1.ff_out.weight",
+            "transformer.blocks.2.att_proj.weight",
+            "transformer.blocks.2.attn_out.weight",
+            "transformer.blocks.2.ff_proj.weight",
+            "transformer.blocks.2.ff_out.weight",
+            "transformer.blocks.3.att_proj.weight",
+            "transformer.blocks.3.attn_out.weight",
+            "transformer.blocks.3.ff_proj.weight",
+            "transformer.blocks.3.ff_out.weight",
+            "transformer.blocks.4.att_proj.weight",
+            "transformer.blocks.4.attn_out.weight",
+            "transformer.blocks.4.ff_proj.weight",
+            "transformer.blocks.4.ff_out.weight",
+            "transformer.blocks.5.att_proj.weight",
+            "transformer.blocks.5.attn_out.weight",
+            "transformer.blocks.5.ff_proj.weight",
+            "transformer.blocks.5.ff_out.weight",
+            "transformer.blocks.6.att_proj.weight",
+            "transformer.blocks.6.attn_out.weight",
+            "transformer.blocks.6.ff_proj.weight",
+            "transformer.blocks.6.ff_out.weight",
+            "transformer.blocks.7.att_proj.weight",
+            "transformer.blocks.7.attn_out.weight",
+            "transformer.blocks.7.ff_proj.weight",
+            "transformer.blocks.7.ff_out.weight",
+            "transformer.blocks.8.att_proj.weight",
+            "transformer.blocks.8.attn_out.weight",
+            "transformer.blocks.8.ff_proj.weight",
+            "transformer.blocks.8.ff_out.weight",
+            "transformer.blocks.9.att_proj.weight",
+            "transformer.blocks.9.attn_out.weight",
+            "transformer.blocks.9.ff_proj.weight",
+            "transformer.blocks.9.ff_out.weight",
+            "transformer.blocks.10.att_proj.weight",
+            "transformer.blocks.10.attn_out.weight",
+            "transformer.blocks.10.ff_proj.weight",
+            "transformer.blocks.10.ff_out.weight",
+            "transformer.blocks.11.att_proj.weight",
+            "transformer.blocks.11.attn_out.weight",
+            "transformer.blocks.11.ff_proj.weight",
+            "transformer.blocks.11.ff_out.weight",
+            "transformer.blocks.12.att_proj.weight",
+            "transformer.blocks.12.attn_out.weight",
+            "transformer.blocks.12.ff_proj.weight",
+            "transformer.blocks.12.ff_out.weight",
+            "transformer.blocks.13.att_proj.weight",
+            "transformer.blocks.13.attn_out.weight",
+            "transformer.blocks.13.ff_proj.weight",
+            "transformer.blocks.13.ff_out.weight",
+            "transformer.blocks.14.att_proj.weight",
+            "transformer.blocks.14.attn_out.weight",
+            "transformer.blocks.14.ff_proj.weight",
+            "transformer.blocks.14.ff_out.weight",
+            "transformer.blocks.15.att_proj.weight",
+            "transformer.blocks.15.attn_out.weight",
+            "transformer.blocks.15.ff_proj.weight",
+            "transformer.blocks.15.ff_out.weight"
+          ],
+          "max_abs": 0.0458984375,
+          "missing": [],
+          "parameter_tensors": 65,
+          "relative_l2": 0.008585278708512691,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.9.ff_out.weight",
+            "relative_l2": 0.013997996723977373
+          }
+        },
+        "hidden": {
+          "difference_l2": 0.5058301687240601,
+          "finite": true,
+          "max_abs": 0.03785419464111328,
+          "reference_l2": 181.01905822753906,
+          "relative_l2": 0.0027943475879110852
+        },
+        "input_gradient": {
+          "difference_l2": 0.0705224871635437,
+          "finite": true,
+          "max_abs": 0.005536019802093506,
+          "reference_l2": 10.032808303833008,
+          "relative_l2": 0.007029187145597187
+        },
+        "logits": {
+          "difference_l2": 7.530961036682129,
+          "finite": true,
+          "max_abs": 0.0625,
+          "reference_l2": 2810.508056640625,
+          "relative_l2": 0.0026795728334199544
+        },
+        "loss": 4.686483860015869,
+        "loss_comparison": {
+          "difference_l2": 0.0013394355773925781,
+          "finite": true,
+          "max_abs": 0.0013394355773925781,
+          "reference_l2": 4.687823295593262,
+          "relative_l2": 0.00028572655002838957
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference": "independent_recomputed_history_oracle",
+        "reference_loss": 4.687823295593262,
+        "versus_fp32": {
+          "finite": true,
+          "fp32_loss": 4.683502674102783,
+          "gradients": {
+            "max_abs": 0.29486703872680664,
+            "missing": [],
+            "parameter_tensors": 65,
+            "relative_l2": 0.0169547315436128,
+            "worst_tensor_relative_l2": {
+              "name": "transformer.blocks.5.ff_proj.weight",
+              "relative_l2": 0.037508359870056095
+            }
+          },
+          "input_gradient": {
+            "difference_l2": 0.1867593377828598,
+            "finite": true,
+            "max_abs": 0.010775625705718994,
+            "reference_l2": 9.987070083618164,
+            "relative_l2": 0.018700112867857208
+          },
+          "logits": {
+            "difference_l2": 13.187302589416504,
+            "finite": true,
+            "max_abs": 0.16971158981323242,
+            "reference_l2": 2810.53515625,
+            "relative_l2": 0.0046920966493128186
+          },
+          "loss": 4.686483860015869,
+          "scope": "descriptive BF16-versus-FP32 observation, not training acceptance",
+          "top_token_disagreement_fraction": 0.0
+        }
+      },
+      {
+        "acceptance_scope": "finite output/backward and complete gradient ownership only",
+        "alpha": 1,
+        "backend": "default",
+        "finite": true,
+        "gradients": {
+          "elementwise_failed": [
+            "transformer.wte.weight",
+            "transformer.blocks.0.att_proj.weight",
+            "transformer.blocks.0.attn_out.weight",
+            "transformer.blocks.0.ff_proj.weight",
+            "transformer.blocks.0.ff_out.weight",
+            "transformer.blocks.1.att_proj.weight",
+            "transformer.blocks.1.attn_out.weight",
+            "transformer.blocks.1.ff_proj.weight",
+            "transformer.blocks.1.ff_out.weight",
+            "transformer.blocks.2.att_proj.weight",
+            "transformer.blocks.2.attn_out.weight",
+            "transformer.blocks.2.ff_proj.weight",
+            "transformer.blocks.2.ff_out.weight",
+            "transformer.blocks.3.att_proj.weight",
+            "transformer.blocks.3.attn_out.weight",
+            "transformer.blocks.3.ff_proj.weight",
+            "transformer.blocks.3.ff_out.weight",
+            "transformer.blocks.4.att_proj.weight",
+            "transformer.blocks.4.attn_out.weight",
+            "transformer.blocks.4.ff_proj.weight",
+            "transformer.blocks.4.ff_out.weight",
+            "transformer.blocks.5.att_proj.weight",
+            "transformer.blocks.5.attn_out.weight",
+            "transformer.blocks.5.ff_proj.weight",
+            "transformer.blocks.5.ff_out.weight",
+            "transformer.blocks.6.att_proj.weight",
+            "transformer.blocks.6.attn_out.weight",
+            "transformer.blocks.6.ff_proj.weight",
+            "transformer.blocks.6.ff_out.weight",
+            "transformer.blocks.7.att_proj.weight",
+            "transformer.blocks.7.attn_out.weight",
+            "transformer.blocks.7.ff_proj.weight",
+            "transformer.blocks.7.ff_out.weight",
+            "transformer.blocks.8.att_proj.weight",
+            "transformer.blocks.8.attn_out.weight",
+            "transformer.blocks.8.ff_proj.weight",
+            "transformer.blocks.8.ff_out.weight",
+            "transformer.blocks.9.att_proj.weight",
+            "transformer.blocks.9.attn_out.weight",
+            "transformer.blocks.9.ff_proj.weight",
+            "transformer.blocks.9.ff_out.weight",
+            "transformer.blocks.10.att_proj.weight",
+            "transformer.blocks.10.attn_out.weight",
+            "transformer.blocks.10.ff_proj.weight",
+            "transformer.blocks.10.ff_out.weight",
+            "transformer.blocks.11.att_proj.weight",
+            "transformer.blocks.11.attn_out.weight",
+            "transformer.blocks.11.ff_proj.weight",
+            "transformer.blocks.11.ff_out.weight",
+            "transformer.blocks.12.att_proj.weight",
+            "transformer.blocks.12.attn_out.weight",
+            "transformer.blocks.12.ff_proj.weight",
+            "transformer.blocks.12.ff_out.weight",
+            "transformer.blocks.13.att_proj.weight",
+            "transformer.blocks.13.attn_out.weight",
+            "transformer.blocks.13.ff_proj.weight",
+            "transformer.blocks.13.ff_out.weight",
+            "transformer.blocks.14.att_proj.weight",
+            "transformer.blocks.14.attn_out.weight",
+            "transformer.blocks.14.ff_proj.weight",
+            "transformer.blocks.14.ff_out.weight",
+            "transformer.blocks.15.att_proj.weight",
+            "transformer.blocks.15.attn_out.weight",
+            "transformer.blocks.15.ff_proj.weight",
+            "transformer.blocks.15.ff_out.weight"
+          ],
+          "max_abs": 0.0625,
+          "missing": [],
+          "parameter_tensors": 65,
+          "relative_l2": 0.012817553550153203,
+          "worst_tensor_relative_l2": {
+            "name": "transformer.blocks.0.att_proj.weight",
+            "relative_l2": 0.015399439273536725
+          }
+        },
+        "hidden": {
+          "difference_l2": 1.2307047843933105,
+          "finite": true,
+          "max_abs": 0.661344051361084,
+          "reference_l2": 181.01904296875,
+          "relative_l2": 0.006798758651076129
+        },
+        "input_gradient": {
+          "difference_l2": 0.151420459151268,
+          "finite": true,
+          "max_abs": 0.011265575885772705,
+          "reference_l2": 10.069419860839844,
+          "relative_l2": 0.01503765472528809
+        },
+        "logits": {
+          "difference_l2": 12.72045612335205,
+          "finite": true,
+          "max_abs": 0.15625,
+          "reference_l2": 2811.5283203125,
+          "relative_l2": 0.004524391958441371
+        },
+        "loss": 4.690043926239014,
+        "loss_comparison": {
+          "difference_l2": 0.0034389495849609375,
+          "finite": true,
+          "max_abs": 0.0034389495849609375,
+          "reference_l2": 4.693482875823975,
+          "relative_l2": 0.0007327073893621494
+        },
+        "passed": true,
+        "precision": "bf16_mixed",
+        "reference": "independent_recomputed_history_oracle",
+        "reference_loss": 4.693482875823975,
+        "versus_fp32": {
+          "finite": true,
+          "fp32_loss": 4.683502674102783,
+          "gradients": {
+            "max_abs": 0.27142953872680664,
+            "missing": [],
+            "parameter_tensors": 65,
+            "relative_l2": 0.014505036225066605,
+            "worst_tensor_relative_l2": {
+              "name": "transformer.blocks.5.ff_proj.weight",
+              "relative_l2": 0.034606351588886836
+            }
+          },
+          "input_gradient": {
+            "difference_l2": 0.15209484100341797,
+            "finite": true,
+            "max_abs": 0.006191477179527283,
+            "reference_l2": 9.987070083618164,
+            "relative_l2": 0.015229175296656806
+          },
+          "logits": {
+            "difference_l2": 14.559959411621094,
+            "finite": true,
+            "max_abs": 0.2033061981201172,
+            "reference_l2": 2810.53515625,
+            "relative_l2": 0.005180493607860769
+          },
+          "loss": 4.690043926239014,
+          "scope": "descriptive BF16-versus-FP32 observation, not training acceptance",
+          "top_token_disagreement_fraction": 0.0
+        }
+      }
+    ],
+    "checkpoint": {
+      "hash_basis": "Hub LFS SHA256",
+      "path": "native/model.safetensors",
+      "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+      "size_bytes": 4707065440,
+      "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+    },
+    "config": {
+      "eos_token_id": 50279,
+      "layer_norm_eps": 1e-05,
+      "max_context_length": 2048,
+      "mlp_intermediate_size": 8192,
+      "model_dim": 2048,
+      "num_heads": 16,
+      "num_layers": 16,
+      "pad_token_id": 1,
+      "rope_freq_constant": 10000.0,
+      "tokenizer_vocab_size": 50280,
+      "vocab_size": 50304
+    },
+    "elapsed_seconds": 36.840228599999136,
+    "finished_utc": "2026-09-21T20:19:35.366137+00:00",
+    "memory_scope": "paired native+RT reference validation with gradients, not training capacity",
+    "peak_allocated_gib": 19.534913539886475,
+    "peak_reserved_gib": 20.505859375,
+    "protocol": {
+      "alphas": [
+        0,
+        0.37,
+        1
+      ],
+      "batch_size": 1,
+      "bf16_scope": "finite smoke checks plus descriptive source/runtime/FP32 differences",
+      "budget_rationale": "initial FP32 semantic screen requires both small tensor-L2 and maximum tensor-scaled error; retains stricter elementwise diagnostics; not a transferred BF16 training budget",
+      "fp32_semantics_acceptance": "logits/hidden 1e-4 absolute+relative; each parameter gradient tensor L2<=1e-4 (or whole error norm<=2e-6) AND maxerror<=2e-6+1e-4*reference_maxabs; input gradient elementwise 2e-6+3e-4*abs(reference)",
+      "not_tested": [
+        "tiled execution",
+        "long contexts",
+        "large batches",
+        "optimizer adaptation",
+        "FBT",
+        "NextLat",
+        "training quality"
+      ],
+      "selected_layers": [
+        0
+      ]
+    },
+    "runtime": {
+      "cuda": "13.3",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "olmo-rt-reference-validation-v1",
+    "scope": "original OLMo-1B step60000 (~252B), B1 short sequence, RT layer0 only; no optimizer or learning run",
+    "source_hashes": {
+      "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+      "cdrm/pretrained/olmo.py": "53f1f812007d0fa5c90d93a026ff80fc32c138632d08dfcc92689a51c3db9667",
+      "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+      "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+      "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+      "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+      "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+      "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+      "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+      "scripts/olmo_rt_validate.py": "29f79e02564f442eaf17230873493d7412361596b4482f33307c5c180dd012d7",
+      "scripts/olmo_validation.py": "7d1d945201cda0f1bccbd2d6f190f0b9ef5126c2abbf88b9d6b117bc4504bbae"
+    },
+    "started_utc": "2026-09-21T20:18:57.783422+00:00",
+    "state": {
+      "parameter_count": 1176764416,
+      "tensor_count": 65
+    },
+    "status": "passed",
+    "wandb": {
+      "enabled": true,
+      "entity": "taylorbollman",
+      "group": "olmo1b-step60000-rt-reference",
+      "mode": "online",
+      "name": "olmo-1b-step60000-rt-reference",
+      "project": "pretrained-fbt-rt-nextlat",
+      "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+      "run_id": "ujs94viz",
+      "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ujs94viz",
+      "status": "synced",
+      "system_stats": false
+    }
+  },
+  "schema": "olmo-o1-validation-summary-v1"
+}

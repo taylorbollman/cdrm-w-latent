@@ -9,25 +9,57 @@ as the new primary model, replacing OpenELM because of uncertainty about its
 layer-wise capacity scaling. We selected **step 60,000, approximately 251–252B**.
 This is a model choice, not a finding that OpenELM's scaling is defective.
 
-The current task is **plan revision and durable documentation only**. Share the
-[v3 plan](fbt-rt-nextlat-research-plan-v3.md), then wait for the user's direction
-before implementing the next milestone. No full OLMo checkpoint has been
-downloaded, no OLMo implementation or GPU validation has been performed, and
-there is no pretrained-model GPU or learning job to resume.
+The user approved the [v3 plan](fbt-rt-nextlat-research-plan-v3.md) and authorized
+**O1 development**. Both gates are now complete: native ordinary fidelity and
+selected-layer sequential RT. See [results](reports/olmo1b-o1/results.md),
+[usage](olmo1b-native-rt-usage.md) and [protocol](reports/olmo1b-o1/protocol.md).
+The scoped CPU suite passes **148 tests**. The actual 1.177B checkpoint passes
+ordinary source equivalence in FP32/BF16 and sequential RT output/all-parameter/
+input-gradient checks in FP32 at alpha 0/0.37/1, physical B1/T16, layer 0 only.
 
-**Next review milestone: O1**, one bounded migration PR with two internal gates:
+**Stop at the O1 review point.** O2 (native RoPE tiled forward/backward), FBT,
+NextLat and learning remain staged; do not start them without the next user
+direction. No GPU, training or evaluation job is running or awaiting resumption.
+There was no optimizer update to the pretrained checkpoint. The user authorizes
+direct PR closure/merges; this does not expand research/training scope.
 
-1. Native original-OLMo import, tokenizer/source pinning and ordinary function
-   fidelity against an independent pristine reference.
-2. Native sequential RT reference and independent history oracle, alpha
-   0 / 0.37 / 1, initially layer 0, bounded actual-checkpoint gradient/cache checks.
+Implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
+(planning PR #3). The O1 source hashes are in the selected validation reports;
+source/evidence, not an unrecorded working tree, defines tested behavior.
 
-Ordinary fidelity comes first. If that uncovers a substantial compatibility
-problem, pause at an ordinary-only reviewable result. O1 does not implement
-FBT, NextLat, the tiler or learning. Subsequent staged work is described in v3;
-no long training budget is authorized by a platform milestone. The user has
-previously authorized direct PR closure/merges; that does not expand scientific
-or training scope.
+## O1 selected results and recovery
+
+- Artifact root: `.runtime/olmo1b-step60000/artifacts/`;
+  `artifact-manifest.json` and `checkpoint-inspection.json` record full integrity.
+- Ordinary: `.runtime/olmo1b-step60000/ordinary-validation-01/report.json`, W&B
+  [td5cce3w](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/td5cce3w).
+  B1/T42 text backward/all 65 parameters and input gradients; T64 code forward.
+  Adapter/native differences are exactly zero in checked outputs/gradients for
+  FP32 math, BF16 math and BF16 default SDPA. Cache/causality checks pass;
+  ordinary BF16 profiler observes cuDNN fused/Flash-style SDPA.
+- RT: `.runtime/olmo1b-step60000/rt-validation-01/report.json`, W&B
+  [ujs94viz](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ujs94viz).
+  Actual B1/T16 bottom-layer alpha 0 versus ordinary, plus alpha 0/.37/1 versus
+  independent history oracle. Largest FP32 individual-tensor relative L2 error
+  is 4.880e-6; all declared joint tensor-norm/maximum and input/output checks pass.
+  Two stricter elementwise coordinates flag and are retained as diagnostics;
+  no acceptance tolerance was changed after results.
+- BF16 RT: finite/complete-gradient smoke scope only. Alpha 1 global gradient
+  difference versus same-path FP32 is 1.695% math/1.451% default; worst tensor
+  is 3.751%/3.461%, `transformer.blocks.5.ff_proj.weight`. This is not tiled or
+  training clearance. Ordinary mixed precision is descriptively similar on a
+  different fixture, so it is not a controlled recurrence-sensitivity ablation.
+- Combined CPU record: `.runtime/olmo1b-step60000/cpu-suite.log`, also retained
+  as [test-results.txt](reports/olmo1b-o1/test-results.txt): 148 passed.
+- Current implementations: `cdrm/pretrained/olmo.py`, `olmo_recurrent.py`,
+  `olmo_artifacts.py`, isolated `olmo_reference.py` and
+  `olmo_recurrent_oracle.py`; pristine source in `_olmo_reference/`.
+- Retention is verified at
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/`;
+  [storage receipt](reports/olmo1b-o1/storage-receipt.json) records generations,
+  sizes, server MD5 and SHA256. Local receipt/evidence:
+  `.runtime/olmo1b-step60000/retention-20260921T202457Z/`.
+  The native source checkpoint is retained, not a newly trained model.
 
 ## Read in order
 
@@ -52,15 +84,15 @@ approximately 3T checkpoint or obsolete milestone details.
   **`81b71efbce6f4dada57c94860301af4298bcd351`**.
 - Native file: `model.safetensors`, 4,707,065,440 bytes; advertised SHA256
   `ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c`.
-  **Whole-file bytes/hash not yet downloaded/verified.**
+  **Complete bytes and published SHA256 verified in O1.**
 - Secondary official conversion: `allenai/OLMo-1B-hf`,
   `step60000-tokens251B`, revision
   `6e6042e824831c7b42223f75cf60fe3a5d92eb79`.
   Same-step naming does not prove actual tensor parity; verify before use as a
   secondary oracle. Native artifact is authoritative.
-- Prospective original source: `allenai/OLMo` v0.2.4 at
-  `b3741bc21f1dd504838b7dbd9878ee077ded63bd`. Source inspected but execution and
-  checkpoint fidelity untested. Checkpoint remote-code stubs import `hf_olmo`;
+- Validated original source: `allenai/OLMo` v0.2.4 at
+  `b3741bc21f1dd504838b7dbd9878ee077ded63bd`. Pristine source execution and native
+  checkpoint fidelity validated in O1. Checkpoint remote-code stubs import `hf_olmo`;
   checkpoint SHA alone does not pin model math.
 - Use native tokenizer files at the primary revision. HF conversion tokenizer
   differs, including postprocessor. Do not silently substitute or copy OpenELM
@@ -94,7 +126,7 @@ approximately 3T checkpoint or obsolete milestone details.
 
 - Keep independent RT, FBT and NextLat switches. Standalone RT is one pass;
   FBT K counts complete passes and K1 is ordinary pass 0.
-- Initial selected RT set is `{0}`. Top index is15; derive from configuration.
+- Initial selected RT set is `{0}`. Top index is 15; derive from configuration.
   Use full history, not the restricted-window synthetic default.
 - RT writes from `m_t=(1-alpha)*x_t+alpha*z_t`, then native input LayerNorm and
   K/V projections, with RoPE in attention coordinates. There is no Q/K norm.
@@ -150,8 +182,9 @@ OpenELM import and sequential RT are complete, now historical references:
   Reports retain verified storage receipts. Reuse existing checkpoint objects;
   do not upload another OpenELM copy.
 
-The current planning revision changes documentation only. OpenELM's proposed
-next tiled milestone is superseded by O1, not still queued in parallel.
+The completed planning revision changed documentation only; O1 subsequently
+implemented and validated OLMo. OpenELM's proposed tiled milestone is superseded
+by the OLMo lineage and is not still queued in parallel.
 
 ## Execution, resources and retention
 
@@ -162,9 +195,9 @@ and successful `nvidia-smi` **inside it** before GPU work. Never execute CUDA,
 training/evaluation/profiling on the host or silently use CPU. Explicit CPU unit
 tests use `CDRM_DOCKER_GPUS=none` with the same launcher.
 
-Next OLMo runtime lineage is proposed as `.runtime/olmo1b-step60000/`, with a
-new prefix under `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/`. No OLMo upload
-exists yet. Project files persist; local SSD is disposable. Retain checkpoints,
+The OLMo runtime lineage is `.runtime/olmo1b-step60000/`; cloud retention is
+recorded by a verified receipt under the O1 results. Project files persist;
+local SSD is disposable. Retain checkpoints,
 source/config/tokenizer hashes, evidence and receipts. Graphable runs go online
 to W&B `taylorbollman/pretrained-fbt-rt-nextlat`; record actual URLs.
 
