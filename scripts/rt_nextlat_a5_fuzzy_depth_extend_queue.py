@@ -1,0 +1,106 @@
+#!/usr/bin/env python3
+"""Host supervisor for the three-layer mixed-task extension from 5k to total 7.5k."""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import json
+import os
+from pathlib import Path
+import signal
+
+from scripts.rt_a5_bf16_queue import Queue as OriginalQueue, ROOT, read, sha
+
+
+class Queue(OriginalQueue):
+    def status(self, phase, **values):
+        packet = {"schema": "rt-nextlat-mixed-depth-extend-queue-v1", "phase": phase,
+                  "pid": os.getpid(), "updated_at_utc": datetime.now(timezone.utc).isoformat(),
+                  "endpoint": 7500, "batch_per_task": 2560, **values}
+        temporary = self.runtime / "status.tmp"
+        temporary.write_text(json.dumps(packet, indent=2, allow_nan=False) + "\n")
+        temporary.replace(self.runtime / "status.json")
+
+    def verify(self):
+        ready = read(self.runtime / "ready.json")
+        if ready.get("passed") is not True:
+            raise RuntimeError("Depth pilot readiness has not passed")
+        for name, expected in ready["source_sha256"].items():
+            if sha(ROOT / name) != expected:
+                raise RuntimeError("Frozen pilot source changed: " + name)
+        if sha(ROOT / self.config["resume_checkpoint"]) != self.config["resume_checkpoint_sha256"]:
+            raise RuntimeError("Restored parent checkpoint changed")
+
+    def invoke(self, name, arguments, **kwargs):
+        # Training sources are frozen before restart. Analysis is prepared and
+        # independently frozen while the already-qualified training continues.
+        if name == "compare":
+            analysis = read(self.runtime / "analysis-ready.json")
+            if analysis.get("passed") is not True:
+                raise RuntimeError("Continuation comparison readiness has not passed")
+            for path, digest in analysis["source_sha256"].items():
+                if sha(ROOT / path) != digest:
+                    raise RuntimeError("Frozen continuation analysis changed: " + path)
+        return super().invoke(name, arguments, **kwargs)
+
+    def run(self):
+        self.verify()
+        if self.config["endpoint"] != 7500:
+            raise RuntimeError("Only the authorized 7,500-update pilot is scheduled")
+        if (self.runtime / "STOP").exists():
+            self.status("cancelled_before_training")
+            return
+        self.invoke("train", ["python", "-u", "-m", "scripts.rt_nextlat_a5_fuzzy_depth_train",
+                              *self.config["training_cli"]], gpu=True)
+        report = read(ROOT / self.config["training"] / "report.json")
+        endpoint = report["completed_updates"]
+        if (report["status"] not in ("complete", "stopped")
+                or report["start_update"] != self.config["resume_update"]
+                or not isinstance(report["parent_checkpoint"], dict)
+                or report["parent_checkpoint"]["sha256"] != self.config["resume_checkpoint_sha256"]
+                or report["requested_endpoint"] != 7500 or not self.config["resume_update"] <= endpoint <= 7500
+                or (report["status"] == "complete" and endpoint != 7500)
+                or report["contract"]["batch_per_task"] != 2560
+                or report["contract"]["microbatch"] != self.config["microbatch"]
+                or report["contract"]["model_config"]["backbone"]["n_layers"] != 3):
+            raise RuntimeError("Resumed mixed run did not obey the authorized 7.5k/B2560 contract")
+        report_args = []
+        if endpoint > 0:
+            self.invoke("compare", ["python", "-m", "scripts.rt_nextlat_a5_fuzzy_depth_extend_report",
+                                    "--baseline-train", self.config["baseline_training"],
+                                    "--train", self.config["training"],
+                                    "--output", self.config["report"], "--wandb"])
+            if read(ROOT / self.config["report"] / "report.json").get("status") != "complete":
+                raise RuntimeError("Depth comparison did not complete")
+            report_args = ["--report", self.config["report"]]
+        self.invoke("retain", ["python", "-m", "scripts.rt_nextlat_fuzzy_retain",
+                               "--runtime", str(self.relative), *report_args,
+                               "--prefix", self.config["retention_prefix"], "--label", "final"], adc=True)
+        receipt = read(self.runtime / "retention/final-receipt.json")
+        record = next(x for x in report["checkpoints"] if x["completed_updates"] == endpoint)
+        name = f"train/checkpoints/step-{endpoint:06d}.pt"
+        member = next(x for x in receipt["members"] if x["path"] == "runtime/" + name)
+        if (receipt["status"] != "verified" or member["sha256"] != record["sha256"]
+                or sha(self.runtime / name) != record["sha256"]):
+            raise RuntimeError("Retained endpoint does not match completed training")
+        self.status("complete" if report["status"] == "complete" else "stopped_and_retained",
+                    completed_updates=endpoint, retained_uri=receipt["uri"],
+                    checkpoint_sha256=record["sha256"], no_following_experiments=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--runtime", type=Path, required=True)
+    args = parser.parse_args()
+    queue = Queue(args.runtime)
+    for number in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(number, queue.stop)
+    try:
+        queue.run()
+    except BaseException as error:
+        queue.status("failed", error_type=type(error).__name__, error=str(error))
+        raise
+
+
+if __name__ == "__main__":
+    main()
