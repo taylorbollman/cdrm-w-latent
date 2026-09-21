@@ -6,6 +6,9 @@ target for native tiled implementation. No weights were trained or changed.
 
 The checkpoint-import [PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1)
 was merged at `959c225`. Stage B uses branch `feat/openelm-rt-reference`.
+Its implementation/evidence commit is `6603521`, tracked by
+[PR #2](https://github.com/taylorbollman/cdrm-w-latent/pull/2). Later
+documentation-only changes do not alter the validated source hashes.
 The user authorized direct PR closure/merge and asked us to stop at the next
 review milestone. Tiled execution and learning are subsequent work.
 

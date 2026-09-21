@@ -39,6 +39,9 @@ by Stage B.
 Stage A: [PR #1](https://github.com/taylorbollman/cdrm-w-latent/pull/1) merged at
 `959c225`, including implementation commit `b24abd8` and documentation followup
 `ad86d71`. Stage B branch: `feat/openelm-rt-reference`, based on that merge.
+Stage B: [PR #2](https://github.com/taylorbollman/cdrm-w-latent/pull/2),
+implementation/evidence commit `6603521`. Subsequent documentation-only
+changes do not alter the source hashes in the validated/retained report.
 The working tree was clean at the start of Stage B. Preserve subsequent user changes.
 Model source for this new lineage belongs in `cdrm/pretrained/`; the historical
 Recurrent OLMo/synthetic implementations remain their own reference lineage.
