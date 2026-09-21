@@ -1,0 +1,31 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790015661728396",
+    "md5_base64": "L7etcnviBNe9rtUAbRjRNg==",
+    "reused_without_upload": true,
+    "sha256": "0e79fef600d022da33111f86dae4e7f4a4fd1d2e9045364c5ccd4c2283c4d9c6",
+    "size_bytes": 4320718260,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-import/20260921T182701Z/checkpoint/checkpoint_epoch_0_iter_299999.pt",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match the Stage A receipt"
+  },
+  "objects": [
+    {
+      "generation": "1790017679961307",
+      "md5_base64": "w/sKa0NQkz8ifiLP7wSJYQ==",
+      "sha256": "312f459fd0e41ed7675f7071b54ed38b632ea4735c00efa0aa6dcc1c1bdb582c",
+      "size_bytes": 533165,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-rt-reference/20260921T190151Z/evidence.tar.gz",
+      "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+    },
+    {
+      "generation": "1790017680226771",
+      "md5_base64": "NGYQ4v3Ud1M47/sDrc+OIA==",
+      "sha256": "1581a731e2ec0cff89376c20b2b770713ba2d7f914abaf08501e5a8831dcd877",
+      "size_bytes": 20537,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/openelm-rt-reference/20260921T190151Z/retention-manifest.json",
+      "verification": "GCS size and server MD5 match local bytes; SHA256 matches object metadata"
+    }
+  ],
+  "schema": "openelm-rt-reference-storage-receipt-v1",
+  "status": "verified"
+}

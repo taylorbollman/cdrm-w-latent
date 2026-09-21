@@ -3,7 +3,8 @@
 Research workspace with a persistent Docker environment and an editable local
 checkout of Recurrent OLMo.
 
-The current pretrained-model research begins with native OpenELM-1.1B import.
+The current pretrained-model research has validated native OpenELM-1.1B import
+and a [sequential RT reference](docs/openelm-rt-reference-usage.md).
 See the [implementation handoff](docs/fbt-rt-nextlat-handoff.md) for current
 status and recovery, and the [staged research plan](docs/fbt-rt-nextlat-research-plan-v2.md)
 for the subsequent RT, FBT and NextLat comparisons.
