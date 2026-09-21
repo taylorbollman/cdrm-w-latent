@@ -1,0 +1,353 @@
+"""Dyadically tiled native OLMo recurrence with explicit-parameter backward.
+
+The custom Function retains layer inputs and completed outputs, not the scan's
+activation graphs. Backward reconstructs projections and attention in parallel,
+propagates recurrent credit in reverse with frozen-weight local VJPs, and uses
+one batched VJP to return input/parameter/cache gradients. It never writes .grad
+or replays a sequential recurrent forward. Higher-order derivatives are outside
+this first-order backend's contract.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+import math
+
+import torch
+from torch import Tensor
+from torch.autograd.function import once_differentiable
+from torch.nn import functional as F
+
+from .olmo import OLMoBlock, OLMoConfig, _apply_rope
+from .olmo_recurrent import OLMoRTForCausalLM
+from .recurrent import RTExecutionContext, RTMode
+
+
+@dataclass(frozen=True)
+class _Invocation:
+    config: OLMoConfig
+    alpha: float
+    attention_precision: str
+    autocast_enabled: bool
+    autocast_dtype: torch.dtype
+
+
+def _replay(spec: _Invocation, device: torch.device):
+    return torch.autocast(device.type, enabled=spec.autocast_enabled, dtype=spec.autocast_dtype)
+
+
+def _project(x: Tensor, weight: Tensor, config: OLMoConfig):
+    normalized = F.layer_norm(x, (config.model_dim,), eps=config.layer_norm_eps)
+    parts = F.linear(normalized, weight).split(config.model_dim, dim=-1)
+    return tuple(part.view(x.shape[0], x.shape[1], config.num_heads, config.head_dim).transpose(1, 2) for part in parts)
+
+
+def _finish(x, attended, out_weight, up_gate_weight, ff_out_weight, config, projection_dtype):
+    attended = attended.to(projection_dtype).transpose(1, 2).contiguous().view(x.shape)
+    residual = x + F.linear(attended, out_weight)
+    normalized = F.layer_norm(residual, (config.model_dim,), eps=config.layer_norm_eps)
+    up, gate = F.linear(normalized, up_gate_weight).chunk(2, dim=-1)
+    return residual + F.linear(F.silu(gate) * up, ff_out_weight)
+
+
+def _mm(a: Tensor, b: Tensor, spec: _Invocation, projection_dtype: torch.dtype) -> Tensor:
+    """Explicit matrix arithmetic; online state and reductions stay FP32.
+
+    Mixed uses the projection dtype for matrix operands/results, like the
+    paper's mixed path. FP32 promotes attention matrices only; dense native
+    projections/MLPs retain the caller's autocast behavior.
+    """
+    dtype = torch.float32 if spec.attention_precision == "fp32" else projection_dtype
+    with torch.autocast(a.device.type, enabled=False):
+        return torch.matmul(a.to(dtype), b.to(dtype)).float()
+
+
+def _add_tile(query, key, value, valid, numerator, maximum, denominator, spec, dtype):
+    score = _mm(query, key.transpose(-1, -2), spec, dtype) / math.sqrt(spec.config.head_dim)
+    score = score.masked_fill(~valid[:, None, None, :], -torch.inf)
+    merged_max = torch.maximum(maximum, score.max(-1).values)
+    # Empty/all-masked histories must produce zero, including left padding.
+    safe_max = torch.where(torch.isfinite(merged_max), merged_max, torch.zeros_like(merged_max))
+    old_factor = torch.exp(maximum - safe_max)
+    weights = torch.exp(score - safe_max.unsqueeze(-1))
+    numerator = numerator * old_factor.unsqueeze(-1) + _mm(weights, value, spec, dtype)
+    denominator = denominator * old_factor + weights.sum(-1)
+    return numerator, merged_max, denominator
+
+
+def _attention_from_completed(query, temporary_key, temporary_value, permanent_key,
+                              permanent_value, valid, prefix_length, spec, dtype):
+    """Reconstruct complete causal attention once all completed states are known."""
+    length = query.shape[-2]
+    scores = _mm(query, permanent_key.transpose(-1, -2), spec, dtype) / math.sqrt(spec.config.head_dim)
+    indices = torch.arange(length, device=query.device)
+    diagonal = (query.float() * temporary_key.float()).sum(-1) / math.sqrt(spec.config.head_dim)
+    scores[:, :, indices, prefix_length + indices] = diagonal
+    keys = torch.arange(permanent_key.shape[-2], device=query.device)
+    causal = keys[None, :] <= (prefix_length + indices[:, None])
+    allowed = causal[None, None] & valid[:, None, None, :]
+    scores = scores.masked_fill(~allowed, -torch.inf)
+    any_valid = allowed.any(-1, keepdim=True)
+    scores = torch.where(any_valid, scores, torch.zeros_like(scores))
+    probabilities = scores.softmax(-1) * any_valid
+    diagonal_probability = probabilities[:, :, indices, prefix_length + indices]
+    historical_probability = probabilities.clone()
+    historical_probability[:, :, indices, prefix_length + indices] = 0
+    attention = _mm(historical_probability, permanent_value, spec, dtype)
+    # Keep the temporary diagonal separate. Subtracting a permanent diagonal
+    # after a BF16 PV matmul would mix rounded and unrounded probabilities.
+    attention += diagonal_probability.unsqueeze(-1) * temporary_value.float()
+    return probabilities, attention
+
+
+class _TiledRecurrence(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x, wq, wo, wup, wdown, past_key, past_value,
+                positions, key_positions, valid, spec):
+        config = spec.config
+        batch, length, _ = x.shape
+        prefix = past_key.shape[-2]
+        query, temporary_key, temporary_value = _project(x, wq, config)
+        dtype = query.dtype
+        query = _apply_rope(query, positions, config.rope_freq_constant)
+        temporary_key = _apply_rope(temporary_key, positions, config.rope_freq_constant)
+        with torch.autocast(x.device.type, enabled=False):
+            maximum = (query.float() * temporary_key.float()).sum(-1) / math.sqrt(config.head_dim)
+            self_valid = valid[:, None, prefix:]
+            maximum = maximum.masked_fill(~self_valid, -torch.inf)
+            denominator = self_valid.expand(batch, config.num_heads, length).float().clone()
+            numerator = temporary_value.float() * self_valid.unsqueeze(-1)
+        if prefix:
+            prefix_key = _apply_rope(past_key, key_positions[:, :prefix], config.rope_freq_constant)
+            numerator, maximum, denominator = _add_tile(
+                query, prefix_key, past_value, valid[:, :prefix],
+                numerator, maximum, denominator, spec, dtype,
+            )
+        shape = (batch, config.num_heads, length, config.head_dim)
+        keys = torch.empty(shape, device=x.device, dtype=dtype)
+        values = torch.empty_like(keys)
+        rotated_keys = torch.empty_like(keys)
+        outputs = []
+        for index in range(length):
+            attention = numerator[:, :, index:index + 1] / denominator[:, :, index:index + 1].clamp_min(1e-30).unsqueeze(-1)
+            current = x[:, index:index + 1]
+            completed = _finish(current, attention, wo, wup, wdown, config, dtype)
+            outputs.append(completed)
+            source = (1.0 - spec.alpha) * current + spec.alpha * completed
+            _, key, value = _project(source, wq, config)
+            keys[:, :, index:index + 1] = key
+            values[:, :, index:index + 1] = value
+            rotated_keys[:, :, index:index + 1] = _apply_rope(key, positions[:, index:index + 1], config.rope_freq_constant)
+            boundary = index + 1
+            if boundary == length:
+                continue
+            width = boundary & -boundary
+            stop = min(length, boundary + width)
+            target = slice(boundary, stop)
+            source_slice = slice(boundary - width, boundary)
+            n, m, d = _add_tile(
+                query[:, :, target], rotated_keys[:, :, source_slice], values[:, :, source_slice],
+                valid[:, prefix + boundary - width:prefix + boundary],
+                numerator[:, :, target], maximum[:, :, target], denominator[:, :, target], spec, dtype,
+            )
+            numerator[:, :, target], maximum[:, :, target], denominator[:, :, target] = n, m, d
+        completed = torch.cat(outputs, dim=1)
+        ctx.save_for_backward(x, completed, wq, wo, wup, wdown, past_key, past_value,
+                              positions, key_positions, valid)
+        ctx.spec, ctx.projection_dtype = spec, dtype
+        ctx.set_materialize_grads(False)
+        return completed, keys, values
+
+    @staticmethod
+    @once_differentiable
+    def backward(ctx, grad_output, grad_new_key, grad_new_value):
+        x, completed, wq, wo, wup, wdown, past_key, past_value, positions, key_positions, valid = ctx.saved_tensors
+        spec, dtype = ctx.spec, ctx.projection_dtype
+        config, alpha = spec.config, spec.alpha
+        length, prefix = x.shape[1], past_key.shape[-2]
+        shape = (x.shape[0], config.num_heads, length, config.head_dim)
+        grad_output = torch.zeros_like(completed) if grad_output is None else grad_output
+        grad_new_key = torch.zeros(shape, device=x.device, dtype=dtype) if grad_new_key is None else grad_new_key
+        grad_new_value = torch.zeros_like(grad_new_key) if grad_new_value is None else grad_new_value
+        # Detached local leaves isolate this custom VJP from outer .grad fields.
+        xg = x.detach().requires_grad_(True)
+        weights = tuple(w.detach().requires_grad_(True) for w in (wq, wo, wup, wdown))
+        # Autocast does not cache casts of detached, requires_grad=False weights.
+        # Cast each local-Jacobian weight once, not once per sequence position.
+        # Batched parameter VJPs below still use the original FP32 weight leaves.
+        frozen = tuple(w.detach().to(dtype) if spec.autocast_enabled else w.detach() for w in weights)
+        pkg, pvg = past_key.detach().requires_grad_(True), past_value.detach().requires_grad_(True)
+        with torch.enable_grad(), _replay(spec, x.device):
+            q, kt, vt = _project(xg, weights[0], config)
+            q = _apply_rope(q, positions, config.rope_freq_constant)
+            kt = _apply_rope(kt, positions, config.rope_freq_constant)
+            memory_source = (1.0 - alpha) * xg + alpha * completed.detach()
+            _, kr, vr = _project(memory_source, weights[0], config)
+            rotated_current = _apply_rope(kr, positions, config.rope_freq_constant)
+            rotated_prefix = _apply_rope(pkg, key_positions[:, :prefix], config.rope_freq_constant)
+            all_keys = torch.cat((rotated_prefix, rotated_current), dim=-2)
+            all_values = torch.cat((pvg, vr), dim=-2)
+            with torch.no_grad():
+                probabilities, attention = _attention_from_completed(
+                    q.detach(), kt.detach(), vt.detach(), all_keys.detach(), all_values.detach(),
+                    valid, prefix, spec, dtype,
+                )
+                dk = torch.zeros(shape, device=x.device, dtype=torch.float32)
+                dv = torch.zeros_like(dk)
+                ga = torch.zeros_like(dk)
+                gamma = torch.empty_like(completed)
+                dot = torch.zeros(shape[:-1], device=x.device, dtype=torch.float32)
+            # Only local Jacobian-vector products are sequential. No completed
+            # state is regenerated from preceding states, and no weight VJP is
+            # evaluated per token. Permanent projection/attention graphs above
+            # and parameter VJPs below are batched over the complete sequence.
+            for index in range(length - 1, -1, -1):
+                source = memory_source[:, index:index + 1].detach().requires_grad_(True)
+                _, local_key, local_value = _project(source, frozen[0], config)
+                local_rotated = _apply_rope(local_key, positions[:, index:index + 1], config.rope_freq_constant)
+                du = torch.autograd.grad(
+                    (local_rotated, local_key, local_value), source,
+                    grad_outputs=(dk[:, :, index:index + 1], grad_new_key[:, :, index:index + 1],
+                                  dv[:, :, index:index + 1] + grad_new_value[:, :, index:index + 1]),
+                )[0]
+                total = grad_output[:, index:index + 1] + alpha * du
+                local_attention = attention[:, :, index:index + 1].detach().requires_grad_(True)
+                local_finished = _finish(x[:, index:index + 1].detach(), local_attention,
+                                         *frozen[1:], config, dtype)
+                g = torch.autograd.grad(local_finished, local_attention, grad_outputs=total)[0]
+                with torch.no_grad():
+                    gamma[:, index:index + 1] = total
+                    ga[:, :, index:index + 1] = g
+                    dot[:, :, index:index + 1] = (g * attention[:, :, index:index + 1]).sum(-1)
+                    if index:
+                        width = index & -index
+                        queries = slice(index, min(length, index + width))
+                        keys_slice = slice(index - width, index)
+                        p = probabilities[:, :, queries, prefix + index - width:prefix + index]
+                        dvalue = _mm(p.transpose(-1, -2), ga[:, :, queries], spec, dtype)
+                        error = p * (_mm(ga[:, :, queries], vr.detach()[:, :, keys_slice].transpose(-1, -2), spec, dtype)
+                                     - dot[:, :, queries].unsqueeze(-1))
+                        dkey = _mm(error.transpose(-1, -2), q.detach()[:, :, queries], spec, dtype) / math.sqrt(config.head_dim)
+                        dv[:, :, keys_slice] += dvalue
+                        dk[:, :, keys_slice] += dkey
+            with torch.no_grad():
+                indices = torch.arange(length, device=x.device)
+                diagonal_p = probabilities[:, :, indices, prefix + indices]
+                self_error = diagonal_p * ((ga * vt.detach().float()).sum(-1) - dot)
+                dkt = self_error.unsqueeze(-1) * q.detach().float() / math.sqrt(config.head_dim)
+                dvt = diagonal_p.unsqueeze(-1) * ga
+                error = probabilities * (_mm(ga, all_values.detach().transpose(-1, -2), spec, dtype) - dot.unsqueeze(-1))
+                error[:, :, indices, prefix + indices] = 0
+                dq = _mm(error, all_keys.detach(), spec, dtype) / math.sqrt(config.head_dim)
+                dq += self_error.unsqueeze(-1) * kt.detach().float() / math.sqrt(config.head_dim)
+                dpk = _mm(error[:, :, :, :prefix].transpose(-1, -2), q.detach(), spec, dtype) / math.sqrt(config.head_dim)
+                dpv = _mm(probabilities[:, :, :, :prefix].transpose(-1, -2), ga, spec, dtype)
+            replayed_finished = _finish(xg, attention.detach(), *weights[1:], config, dtype)
+            gradients = torch.autograd.grad(
+                (q, kt, vt, rotated_current, kr, vr, rotated_prefix, pvg, replayed_finished),
+                (xg, *weights, pkg, pvg),
+                grad_outputs=(dq, dkt, dvt, dk, grad_new_key, dv + grad_new_value,
+                              dpk, dpv, gamma),
+                allow_unused=True,
+            )
+        # The autograd engine owns accumulation, including shared multi-call and
+        # distributed consumers. Frozen inputs receive no fabricated .grad.
+        return tuple(g if needed else None for g, needed in zip(gradients, ctx.needs_input_grad[:7])) + (None,) * 4
+
+
+def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
+                          past: tuple[Tensor, Tensor] | None,
+                          query_positions: Tensor, key_positions: Tensor, key_valid: Tensor,
+                          attention_precision: str = "mixed"):
+    if attention_precision not in ("mixed", "fp32"):
+        raise ValueError("attention_precision must be 'mixed' or 'fp32'")
+    if isinstance(alpha, bool) or not isinstance(alpha, (int, float)) or not math.isfinite(alpha) or not 0 <= alpha <= 1:
+        raise ValueError("alpha must be finite and in [0,1]")
+    if x.ndim != 3 or min(x.shape) == 0 or x.shape[-1] != layer.config.model_dim:
+        raise ValueError("x must be nonempty [batch, length, model_dim]")
+    if past is None:
+        shape = (x.shape[0], layer.config.num_heads, 0, layer.config.head_dim)
+        pk, pv = x.new_empty(shape), x.new_empty(shape)
+    else:
+        pk, pv = past
+    spec = _Invocation(layer.config, float(alpha), attention_precision,
+                       torch.is_autocast_enabled(x.device.type), torch.get_autocast_dtype(x.device.type))
+    z, k, v = _TiledRecurrence.apply(
+        x, layer.att_proj.weight, layer.attn_out.weight, layer.ff_proj.weight, layer.ff_out.weight,
+        pk, pv, query_positions.clone(), key_positions.clone(), key_valid.clone(), spec,
+    )
+    memory = (k, v) if past is None else (torch.cat((pk, k), dim=-2), torch.cat((pv, v), dim=-2))
+    return z, memory
+
+
+@dataclass(frozen=True)
+class OLMoTiledCache:
+    key_values: tuple[tuple[Tensor, Tensor], ...]
+    attention_mask: Tensor
+    position_ids: Tensor
+    mode: RTMode
+    parameter_versions: tuple[tuple[int, int], ...] = field(repr=False)
+    model_generation: int = field(repr=False)
+    execution_context: RTExecutionContext
+    attention_precision: str
+
+    @property
+    def sequence_length(self):
+        return self.attention_mask.shape[1]
+
+
+@dataclass
+class OLMoTiledOutput:
+    logits: Tensor | None
+    last_hidden_state: Tensor
+    past_key_values: OLMoTiledCache | None = None
+
+
+class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
+    def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed", device=None, dtype=None):
+        if attention_precision not in ("mixed", "fp32"):
+            raise ValueError("attention_precision must be 'mixed' or 'fp32'")
+        super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
+        self.attention_precision = attention_precision
+
+    def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
+                attention_mask=None, position_ids=None, past_key_values=None,
+                use_cache=False, return_logits=True):
+        if not isinstance(mode, RTMode):
+            raise TypeError("mode must be an RTMode")
+        if any(index >= self.config.num_layers for index in mode.selected_layers):
+            raise ValueError("selected_layers contains an index outside the model")
+        x, valid, positions, key_positions, mask, causal = self._prepare_inputs(
+            input_ids, inputs_embeds, attention_mask, position_ids, past_key_values,
+            cache_type=OLMoTiledCache,
+        )
+        versions = self._parameter_versions() if use_cache or past_key_values is not None else ()
+        generation = getattr(self, "_rt_cache_generation", 0)
+        context = self._execution_context(x.device)
+        if past_key_values is not None:
+            if past_key_values.mode != mode:
+                raise ValueError("Cached RT mode differs from the requested mode")
+            if past_key_values.parameter_versions != versions:
+                raise ValueError("Cached weights differ from the current model or were modified")
+            if past_key_values.model_generation != generation:
+                raise ValueError("Cached model generation changed after a model conversion")
+            if past_key_values.execution_context != context or past_key_values.attention_precision != self.attention_precision:
+                raise ValueError("Cached execution context or attention precision differs")
+        present = []
+        for index, layer in enumerate(self.layers):
+            past = None if past_key_values is None else past_key_values.key_values[index]
+            if index in mode.selected_layers:
+                x, pair = tiled_recurrent_layer(
+                    layer, x, alpha=mode.alpha, past=past, query_positions=positions,
+                    key_positions=key_positions, key_valid=valid,
+                    attention_precision=self.attention_precision,
+                )
+            else:
+                x, pair = layer(x, past=past, query_positions=positions, key_positions=key_positions,
+                                mask=mask, is_causal=causal, attention_backend=self.attention_backend)
+            if use_cache:
+                present.append(pair)
+        hidden = self.norm(x)
+        cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
+                              versions, generation, context, self.attention_precision) if use_cache else None
+        return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)

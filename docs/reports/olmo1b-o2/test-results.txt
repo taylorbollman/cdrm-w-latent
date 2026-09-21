@@ -1,0 +1,28 @@
+Command: CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc "python -m pytest -q tests/test_olmo_artifacts.py tests/test_olmo_model.py tests/test_olmo_reference.py tests/test_olmo_recurrent.py tests/test_olmo_recurrent_oracle.py tests/test_olmo_validation.py tests/test_olmo_retain.py tests/test_olmo_tiled.py tests/test_olmo_tiled_retain.py tests/test_olmo_tiled_roundoff.py"
+
+........................................................................ [ 31%]
+........................................................................ [ 62%]
+........................................................................ [ 93%]
+..............                                                           [100%]
+=============================== warnings summary ===============================
+tests/test_olmo_reference.py: 8 warnings
+tests/test_olmo_recurrent_oracle.py: 20 warnings
+tests/test_olmo_tiled.py: 9 warnings
+  /workspace/cdrm-w-latent/cdrm/pretrained/_olmo_reference/model.py:1019: UserWarning: Embedding size is not a multiple of 128! This could hurt throughput performance.
+    warnings.warn(
+
+tests/test_olmo_reference.py::test_native_cached_chunks_and_attached_prefix_gradients_match_full_execution
+tests/test_olmo_reference.py::test_native_cached_chunks_and_attached_prefix_gradients_match_full_execution
+  /workspace/cdrm-w-latent/cdrm/pretrained/_olmo_reference/model.py:504: DeprecationWarning: torch.is_autocast_cpu_enabled() is deprecated. Please use torch.is_autocast_enabled('cpu') instead. (Triggered internally at /opt/pytorch/pytorch/torch/csrc/autograd/init.cpp:826.)
+    elif bias.device.type == "cpu" and torch.is_autocast_cpu_enabled():
+
+tests/test_olmo_retain.py::test_upload_only_creates_once_and_rejects_existing_remote_mismatch[sha256]
+  /usr/local/lib/python3.12/dist-packages/google/api_core/_python_package_support.py:206: FutureWarning: Package google.api_core depends on grpcio, currently installed at version 1.81.0. grpcio < 1.83.0 does not support Post-Quantum Cryptography (PQC). Support for non-PQC environments is deprecated. In October 2026, Google Cloud Python packages will raise their minimum requirements (including google-api-core, grpcio, and grpcio-status) to enforce grpcio >= 1.83.0. For more details on Google Cloud's post-quantum security migration, visit: https://cloud.google.com/security/resources/post-quantum-cryptography
+    warnings.warn(
+
+tests/test_olmo_tiled_retain.py::test_end_to_end_mock_retention_creates_only_three_evidence_objects
+  /usr/local/lib/python3.12/dist-packages/google/auth/transport/grpc.py:44: FutureWarning: grpcio < 1.83.0 does not support Post-Quantum Cryptography (PQC). Support for non-PQC environments is deprecated. In October 2026, google-auth will raise its minimum requirements to enforce grpcio >= 1.83.0. For more details on Google Cloud's post-quantum security migration, visit: https://cloud.google.com/security/resources/post-quantum-cryptography
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+230 passed, 41 warnings in 7.57s

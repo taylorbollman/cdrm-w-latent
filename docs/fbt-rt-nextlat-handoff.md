@@ -17,15 +17,70 @@ The scoped CPU suite passes **148 tests**. The actual 1.177B checkpoint passes
 ordinary source equivalence in FP32/BF16 and sequential RT output/all-parameter/
 input-gradient checks in FP32 at alpha 0/0.37/1, physical B1/T16, layer 0 only.
 
-**Stop at the O1 review point.** O2 (native RoPE tiled forward/backward), FBT,
-NextLat and learning remain staged; do not start them without the next user
-direction. No GPU, training or evaluation job is running or awaiting resumption.
+The user reviewed O1 and authorized **O2: native RoPE tiled forward/backward**.
+O2 is complete on `feat/olmo1b-tiled-rt`, based on O1 merge `a806835`.
+Implementation/evidence commit: `c6a41c23568a4ef4e561b7b44a05f47fe38ab59b`,
+[PR #5](https://github.com/taylorbollman/cdrm-w-latent/pull/5).
+See [O2 results](reports/olmo1b-o2/results.md),
+[usage](olmo1b-tiled-rt-usage.md) and [protocol/amendment](reports/olmo1b-o2/protocol.md).
+The combined scoped CPU suite passes **230 tests**. Actual-checkpoint tiled
+FP32 checks pass at B1/T16 alpha 0/.37/1 and B1/T128 alpha 1, all 65 parameter
+and input gradients. A raw-cotangent B2/T17 strict input-coordinate failure is
+retained and adjudicated with an independent FP64 oracle; see details below.
+BF16 differences and eager H100 performance are measured, not training clearance.
+**Pause at O2 for review. O3 and learning are not started or queued.**
 There was no optimizer update to the pretrained checkpoint. The user authorizes
 direct PR closure/merges; this does not expand research/training scope.
 
-Implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
+O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
 source/evidence, not an unrecorded working tree, defines tested behavior.
+
+## O2 selected results and recovery
+
+- Code: `cdrm/pretrained/olmo_tiled.py`, `OLMoTiledRTForCausalLM` and low-level
+  `tiled_recurrent_layer`. Parameters/layout unchanged; O1 references preserved.
+  Dyadic attention, native RoPE, fractional alpha, explicit returned parameter
+  gradients, attached prefix/exported-cache gradients. Separate tiled cache
+  provenance. Saved x/z enable recomputation without sequential forward replay.
+- Final validation: `.runtime/olmo1b-step60000/tiled-validation-02/report.json`,
+  W&B [nfys79l3](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/nfys79l3).
+  FP32 full-model global gradient relative L2 1.543e-6–2.319e-6; worst tensor
+  3.434e-6. All original full-model acceptance budgets pass. Some stricter
+  parameter-coordinate diagnostics remain flagged, as recorded in the report.
+- Initial stress-test failure remains in `tiled-validation-01/`, W&B
+  [q4gu72t4](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/q4gu72t4),
+  and [retained report](reports/olmo1b-o2/initial-validation-01.json). Final
+  raw-input adjudication retains 65/69,632 coordinate flags but finds FP32
+  input-gradient norm error versus FP64 only 6.143e-7 tiled / 5.439e-7 scan.
+  A documented **post-failure calibration** applies the existing joint tensor
+  norm/maximum budget to raw input gradients, requiring both FP32 paths to
+  agree with FP64. Do not call this an unchanged original coordinate screen.
+  Original source hashes are recoverable with the retained reverse source patch.
+- BF16 alpha1 versus tiled FP32: T16 global 1.489–1.660%, worst tensor
+  3.499–3.723%; T128 mixed attention global 2.714%, worst 3.197%; T128 FP32
+  attention global 1.675%, worst 2.219%. All finite and complete. Both attention
+  policies remain available; this is bounded observation, not learning clearance.
+- Profile: `.runtime/olmo1b-step60000/tiled-profile-01/report.json`, W&B
+  [em18z6bm](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/em18z6bm).
+  Full model (RT layer0 only), BF16 B1/T512: 1.464 s forward/backward,
+  350 tokens/s, 9.509 GiB operational peak; no optimizer. B4/T512 block-only
+  1,388 tokens/s. Eager tiled B1/T128 is slower than scan (1.6x FP32/1.4x BF16).
+  Entire backbone remains resident even for block-only measurements. Memory
+  includes finiteness-check scratch; timings exclude it.
+- Limits: quadratic attention reconstruction in backward, per-position local
+  autograd, first-order only; no compiler/graphs, multi-GPU, context2048,
+  all-16-layer actual-checkpoint recurrence or training-quality clearance.
+- CPU record: `.runtime/olmo1b-step60000/tiled-cpu-suite.log` and
+  [230-test record](reports/olmo1b-o2/test-results.txt).
+- O2 evidence retention reuses the existing O1 checkpoint object without
+  another model upload. [O2 storage receipt](reports/olmo1b-o2/storage-receipt.json)
+  records the verified timestamp prefix, object generations and hashes.
+  Prefix: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-tiled-rt/20260921T205831Z/`;
+  local receipts/archive in `.runtime/olmo1b-step60000/tiled-retention-20260921T205831Z/`.
+- Next staged milestone O3: LM NextLat alignment/detachment/document masks,
+  optimizer/save/resume and realistic batch memory; two-GPU correctness when
+  available. No adaptation run is implicitly authorized by platform work.
 
 ## O1 selected results and recovery
 
