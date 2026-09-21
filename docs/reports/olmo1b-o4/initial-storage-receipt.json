@@ -1,0 +1,31 @@
+{
+  "objects": [
+    {
+      "generation": "1790028911751263",
+      "md5_base64": "DrQDiCwzpwoZW1cnnUHsqw==",
+      "sha256": "ab0d8f4e0f39b9e9107f37dcc3da0d509beec760d828dc3a2c3b7c77b36888f4",
+      "size_bytes": 68381709,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/evidence.tar.gz",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    },
+    {
+      "generation": "1790028912626318",
+      "md5_base64": "BgskcfIaByszAnljzvXM9w==",
+      "sha256": "51c39dcffa9f21ed85254058b3fb1c37520c583a2ec4024501c102704571cf35",
+      "size_bytes": 18385,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/manifest.json",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    }
+  ],
+  "phase": "initial",
+  "receipt_object": {
+    "generation": "1790028913449845",
+    "md5_base64": "3BRS844ikgREJCKGGknIqQ==",
+    "sha256": "d7e1fc8dc2191372b8faabffe2c9f5ba9b6d5daf62acb08b2cd7ea6e46aa179a",
+    "size_bytes": 956,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/storage-receipt.json",
+    "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+  },
+  "schema": "olmo-o4-evidence-receipt-v1",
+  "status": "verified"
+}

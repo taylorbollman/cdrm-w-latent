@@ -127,6 +127,27 @@ CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python scripts/olmo
   --output-dir docs/reports/olmo1b-o4'
 ```
 
+For the current queue, `scripts/olmo_o4_finish.py` is already waiting in a CPU
+container and will invoke this report and final evidence retention automatically.
+Its state is `<runs>/finish-status.json`; its log is
+`.runtime/olmo1b-step60000/o4-finish-01.log`. It does not merge the draft PR.
+After a VM restart, relaunch it alongside the resumed GPU queue:
+
+```bash
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'env -u GOOGLE_APPLICATION_CREDENTIALS \
+  python scripts/olmo_o4_finish.py \
+  --data .runtime/olmo1b-step60000/o4-data-01/prepared \
+  --preflight .runtime/olmo1b-step60000/o4-preflight-01 \
+  --runs .runtime/olmo1b-step60000/o4-pilot-01 \
+  --retention-output .runtime/olmo1b-step60000/o4-final-retention-01 \
+  --report-dir docs/reports/olmo1b-o4 \
+  --prefix gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z'
+```
+
+Run only one finisher. If final retention already started before an interruption,
+inspect its receipts before choosing a new retention output/prefix; immutable
+objects must not be overwritten with different bytes.
+
 It checks complete configuration/source/data/schedule and exposure agreement,
 final checkpoint receipts, evaluation identities and inference modes. It
 rejects missing/running/failed arms and conflicting duplicate observations;

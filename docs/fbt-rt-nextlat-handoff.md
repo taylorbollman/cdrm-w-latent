@@ -46,7 +46,10 @@ run was awaiting resumption at the O3 close. The user authorizes direct PR closu
 does not expand research/training scope.
 
 **O4 is now active** on `feat/olmo1b-o4-learning-pilot`, based on O3 merge
-`29fee0dae0f551ef75a29de1d1269e3a69ec8055`. Read the
+`29fee0dae0f551ef75a29de1d1269e3a69ec8055`. Implementation commit
+`e294ce6735dd7f1a4d8be08e464d4b8336892db6`,
+[draft PR #7](https://github.com/taylorbollman/cdrm-w-latent/pull/7); keep draft
+until the learning comparison has completed and been reviewed. Read the
 [O4 protocol](reports/olmo1b-o4/protocol.md). Scope: four matched code-continuation
 arms, ordinary / ordinary+NextLat / RT / RT+NextLat; original checkpoint, RT
 layer0 only, FBT off. Approximately20–22M valid input tokens/arm:100-update
@@ -93,7 +96,31 @@ It records a pre-training recovery-only source amendment; see protocol.
 No core training/model/data source changes are permitted between matched arms
 without explicitly stopping/revising this lineage. Analysis/report-only new
 files can be developed independently. New implementation tests:397 combined
-O1–O4 core tests plus22 runner helper tests, all passed; report tests forthcoming.
+O1–O4 core tests plus22 runner helper,12 retention and35 report tests:466 distinct
+passing tests, recorded in [test-results](reports/olmo1b-o4/test-results.txt).
+
+Initial source/data/preflight evidence has been verified in GCS under the above
+prefix's `initial/` directory, including68,381,709-byte evidence archive. Receipt:
+[initial-storage-receipt.json](reports/olmo1b-o4/initial-storage-receipt.json).
+The ordinary control's update100 full checkpoint is also verified remotely
+(`ordinary/update-000100.pt`, SHA256
+`0cc6f230144dd9c1eb0d8accd076fa08179f7f9fc4886d8023912702807a23b4`).
+Its live W&B run is
+[4rhi7s7i](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/4rhi7s7i).
+As of22:17UTC it had passed7.5M tokens and was healthy; use actual reports for
+newer status. Other arms are queued, not claimed complete.
+
+Automatic CPU finisher is running in unified-exec session3634, log
+`.runtime/olmo1b-step60000/o4-finish-01.log`; state is
+`o4-pilot-01/finish-status.json`. It waits for all four completed arms, then runs
+the strict analysis reporter to create `docs/reports/olmo1b-o4/results.md`,
+`final-comparison.json`, `learning-curves.pdf/png`, and verifies a final GCS
+evidence upload (`o4-final-retention-01/`, cloud `final/`). It stops without
+claiming completion if the queue stops/fails. If the VM shuts down, resume the
+GPU queue and relaunch this CPU finisher; no external scheduler was created.
+The finisher does not commit reports or merge PRs: after completion, inspect
+results/curves/receipts, update this handoff and PR description, commit evidence
+and close the draft PR. See [O4 usage](olmo1b-o4-usage.md) for stop/resume/report.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
