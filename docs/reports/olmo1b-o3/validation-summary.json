@@ -1,0 +1,1678 @@
+{
+  "cpu_suite": {
+    "command": "python -m pytest -q tests/test_olmo*.py tests/test_nextlat_memory.py",
+    "passed": 326,
+    "seconds": 8.63,
+    "warnings": 41
+  },
+  "limits": [
+    "one GPU",
+    "RT layer 0 only on actual checkpoint",
+    "short math-backend quantitative gradient checks",
+    "BF16 default-SDPA zero-LR profile is execution/capacity evidence, not learning or gradient-equivalence clearance",
+    "one document per row; no packed-document attention",
+    "no FBT, compile, CUDA graphs or distributed clearance",
+    "no O4 learning run"
+  ],
+  "profile": {
+    "cases": [
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 13.216800689697266,
+        "batch_size": 1,
+        "cuda_event_seconds": [
+          0.0892286376953125,
+          0.06840220642089843,
+          0.06828147125244141
+        ],
+        "incremental_peak_allocated_gib": 5.154299259185791,
+        "last_step": {
+          "counters": {
+            "ce_positions": 384,
+            "documents": 6,
+            "input_tokens": 768,
+            "kl_triples": 0,
+            "latent_pairs": 0,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 64,
+            "kl": 0,
+            "latent": 0
+          },
+          "gradient_norm_before_clip": 9.404549598693848,
+          "loss_means": {
+            "ce": 0.28158432245254517,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "loss_sums": {
+            "ce": 18.02139663696289,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "lr_next": [
+            0.0
+          ],
+          "lr_used": [
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 0.28158432245254517,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 260,
+            "cuda:0": 9414115328
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 128,
+        "median_cuda_seconds": 0.06840220642089843,
+        "median_wall_seconds": 0.06842524599960598,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "nextlat": false,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 18.371099948883057,
+        "peak_reserved_gib": 19.78515625,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 935.3272913387632,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 1870.6545826775264,
+        "wall_seconds": [
+          0.08927726199908648,
+          0.06842524599960598,
+          0.06830499299940129
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 13.216800689697266,
+        "batch_size": 1,
+        "cuda_event_seconds": [
+          0.4437476806640625,
+          0.428443359375,
+          0.4250098876953125
+        ],
+        "incremental_peak_allocated_gib": 5.154299259185791,
+        "last_step": {
+          "counters": {
+            "ce_positions": 384,
+            "documents": 6,
+            "input_tokens": 768,
+            "kl_triples": 0,
+            "latent_pairs": 0,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 64,
+            "kl": 0,
+            "latent": 0
+          },
+          "gradient_norm_before_clip": 62.75167465209961,
+          "loss_means": {
+            "ce": 0.7943335771560669,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "loss_sums": {
+            "ce": 50.83734893798828,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "lr_next": [
+            0.0
+          ],
+          "lr_used": [
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 0.7943335771560669,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 0.0,
+            "latent": 0.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 260,
+            "cuda:0": 9414115328
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 128,
+        "median_cuda_seconds": 0.428443359375,
+        "median_wall_seconds": 0.4284661799993046,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": false,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 18.371099948883057,
+        "peak_reserved_gib": 20.025390625,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 149.37001562201215,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 298.7400312440243,
+        "wall_seconds": [
+          0.44379819900132134,
+          0.4284661799993046,
+          0.4250322900006722
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 14.144275665283203,
+        "batch_size": 1,
+        "cuda_event_seconds": [
+          0.09605903625488281,
+          0.07583273315429688,
+          0.07568412780761719
+        ],
+        "incremental_peak_allocated_gib": 5.462482452392578,
+        "last_step": {
+          "counters": {
+            "ce_positions": 384,
+            "documents": 6,
+            "input_tokens": 768,
+            "kl_triples": 384,
+            "latent_pairs": 762,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 64,
+            "kl": 64,
+            "latent": 127
+          },
+          "gradient_norm_before_clip": 152.35623168945312,
+          "loss_means": {
+            "ce": 0.28158432245254517,
+            "kl": 11.860353469848633,
+            "latent": 0.9190724891001784
+          },
+          "loss_sums": {
+            "ce": 18.02139663696289,
+            "kl": 759.0626220703125,
+            "latent": 116.72220611572266
+          },
+          "lr_next": [
+            0.0,
+            0.0
+          ],
+          "lr_used": [
+            0.0,
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 13.061010281401357,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 128,
+        "median_cuda_seconds": 0.07583273315429688,
+        "median_wall_seconds": 0.07585620500140067,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "nextlat": true,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 19.60675811767578,
+        "peak_reserved_gib": 21.07421875,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 843.7015798354038,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 1687.4031596708076,
+        "wall_seconds": [
+          0.0961166269989917,
+          0.07585620500140067,
+          0.07572091100155376
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 14.144275665283203,
+        "batch_size": 1,
+        "cuda_event_seconds": [
+          0.447329345703125,
+          0.43356683349609376,
+          0.431936767578125
+        ],
+        "incremental_peak_allocated_gib": 5.462482452392578,
+        "last_step": {
+          "counters": {
+            "ce_positions": 384,
+            "documents": 6,
+            "input_tokens": 768,
+            "kl_triples": 384,
+            "latent_pairs": 762,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 64,
+            "kl": 64,
+            "latent": 127
+          },
+          "gradient_norm_before_clip": 198.3229217529297,
+          "loss_means": {
+            "ce": 0.7943335771560669,
+            "kl": 8.851173400878906,
+            "latent": 0.8804988110159325
+          },
+          "loss_sums": {
+            "ce": 50.83734893798828,
+            "kl": 566.47509765625,
+            "latent": 111.82334899902344
+          },
+          "lr_next": [
+            0.0,
+            0.0
+          ],
+          "lr_used": [
+            0.0,
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 10.526005789050906,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 128,
+        "median_cuda_seconds": 0.43356683349609376,
+        "median_wall_seconds": 0.43360462300006475,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 19.60675811767578,
+        "peak_reserved_gib": 20.99609375,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 147.5999023192851,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 295.1998046385702,
+        "wall_seconds": [
+          0.4473798330000136,
+          0.43360462300006475,
+          0.43195863900109543
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 14.144281387329102,
+        "batch_size": 1,
+        "cuda_event_seconds": [
+          1.5131878662109375,
+          1.4958824462890625,
+          1.488777587890625
+        ],
+        "incremental_peak_allocated_gib": 5.462482452392578,
+        "last_step": {
+          "counters": {
+            "ce_positions": 1536,
+            "documents": 6,
+            "input_tokens": 3072,
+            "kl_triples": 1536,
+            "latent_pairs": 3066,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 256,
+            "kl": 256,
+            "latent": 511
+          },
+          "gradient_norm_before_clip": 516.4226684570312,
+          "loss_means": {
+            "ce": 1.5956509113311768,
+            "kl": 9.677894592285156,
+            "latent": 0.8772679756298923
+          },
+          "loss_sums": {
+            "ce": 408.48663330078125,
+            "kl": 2477.541015625,
+            "latent": 448.283935546875
+          },
+          "lr_next": [
+            0.0,
+            0.0
+          ],
+          "lr_used": [
+            0.0,
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 12.150813479246226,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 512,
+        "median_cuda_seconds": 1.4958824462890625,
+        "median_wall_seconds": 1.4959068000007392,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 19.60676383972168,
+        "peak_reserved_gib": 21.541015625,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 171.13365618758704,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 342.2673123751741,
+        "wall_seconds": [
+          1.513239097999758,
+          1.4959068000007392,
+          1.4888131400002749
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 14.144309997558594,
+        "batch_size": 4,
+        "cuda_event_seconds": [
+          1.59823046875,
+          1.576081298828125,
+          1.587050537109375
+        ],
+        "incremental_peak_allocated_gib": 6.222198009490967,
+        "last_step": {
+          "counters": {
+            "ce_positions": 6144,
+            "documents": 24,
+            "input_tokens": 12288,
+            "kl_triples": 6144,
+            "latent_pairs": 12264,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 1024,
+            "kl": 1024,
+            "latent": 2044
+          },
+          "gradient_norm_before_clip": 358.9934997558594,
+          "loss_means": {
+            "ce": 1.8652852773666382,
+            "kl": 8.949664115905762,
+            "latent": 0.9005567696229819
+          },
+          "loss_sums": {
+            "ce": 1910.0521240234375,
+            "kl": 9164.4560546875,
+            "latent": 1840.738037109375
+          },
+          "lr_next": [
+            0.0,
+            0.0
+          ],
+          "lr_used": [
+            0.0,
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 11.715506162895382,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 512,
+        "median_cuda_seconds": 1.587050537109375,
+        "median_wall_seconds": 1.5870772170001146,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 20.36650800704956,
+        "peak_reserved_gib": 23.654296875,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 645.2112027262036,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 1290.4224054524072,
+        "wall_seconds": [
+          1.598281741999017,
+          1.5761073800003942,
+          1.5870772170001146
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      },
+      {
+        "attention_precision": "mixed",
+        "baseline_allocated_gib": 14.14434814453125,
+        "batch_size": 8,
+        "cuda_event_seconds": [
+          1.6355999755859374,
+          1.6178304443359375,
+          1.626167724609375
+        ],
+        "incremental_peak_allocated_gib": 9.846429347991943,
+        "last_step": {
+          "counters": {
+            "ce_positions": 12288,
+            "documents": 48,
+            "input_tokens": 24576,
+            "kl_triples": 12288,
+            "latent_pairs": 24528,
+            "microbatches": 6,
+            "optimizer_updates": 6
+          },
+          "counts": {
+            "ce": 2048,
+            "kl": 2048,
+            "latent": 4088
+          },
+          "gradient_norm_before_clip": 358.9557800292969,
+          "loss_means": {
+            "ce": 1.865285038948059,
+            "kl": 8.949664115905762,
+            "latent": 0.9005567696229819
+          },
+          "loss_sums": {
+            "ce": 3820.103759765625,
+            "kl": 18328.912109375,
+            "latent": 3681.47607421875
+          },
+          "lr_next": [
+            0.0,
+            0.0
+          ],
+          "lr_used": [
+            0.0,
+            0.0
+          ],
+          "max_grad_norm": 1.0,
+          "objective": 11.715505924476803,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "length": 512,
+        "median_cuda_seconds": 1.626167724609375,
+        "median_wall_seconds": 1.6261945910009672,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "optimizer_moments_finite": true,
+        "ordinary_backend": "sdpa",
+        "passed": true,
+        "peak_allocated_gib": 23.990777492523193,
+        "peak_reserved_gib": 25.791015625,
+        "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+        "precision": "bf16_mixed",
+        "supervised_tokens_per_second": 1259.381879224798,
+        "timed_iterations": 3,
+        "valid_input_tokens_per_second": 2518.763758449596,
+        "wall_seconds": [
+          1.6356520279987308,
+          1.6178809909997653,
+          1.6261945910009672
+        ],
+        "warmup_iterations": 3,
+        "weights_unchanged": true
+      }
+    ],
+    "checkpoint": {
+      "hash_basis": "Hub LFS SHA256",
+      "path": "native/model.safetensors",
+      "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+      "size_bytes": 4707065440,
+      "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+    },
+    "compile": false,
+    "cuda_graphs": false,
+    "distributed": false,
+    "elapsed_seconds": 180.44916014699993,
+    "executed_zero_lr_steps": 42,
+    "finished_utc": "2026-09-21T21:29:56.860969+00:00",
+    "learning_rate": 0,
+    "microbatch_accumulation": 1,
+    "model_config": {
+      "eos_token_id": 50279,
+      "layer_norm_eps": 1e-05,
+      "max_context_length": 2048,
+      "mlp_intermediate_size": 8192,
+      "model_dim": 2048,
+      "num_heads": 16,
+      "num_layers": 16,
+      "pad_token_id": 1,
+      "rope_freq_constant": 10000.0,
+      "tokenizer_vocab_size": 50280,
+      "vocab_size": 50304
+    },
+    "nextlat_config": {
+      "bias": false,
+      "dropout": 0.0,
+      "init_std": 0.02,
+      "lambda_kl": 1.0,
+      "lambda_latent": 1.0,
+      "model_dim": 2048,
+      "norm_eps": 1e-05,
+      "proj_factor": 1.6,
+      "seed": 20260921,
+      "vocab_chunk_size": 128
+    },
+    "parameter_counts": {
+      "baseline": 1176764416,
+      "nextlat": 1259491328
+    },
+    "report_sha256": "1e37b518d960f70eabb8424ba4bd8d0ccf293c4de53c71c740b8c2cb0343a2ca",
+    "runtime": {
+      "cuda": "13.3",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "olmo-lm-profile-v1",
+    "scope": "O3 zero-LR full optimizer steps with NextLat independently off/on; one RT layer; no O4 learning comparison",
+    "source_hashes": {
+      "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+      "cdrm/pretrained/lm_training.py": "09a7b33eb6928486c8c1d9f52bd2ffc4e0f88fe01baa42527ba56742bfce6a69",
+      "cdrm/pretrained/nextlat.py": "04bf4e4cd9558ad5086170fab8577a3164a8b0a675fc38c9cb33da4e85dbfa3f",
+      "cdrm/pretrained/olmo.py": "53f1f812007d0fa5c90d93a026ff80fc32c138632d08dfcc92689a51c3db9667",
+      "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+      "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+      "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+      "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+      "cdrm/pretrained/olmo_tiled.py": "f9774c8b48d35f5ad4e8371ede70148e8c033d4966d2e997974f0129d041e03c",
+      "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+      "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+      "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+      "scripts/olmo_lm_common.py": "5edfc5fd562b3b6f83ac7bf062ef9d35c914ee0702b6a7dad15361726374b49d",
+      "scripts/olmo_lm_profile.py": "b44bb9daeb4d4779aa605414008790742767529aecc8a8282afa65a023e69b3e",
+      "scripts/olmo_rt_validate.py": "29f79e02564f442eaf17230873493d7412361596b4482f33307c5c180dd012d7",
+      "scripts/olmo_validation.py": "7d1d945201cda0f1bccbd2d6f190f0b9ef5126c2abbf88b9d6b117bc4504bbae"
+    },
+    "started_utc": "2026-09-21T21:26:55.688966+00:00",
+    "status": "passed",
+    "vocabulary_projection_positions_per_chunk": 128,
+    "wandb": {
+      "enabled": true,
+      "entity": "taylorbollman",
+      "group": "olmo1b-step60000-nextlat-platform",
+      "mode": "online",
+      "name": "olmo-1b-o3-profile",
+      "project": "pretrained-fbt-rt-nextlat",
+      "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+      "run_id": "zbrcek8g",
+      "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zbrcek8g",
+      "status": "synced",
+      "system_stats": false
+    }
+  },
+  "schema": "olmo-o3-summary-v1",
+  "source_snapshots": {
+    "native_revision": "b3741bc21f1dd504838b7dbd9878ee077ded63bd",
+    "nextlat_revision": "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9"
+  },
+  "validation": {
+    "cases": [
+      {
+        "batch_size": 1,
+        "counts": {
+          "ce": 8,
+          "kl": 0,
+          "latent": 0
+        },
+        "gradients": {
+          "elementwise_failed": [
+            "backbone.transformer.blocks.1.att_proj.weight",
+            "backbone.transformer.blocks.3.att_proj.weight"
+          ],
+          "failed": [],
+          "max_abs": 1.6689300537109375e-05,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 2.4034981390428485e-06,
+          "worst_tensor": {
+            "atol": 2e-06,
+            "difference_l2": 3.734986239578575e-05,
+            "elementwise_passed": true,
+            "elementwise_violation_count": 0,
+            "finite": true,
+            "max_abs": 8.106231689453125e-06,
+            "maximum_error_limit": 0.00015920456838607787,
+            "name": "backbone.transformer.blocks.15.ff_proj.weight",
+            "passed": true,
+            "reference_l2": 13.53532886505127,
+            "reference_max_abs": 1.5720456838607788,
+            "relative_l2": 2.7594351617288373e-06,
+            "relative_l2_limit": 0.0001,
+            "rtol": 0.0003,
+            "tensor_relative_max": 5.156486082226995e-06
+          }
+        },
+        "kind": "objective_parity",
+        "length": 16,
+        "loss_comparisons": {
+          "ce": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 4.6616058349609375,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          },
+          "kl": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.0,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          },
+          "latent": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.0,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          }
+        },
+        "loss_means": {
+          "ce": 4.6616058349609375,
+          "kl": -0.0,
+          "latent": -0.0
+        },
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "nextlat": false,
+        "passed": true,
+        "reference_counts": {
+          "ce": 8,
+          "kl": 0,
+          "latent": 0
+        },
+        "total": {
+          "atol": 1e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 4.6616058349609375,
+          "relative_l2": 0.0,
+          "rtol": 1e-05
+        },
+        "weights": {
+          "ce": 1.0,
+          "kl": 0.0,
+          "latent": 0.0
+        }
+      },
+      {
+        "batch_size": 1,
+        "counts": {
+          "ce": 8,
+          "kl": 0,
+          "latent": 0
+        },
+        "gradients": {
+          "elementwise_failed": [],
+          "failed": [],
+          "max_abs": 1.049041748046875e-05,
+          "missing": [],
+          "parameter_tensors": 65,
+          "passed": true,
+          "relative_l2": 1.5789551853175323e-06,
+          "worst_tensor": {
+            "atol": 2e-06,
+            "difference_l2": 2.4777938961051404e-05,
+            "elementwise_passed": true,
+            "elementwise_violation_count": 0,
+            "finite": true,
+            "max_abs": 3.516674041748047e-06,
+            "maximum_error_limit": 0.00016240818691253662,
+            "name": "backbone.transformer.blocks.15.ff_proj.weight",
+            "passed": true,
+            "reference_l2": 12.184988021850586,
+            "reference_max_abs": 1.6040818691253662,
+            "relative_l2": 2.033480781156178e-06,
+            "relative_l2_limit": 0.0001,
+            "rtol": 0.0003,
+            "tensor_relative_max": 2.1923282778986407e-06
+          }
+        },
+        "kind": "objective_parity",
+        "length": 16,
+        "loss_comparisons": {
+          "ce": {
+            "atol": 1e-05,
+            "difference_l2": 1.430511474609375e-06,
+            "finite": true,
+            "max_abs": 1.430511474609375e-06,
+            "passed": true,
+            "reference_l2": 5.094545841217041,
+            "relative_l2": 2.807927378012637e-07,
+            "rtol": 1e-05
+          },
+          "kl": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.0,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          },
+          "latent": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.0,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          }
+        },
+        "loss_means": {
+          "ce": 5.094544410705566,
+          "kl": 0.0,
+          "latent": 0.0
+        },
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": false,
+        "passed": true,
+        "reference_counts": {
+          "ce": 8,
+          "kl": 0,
+          "latent": 0
+        },
+        "total": {
+          "atol": 1e-05,
+          "difference_l2": 1.430511474609375e-06,
+          "finite": true,
+          "max_abs": 1.430511474609375e-06,
+          "passed": true,
+          "reference_l2": 5.094545841217041,
+          "relative_l2": 2.807927378012637e-07,
+          "rtol": 1e-05
+        },
+        "weights": {
+          "ce": 1.0,
+          "kl": 0.0,
+          "latent": 0.0
+        }
+      },
+      {
+        "batch_size": 1,
+        "counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "gradients": {
+          "elementwise_failed": [
+            "backbone.transformer.blocks.1.ff_out.weight",
+            "backbone.transformer.blocks.2.att_proj.weight",
+            "backbone.transformer.blocks.3.att_proj.weight",
+            "backbone.transformer.blocks.4.att_proj.weight",
+            "backbone.transformer.blocks.9.ff_out.weight",
+            "backbone.transformer.blocks.10.ff_out.weight",
+            "backbone.transformer.blocks.13.att_proj.weight",
+            "backbone.transformer.blocks.14.att_proj.weight",
+            "backbone.transformer.blocks.15.att_proj.weight",
+            "backbone.transformer.blocks.15.ff_out.weight",
+            "predictor.mlp.0.weight"
+          ],
+          "failed": [],
+          "max_abs": 1.6689300537109375e-05,
+          "missing": [],
+          "parameter_tensors": 69,
+          "passed": true,
+          "relative_l2": 3.8254658127057505e-06,
+          "worst_tensor": {
+            "atol": 2e-06,
+            "difference_l2": 9.571675764163956e-05,
+            "elementwise_passed": true,
+            "elementwise_violation_count": 0,
+            "finite": true,
+            "max_abs": 2.3096799850463867e-06,
+            "maximum_error_limit": 5.3575160026550294e-05,
+            "name": "backbone.transformer.blocks.14.ff_proj.weight",
+            "passed": true,
+            "reference_l2": 22.08833122253418,
+            "reference_max_abs": 0.5157516002655029,
+            "relative_l2": 4.333363017663859e-06,
+            "relative_l2_limit": 0.0001,
+            "rtol": 0.0003,
+            "tensor_relative_max": 4.478279822801113e-06
+          }
+        },
+        "kind": "objective_parity",
+        "length": 16,
+        "loss_comparisons": {
+          "ce": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 4.6616058349609375,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          },
+          "kl": {
+            "atol": 1e-05,
+            "difference_l2": 2.86102294921875e-06,
+            "finite": true,
+            "max_abs": 2.86102294921875e-06,
+            "passed": true,
+            "reference_l2": 8.471176147460938,
+            "relative_l2": 3.377362127071674e-07,
+            "rtol": 1e-05
+          },
+          "latent": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.9320178627967834,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          }
+        },
+        "loss_means": {
+          "ce": 4.6616058349609375,
+          "kl": 8.471173286437988,
+          "latent": 0.9320178627967834
+        },
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "nextlat": true,
+        "passed": true,
+        "reference_counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "total": {
+          "atol": 1e-05,
+          "difference_l2": 3.814697265625e-06,
+          "finite": true,
+          "max_abs": 3.814697265625e-06,
+          "passed": true,
+          "reference_l2": 14.064800262451172,
+          "relative_l2": 2.7122299602142986e-07,
+          "rtol": 1e-05
+        },
+        "weights": {
+          "ce": 1.0,
+          "kl": 1.0,
+          "latent": 1.0
+        }
+      },
+      {
+        "batch_size": 1,
+        "counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "gradients": {
+          "elementwise_failed": [
+            "backbone.transformer.blocks.0.att_proj.weight",
+            "backbone.transformer.blocks.1.att_proj.weight",
+            "backbone.transformer.blocks.1.ff_out.weight",
+            "backbone.transformer.blocks.2.att_proj.weight",
+            "backbone.transformer.blocks.3.att_proj.weight",
+            "backbone.transformer.blocks.4.att_proj.weight",
+            "backbone.transformer.blocks.5.att_proj.weight",
+            "backbone.transformer.blocks.5.ff_proj.weight",
+            "backbone.transformer.blocks.6.att_proj.weight",
+            "backbone.transformer.blocks.7.ff_proj.weight",
+            "backbone.transformer.blocks.9.ff_out.weight",
+            "backbone.transformer.blocks.10.ff_proj.weight",
+            "backbone.transformer.blocks.10.ff_out.weight",
+            "backbone.transformer.blocks.12.att_proj.weight",
+            "backbone.transformer.blocks.13.att_proj.weight",
+            "backbone.transformer.blocks.14.att_proj.weight",
+            "backbone.transformer.blocks.15.att_proj.weight",
+            "backbone.transformer.blocks.15.ff_out.weight",
+            "predictor.mlp.0.weight"
+          ],
+          "failed": [],
+          "max_abs": 1.7881393432617188e-05,
+          "missing": [],
+          "parameter_tensors": 69,
+          "passed": true,
+          "relative_l2": 4.810672587356491e-06,
+          "worst_tensor": {
+            "atol": 2e-06,
+            "difference_l2": 0.00010113818279933184,
+            "elementwise_passed": true,
+            "elementwise_violation_count": 0,
+            "finite": true,
+            "max_abs": 1.1138617992401123e-06,
+            "maximum_error_limit": 1.7073204040527344e-05,
+            "name": "backbone.transformer.blocks.14.ff_out.weight",
+            "passed": true,
+            "reference_l2": 16.244571685791016,
+            "reference_max_abs": 0.15073204040527344,
+            "relative_l2": 6.225967957517558e-06,
+            "relative_l2_limit": 0.0001,
+            "rtol": 0.0003,
+            "tensor_relative_max": 7.38968169106761e-06
+          }
+        },
+        "kind": "objective_parity",
+        "length": 16,
+        "loss_comparisons": {
+          "ce": {
+            "atol": 1e-05,
+            "difference_l2": 1.430511474609375e-06,
+            "finite": true,
+            "max_abs": 1.430511474609375e-06,
+            "passed": true,
+            "reference_l2": 5.094545841217041,
+            "relative_l2": 2.807927378012637e-07,
+            "rtol": 1e-05
+          },
+          "kl": {
+            "atol": 1e-05,
+            "difference_l2": 1.9073486328125e-06,
+            "finite": true,
+            "max_abs": 1.9073486328125e-06,
+            "passed": true,
+            "reference_l2": 8.348674774169922,
+            "relative_l2": 2.2846124497670838e-07,
+            "rtol": 1e-05
+          },
+          "latent": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.9162096977233887,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          }
+        },
+        "loss_means": {
+          "ce": 5.094544410705566,
+          "kl": 8.348676681518555,
+          "latent": 0.9162096977233887
+        },
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "passed": true,
+        "reference_counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "total": {
+          "atol": 1e-05,
+          "difference_l2": 0.0,
+          "finite": true,
+          "max_abs": 0.0,
+          "passed": true,
+          "reference_l2": 14.359430313110352,
+          "relative_l2": 0.0,
+          "rtol": 1e-05
+        },
+        "weights": {
+          "ce": 1.0,
+          "kl": 1.0,
+          "latent": 1.0
+        }
+      },
+      {
+        "attention_precision": "mixed",
+        "counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "fp32_loss_means": {
+          "ce": 5.094544410705566,
+          "kl": 8.348676681518555,
+          "latent": 0.9162096977233887
+        },
+        "gradients": {
+          "missing": [],
+          "relative_l2": 0.019323336761792608,
+          "worst_tensor": {
+            "difference_l2": 1.2696378231048584,
+            "finite": true,
+            "max_abs": 0.09457094967365265,
+            "name": "backbone.transformer.blocks.9.ff_out.weight",
+            "reference_l2": 44.722251892089844,
+            "relative_l2": 0.028389398328339165
+          }
+        },
+        "kind": "mixed_precision_observation",
+        "loss_means": {
+          "ce": 5.090590476989746,
+          "kl": 8.349944114685059,
+          "latent": 0.916504442691803
+        },
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "ordinary_backend": "math",
+        "passed": true,
+        "scope": "finite objective/complete gradients; cross-precision errors descriptive, not training clearance"
+      },
+      {
+        "attention_precision": "fp32",
+        "counts": {
+          "ce": 8,
+          "kl": 8,
+          "latent": 15
+        },
+        "fp32_loss_means": {
+          "ce": 5.094544410705566,
+          "kl": 8.348676681518555,
+          "latent": 0.9162096977233887
+        },
+        "gradients": {
+          "missing": [],
+          "relative_l2": 0.019113483669688278,
+          "worst_tensor": {
+            "difference_l2": 1.1581830978393555,
+            "finite": true,
+            "max_abs": 0.08887846767902374,
+            "name": "backbone.transformer.blocks.9.ff_out.weight",
+            "reference_l2": 44.722251892089844,
+            "relative_l2": 0.025897244634146135
+          }
+        },
+        "kind": "mixed_precision_observation",
+        "loss_means": {
+          "ce": 5.098221302032471,
+          "kl": 8.342242240905762,
+          "latent": 0.9163714647293091
+        },
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "ordinary_backend": "math",
+        "passed": true,
+        "scope": "finite objective/complete gradients; cross-precision errors descriptive, not training clearance"
+      },
+      {
+        "batch_size": 2,
+        "counts": {
+          "ce": 14,
+          "kl": 14,
+          "latent": 25
+        },
+        "gradients": {
+          "elementwise_failed": [
+            "backbone.transformer.blocks.1.ff_out.weight",
+            "backbone.transformer.blocks.3.att_proj.weight",
+            "backbone.transformer.blocks.4.att_proj.weight",
+            "backbone.transformer.blocks.9.ff_out.weight",
+            "backbone.transformer.blocks.10.ff_out.weight",
+            "backbone.transformer.blocks.15.ff_out.weight"
+          ],
+          "failed": [],
+          "max_abs": 2.384185791015625e-05,
+          "missing": [],
+          "parameter_tensors": 69,
+          "passed": true,
+          "relative_l2": 3.1320734142993228e-06,
+          "worst_tensor": {
+            "atol": 2e-06,
+            "difference_l2": 0.000167013073223643,
+            "elementwise_passed": false,
+            "elementwise_violation_count": 10,
+            "finite": true,
+            "max_abs": 1.2278556823730469e-05,
+            "maximum_error_limit": 0.00031744716358184815,
+            "name": "backbone.transformer.blocks.9.ff_out.weight",
+            "passed": true,
+            "reference_l2": 42.56878662109375,
+            "reference_max_abs": 3.1544716358184814,
+            "relative_l2": 3.923369362397669e-06,
+            "relative_l2_limit": 0.0001,
+            "rtol": 0.0003,
+            "tensor_relative_max": 3.892428983766909e-06,
+            "worst_elementwise_violation": {
+              "absolute_error": 8.665025234222412e-06,
+              "actual": -0.0013151093153283,
+              "flat_index": 16493452,
+              "reference": -0.0013064442900940776
+            }
+          }
+        },
+        "kind": "objective_parity",
+        "length": 16,
+        "loss_comparisons": {
+          "ce": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 4.6928253173828125,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          },
+          "kl": {
+            "atol": 1e-05,
+            "difference_l2": 3.814697265625e-06,
+            "finite": true,
+            "max_abs": 3.814697265625e-06,
+            "passed": true,
+            "reference_l2": 8.360296249389648,
+            "relative_l2": 4.562873314332008e-07,
+            "rtol": 1e-05
+          },
+          "latent": {
+            "atol": 1e-05,
+            "difference_l2": 0.0,
+            "finite": true,
+            "max_abs": 0.0,
+            "passed": true,
+            "reference_l2": 0.9312853217124939,
+            "relative_l2": 0.0,
+            "rtol": 1e-05
+          }
+        },
+        "loss_means": {
+          "ce": 4.6928253173828125,
+          "kl": 8.360292434692383,
+          "latent": 0.9312853217124939
+        },
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "nextlat": true,
+        "passed": true,
+        "reference_counts": {
+          "ce": 14,
+          "kl": 14,
+          "latent": 25
+        },
+        "total": {
+          "atol": 1e-05,
+          "difference_l2": 3.814697265625e-06,
+          "finite": true,
+          "max_abs": 3.814697265625e-06,
+          "passed": true,
+          "reference_l2": 13.984407424926758,
+          "relative_l2": 2.7278218874154254e-07,
+          "rtol": 1e-05
+        },
+        "weights": {
+          "ce": 1.0,
+          "kl": 1.0,
+          "latent": 1.0
+        }
+      },
+      {
+        "checkpoint": {
+          "disposition": "removed after exact recovery; hash and evidence retained",
+          "optimizer_updates": 2,
+          "path": ".runtime/olmo1b-step60000/lm-validation-01/disposable-update2.pt",
+          "save_and_hash_seconds": 69.7580137419991,
+          "schema": "olmo-lm-training-checkpoint-v1",
+          "sha256": "8d615b49730f8c8e1292fac008596977e1fdc754e0f78366293418a05b6fba22",
+          "size_bytes": 15114028075,
+          "verify_and_load_seconds": 22.1380867200005
+        },
+        "checks": {
+          "counters": true,
+          "model": true,
+          "optimizer": true,
+          "rng_cpu_draw": true,
+          "rng_cuda_draw": true,
+          "scheduler": true,
+          "third_update_metrics": true
+        },
+        "configuration": {
+          "attention_precision": "mixed",
+          "enabled": true,
+          "mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0
+            ]
+          },
+          "nextlat": {
+            "bias": false,
+            "dropout": 0.0,
+            "init_std": 0.02,
+            "lambda_kl": 1.0,
+            "lambda_latent": 1.0,
+            "model_dim": 2048,
+            "norm_eps": 1e-05,
+            "proj_factor": 1.6,
+            "seed": 20260921,
+            "vocab_chunk_size": 8
+          },
+          "ordinary_backend": "math",
+          "training": {
+            "max_grad_norm": 1,
+            "precision": "fp32"
+          }
+        },
+        "executed_optimizer_updates": 4,
+        "kind": "native_optimizer_recovery",
+        "passed": true,
+        "recovered_counters": {
+          "ce_positions": 24,
+          "documents": 3,
+          "input_tokens": 48,
+          "kl_triples": 24,
+          "latent_pairs": 45,
+          "microbatches": 3,
+          "optimizer_updates": 3
+        },
+        "resumed_third_update": {
+          "counters": {
+            "ce_positions": 24,
+            "documents": 3,
+            "input_tokens": 48,
+            "kl_triples": 24,
+            "latent_pairs": 45,
+            "microbatches": 3,
+            "optimizer_updates": 3
+          },
+          "counts": {
+            "ce": 8,
+            "kl": 8,
+            "latent": 15
+          },
+          "gradient_norm_before_clip": 167.0270233154297,
+          "loss_means": {
+            "ce": 1.4770698547363281,
+            "kl": 4.7569732666015625,
+            "latent": 0.8829018910725911
+          },
+          "loss_sums": {
+            "ce": 11.816558837890625,
+            "kl": 38.0557861328125,
+            "latent": 13.243528366088867
+          },
+          "lr_next": [
+            1e-05,
+            1e-05
+          ],
+          "lr_used": [
+            1e-05,
+            1e-05
+          ],
+          "max_grad_norm": 1,
+          "objective": 7.116945012410482,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "scope": "disposable correctness state, not an adaptation candidate",
+        "uninterrupted_third_update": {
+          "counters": {
+            "ce_positions": 24,
+            "documents": 3,
+            "input_tokens": 48,
+            "kl_triples": 24,
+            "latent_pairs": 45,
+            "microbatches": 3,
+            "optimizer_updates": 3
+          },
+          "counts": {
+            "ce": 8,
+            "kl": 8,
+            "latent": 15
+          },
+          "gradient_norm_before_clip": 167.0270233154297,
+          "loss_means": {
+            "ce": 1.4770698547363281,
+            "kl": 4.7569732666015625,
+            "latent": 0.8829018910725911
+          },
+          "loss_sums": {
+            "ce": 11.816558837890625,
+            "kl": 38.0557861328125,
+            "latent": 13.243528366088867
+          },
+          "lr_next": [
+            1e-05,
+            1e-05
+          ],
+          "lr_used": [
+            1e-05,
+            1e-05
+          ],
+          "max_grad_norm": 1,
+          "objective": 7.116945012410482,
+          "objective_weights": {
+            "ce": 1.0,
+            "kl": 1.0,
+            "latent": 1.0
+          },
+          "optimizer_state_bytes_by_device": {
+            "cpu": 276,
+            "cuda:0": 10075930624
+          },
+          "schema": "olmo-lm-optimizer-step-v1",
+          "update_completed": true
+        },
+        "updates_before_save": [
+          {
+            "counters": {
+              "ce_positions": 8,
+              "documents": 1,
+              "input_tokens": 16,
+              "kl_triples": 8,
+              "latent_pairs": 15,
+              "microbatches": 1,
+              "optimizer_updates": 1
+            },
+            "counts": {
+              "ce": 8,
+              "kl": 8,
+              "latent": 15
+            },
+            "gradient_norm_before_clip": 185.3287353515625,
+            "loss_means": {
+              "ce": 5.094544410705566,
+              "kl": 8.348676681518555,
+              "latent": 0.9162096659342448
+            },
+            "loss_sums": {
+              "ce": 40.75635528564453,
+              "kl": 66.78941345214844,
+              "latent": 13.743144989013672
+            },
+            "lr_next": [
+              1e-05,
+              1e-05
+            ],
+            "lr_used": [
+              5e-06,
+              5e-06
+            ],
+            "max_grad_norm": 1,
+            "objective": 14.359430758158366,
+            "objective_weights": {
+              "ce": 1.0,
+              "kl": 1.0,
+              "latent": 1.0
+            },
+            "optimizer_state_bytes_by_device": {
+              "cpu": 276,
+              "cuda:0": 10075930624
+            },
+            "schema": "olmo-lm-optimizer-step-v1",
+            "update_completed": true
+          },
+          {
+            "counters": {
+              "ce_positions": 16,
+              "documents": 2,
+              "input_tokens": 32,
+              "kl_triples": 16,
+              "latent_pairs": 30,
+              "microbatches": 2,
+              "optimizer_updates": 2
+            },
+            "counts": {
+              "ce": 8,
+              "kl": 8,
+              "latent": 15
+            },
+            "gradient_norm_before_clip": 159.31959533691406,
+            "loss_means": {
+              "ce": 2.9808011054992676,
+              "kl": 5.343486309051514,
+              "latent": 0.908871587117513
+            },
+            "loss_sums": {
+              "ce": 23.84640884399414,
+              "kl": 42.74789047241211,
+              "latent": 13.633073806762695
+            },
+            "lr_next": [
+              1e-05,
+              1e-05
+            ],
+            "lr_used": [
+              1e-05,
+              1e-05
+            ],
+            "max_grad_norm": 1,
+            "objective": 9.233159001668295,
+            "objective_weights": {
+              "ce": 1.0,
+              "kl": 1.0,
+              "latent": 1.0
+            },
+            "optimizer_state_bytes_by_device": {
+              "cpu": 276,
+              "cuda:0": 10075930624
+            },
+            "schema": "olmo-lm-optimizer-step-v1",
+            "update_completed": true
+          }
+        ]
+      }
+    ],
+    "checkpoint": {
+      "hash_basis": "Hub LFS SHA256",
+      "path": "native/model.safetensors",
+      "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+      "size_bytes": 4707065440,
+      "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+    },
+    "elapsed_seconds": 171.73827428100049,
+    "finished_utc": "2026-09-21T21:26:21.739868+00:00",
+    "memory_scope": "validation pair/optimizer recovery/digest scratch; not a batch-capacity measure",
+    "model_config": {
+      "eos_token_id": 50279,
+      "layer_norm_eps": 1e-05,
+      "max_context_length": 2048,
+      "mlp_intermediate_size": 8192,
+      "model_dim": 2048,
+      "num_heads": 16,
+      "num_layers": 16,
+      "pad_token_id": 1,
+      "rope_freq_constant": 10000.0,
+      "tokenizer_vocab_size": 50280,
+      "vocab_size": 50304
+    },
+    "nextlat_config": {
+      "bias": false,
+      "dropout": 0.0,
+      "init_std": 0.02,
+      "lambda_kl": 1.0,
+      "lambda_latent": 1.0,
+      "model_dim": 2048,
+      "norm_eps": 1e-05,
+      "proj_factor": 1.6,
+      "seed": 20260921,
+      "vocab_chunk_size": 8
+    },
+    "parameter_counts": {
+      "baseline": 1176764416,
+      "nextlat": 1259491328
+    },
+    "peak_allocated_gib": 20.76008129119873,
+    "peak_reserved_gib": 21.69921875,
+    "report_sha256": "4537044ea87016e0c9175a9506255e61640aa216695f08fb3623fbd45533e251",
+    "runtime": {
+      "cuda": "13.3",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "olmo-lm-validation-v1",
+    "scope": "O3 loss/platform checks; four disposable AdamW updates including replay; no O4 learning comparison",
+    "source_hashes": {
+      "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+      "cdrm/pretrained/lm_training.py": "09a7b33eb6928486c8c1d9f52bd2ffc4e0f88fe01baa42527ba56742bfce6a69",
+      "cdrm/pretrained/nextlat.py": "04bf4e4cd9558ad5086170fab8577a3164a8b0a675fc38c9cb33da4e85dbfa3f",
+      "cdrm/pretrained/olmo.py": "53f1f812007d0fa5c90d93a026ff80fc32c138632d08dfcc92689a51c3db9667",
+      "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+      "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+      "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+      "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+      "cdrm/pretrained/olmo_tiled.py": "f9774c8b48d35f5ad4e8371ede70148e8c033d4966d2e997974f0129d041e03c",
+      "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+      "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+      "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+      "scripts/olmo_lm_common.py": "5edfc5fd562b3b6f83ac7bf062ef9d35c914ee0702b6a7dad15361726374b49d",
+      "scripts/olmo_lm_validate.py": "8bf1848238c0e9706ca6884895ad2fbdaf43d81f12758d004a31cb23fd8c4742",
+      "scripts/olmo_rt_validate.py": "29f79e02564f442eaf17230873493d7412361596b4482f33307c5c180dd012d7",
+      "scripts/olmo_validation.py": "7d1d945201cda0f1bccbd2d6f190f0b9ef5126c2abbf88b9d6b117bc4504bbae"
+    },
+    "started_utc": "2026-09-21T21:23:29.072366+00:00",
+    "status": "passed",
+    "wandb": {
+      "enabled": true,
+      "entity": "taylorbollman",
+      "group": "olmo1b-step60000-nextlat-platform",
+      "mode": "online",
+      "name": "olmo-1b-o3-validation",
+      "project": "pretrained-fbt-rt-nextlat",
+      "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+      "run_id": "r0zqx75g",
+      "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/r0zqx75g",
+      "status": "synced",
+      "system_stats": false
+    }
+  }
+}

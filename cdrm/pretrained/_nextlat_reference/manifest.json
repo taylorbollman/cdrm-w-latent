@@ -1,0 +1,48 @@
+{
+  "repository": "JaydenTeoh/NextLat",
+  "revision": "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9",
+  "files": [
+    {
+      "file": "model_nextlat.py",
+      "upstream_path": "models/model_nextlat.py",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/models/model_nextlat.py",
+      "bytes": 34197,
+      "sha256": "957fa4f1a2fd5be0b30269e636ccbf2b899c6ba05a1441ec5d75a680b5f95d21"
+    },
+    {
+      "file": "model_base.py",
+      "upstream_path": "models/model_base.py",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/models/model_base.py",
+      "bytes": 32536,
+      "sha256": "3c22766cf04ddd84ff18b1d207e287e5399324cd2005c6622bf473d3c199ed4a"
+    },
+    {
+      "file": "fineweb_1b_horizon1.yaml",
+      "upstream_path": "config/fineweb/1B/nextlat_finewebedu_1b_100b_horizon1.yaml",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/config/fineweb/1B/nextlat_finewebedu_1b_100b_horizon1.yaml",
+      "bytes": 2011,
+      "sha256": "66ba75e5ff0dded80eb7952db17a2f8175e2f3e19fb13e4278c9a496f98e4653"
+    },
+    {
+      "file": "fineweb_100m.yaml",
+      "upstream_path": "config/fineweb/100M/nextlat_finewebedu.yaml",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/config/fineweb/100M/nextlat_finewebedu.yaml",
+      "bytes": 1759,
+      "sha256": "ed0a56c90a21b998a5e427d3929c9be2508f1f8ef2eeaf1e9ad9012e0ec3c0d0"
+    },
+    {
+      "file": "a5.yaml",
+      "upstream_path": "config/a5/nextlat_a5.yaml",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/config/a5/nextlat_a5.yaml",
+      "bytes": 1395,
+      "sha256": "3cb67555e9b9f268d141bfe0e83a11b82c13195ad844f868ea84e1dd501d4721"
+    },
+    {
+      "file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/JaydenTeoh/NextLat/b37d3411ab9b17be8638abbddb9529f0f3a0a5f9/LICENSE",
+      "bytes": 1073,
+      "sha256": "646f8936b8ddcd14e13e578ff6857e368780b0d1a4f6066bee89211923a373e2"
+    }
+  ]
+}
