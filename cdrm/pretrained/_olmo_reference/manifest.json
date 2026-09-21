@@ -1,0 +1,60 @@
+{
+  "repository": "allenai/OLMo",
+  "revision": "b3741bc21f1dd504838b7dbd9878ee077ded63bd",
+  "files": [
+    {
+      "file": "model.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/model.py",
+      "bytes": 70696,
+      "sha256": "849a56149e87fe30de2e5bc51c9559f896785533b6f22d8b2f30952db2f6da04"
+    },
+    {
+      "file": "config.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/config.py",
+      "bytes": 30021,
+      "sha256": "1912bfc6127b15428786d4dd38e11ebceea3f20897ba5bf42facdb930f5fbfab"
+    },
+    {
+      "file": "util.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/util.py",
+      "bytes": 22834,
+      "sha256": "b8d463b6971eb465fadac5e31b4350fa54d07acc8a246a1c4a12ad54d186ab3e"
+    },
+    {
+      "file": "torch_util.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/torch_util.py",
+      "bytes": 4027,
+      "sha256": "bcbad1c327411bb7c98e1469c3778f45a5926d65e7bddea2fefd86e54520a874"
+    },
+    {
+      "file": "exceptions.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/exceptions.py",
+      "bytes": 672,
+      "sha256": "248da7c3246c4d9c1a202e5c3857c7628ef7a3657d725f9c4b0879b0a8ea817f"
+    },
+    {
+      "file": "LICENSE",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/LICENSE",
+      "bytes": 11359,
+      "sha256": "62fb8a3a9621dc2388174caaabe9c2317b694bb9a1d46c98bcf5655b68f51be3"
+    },
+    {
+      "file": "initialization.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/initialization.py",
+      "bytes": 3501,
+      "sha256": "6ae4fcfc41e281b25372f83a825f2140b23bd6dc975c478bc435a5202eff7503"
+    },
+    {
+      "file": "aliases.py",
+      "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/aliases.py",
+      "bytes": 109,
+      "sha256": "c78c3756200b598555160af3bb8baed659db2c0b7c495377d093eb695a7a7744"
+    },
+    {
+      "file": "checkpoint_config.json",
+      "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/config.json",
+      "bytes": 1321,
+      "sha256": "89767baeb3784222457a8e18e7821640bd45021cb7d4b3b1c0d7de5a7ab59c9d"
+    }
+  ]
+}

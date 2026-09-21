@@ -1,6 +1,16 @@
 # OLMo-1B / RT / FBT / NextLat research plan
 
-Updated 2026-09-21. **Current authoritative plan.** This replaces the model
+Updated 2026-09-21. **Current authoritative plan.**
+
+**Implementation update:** the user authorized O1 after reviewing this plan.
+Native OLMo import and the sequential RT reference now pass bounded validation;
+see [O1 results](reports/olmo1b-o1/results.md),
+[usage](olmo1b-native-rt-usage.md) and the [handoff](fbt-rt-nextlat-handoff.md).
+O2 and later milestones remain staged. The planning-status statements below
+describe what was verified when selecting the checkpoint; O1 results supersede
+those statements about full download and tested execution.
+
+This replaces the model
 selection and forward milestones in [v2](fbt-rt-nextlat-research-plan-v2.md)
 and the [original proposal](fbt-rt-nextlat-pretrained-plan.md). The user requested
 this revision before authorizing the next implementation milestone. This change
@@ -376,5 +386,5 @@ container; verify `nvidia-smi` there. Never silently substitute CPU. Persistent
 project files survive sessions; local SSD contents do not. Keep credentials out
 of logs. Read the handoff for container and retention recovery details.
 
-**Review boundary:** share this revised plan, then wait for the user's direction
-to begin O1. No OLMo GPU/training job is running or awaiting resumption.
+**Current review boundary:** O1 is complete; review its results before proceeding
+to O2. No OLMo GPU/training job is running or awaiting resumption.
