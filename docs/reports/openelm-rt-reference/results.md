@@ -108,6 +108,11 @@ paths choose the same top token as FP32 at every fixture position. Their CE
 losses are 5.93685 (math) and 5.92659 (default), versus 5.92037 in FP32.
 These observations come from one short fixture; they do not establish quality,
 stability over optimization, or acceptable precision at long recurrent lengths.
+Individual tensors can differ more than the global norm suggests:
+`layers.16.attn_norm.weight` has gradient relative L2 differences versus FP32
+of **25.83% (math) / 29.87% (default)**. Its FP32 gradient norm is 0.18496;
+the respective difference norms are 0.04778 and 0.05525. This is another reason
+to retain the BF16 qualification and inspect actual tiled behavior later.
 The default backend was requested but not profiled here, so this report makes
 no specific flash/cuDNN dispatch claim for the recurrent path.
 

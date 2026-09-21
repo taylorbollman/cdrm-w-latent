@@ -507,6 +507,14 @@
         "finite": true,
         "fp32_loss": 5.920373439788818,
         "gradients": {
+          "largest_tensor_relative_l2": {
+            "difference_l2": 0.04777951166033745,
+            "finite": true,
+            "max_abs": 0.04304897040128708,
+            "name": "layers.16.attn_norm.weight",
+            "reference_l2": 0.18495763838291168,
+            "relative_l2": 0.2583267827058924
+          },
           "max_abs": 0.60198974609375,
           "missing": [],
           "parameter_tensors": 226,
@@ -580,6 +588,14 @@
         "finite": true,
         "fp32_loss": 5.920373439788818,
         "gradients": {
+          "largest_tensor_relative_l2": {
+            "difference_l2": 0.05525295063853264,
+            "finite": true,
+            "max_abs": 0.04978301376104355,
+            "name": "layers.16.attn_norm.weight",
+            "reference_l2": 0.18495763838291168,
+            "relative_l2": 0.29873300244104695
+          },
           "max_abs": 0.5509904026985168,
           "missing": [],
           "parameter_tensors": 226,

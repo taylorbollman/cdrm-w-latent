@@ -21,6 +21,8 @@ all-226-parameter/input gradient comparisons at alpha 0, 0.37 and 1, plus
 cache/causality checks. The scoped CPU suite passes 136 tests. BF16 is a finite
 smoke test and descriptive observation: alpha 1 gradient differences versus
 FP32 are 3.859% math / 4.842% default. **No BF16 training clearance.**
+The worst individual tensor differs by 25.83% / 29.87% respectively
+(`layers.16.attn_norm.weight`); the global norm must not obscure this scope.
 There is no GPU or learning job to resume. The next code milestone is native
 tiled execution/backward against this reference, followed by planned platform
 and early-learning comparisons.
@@ -172,7 +174,8 @@ fixed in test setup; the final 136-test record is authoritative.
   unrotated in cache; avoid accidental double rotation or cached causal shifts.
 - Ordinary OpenELM/FBT attention can use SDPA fused kernels. Exact RT remains
   a distinct schedule and backward. The FA4 dependency is not evidence of use.
-- Current RT autograd accumulates hidden block-parameter gradients internally;
+- The historical OLMo tiled RT autograd accumulates hidden block-parameter
+  gradients internally (the new sequential reference uses ordinary autograd);
   DDP/FSDP compatibility must be established separately. Start with the planned
   explicit gradient synchronization baseline before more elaborate sharding.
 
