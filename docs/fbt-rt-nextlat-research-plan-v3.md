@@ -2,13 +2,14 @@
 
 Updated 2026-09-21. **Current authoritative plan.**
 
-**Implementation update:** the user authorized O1 after reviewing this plan.
-Native OLMo import and the sequential RT reference now pass bounded validation;
-see [O1 results](reports/olmo1b-o1/results.md),
-[usage](olmo1b-native-rt-usage.md) and the [handoff](fbt-rt-nextlat-handoff.md).
-O2 and later milestones remain staged. The planning-status statements below
-describe what was verified when selecting the checkpoint; O1 results supersede
-those statements about full download and tested execution.
+**Implementation update:** O1 native import/sequential RT and O2 native RoPE
+tiled forward/backward now pass bounded validation. See
+[O1 results](reports/olmo1b-o1/results.md), [O2 results](reports/olmo1b-o2/results.md)
+and the [handoff](fbt-rt-nextlat-handoff.md). O2 includes an explicit raw-input
+coordinate-screen calibration backed by FP64, and initial eager performance
+measurements; it does not clear training quality or optimized throughput.
+O3 and later milestones remain staged. Historical planning-status statements
+below describe checkpoint selection, before the O1/O2 implementation evidence.
 
 This replaces the model
 selection and forward milestones in [v2](fbt-rt-nextlat-research-plan-v2.md)
@@ -386,5 +387,5 @@ container; verify `nvidia-smi` there. Never silently substitute CPU. Persistent
 project files survive sessions; local SSD contents do not. Keep credentials out
 of logs. Read the handoff for container and retention recovery details.
 
-**Current review boundary:** O1 is complete; review its results before proceeding
-to O2. No OLMo GPU/training job is running or awaiting resumption.
+**Current review boundary:** O2 is complete; review its results before proceeding
+to O3. No OLMo GPU/training job is running or awaiting resumption.

@@ -1,0 +1,86 @@
+--- a/cdrm/pretrained/olmo_tiled.py
++++ b/cdrm/pretrained/olmo_tiled.py
+@@ -90,13 +90,11 @@
+     any_valid = allowed.any(-1, keepdim=True)
+     scores = torch.where(any_valid, scores, torch.zeros_like(scores))
+     probabilities = scores.softmax(-1) * any_valid
++    attention = _mm(probabilities, permanent_value, spec, dtype)
+     diagonal_probability = probabilities[:, :, indices, prefix_length + indices]
+-    historical_probability = probabilities.clone()
+-    historical_probability[:, :, indices, prefix_length + indices] = 0
+-    attention = _mm(historical_probability, permanent_value, spec, dtype)
+-    # Keep the temporary diagonal separate. Subtracting a permanent diagonal
+-    # after a BF16 PV matmul would mix rounded and unrounded probabilities.
+-    attention += diagonal_probability.unsqueeze(-1) * temporary_value.float()
++    attention += diagonal_probability.unsqueeze(-1) * (
++        temporary_value.float() - permanent_value[:, :, prefix_length:].float()
++    )
+     return probabilities, attention
+ 
+ 
+@@ -172,10 +170,7 @@
+         # Detached local leaves isolate this custom VJP from outer .grad fields.
+         xg = x.detach().requires_grad_(True)
+         weights = tuple(w.detach().requires_grad_(True) for w in (wq, wo, wup, wdown))
+-        # Autocast does not cache casts of detached, requires_grad=False weights.
+-        # Cast each local-Jacobian weight once, not once per sequence position.
+-        # Batched parameter VJPs below still use the original FP32 weight leaves.
+-        frozen = tuple(w.detach().to(dtype) if spec.autocast_enabled else w.detach() for w in weights)
++        frozen = tuple(w.detach() for w in weights)
+         pkg, pvg = past_key.detach().requires_grad_(True), past_value.detach().requires_grad_(True)
+         with torch.enable_grad(), _replay(spec, x.device):
+             q, kt, vt = _project(xg, weights[0], config)
+@@ -237,9 +232,9 @@
+                 dkt = self_error.unsqueeze(-1) * q.detach().float() / math.sqrt(config.head_dim)
+                 dvt = diagonal_p.unsqueeze(-1) * ga
+                 error = probabilities * (_mm(ga, all_values.detach().transpose(-1, -2), spec, dtype) - dot.unsqueeze(-1))
+-                error[:, :, indices, prefix + indices] = 0
++                error[:, :, indices, prefix + indices] = self_error
+                 dq = _mm(error, all_keys.detach(), spec, dtype) / math.sqrt(config.head_dim)
+-                dq += self_error.unsqueeze(-1) * kt.detach().float() / math.sqrt(config.head_dim)
++                dq += self_error.unsqueeze(-1) * (kt.detach().float() - rotated_current.detach().float()) / math.sqrt(config.head_dim)
+                 dpk = _mm(error[:, :, :, :prefix].transpose(-1, -2), q.detach(), spec, dtype) / math.sqrt(config.head_dim)
+                 dpv = _mm(probabilities[:, :, :, :prefix].transpose(-1, -2), ga, spec, dtype)
+             replayed_finished = _finish(xg, attention.detach(), *weights[1:], config, dtype)
+--- a/scripts/olmo_tiled_validate.py
++++ b/scripts/olmo_tiled_validate.py
+@@ -23,14 +23,13 @@
+ from cdrm.pretrained.olmo_tiled import OLMoTiledRTForCausalLM, tiled_recurrent_layer
+ from scripts.experiment_tracking import OnlineTracker
+ from scripts.olmo_rt_validate import SOURCE_FILES as O1_SOURCE_FILES, cache_checks
+-from scripts.olmo_tiled_roundoff import roundoff_check
+ from scripts.olmo_validation import (
+     PROMPTS, autocast, comparison, compare_snapshot, descriptive, loss_of,
+     require_container_gpu, semantic_gradients, snapshot,
+ )
+ 
+ SOURCE_FILES = O1_SOURCE_FILES + (
+-    "cdrm/pretrained/olmo_tiled.py", "scripts/olmo_tiled_validate.py", "scripts/olmo_tiled_roundoff.py",
++    "cdrm/pretrained/olmo_tiled.py", "scripts/olmo_tiled_validate.py",
+ )
+ 
+ 
+@@ -110,22 +109,7 @@
+            "value": comparison(pair[1], rpair[1], atol=1e-4, rtol=1e-4),
+            "input_gradient": comparison(x.grad, rx.grad, atol=2e-6, rtol=3e-4),
+            "gradients": semantic_gradients(model.layers[0], reference.layers[0])}
+-    # The initial run retained a strict-coordinate failure under large raw
+-    # cotangents despite sub-ppm aggregate agreement. Do not erase that screen:
+-    # adjudicate BOTH paths with independent FP64 arithmetic, and explicitly
+-    # apply the existing tensor budget to this unnormalized input gradient.
+-    diagnostic = roundoff_check(model.layers[0], x, positions, valid, go, gk, gv, 0.37)
+-    def tensor_budget(metrics):
+-        return metrics["finite"] and (
+-            metrics["relative_l2"] <= 1e-4 or metrics["difference_l2"] <= 2e-6
+-        ) and metrics["max_abs"] <= 2e-6 + 1e-4 * metrics["reference_max_abs"]
+-    row["roundoff_adjudication"] = diagnostic
+-    row["input_gradient_tensor_screen"] = {
+-        "passed": all(tensor_budget(metrics) for metrics in diagnostic["input_gradient"].values()),
+-        "relative_l2_limit": 1e-4, "maximum_error_rule": "2e-6 + 1e-4*reference_max_abs",
+-        "protocol_amendment": "Declared after validation-01: tensor budgets for raw-cotangent input gradients, backed by FP64; original coordinate screen remains recorded",
+-    }
+-    row["passed"] = all(row[key]["passed"] for key in ("output", "key", "value", "gradients", "input_gradient_tensor_screen"))
++    row["passed"] = all(row[key]["passed"] for key in ("output", "key", "value", "input_gradient", "gradients"))
+     model.zero_grad(set_to_none=True)
+     reference.zero_grad(set_to_none=True)
+     return row
