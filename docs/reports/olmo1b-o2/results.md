@@ -8,6 +8,11 @@ required an explicit, documented calibration supported by an FP64 oracle;
 the original failure is retained below. This is a correctness milestone and
 an initial performance baseline, not a training-quality or speedup claim.
 
+Implementation/evidence commit `c6a41c23568a4ef4e561b7b44a05f47fe38ab59b`;
+[PR #5](https://github.com/taylorbollman/cdrm-w-latent/pull/5). The retained
+archive precedes this PR-link documentation update; validated code hashes are
+unchanged.
+
 No pretrained optimizer update was made. FBT and NextLat remain subsequent
 milestones. See the [usage guide](../../olmo1b-tiled-rt-usage.md),
 [protocol and amendment](protocol.md), [machine-readable summary](validation-summary.json),

@@ -19,6 +19,8 @@ input-gradient checks in FP32 at alpha 0/0.37/1, physical B1/T16, layer 0 only.
 
 The user reviewed O1 and authorized **O2: native RoPE tiled forward/backward**.
 O2 is complete on `feat/olmo1b-tiled-rt`, based on O1 merge `a806835`.
+Implementation/evidence commit: `c6a41c23568a4ef4e561b7b44a05f47fe38ab59b`,
+[PR #5](https://github.com/taylorbollman/cdrm-w-latent/pull/5).
 See [O2 results](reports/olmo1b-o2/results.md),
 [usage](olmo1b-tiled-rt-usage.md) and [protocol/amendment](reports/olmo1b-o2/protocol.md).
 The combined scoped CPU suite passes **230 tests**. Actual-checkpoint tiled
