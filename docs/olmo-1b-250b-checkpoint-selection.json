@@ -1,0 +1,368 @@
+{
+  "schema": "olmo-1b-checkpoint-planning-audit-v1",
+  "checked_utc": "2026-09-21T19:56:12.358862+00:00",
+  "scope": "Read-only remote metadata, small config/tokenizer/source downloads, and bounded safetensors header ranges. No complete model checkpoint downloaded, no tensor payload parity comparison, no model load, no GPU execution.",
+  "selected_primary": {
+    "repo_id": "allenai/OLMo-1B",
+    "branch_label": "step60000-tokens252B",
+    "immutable_revision": "81b71efbce6f4dada57c94860301af4298bcd351",
+    "branch_url": "https://huggingface.co/allenai/OLMo-1B/tree/81b71efbce6f4dada57c94860301af4298bcd351",
+    "refs_api_url": "https://huggingface.co/api/models/allenai/OLMo-1B/refs",
+    "tree_api_url": "https://huggingface.co/api/models/allenai/OLMo-1B/tree/81b71efbce6f4dada57c94860301af4298bcd351?recursive=false&expand=false",
+    "raw_config": {
+      "activation_type": "swiglu",
+      "alibi": false,
+      "alibi_bias_max": 8.0,
+      "architectures": [
+        "OLMoForCausalLM"
+      ],
+      "attention_dropout": 0.0,
+      "attention_layer_norm": false,
+      "attention_layer_norm_with_affine": false,
+      "bias_for_layer_norm": false,
+      "block_group_size": 1,
+      "block_type": "sequential",
+      "d_model": 2048,
+      "embedding_dropout": 0.0,
+      "embedding_size": 50304,
+      "eos_token_id": 50279,
+      "flash_attention": false,
+      "include_bias": false,
+      "init_cutoff_factor": null,
+      "init_device": "meta",
+      "init_fn": "mitchell",
+      "init_std": 0.02,
+      "layer_norm_type": "default",
+      "layer_norm_with_affine": false,
+      "max_sequence_length": 2048,
+      "mlp_hidden_size": null,
+      "mlp_ratio": 8,
+      "model_type": "hf_olmo",
+      "multi_query_attention": false,
+      "n_heads": 16,
+      "n_layers": 16,
+      "pad_token_id": 1,
+      "precision": "amp_bf16",
+      "residual_dropout": 0.0,
+      "rope": true,
+      "rope_full_precision": true,
+      "scale_logits": false,
+      "transformers_version": "4.37.1",
+      "use_cache": true,
+      "vocab_size": 50280,
+      "weight_tying": true,
+      "auto_map": {
+        "AutoConfig": "configuration_olmo.OLMoConfig",
+        "AutoModelForCausalLM": "modeling_olmo.OLMoForCausalLM",
+        "AutoTokenizer": [
+          "tokenization_olmo_fast.OLMoTokenizerFast",
+          "tokenization_olmo_fast.OLMoTokenizerFast"
+        ]
+      }
+    },
+    "downloaded_metadata_files": {
+      "config.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/config.json",
+        "downloaded_bytes": 1321,
+        "locally_computed_sha256": "89767baeb3784222457a8e18e7821640bd45021cb7d4b3b1c0d7de5a7ab59c9d"
+      },
+      "tokenizer.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/tokenizer.json",
+        "downloaded_bytes": 2115113,
+        "locally_computed_sha256": "9ad33b4b39a9f83973c3f8c42a01948dd5b877a28ac9a5356956c4ff4ed0b714"
+      },
+      "tokenizer_config.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/tokenizer_config.json",
+        "downloaded_bytes": 5492,
+        "locally_computed_sha256": "2076c0f5842818df6372ac9699df1056cee7a44e01650677599e0d1d57de5755"
+      },
+      "special_tokens_map.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/special_tokens_map.json",
+        "downloaded_bytes": 65,
+        "locally_computed_sha256": "b77491e270c6fcc5b2ecf22370f7318a6a18d3cabea09ba7bab92e9bf12656c2"
+      }
+    },
+    "weights": {
+      "filename": "model.safetensors",
+      "download_url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors",
+      "advertised_size_bytes": 4707065440,
+      "advertised_lfs_sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+      "whole_file_downloaded": false,
+      "whole_file_hash_verified": false,
+      "range_header": "bytes 0-131071/4707065440",
+      "range_bytes_fetched": 131072,
+      "safetensors_header_bytes": 7768,
+      "safetensors_header_sha256": "9e4b6e4f5a82fdb7ab053e9ae82e3cfaa2709169a3cbc2f6b48f147c4aef8abc",
+      "tensor_count": 65,
+      "stored_elements": 1176764416,
+      "stored_dtypes": [
+        "F32"
+      ],
+      "embedding_tensor": {
+        "name": "model.transformer.wte.weight",
+        "dtype": "F32",
+        "shape": [
+          50304,
+          2048
+        ],
+        "data_offsets": [
+          4294967296,
+          4707057664
+        ]
+      }
+    },
+    "tokenizer_summary": {
+      "model_type": "BPE",
+      "model_vocabulary_size": 50280,
+      "added_token_records": 28,
+      "normalizer": {
+        "type": "NFC"
+      },
+      "pre_tokenizer": {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": true,
+        "use_regex": true
+      },
+      "post_processor": {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": true,
+        "use_regex": true
+      },
+      "decoder": {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": true,
+        "use_regex": true
+      },
+      "padding": null,
+      "eos_token_id": 50279,
+      "pad_token_id": 1,
+      "bos_token": null,
+      "add_bos_token_config": null,
+      "add_eos_token_config": null,
+      "tokenizer_class": "OLMoTokenizer"
+    }
+  },
+  "secondary_official_hf_conversion": {
+    "repo_id": "allenai/OLMo-1B-hf",
+    "branch_label": "step60000-tokens251B",
+    "immutable_revision": "6e6042e824831c7b42223f75cf60fe3a5d92eb79",
+    "branch_url": "https://huggingface.co/allenai/OLMo-1B-hf/tree/6e6042e824831c7b42223f75cf60fe3a5d92eb79",
+    "refs_api_url": "https://huggingface.co/api/models/allenai/OLMo-1B-hf/refs",
+    "tree_api_url": "https://huggingface.co/api/models/allenai/OLMo-1B-hf/tree/6e6042e824831c7b42223f75cf60fe3a5d92eb79?recursive=false&expand=false",
+    "raw_config": {
+      "architectures": [
+        "OlmoForCausalLM"
+      ],
+      "attention_bias": false,
+      "attention_dropout": 0.0,
+      "clip_qkv": null,
+      "eos_token_id": 50279,
+      "hidden_act": "silu",
+      "hidden_size": 2048,
+      "initializer_range": 0.02,
+      "intermediate_size": 8192,
+      "max_position_embeddings": 2048,
+      "model_type": "olmo",
+      "num_attention_heads": 16,
+      "num_hidden_layers": 16,
+      "num_key_value_heads": 16,
+      "pad_token_id": 1,
+      "rope_scaling": null,
+      "rope_theta": 10000.0,
+      "tie_word_embeddings": true,
+      "torch_dtype": "float32",
+      "transformers_version": "4.40.2",
+      "use_cache": true,
+      "vocab_size": 50304
+    },
+    "downloaded_metadata_files": {
+      "config.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B-hf/resolve/6e6042e824831c7b42223f75cf60fe3a5d92eb79/config.json",
+        "downloaded_bytes": 609,
+        "locally_computed_sha256": "95153241d18c58f712a0e12d41014a82d30c694c0472cfa7d6e72d8a8acc4d55"
+      },
+      "tokenizer.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B-hf/resolve/6e6042e824831c7b42223f75cf60fe3a5d92eb79/tokenizer.json",
+        "downloaded_bytes": 2115417,
+        "locally_computed_sha256": "a094266ac6c4982efba277bc251349a5a6d6ad37efb39a2a90f53d8be2a40a40"
+      },
+      "tokenizer_config.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B-hf/resolve/6e6042e824831c7b42223f75cf60fe3a5d92eb79/tokenizer_config.json",
+        "downloaded_bytes": 5372,
+        "locally_computed_sha256": "78a839c7851f14f9fb30e664c2b46166dc0628f2900679e5ec160656f702edff"
+      },
+      "special_tokens_map.json": {
+        "url": "https://huggingface.co/allenai/OLMo-1B-hf/resolve/6e6042e824831c7b42223f75cf60fe3a5d92eb79/special_tokens_map.json",
+        "downloaded_bytes": 65,
+        "locally_computed_sha256": "b77491e270c6fcc5b2ecf22370f7318a6a18d3cabea09ba7bab92e9bf12656c2"
+      }
+    },
+    "weights": {
+      "filename": "model.safetensors",
+      "download_url": "https://huggingface.co/allenai/OLMo-1B-hf/resolve/6e6042e824831c7b42223f75cf60fe3a5d92eb79/model.safetensors",
+      "advertised_size_bytes": 4707070632,
+      "advertised_lfs_sha256": "052be2bc6c1916e90a4c73a8562cd90521b32781eaa72c4e3587960450687ebd",
+      "whole_file_downloaded": false,
+      "whole_file_hash_verified": false,
+      "range_header": "bytes 0-131071/4707070632",
+      "range_bytes_fetched": 131072,
+      "safetensors_header_bytes": 12960,
+      "safetensors_header_sha256": "fe7520657109812532828d28d7e2f5b2f0fb4d4e964eb634749e6a29f2e18273",
+      "tensor_count": 113,
+      "stored_elements": 1176764416,
+      "stored_dtypes": [
+        "F32"
+      ],
+      "embedding_tensor": {
+        "name": "model.embed_tokens.weight",
+        "dtype": "F32",
+        "shape": [
+          50304,
+          2048
+        ],
+        "data_offsets": [
+          0,
+          412090368
+        ]
+      }
+    },
+    "tokenizer_summary": {
+      "model_type": "BPE",
+      "model_vocabulary_size": 50280,
+      "added_token_records": 28,
+      "normalizer": {
+        "type": "NFC"
+      },
+      "pre_tokenizer": {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": true,
+        "use_regex": true
+      },
+      "post_processor": {
+        "type": "TemplateProcessing",
+        "single": [
+          {
+            "Sequence": {
+              "id": "A",
+              "type_id": 0
+            }
+          }
+        ],
+        "pair": [
+          {
+            "Sequence": {
+              "id": "A",
+              "type_id": 0
+            }
+          },
+          {
+            "Sequence": {
+              "id": "B",
+              "type_id": 1
+            }
+          }
+        ],
+        "special_tokens": {}
+      },
+      "decoder": {
+        "type": "ByteLevel",
+        "add_prefix_space": false,
+        "trim_offsets": true,
+        "use_regex": true
+      },
+      "padding": null,
+      "eos_token_id": 50279,
+      "pad_token_id": 1,
+      "bos_token": null,
+      "add_bos_token_config": false,
+      "add_eos_token_config": false,
+      "tokenizer_class": "GPTNeoXTokenizer"
+    }
+  },
+  "checkpoint_age": {
+    "optimizer_step_from_both_branch_names": 60000,
+    "display": "approximately 251-252 billion pretraining tokens",
+    "exact_training_counter_verified": false,
+    "notes": [
+      "Native branch says tokens252B; official Transformers conversion says tokens251B. Preserve both labels and identify selection by immutable SHA and optimizer step.",
+      "Same-step naming and matching geometry establish a candidate official conversion pair, not tensor-by-tensor equivalence. Validate mapping before using it as a fidelity oracle."
+    ]
+  },
+  "architecture_contract": {
+    "unique_parameters_from_native_header": 1176764416,
+    "layers": 16,
+    "residual_width": 2048,
+    "attention_heads": 16,
+    "kv_heads": 16,
+    "head_dim": 128,
+    "ffn_fused_width": 16384,
+    "swiglu_intermediate_width": 8192,
+    "normalization": "nonparametric LayerNorm, not RMSNorm",
+    "layer_norm_eps_in_candidate_native_source": 1e-05,
+    "qk_normalization": false,
+    "weight_tying": true,
+    "learned_biases": false,
+    "position_encoding": "RoPE, base 10000, native full precision rotation",
+    "max_context": 2048,
+    "tokenizer_vocabulary": 50280,
+    "physical_embedding_and_readout_rows": 50304,
+    "source_precision_field": "amp_bf16",
+    "weight_storage_dtype": "F32",
+    "native_swiglu_gate_order": "Fused ff_proj output splits x,gate; output F.silu(gate)*x.",
+    "native_embedding_padding_idx": null,
+    "padding_gradient_note": "Native nn.Embedding constructor does not specify padding_idx; do not introduce lookup-gradient suppression merely because config.pad_token_id=1. Explicit masks/loss labels determine excluded positions."
+  },
+  "proposed_native_source_pin": {
+    "repository": "https://github.com/allenai/OLMo",
+    "tag": "v0.2.4",
+    "annotated_tag_sha": "196dcc0476f3b424a70ac2f187a6d05eb5ddd0a7",
+    "commit": "b3741bc21f1dd504838b7dbd9878ee077ded63bd",
+    "status": "Official compatible historical source candidate; source bytes inspected, import/execution and parity untested. Checkpoint remote-code stubs import hf_olmo with unbounded ai2-olmo>=0.2.2, so pinning checkpoint alone is insufficient.",
+    "files": {
+      "olmo/model.py": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/model.py",
+        "downloaded_bytes": 70696,
+        "locally_computed_sha256": "849a56149e87fe30de2e5bc51c9559f896785533b6f22d8b2f30952db2f6da04"
+      },
+      "olmo/config.py": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/olmo/config.py",
+        "downloaded_bytes": 30021,
+        "locally_computed_sha256": "1912bfc6127b15428786d4dd38e11ebceea3f20897ba5bf42facdb930f5fbfab"
+      },
+      "hf_olmo/modeling_olmo.py": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/hf_olmo/modeling_olmo.py",
+        "downloaded_bytes": 5031,
+        "locally_computed_sha256": "c5066a70d79a95f6ed08580bd6fd0e86d657a859b292d3efe7a5c070f702580f"
+      },
+      "hf_olmo/configuration_olmo.py": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/hf_olmo/configuration_olmo.py",
+        "downloaded_bytes": 1159,
+        "locally_computed_sha256": "a9dfd0aa9454030b5bf9927fd6c8f9f3bdbea83cdb6ca0dc20128131e6bb0b28"
+      },
+      "hf_olmo/tokenization_olmo_fast.py": {
+        "url": "https://raw.githubusercontent.com/allenai/OLMo/b3741bc21f1dd504838b7dbd9878ee077ded63bd/hf_olmo/tokenization_olmo_fast.py",
+        "downloaded_bytes": 645,
+        "locally_computed_sha256": "66eb5b2dcacb87403a1a9a22b2f3f6b52cb1f7e69dbf5acd6de3f37bdf231eff"
+      }
+    }
+  },
+  "authority_boundary": {
+    "weights_and_architecture": "Pinned original allenai/OLMo-1B safetensors/config are primary. Preserve fused projection ordering, all50304 vocabulary rows, nonparametric LayerNorm, native RoPE, tying, and no Q/K normalization.",
+    "native_reference": "Pin and snapshot original allenai/OLMo model math with source hashes, then validate it on the selected native tensor bytes.",
+    "hf_conversion": "Optional independent convenience/reference only after explicit native-to-HF tensor mapping and output/loss/gradient checks. Current tensor-header count differs due to split QKV/SwiGLU projections.",
+    "tokenizer": "Use tokenizer files from the selected original checkpoint SHA. HF tokenizer.json is not byte-identical and has a different post_processor; verify encode/decode/special-token fixtures before substitution. No invented BOS/EOS preprocessing.",
+    "optimizer": "These are model-only weight artifacts. Any new adaptation optimizer/warmup is a new run, not exact original training resume.",
+    "precision": "Native stored FP32 weights and amp_bf16 metadata do not establish our RT/FBT BF16 correctness. New bounded source-fidelity and intended-runtime checks remain required."
+  },
+  "remaining_acceptance_work": [
+    "Download complete selected native model.safetensors and verify full hash against advertised LFS SHA256.",
+    "Strict tensor keys/shapes/finiteness and tied-parameter ownership on load, with no cropping/reinitialization.",
+    "Freeze original source and tokenizer behavior; source config defaults must be expanded into resolved experiment config.",
+    "Establish ordinary output/loss/gradient/cache causality fidelity before introducing RT/FBT/NextLat.",
+    "If using official HF conversion, verify actual tensor correspondence and tokenization rather than assuming same-step names guarantee parity."
+  ]
+}

@@ -1,5 +1,12 @@
 # OpenELM-1.1B: attention backends and layer-wise scaling
 
+> **Historical model-selection record.** The user subsequently selected original
+> OLMo-1B at approximately 252B tokens. The
+> [v3 plan](fbt-rt-nextlat-research-plan-v3.md) and
+> [current handoff](fbt-rt-nextlat-handoff.md) govern active work.
+> OpenELM recommendations and future-tense milestones below retain their
+> original context; source audits and completed results remain useful evidence.
+
 Follow-up: the [ordinary import milestone](reports/openelm-import/results.md)
 now validates the native1.1B checkpoint, including the container's cuDNN fused
 attention path. RT/FBT implementation remains subsequent work.
