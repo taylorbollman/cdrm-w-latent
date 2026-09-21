@@ -28,13 +28,86 @@ FP32 checks pass at B1/T16 alpha 0/.37/1 and B1/T128 alpha 1, all 65 parameter
 and input gradients. A raw-cotangent B2/T17 strict input-coordinate failure is
 retained and adjudicated with an independent FP64 oracle; see details below.
 BF16 differences and eager H100 performance are measured, not training clearance.
-**Pause at O2 for review. O3 and learning are not started or queued.**
-There was no optimizer update to the pretrained checkpoint. The user authorizes
-direct PR closure/merges; this does not expand research/training scope.
+The user reviewed O2 and authorized **O3 language-model objectives/platform**.
+O3 is complete on `feat/olmo1b-nextlat-platform`, based on O2 merge
+`ef3380f1beb41642150c693c33ca2558365e4f84`. Implementation/evidence commit:
+`40290357aff82f0caa40f9deff79c90412758faa`,
+[PR #6](https://github.com/taylorbollman/cdrm-w-latent/pull/6). See
+[O3 results](reports/olmo1b-o3/results.md), [usage](olmo1b-nextlat-platform-usage.md)
+and [protocol](reports/olmo1b-o3/protocol.md). The scoped CPU suite passes
+**326 tests**; actual-checkpoint FP32 objective/gradient checks and exact full
+optimizer recovery pass. Bounded BF16 complete-step profiles are recorded below.
+Pause for O3 review before O4 comparative learning or FBT. One H100 is available;
+two-GPU correctness requires later hardware. Native checkpoint files and research
+starting weights are unchanged. Four physical optimizer updates were executed
+on disposable diagnostic state (three logical updates, including one replay);
+profiling executed 42 zero-LR updates. No adapted research checkpoint or learning
+run is awaiting resumption. The user authorizes direct PR closure/merges; this
+does not expand research/training scope.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
 source/evidence, not an unrecorded working tree, defines tested behavior.
+
+## O3 selected results and recovery
+
+- Code: `cdrm/pretrained/nextlat.py` and `lm_training.py`; GPU drivers
+  `scripts/olmo_lm_validate.py` / `olmo_lm_profile.py`; shared literal fixtures
+  and dense objective in `scripts/olmo_lm_common.py`. O1/O2 model math unchanged.
+- Source fidelity: NextLat revision `b37d3411ab9b17be8638abbddb9529f0f3a0a5f9`,
+  retained byte snapshot in `_nextlat_reference/`. Select its **1B LM horizon-one**
+  recipe, not A5: predictor factor 1.6 (hidden6528), latent/KL coefficients 1/1,
+  no auxiliary predicted-token CE. Predictor adds 82,726,912 parameters; total
+  1,259,491,328 versus native 1,176,764,416. Predictor is training-only, with
+  isolated initialization; inference remains `model.backbone(...)`.
+- Masks: CE targets token t+1; latent targets stopped post-finalnorm state t+1;
+  KL compares stopped teacher and predicted-state distributions for token t+2.
+  Source/conditioning embeddings remain attached; only auxiliary readout use
+  is detached. Separate target-position masks and global valid counts per
+  objective across microbatches. One document per row; reject multi-document
+  packing because loss masks cannot prevent attention leakage.
+- Validation: `.runtime/olmo1b-step60000/lm-validation-01/report.json`, W&B
+  [r0zqx75g](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/r0zqx75g).
+  Full-checkpoint FP32 math B1/T16 ordinary/RT with NextLat off/on and padded
+  B2/T16 RT+NextLat pass independent dense-objective/all-active-parameter checks.
+  Global gradient relative L2 1.579e-6–4.811e-6; worst tensor 6.226e-6.
+  BF16 RT+NextLat versus FP32 global differences: mixed attention 1.932%, FP32
+  attention 1.911%; worst tensors 2.839%/2.590%. Finite descriptive diagnostics,
+  not long-sequence fused-backend gradient or learning-equivalence clearance.
+- Exact actual-model recovery: save after update2, rebuild, reload, repeat update3.
+  Model, AdamW moments, scheduler, counters, CPU/CUDA next RNG draws and update
+  metrics match bit-for-bit. LR1e-5 with two-update warmup; FP32, layer0 RT.
+  Disposable 15,114,028,075-byte checkpoint SHA256
+  `8d615b49730f8c8e1292fac008596977e1fdc754e0f78366293418a05b6fba22`
+  was deleted after passing; full hashes/fixtures/evidence retained. No need to
+  recover this diagnostic model. CPU tests also cover nonzero predictor dropout
+  and Python/NumPy/explicit data-generator RNG.
+- Profile: `.runtime/olmo1b-step60000/lm-profile-01/report.json`, W&B
+  [zbrcek8g](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zbrcek8g).
+  BF16 default SDPA + mixed tiled attention; layer0 RT only; FP32 parameters,
+  real initialized AdamW moments, clipping, LR0. Three warmups/three timed steps.
+  RT+NextLat B1/B4/B8,T512: 1.496/1.587/1.626 seconds, 342/1,290/2,519 valid
+  input tokens/s, 19.61/20.37/23.99 GiB allocated peaks. B8 reserved25.79 GiB.
+  All weights unchanged and moments finite. Not a maximum-batch search or a
+  learning run; literal repeated text with half-length CE masks, no data loader.
+- Memory: vocabulary loss chunks recompute full-vocabulary logits rather than
+  retaining all such activations. Validation chunk8; profile chunk128 positions.
+  O2 backward still reconstructs quadratic attention and uses per-position VJPs.
+  No compile/graphs, FBT, distributed, packed-document attention or cached LM
+  objective training clearance. Only layer0 is recurrent in actual-model checks.
+- CPU record: `.runtime/olmo1b-step60000/lm-cpu-suite.log`, copied to
+  [test-results.txt](reports/olmo1b-o3/test-results.txt): 326 passed, 41 warnings.
+  Compact machine-readable record: [summary](reports/olmo1b-o3/validation-summary.json).
+- Evidence prefix:
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-nextlat-platform/20260921T213500Z/`.
+  [Storage receipt](reports/olmo1b-o3/storage-receipt.json) records verified
+  objects. Local archive/receipts:
+  `.runtime/olmo1b-step60000/lm-retention-20260921T213500Z/`.
+  Reuse O1's existing immutable checkpoint object; do not upload another copy.
+- Next review: choose O4 domain/splits and masking, practical batch/exposure,
+  ordinary/ordinary+NextLat/RT/RT+NextLat controls and matched alpha ramp. Inspect
+  untrained predictor scale before selecting adaptation schedule; initial short
+  RT fixture means CE5.095/latent0.916/KL8.349 are not model-quality measurements.
 
 ## O2 selected results and recovery
 
@@ -78,9 +151,9 @@ source/evidence, not an unrecorded working tree, defines tested behavior.
   records the verified timestamp prefix, object generations and hashes.
   Prefix: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-tiled-rt/20260921T205831Z/`;
   local receipts/archive in `.runtime/olmo1b-step60000/tiled-retention-20260921T205831Z/`.
-- Next staged milestone O3: LM NextLat alignment/detachment/document masks,
-  optimizer/save/resume and realistic batch memory; two-GPU correctness when
-  available. No adaptation run is implicitly authorized by platform work.
+- Its subsequent O3 single-GPU milestone is now complete (above); two-GPU
+  correctness remains untested. No adaptation run is implicitly authorized by
+  platform work.
 
 ## O1 selected results and recovery
 

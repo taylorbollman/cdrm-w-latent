@@ -8,8 +8,12 @@ tiled forward/backward now pass bounded validation. See
 and the [handoff](fbt-rt-nextlat-handoff.md). O2 includes an explicit raw-input
 coordinate-screen calibration backed by FP64, and initial eager performance
 measurements; it does not clear training quality or optimized throughput.
-O3 and later milestones remain staged. Historical planning-status statements
-below describe checkpoint selection, before the O1/O2 implementation evidence.
+O3 language-model NextLat and the single-GPU training platform are also complete:
+326 scoped CPU tests, actual-checkpoint objective/gradient parity, exact optimizer
+recovery, and bounded complete-step profiling. See [O3 results](reports/olmo1b-o3/results.md)
+and [usage](olmo1b-nextlat-platform-usage.md). Two-GPU correctness remains untested.
+O4 and later milestones remain staged. Historical planning-status statements
+below describe checkpoint selection, before the implementation evidence.
 
 This replaces the model
 selection and forward milestones in [v2](fbt-rt-nextlat-research-plan-v2.md)
@@ -387,5 +391,12 @@ container; verify `nvidia-smi` there. Never silently substitute CPU. Persistent
 project files survive sessions; local SSD contents do not. Keep credentials out
 of logs. Read the handoff for container and retention recovery details.
 
-**Current review boundary:** O2 is complete; review its results before proceeding
-to O3. No OLMo GPU/training job is running or awaiting resumption.
+**Current review boundary:** O3 is complete on one H100; review its results before
+O4. O3's disposable optimizer recovery and zero-LR profiling are not a comparative
+learning run. Next, freeze one domain and held-out/retention data, masking policy,
+batch/exposure budget and matched alpha transition. The released NextLat 1B LM
+recipe adds 82.7M training-only predictor parameters (factor 1.6, horizon one,
+latent/KL coefficients 1/1); it differs from the historical A5 recipe. The
+untrained predictor's initial auxiliary loss scales are recorded in O3 and should
+inform the adaptation review. No OLMo GPU/training job is running or awaiting
+resumption. Multi-GPU validation requires hardware not currently available.
