@@ -6,6 +6,10 @@ reference in FP32, including gradients. No backbone adaptation, tiled execution,
 FBT or NextLat training was performed. The next milestone is the native RoPE
 tiled backend, subject to the user's review of this result.
 
+Implementation: [PR #4](https://github.com/taylorbollman/cdrm-w-latent/pull/4),
+source/evidence commit `9a5bc78`. Subsequent documentation and whitespace-only
+test formatting do not change model/validator source hashes in the reports.
+
 - [Usage and reproduction](../../olmo1b-native-rt-usage.md)
 - [Frozen protocol](protocol.md)
 - [Compact machine-readable results](validation-summary.json)
