@@ -5,3 +5,12 @@ python -m pytest -q tests/test_olmo_o5e_common.py tests/test_olmo_o5e_train.py t
 Two independent read-only reviews of runner/preflight/protocol: no launch blocker.
 O5e source inventory includes imported O5d endpoint metadata helper.
 All inherited model, optimizer, evaluator and O5b/O5c/O5d runtime sources unchanged.
+
+python -m pytest -q tests/test_olmo_o5e_retain.py
+19 passed in 1.72s (independent agent, GPU-disabled project container).
+94 distinct scoped tests total.
+
+H100 preflight01: passed, 2026-09-22T13:22:15–13:24:05UTC.
+Real zero-LR steps: first 0.360521s / 30.361558GiB; largest-row 0.466800s / 34.732627GiB.
+65 native tensors changed on first scheduled nonzero step; 3 unused fusion tensors unchanged.
+All 68 state hashes restored exactly; original full ordinary NLL reproduced.

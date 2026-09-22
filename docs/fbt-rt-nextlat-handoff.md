@@ -11,10 +11,19 @@ Use the same O5b source native backbone and exact O5c data02 mixed plan:512updat
 LR1e-5/warmup50; fusion fixed/unused, FBT/RT/NextLat off. This matches data and
 exposure, not capacity or compute, against fusion-only8.39M/LR1e-4. New branch
 `feat/olmo1b-o5e-ordinary-control` from O5d merge
-`1364373cb38714da13bdc4e3c88f05c0ac60dcb9`. O5e preflight01 is active (exec29100), output
-`.runtime/olmo1b-step60000/o5e-preflight-01/` with adjacent log.75 scoped CPU
-tests passed. Preflight will freeze configuration and verify state/capacity;
-training has not launched. Historical wording
+`1364373cb38714da13bdc4e3c88f05c0ac60dcb9`. O5e preflight01 passed (exec29100 completed0), output
+`.runtime/olmo1b-step60000/o5e-preflight-01/`, W&B `62kr0zjb`.75 scoped CPU
+tests passed. Frozen runtime/protocol commit `3d3f865`; configuration SHA
+`497f2dc70fcd0fefbf907a51306e7c8bb76208c8e44c928cbe289d9b214221cd`.
+Both real profiles passed:0.361–0.467s/update, peak34.733GiB. Nonzero native
+step changed65tensors with fusion fixed, then restored all68state hashes and
+initial ordinary scores. One training run will use
+`.runtime/olmo1b-step60000/o5e-pilot-01/ordinary/` and GCS prefix
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5e-ordinary-control/20260922T132415Z/`.
+Initial evidence retention is verified at the prefix above under `initial/`.
+The one training control is now launching, with adjacent `o5e-pilot-01.log`.
+[PR12](https://github.com/taylorbollman/cdrm-w-latent/pull/12) is draft;
+94 distinct scoped CPU tests pass, including19 retention tests. Historical wording
 below saying no ordinary training is authorized is superseded by this explicit
 approval. No other learning arm or extension is queued.
 

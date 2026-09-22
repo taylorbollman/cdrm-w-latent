@@ -51,7 +51,7 @@ repair survives teacher-forced online execution through512-token contexts.
 Read the current handoff and O5d assessment for retained evidence and the
 ordinary additional-training control. O5e is now explicitly authorized: one512-update
 ordinary continuation from the shared O5b native state on the exact O5c mixed
-plan, with FBT/RT/NextLat off. Its H100 preflight is active; read the current
+plan, with FBT/RT/NextLat off. Its H100 preflight passed and the one control is launching; read the current
 handoff and O5e protocol before recovery. Do not relaunch completed diagnostics
 or add other learning arms or extensions.
 Two-GPU correctness remains untested. Read the handoff
