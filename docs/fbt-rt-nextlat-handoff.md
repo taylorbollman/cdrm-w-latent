@@ -4,6 +4,22 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**O5d is authorized and running (2026-09-22).** The user approved
+fixed-checkpoint finite K2/K3/K4 versus exact sequential feedback at the repaired
+O5c mixed endpoint and permits several hours if needed. No training is authorized
+in this step. New branch `feat/olmo1b-o5d-online-diagnostic` from O5c merge
+`ec618060b51e0a7ef472903a50d4009c8dc45ced`. Read
+[O5d protocol](reports/olmo1b-o5d/protocol.md): source and mixed checkpoints,
+beta1, RT/NextLat off, BF16 mixed / batch8; first32 windows at max64, then the
+full final512-window selection at max512. Evaluation has atomic progress and
+case-boundary recovery; no optimizer checkpoints are needed for unchanged weights.
+Historical statements below saying this diagnostic is not launched describe the
+O5c close and are superseded by this authorization. GPU run `.runtime/olmo1b-step60000/o5d-diagnostic-01/` is active via exec19959;
+log is adjacent `.log`. Read report status before resuming; no automatic duplicate
+launch. Loader32 tests and driver/evaluator43 tests passed before launch. The
+new driver had an independent review with no blocker.
+
+
 **O5c is complete and assessed (2026-09-22).** The user authorized the paired
 fusion-only code versus code/general-text experiment with periodic checkpoints.
 Both arms completed 512 updates / 4,194,304 additional CE targets. Every native

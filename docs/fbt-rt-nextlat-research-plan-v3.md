@@ -442,3 +442,13 @@ pre-training environment retry. No job remains active. Recommended next review:
 unchanged repaired-endpoint finite K2/K3/K4 versus exact online on matched
 prefixes, then a matched ordinary training reference. This next check is a
 proposal and has not been launched; no RT/NextLat interaction sweep is queued.
+
+
+## O5d authorization: repaired-checkpoint online evaluation
+
+The user approved the next fixed-weight diagnostic on2026-09-22, with several
+hours allowed if necessary. [Frozen protocol](reports/olmo1b-o5d/protocol.md)
+compares source and repaired mixed endpoints at beta1, K2/K3/K4 and exact online,
+first on32 max64 prefixes and then on the same512 max512 windows used for final
+O5c reporting. Batch8/BF16 and all model math remain unchanged. No training,
+new RT/NextLat arm, beta search or ordinary continuation control is launched.
