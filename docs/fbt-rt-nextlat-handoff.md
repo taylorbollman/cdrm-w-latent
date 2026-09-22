@@ -179,9 +179,28 @@ predeclared gradual ramp is intended to assess recovery, not assume efficacy.
 Initial beta0 exact-online differs by~0.0006nats from parallel on identical short
 prefixes (cached versus full BF16 kernels); both are finite.
 
-No O5b learning arm has started as of this entry. Next: retain initial evidence,
-then start queue `.runtime/olmo1b-step60000/o5b-pilot-01/` and automatic CPU
-finisher. Storage prefix selected:
+Initial evidence is verified and retained. The **O5b queue is running**, with
+ordinary control first, then FBT automatically. Implementation/evidence commit
+`4751d508b26887b8873cf43b06acc2b47994067c`,
+[draft PR9](https://github.com/taylorbollman/cdrm-w-latent/pull/9). Keep the PR
+open until completed comparison is assessed. Read
+[current results](reports/olmo1b-o5b/results.md).
+
+Live queue `.runtime/olmo1b-step60000/o5b-pilot-01/queue.json`; per-arm
+`report.json` and `events.jsonl` are authoritative. GPU queue exec session42624;
+CPU completion/report/retention exec session69027, status
+`o5b-pilot-01/finish-status.json`. They started at03:59UTC2026-09-22. Do not
+launch duplicates; inspect processes/status first. Both processes run inside
+containers and persist while the VM stays up. Logs are
+`.runtime/olmo1b-step60000/o5b-pilot-01.log`,
+`o5b-pilot-01/ordinary.log` and `o5b-finish-01.log`.
+Ordinary W&B `ichekj67`; FBT run ID will appear when it starts. Ordinary passed
+its update50 check: codeNLL1.644527 vsinitial1.690766; retention3.105349
+vs3.105747 (128-window subset). At update100:1.649572/3.108210. All observed
+losses/gradients finite, passes identical, fusion gradient0 as intended.
+This is startup health, not a completed learning comparison.
+
+Storage prefix:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/`.
 The queue runs ordinary then FBT and halts on failure. Do not change frozen
 source files/protocol mid-run. Only resume latest recorded full checkpoint with
