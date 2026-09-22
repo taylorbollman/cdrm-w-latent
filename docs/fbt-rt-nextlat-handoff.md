@@ -26,7 +26,8 @@ Read [assessment](reports/olmo1b-f1/assessment.md),
 Operational record:
 
 - Branch `feat/olmo1b-f1-integration`, base O5e merge `9139783`;
-  frozen runtime/protocol commit `c9524ca`.
+  frozen runtime/protocol commit `c9524ca`;
+  [PR13](https://github.com/taylorbollman/cdrm-w-latent/pull/13).
 - Run .runtime/olmo1b-step60000/f1-integration-01, adjacent .log;
   exec55172 completed0, 2026-09-22T15:31:17–15:41:34UTC, 615.86seconds.
   [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8patkvpi).
