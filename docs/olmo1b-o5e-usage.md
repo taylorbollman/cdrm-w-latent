@@ -2,8 +2,14 @@
 
 Read the [current handoff](fbt-rt-nextlat-handoff.md) and
 [protocol](reports/olmo1b-o5e/protocol.md) before launching or recovering work.
-Only one 512-update control is authorized. It trains the shared O5b native
-backbone on the exact O5c mixed plan with a single ordinary CE; FBT, RT and
+**Completed and assessed 2026-09-22. Do not relaunch or resume this run.**
+See [assessment](reports/olmo1b-o5e/assessment.md) and [results](reports/olmo1b-o5e/results.md).
+[W&B training run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ri76qycw).
+Exec72097 completed0; all four checkpoints are retained. No further training
+is queued. The commands below document the completed invocation and recovery
+behavior for an incomplete run, not another authorized experiment.
+
+The completed control trained the shared O5b native backbone on the exact O5c mixed plan with a single ordinary CE; FBT, RT and
 NextLat are off. Fusion tensors are retained but unused and frozen.
 
 Run GPU commands through the project container; host and container roots are

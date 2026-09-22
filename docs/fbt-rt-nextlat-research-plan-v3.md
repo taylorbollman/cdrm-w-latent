@@ -2,13 +2,18 @@
 
 Updated 2026-09-22. **Current authoritative plan.**
 
-**Current execution status:** O5c fusion-only repair and O5d finite/online
-transfer evaluation are complete. Mixed exact-online WikiText NLL is3.140935
-versus5.101028 at the source, with all native weights unchanged. See the current
-[handoff](fbt-rt-nextlat-handoff.md) and [O5d assessment](reports/olmo1b-o5d/assessment.md).
-No training is queued. A matched ordinary additional-training control is the
-recommended next decision, not launched. Earlier stage-status wording below
-is historical and superseded by the completed records.
+**Current execution status:** O5c fusion-only repair, O5d finite/online transfer
+and O5e matched ordinary continuation are complete. O5e ordinary reaches
+code/WikiText NLL1.696348/2.720260 versus mixed fusion K2 1.720900/3.061443
+and exact online1.723307/3.140935 on the same512-window evaluations. Code is
+maintained relative to its ordinary starting point, while WikiText improves.
+The equal-data control favors ordinary adaptation, with trainable capacity,
+learning rate, compute and starting-forward-function differences explicit.
+See [handoff](fbt-rt-nextlat-handoff.md) and [O5e assessment](reports/olmo1b-o5e/assessment.md).
+No job or further training is queued. Proposed next review: full-backbone+fusion
+FBT on the shared mixed plan against this ordinary control, with explicit CE
+reduction, before RT/NextLat interactions. This is not launched. Earlier status
+wording is historical and superseded by the completed records.
 
 **Implementation update:** O1 native import/sequential RT and O2 native RoPE
 tiled forward/backward now pass bounded validation. See
@@ -482,3 +487,23 @@ native weights at1e-5 with one CE, keep fusion unused/fixed and all recurrence
 and NextLat off. See [protocol](reports/olmo1b-o5e/protocol.md) for capacity/compute
 qualifications, preflight and checkpoint/evaluation boundaries. One512-update
 control is authorized; no other learning or automatic extension is queued.
+
+
+## O5e completed control and next review boundary
+
+The one512-update ordinary control is complete and retained. Shared-source,
+exact-data ordinary adaptation beats both fusion-only endpoints: final code
+1.696348 and WikiText2.720260 NLL, compared with K2 1.720900/3.061443 and
+online1.723307/3.140935. The small change from starting ordinary code1.698216
+is not established as an improvement; its paired interval includes zero.
+WikiText perplexity is28.9% below K2 and34.3% below online. Allupdates remain
+finite under clipping; no precision redesign is indicated.
+
+This removes the frozen-ordinary comparison as evidence of FBT quality advantage
+on this setting. Capacity still differs140-fold. A next focused proposal would
+train native weights and fusion together from the same O5b source on the same
+mixed plan and native LR/budget, reusing O5e as control. Explicitly choose the
+finite-pass CE reduction; averaging two pass losses preserves one-CE scale when
+both passes are ordinary. Evaluate actual online behavior if pursuing the new
+FBT endpoint. No such run, adapter comparison, RT/NextLat interaction, budget
+extension or new numerical campaign is queued by completing O5e.

@@ -14,3 +14,10 @@ H100 preflight01: passed, 2026-09-22T13:22:15–13:24:05UTC.
 Real zero-LR steps: first 0.360521s / 30.361558GiB; largest-row 0.466800s / 34.732627GiB.
 65 native tensors changed on first scheduled nonzero step; 3 unused fusion tensors unchanged.
 All 68 state hashes restored exactly; original full ordinary NLL reproduced.
+
+Independent read-only audit of actual512 training updates:
+exact update order,8192CE/update,4096/domain,50-update LRwarmup,oneCE and noauxcounts.
+All recorded values finite; no resumptions. All512 updates clipped atnorm1.
+Preclipnorm min2.44148/median2.85238/max29.80410(update84); postclipnative norms0.99999952–0.99999994.
+8 updates above5,2 above10; isolatedmax neighbors2.88909/3.66301, no sustained divergence.
+Coresteps191.219s total,0.368061s median,peak34.7593GiB.

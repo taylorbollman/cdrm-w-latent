@@ -4,28 +4,60 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**O5e is now authorized and in development (2026-09-22).** The user approved
-ordinary additional training after O5d. Read [O5e protocol](reports/olmo1b-o5e/protocol.md).
-Use the same O5b source native backbone and exact O5c data02 mixed plan:512updates,
-4.194M CE targets, physical<=16. Train65native tensors with a single ordinary CE,
-LR1e-5/warmup50; fusion fixed/unused, FBT/RT/NextLat off. This matches data and
-exposure, not capacity or compute, against fusion-only8.39M/LR1e-4. New branch
-`feat/olmo1b-o5e-ordinary-control` from O5d merge
-`1364373cb38714da13bdc4e3c88f05c0ac60dcb9`. O5e preflight01 passed (exec29100 completed0), output
-`.runtime/olmo1b-step60000/o5e-preflight-01/`, W&B `62kr0zjb`.75 scoped CPU
-tests passed. Frozen runtime/protocol commit `3d3f865`; configuration SHA
-`497f2dc70fcd0fefbf907a51306e7c8bb76208c8e44c928cbe289d9b214221cd`.
-Both real profiles passed:0.361–0.467s/update, peak34.733GiB. Nonzero native
-step changed65tensors with fusion fixed, then restored all68state hashes and
-initial ordinary scores. One training run will use
-`.runtime/olmo1b-step60000/o5e-pilot-01/ordinary/` and GCS prefix
-`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5e-ordinary-control/20260922T132415Z/`.
-Initial evidence retention is verified at the prefix above under `initial/`.
-The one training control is now launching, with adjacent `o5e-pilot-01.log`.
-[PR12](https://github.com/taylorbollman/cdrm-w-latent/pull/12) is draft;
-94 distinct scoped CPU tests pass, including19 retention tests. Historical wording
-below saying no ordinary training is authorized is superseded by this explicit
-approval. No other learning arm or extension is queued.
+**O5e is complete and assessed (2026-09-22).** The ordinary additional-training
+control completed512updates /4,194,304CE targets on the exact O5c mixed plan,
+from the same O5b native state. It trains65native tensors with one ordinary CE,
+LR1e-5/warmup50; FBT/RT/NextLat off, three fusion tensors fixed and unused.
+Read [assessment](reports/olmo1b-o5e/assessment.md), [results/plots](reports/olmo1b-o5e/results.md),
+[protocol](reports/olmo1b-o5e/protocol.md) and [usage](olmo1b-o5e-usage.md).
+**No GPU job or further training is queued. Do not resume this completed run.**
+
+Full512-window code / WikiText NLL:
+- Shared starting ordinary:1.698216 /3.183361.
+- Trained ordinary:1.696348 /2.720260; WikiText accuracy45.762%.
+- O5c mixed K2:1.720900 /3.061443; O5d mixed online:1.723307 /3.140935.
+
+Ordinary beats both fusion paths in both domains, with paired document intervals
+excluding zero. Code versus its own start is essentially maintained (NLL delta
+-0.001869, interval[-0.004935,+0.001339]); WikiText perplexity is28.9% below K2
+and34.3% below online. The frozen-ordinary advantage in O5c/O5d does not establish
+an advantage over ordinary adaptation. Qualification:1.177B trainable native
+parameters versus8.39M fusion, different LR/compute and initial forward functions;
+this is equal data/exposure, not a pure architecture ablation or general FBT verdict.
+Recommended next decision: shared-source/data full-backbone+fusion FBT training
+against this reusable ordinary control, with finite-pass CE weighting explicitly
+specified, before RT/NextLat interactions. **That next comparison is not launched.**
+
+Operational record:
+- Branch `feat/olmo1b-o5e-ordinary-control`, base O5d merge
+  `1364373cb38714da13bdc4e3c88f05c0ac60dcb9`; [PR12](https://github.com/taylorbollman/cdrm-w-latent/pull/12).
+  Runtime/protocol commit `3d3f865`; retention implementation `07774f7`.
+- Preflight `.runtime/olmo1b-step60000/o5e-preflight-01/` passed, exec29100
+  completed0, W&B `62kr0zjb`. Config SHA
+  `497f2dc70fcd0fefbf907a51306e7c8bb76208c8e44c928cbe289d9b214221cd`.
+  Actual native updates, fusion freeze and exact restoration/source scores passed.
+- Run `.runtime/olmo1b-step60000/o5e-pilot-01/ordinary/`, adjacent
+  `o5e-pilot-01.log`, exec72097 completed0;2026-09-22T13:27:22–13:51:09UTC,
+  report wall23.7827min. W&B `ri76qycw`, project `taylorbollman/pretrained-fbt-rt-nextlat`.
+- Exact4,208,250inputtokens /13,946segments /1,056microbatches, no cycling,
+  no auxiliary counts/resumptions. All512updates finite and clipped atnorm1;
+  medianpreclip2.8524,max29.8041at84(isolated), peak34.7593GiB.
+  Medianstep0.3681s,totalstep191.22s; checkpoint retention dominates elapsed time.
+-94distinct scoped CPUtests pass. Independent source/exposure/objective/state/
+  stability/paired-report/plot audits pass. All42frozen sourcefiles unchanged;
+  all65native tensors changed, all3fusion tensors fixed. No broad precision
+  campaign or full-GPU optimizer replay was added.
+- GCS prefix
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5e-ordinary-control/20260922T132415Z/`.
+  All128/256/384/512complete checkpoints retained; final local file remains.
+  Final `ordinary/update-000512.pt`,14,154,906,281bytes, SHA
+  `62b288c1e0e7e725ca9b56f65b52d018080b97eaaf28af3215c1613dba3eba45`,
+  generation `1790085054588072`. Initial/final evidence live under corresponding
+  prefix subdirectories; receipts in the O5e report directory. Parent data and
+  checkpoint objects reused without duplicate uploads.
+
+Historical O5d statements describing this control as unlaunched are superseded
+by the completed record above. Further training remains a separate decision.
 
 
 **O5d is complete and assessed (2026-09-22).** The user authorized the fixed-weight

@@ -49,11 +49,12 @@ the native backbone remains unchanged. O5d is complete:
 fixed-weight finite K2/K3/K4 versus exact sequential feedback confirms that the
 repair survives teacher-forced online execution through512-token contexts.
 Read the current handoff and O5d assessment for retained evidence and the
-ordinary additional-training control. O5e is now explicitly authorized: one512-update
-ordinary continuation from the shared O5b native state on the exact O5c mixed
-plan, with FBT/RT/NextLat off. Its H100 preflight passed and the one control is launching; read the current
-handoff and O5e protocol before recovery. Do not relaunch completed diagnostics
-or add other learning arms or extensions.
+ordinary additional-training control. O5e is complete: shared-source ordinary
+continuation on the exact O5c mixed plan beats both fusion-only endpoints in
+code/WikiText NLL, with a140-fold trainable-capacity qualification. Read its
+assessment/results and current handoff. All four full checkpoints are retained;
+no GPU job or further learning is queued. Do not resume completed diagnostics
+or infer authorization for the proposed full-backbone FBT comparison.
 Two-GPU correctness remains untested. Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical

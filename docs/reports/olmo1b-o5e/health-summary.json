@@ -1,0 +1,38 @@
+{
+  "fusion_mixed_reference": {
+    "clipped_updates": 63,
+    "events_sha256": "ff0b5b9bd62082560bc2cd95c5de376876bc2a0d9aa6632d438a00edc96e41e9",
+    "finite_recorded_losses_and_gradient_norms": true,
+    "last64_preclip_norm_median": 0.3839699476957321,
+    "max_norm_update": 8,
+    "median_step_seconds": 0.39160773049661657,
+    "peak_allocated_gib": 18.659574031829834,
+    "preclip_norm_max": 9.28046703338623,
+    "preclip_norm_median": 0.4822535067796707,
+    "preclip_norm_min": 0.29684337973594666,
+    "report_sha256": "020a204ae02d3dfa1af2753f278cb465d73120ca8133258bc8a84272e15afbc8",
+    "resumptions": 0,
+    "summed_step_seconds": 204.71767653905408,
+    "updates": 512,
+    "wall_minutes": 11.612620516666668
+  },
+  "method": "Read recorded update events only; step wall times exclude evaluation, model loading, checkpoint serialization and retention. Gradient clipping threshold1. No new model execution.",
+  "ordinary": {
+    "clipped_updates": 512,
+    "events_sha256": "97e7ae3a38850093f9cabeac327e2990a33e3adb6d6a06fe920f55cee67f78d8",
+    "finite_recorded_losses_and_gradient_norms": true,
+    "last64_preclip_norm_median": 2.7973787784576416,
+    "max_norm_update": 84,
+    "median_step_seconds": 0.3680605804984225,
+    "peak_allocated_gib": 34.75930309295654,
+    "preclip_norm_max": 29.804101943969727,
+    "preclip_norm_median": 2.852378249168396,
+    "preclip_norm_min": 2.4414780139923096,
+    "report_sha256": "353f997eead5f7e248070d0177a51bd39ca171b9ed8815c486d5479d41e48bd3",
+    "resumptions": 0,
+    "summed_step_seconds": 191.2186145290034,
+    "updates": 512,
+    "wall_minutes": 23.78274563333333
+  },
+  "schema": "olmo-o5e-health-summary-v1"
+}
