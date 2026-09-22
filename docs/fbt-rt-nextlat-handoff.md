@@ -4,6 +4,67 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**O5c is complete and assessed (2026-09-22).** The user authorized the paired
+fusion-only code versus code/general-text experiment with periodic checkpoints.
+Both arms completed 512 updates / 4,194,304 additional CE targets. Every native
+parameter and fixed fusion scale stayed byte-identical; only the two fusion
+matrices trained. Read [assessment](reports/olmo1b-o5c/assessment.md),
+[results](reports/olmo1b-o5c/results.md), [protocol](reports/olmo1b-o5c/protocol.md)
+and [usage](olmo1b-o5c-usage.md). No GPU job or further training remains queued.
+
+Final 512-window code / WikiText NLL:
+- Shared starting feedback: 1.737004 / 4.969719.
+- Code-only fusion: 1.715954 / 4.623289.
+- Mixed fusion: 1.720900 / 3.061443.
+- Fixed ordinary pass throughout: 1.698216 / 3.183361.
+
+Mixed minus code-only: +0.004947 code NLL, −1.561846 WikiText NLL. Mixed
+repairs the measured retention loss with a small code tradeoff. Its WikiText
+NLL beats its own ordinary pass by 0.121918, but code remains 0.022684 worse.
+This is domain-adaptation evidence, not FBT efficacy versus an equally trained
+ordinary model. WikiText is a narrow development proxy; exact online inference
+at these new weights remains untested. Recommended next: unchanged-checkpoint
+K2/K3/K4 versus exact online on identical bounded prefixes, then an ordinary
+additional-training control. **This recommendation is not launched.**
+
+Operational record:
+- Branch `feat/olmo1b-o5c-fusion-adaptation`, base O5b merge `4a53e48a2c56f71f4b9b4cc899e6c2c7ecd4e417`;
+  [PR10](https://github.com/taylorbollman/cdrm-w-latent/pull/10).
+- Frozen implementation/preflight commit `9a1fd3a`; preflight `o5c-preflight-01`
+  passed, W&B `b1yqi0ug`. Config SHA
+  `5fafdc28167c117f5c681ff60f784085125186a833dec050837ccc0265b5aa08`.
+- Authoritative data `o5c-data-02/prepared`, manifest SHA
+  `f837f7f412dee17a304df5f78f4b65571f15163af440adecfc77b88cca8b1490`.
+  Data01 was superseded before training to align shared code context boundaries.
+- Both arms use 8192 CE targets/update; mixed splits 4096/4096. Shared code
+  segments match exactly; mixed has half the code exposure. Variable rows,
+  physical chunks at most16; code 4,212,498 input tokens, mixed 4,208,250.
+- Fresh fusion AdamW LR1e-4, warmup50, clip1; native frozen, beta1/K2/gamma1,
+  BF16 mixed/FP32 master, RT/NextLat off. No prefix mixing or hidden jitter.
+- Queue `.runtime/olmo1b-step60000/o5c-pilot-01/queue.json` is **completed**;
+  code W&B `obv0yofk`, mixed `28cum2gv`. Queue elapsed27.6min. No restart
+  of training state; one mixed pre-training NVML query failure was resolved
+  by retrying the unchanged queue in a fresh container. Cause unconfirmed;
+  `startup-incident.json` preserves evidence. Exec3961 ended1; retry78761
+  completed0. Do not relaunch either process or the completed queue.
+- 138 distinct scoped CPU tests pass. Actual H100 nonzero step changed only
+  fusion, then exact restoration; source evaluation matches O5b. All updates
+  finite; code0 clipped, mixed63/512 clipped, settling after startup.
+- GCS prefix:
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5c-fusion-only/20260922T061000Z/`.
+  Each arm retained update128/256/384/512 with verified receipts; latest local
+  checkpoint remains. Initial/final evidence receipts are in the report directory.
+- Final code checkpoint `code/update-000512.pt`, SHA
+  `263dcfd6b0553aa2ee6be26483bbe20ad04486dcc8a76e9f3ab6b9a727270f33`,
+  generation1790058561034880; mixed `mixed/update-000512.pt`, SHA
+  `7bba59ac75478fb15cec5fd0187f306b220da9babb138ebccbf5d88a70609d1a`,
+  generation1790059437165208. Each full file4,807,843,871bytes.
+- New O5c checkpoint metadata uses built-in strings; its wrapper narrowly
+  handles legacy TorchVersion only when needed. CPU exact future-update replay
+  passes; actual full GPU optimizer replay remains unclaimed.
+
+Historical O5b proposal wording below is superseded by this completed O5c record.
+
 The user selected **original OLMo-1B at approximately 200–300B pretraining tokens**
 as the new primary model, replacing OpenELM because of uncertainty about its
 layer-wise capacity scaling. We selected **step 60,000, approximately 251–252B**.

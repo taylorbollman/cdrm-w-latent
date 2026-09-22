@@ -1,0 +1,23 @@
+{
+  "objects": [
+    {
+      "generation": "1790059873230995",
+      "md5_base64": "DOxLq3ZMkt0c5stLAzp2Zg==",
+      "sha256": "d499c9e8cde6241fc71dd56e9ffb4643cb84ed7a1965ddd413a1198e1e11d9db",
+      "size_bytes": 5561695,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5c-fusion-only/20260922T061000Z/final/evidence.tar.gz",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    },
+    {
+      "generation": "1790059874048064",
+      "md5_base64": "t3HrP2dWAHN++tYbhY2zSQ==",
+      "sha256": "3aef33a301b2887173e86389803197071beafcf40f556ce2297bdc712686523a",
+      "size_bytes": 20355,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5c-fusion-only/20260922T061000Z/final/manifest.json",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    }
+  ],
+  "phase": "final",
+  "schema": "olmo-o5c-evidence-receipt-v1",
+  "status": "verified"
+}
