@@ -94,8 +94,8 @@ reference/correctness is now implemented and passes** on
 `4a473bfc296f0c0d6b65a8a6d5bb434ab7002c04`,
 [PR #8](https://github.com/taylorbollman/cdrm-w-latent/pull/8). See
 [O5a results](reports/olmo1b-o5a/results.md), [usage](olmo1b-fbt-usage.md), and
-[protocol](reports/olmo1b-o5a/protocol.md). No GPU job remains running, no O4
-extension or long FBT learning run is queued, and no adapted FBT weights exist.
+[protocol](reports/olmo1b-o5a/protocol.md). At the O5a close no GPU job remained running and no adapted FBT weights
+existed. O5b is now authorized below; do not treat that historical status as live.
 
 New modules `cdrm/pretrained/olmo_fbt.py` and `fbt_training.py`; no existing
 backbone/training math modified. Pinned author-reproduction source snapshot
@@ -143,15 +143,55 @@ the source/report archive and read-only reused O1 checkpoint. Prefix:
 Local retention `.runtime/olmo1b-step60000/o5a-retention-01/`; schema
 `olmo-fbt-reference-v1`. No research checkpoint was generated.
 
-**Next review:** choose O5b ordinary-versus-FBT-only adaptation, without NextLat
-initially. K2/gamma1 has total CE weight 2, so use a new ordinary control with
-matching pass-loss weight (e.g. K2/beta0/no RT); O4's single-CE control is contextual,
-not automatically compatible. Freeze beta/newbranch warmup, prefix mixin/jitter
-policy and exposure, profile actual T512 capacity, then evaluate per-pass and
-exact online code/retention. The O4 NextLat startup shock suggests a separate
-later predictor-only warm start/component-gradient diagnosis, not changing
-multiple mechanisms together in the first FBT control. Review this milestone
-before allocating a large learning budget; distributed remains untested.
+**O5b is now authorized and implemented** after the user reviewed O5a and
+asked to proceed. Branch `feat/olmo1b-o5b-fbt-pilot`, base O5a merge
+`4a3e19630b8c5b0ad87eb228d5d471f5c382da6e`. Read the
+[frozen protocol](reports/olmo1b-o5b/protocol.md) and
+[usage](olmo1b-o5b-usage.md). One bounded paired recovery pilot, not an
+unbounded continuation or interaction sweep:
+
+- Original step60000 weights and O4 prepared data/order; RT and NextLat **off**.
+- `ordinary`: K2/beta0; `fbt`: K2/gradual beta0→1; both gamma1 and two CE losses.
+  O4's single-CE ordinary arm is contextual, not the matched control.
+- Effective batch32,T512; physical batch selected by complete beta1 profiling.
+- BF16 mixed, FP32 master/AdamW, SDPA, no TF32/compile/graphs/distributed.
+- Native LR1e-5, fusion LR1e-4. Native warmup100; first nonzero beta update102
+  also starts fusion LR1e-6, reaching1e-4 at update201. No fusion-only warm start.
+- Warmup100/ramp end1367/final2634;20,855,799 input tokens and20,771,511 CE
+  targets per arm. Two stack passes count41,711,598 stack-input positions.
+- Prefix sampling and hidden jitter **off**, explicitly a departure from the
+  author reproduction. New fusion uses the unchanged O5a initialization/scale.
+- 128-window per-pass learning curves;512-window final paired document intervals;
+  first32 windows truncated64 for pass0/finiteK2/exact-online comparison.
+- All new runner/evaluation/report/retention tests pass150 cases; the full scoped
+  `tests/test_olmo*.py` CPU suite passes693,41 warnings. Existing core math unchanged.
+
+Preflight `.runtime/olmo1b-step60000/o5b-preflight-01/` **passed**; log is the
+adjacent `.log`. W&B `upirj0yb`. Config SHA256
+`b26d4f7af7e6888bf0f8720724d2aadc3f4c1ed842dd988ebbedc89545bce626`.
+Selected physical16 accumulated twice:49.60GiB peak,0.919s/effective32 full-length
+step (~17,821 valid tokens/s). Physical32 used74.53GiB,0.909s. Both have finite
+AdamW and bitwise unchanged zero-LR weights. No OOM. Preflight lasted84s.
+Original512-window code/retention NLL1.787902/3.040993; cold beta1 feedback on
+128 windows gives9.569364/11.091882 versus its same-window pass0 values
+1.690766/3.105747. This confirms a severe untrained-branch perturbation; the
+predeclared gradual ramp is intended to assess recovery, not assume efficacy.
+Initial beta0 exact-online differs by~0.0006nats from parallel on identical short
+prefixes (cached versus full BF16 kernels); both are finite.
+
+No O5b learning arm has started as of this entry. Next: retain initial evidence,
+then start queue `.runtime/olmo1b-step60000/o5b-pilot-01/` and automatic CPU
+finisher. Storage prefix selected:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/`.
+The queue runs ordinary then FBT and halts on failure. Do not change frozen
+source files/protocol mid-run. Only resume latest recorded full checkpoint with
+exact source/config/runtime/cursor; old branches require a new explicit lineage.
+GCS commands inside the container require `env -u GOOGLE_APPLICATION_CREDENTIALS`.
+
+**Next review:** assess the matched O5b comparison and sequential-inference
+behavior before extending toward50–100M tokens or adding RT/NextLat. O4's
+NextLat startup shock suggests a separately staged predictor warm start or
+component-gradient diagnosis. Distributed correctness remains untested.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;

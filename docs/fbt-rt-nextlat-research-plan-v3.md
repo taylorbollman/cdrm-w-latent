@@ -16,7 +16,12 @@ O4 is complete: ordinary continuation wins this short comparison, RT largely
 recovers code quality with a retention cost, and NextLat hurts both measures.
 See [results](reports/olmo1b-o4/results.md) and [assessment](reports/olmo1b-o4/assessment.md).
 The user asked to assess and continue; O5a FBT reference/correctness now passes.
-See [O5a results](reports/olmo1b-o5a/results.md). Further learning remains staged. Historical planning-status statements
+See [O5a results](reports/olmo1b-o5a/results.md). The user subsequently authorized
+O5b: one matched ordinary-versus-FBT-only recovery pilot, about20.856M input
+tokens per arm. Its [frozen protocol](reports/olmo1b-o5b/protocol.md) specifies
+K2/gamma1 in both arms, no RT/NextLat, separate native/fusion learning rates,
+gradual feedback introduction, and finite-pass plus short online evaluation.
+Further learning remains staged. Historical planning-status statements
 below describe checkpoint selection, before the implementation evidence.
 
 This replaces the model
@@ -397,6 +402,8 @@ of logs. Read the handoff for container and retention recovery details.
 
 **Current review boundary:** O4 has completed and been assessed. All four arms
 received20.856M valid input tokens and2,634 updates; final checkpoints/evidence
-are retained. O5a FBT implementation and bounded correctness also pass;
-review before selecting FBT learning or NextLat adaptation diagnostics.
-No additional long learning run is queued. Multi-GPU remains untested.
+are retained. O5a FBT implementation and bounded correctness also pass.
+The user authorized O5b's bounded two-arm pilot; see the handoff for live status.
+Review that comparison before extending exposure, adding RT/NextLat, or changing
+prefix sampling/noise. No larger interaction sweep is authorized. Multi-GPU
+remains untested.
