@@ -105,7 +105,8 @@ class PreparedFBTLayout:
     def _structure_signature(self):
         return (id(self.core), id(self.core.backbone), self.core.config, self.core.fusion_config,
             self.core.fusion.norm_eps, self.base.attention_backend, self.base.attention_precision,
-            self.base.ordinary_activation_checkpointing,
+            self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
+            self.base.tile_backend,
             tuple((name, id(module), type(module), module.training) for name, module in self.core.named_modules()))
 
     def _parameter_signature(self):
@@ -158,6 +159,7 @@ class PreparedFBTLayout:
         if self.core.readout_weight is not self.core.token_embeddings.weight:
             raise ValueError("Native tied embedding/readout ownership changed")
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
+            "cast_weights_once": self.base.cast_weights_once, "tile_backend": self.base.tile_backend,
             "training": self.core.training, "attention_backend": self.base.attention_backend,
             "attention_precision": self.base.attention_precision, "grad_enabled": torch.is_grad_enabled(),
             "inference_mode": torch.is_inference_mode_enabled(),
