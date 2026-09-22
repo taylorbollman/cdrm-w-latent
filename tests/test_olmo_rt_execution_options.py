@@ -106,7 +106,7 @@ def test_cast_once_rereads_in_place_updated_weights_on_each_invocation():
 
 def test_execution_flags_do_not_change_native_parameter_or_state_layout():
     baseline = model()
-    candidate = model(cast_weights_once=True, tile_backend="triton")
+    candidate = model(cast_weights_once=True, tile_backend="triton", backward_tile_backend="triton")
     candidate.load_state_dict(baseline.state_dict(), strict=True)
     assert candidate.readout_weight is candidate.token_embeddings.weight
     assert tuple(baseline.state_dict()) == tuple(candidate.state_dict())
@@ -126,7 +126,7 @@ def test_constructor_rejects_unknown_tile_backend(value):
         model(tile_backend=value)
 
 
-@pytest.mark.parametrize("name,value", [("cast_weights_once", 1), ("tile_backend", "unknown")])
+@pytest.mark.parametrize("name,value", [("cast_weights_once", 1), ("tile_backend", "unknown"), ("backward_tile_backend", "unknown")])
 def test_raw_layer_revalidates_execution_options(name, value):
     layer = model().layers[0]
     options = dict(alpha=1.0, past=None, query_positions=torch.arange(2)[None],
@@ -151,12 +151,13 @@ def test_inactive_rt_does_not_invoke_triton_backend(monkeypatch):
     monkeypatch.setattr("cdrm.pretrained.olmo_rt_kernels.add_tile", unexpected)
     baseline = model(); candidate = copy.deepcopy(baseline)
     candidate.tile_backend = "triton"; candidate.cast_weights_once = True
+    candidate.backward_tile_backend = "triton"
     ids = torch.tensor([[2, 3, 5]])
     torch.testing.assert_close(candidate(ids, mode=RTMode(())).logits,
                                baseline(ids, mode=RTMode(())).logits, rtol=0, atol=0)
 
 
-@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton")])
+@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton"), ("backward_tile_backend", "triton")])
 def test_cached_rt_execution_flags_are_pinned(name, value):
     base = model().eval()
     with torch.no_grad():
@@ -167,7 +168,7 @@ def test_cached_rt_execution_flags_are_pinned(name, value):
             base(torch.tensor([[5]]), mode=RTMode((0,)), past_key_values=cached, use_cache=True)
 
 
-@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton")])
+@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton"), ("backward_tile_backend", "triton")])
 def test_online_fbt_inner_cache_also_rejects_rt_kernel_option_changes(name, value):
     core = OLMoFBT(model()).eval()
     mode = FBTOnlineMode(rt_mode=RTMode((0,)))
@@ -178,7 +179,7 @@ def test_online_fbt_inner_cache_also_rejects_rt_kernel_option_changes(name, valu
             core.forward_online(torch.tensor([[5]]), mode=mode, past_key_values=cached)
 
 
-@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton")])
+@pytest.mark.parametrize("name,value", [("cast_weights_once", True), ("tile_backend", "triton"), ("backward_tile_backend", "triton")])
 def test_static_layout_guards_execution_flags_before_capture_or_replay(name, value):
     core = OLMoFBT(model())
     ids = torch.tensor([[2, 3, 5]])
@@ -188,6 +189,7 @@ def test_static_layout_guards_execution_flags_before_capture_or_replay(name, val
     signature = layout.validate_execution(mode)
     assert signature["cast_weights_once"] is False
     assert signature["tile_backend"] == "eager"
+    assert signature["backward_tile_backend"] == "eager"
     setattr(core.backbone, name, value)
     with pytest.raises(ValueError, match="execution flags changed"):
         layout.validate_execution(mode, expected_signature=signature)
