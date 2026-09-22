@@ -11,6 +11,79 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F3b forward-tile optimization is complete and assessed (2026-09-22).**
+Read the [assessment](reports/olmo1b-f3b/assessment.md),
+[results](reports/olmo1b-f3b/results.md), [protocol](reports/olmo1b-f3b/protocol.md)
+and [usage](olmo1b-f3b-usage.md). This closes the bounded forward prototype,
+not the broader RT backward/memory work. No GPU job or learning run is queued.
+
+F3b durable execution record:
+
+- Branch `feat/olmo1b-f3b-rt-kernel`, base `e86a818`, core runtime `6c5c81c`;
+  [PR16](https://github.com/taylorbollman/cdrm-w-latent/pull/16).
+  Twelve completed reports pass; 60 physical optimizer updates comprise
+  30 eager and 30 graph updates. Warmup/profile backwards do not advance Adam.
+  The historical F3 RT B128 baseline is separate from these counts.
+- Two opt-in flags: `cast_weights_once=True` reuses BF16 projection-weight
+  copies within an RT forward while rereading current weights on every replay;
+  `tile_backend="triton"` fuses historical QK/state/PV. Original defaults stay.
+  Native checkpoint, recurrence, RoPE, losses and parameter counts are unchanged.
+  Raw cache/graph execution signatures include both options.
+- Cast-only actual combined B1/T32 and B8/T512 losses/gradients equal the original
+  path bitwise. Fused actual RT and combined B8/T512 pass predeclared engineering
+  screens: global gradient relative L2 versus original BF16 is 0.003538 and
+  0.010067. All four candidates have exact same-candidate eager/graph losses,
+  gradients and three-update AdamW/model/moment/scheduler/counter parity.
+  Fused versus original is not bitwise; stricter diagnostic flags are retained.
+- Forty-eight frozen tiles and 12 tiny native blocks pass. Tiny-block raw hidden/
+  exported-KV cotangents, masks, odd lengths, attached prefixes and FP32 reference
+  are covered; max FP32 global gradient relative L2 is 0.003464. Candidate/eager
+  BF16 block outputs/cache/gradients are bitwise. All expected fused calls occur.
+  Total scoped CPU test count is 307 (259 integration/kernel/accounting/launcher,
+  23 reporter, 25 retainer). See retained test-results.txt.
+- Complete graph updates at T512: combined B64 rises from 10,409 to 10,871 input
+  tokens/s (+4.4%), RT B128 from 24,684 to 26,101 (+5.7%). Cast reuse alone gives
+  10,717/25,588 respectively. Peak allocated memory remains 40.84/42.10 GiB.
+  Peak reserved and current reserved are recorded separately. Three-step medians
+  after warmup provide direction, not a randomized speed estimate.
+- The final combined profile independently reproduces 10,866 input tokens/s.
+  Ordinary layers use deterministic PyTorch Flash; historical RT tiles use the
+  new Triton kernel, not FA4. CUDA annotation ranges overlap kernels/include gaps;
+  helper CUDA-event timings also include uncaptured host submission overhead.
+- `CDRM_FLASH_ATTENTION_SOURCE=installed` selects compatible FA4 4.0.0b20 and
+  CuTE 4.6.0.dev0 without reinstall; the old vendor remains default. Standalone
+  BF16 forward/QKV gradients versus FP32 and fixed-input forward capture pass.
+  Read [environment details](olmo-fa4-environment.md). FA4 LSE values, captured
+  backward and RT integration are not established by this smoke.
+- [Resource accounting](olmo-resource-accounting.md) now covers all eight feature
+  combinations analytically. At B64/T512 with the actual loss fixture, RT uses
+  an estimated 294.9–316.5 TFLOPs/update, combined 644.5–689.3. This includes
+  recomputation and excludes pointwise/optimizer/launch work. It is not a runtime
+  measurement for all eight combinations or a wall-time prediction.
+- Evidence: `.runtime/olmo1b-step60000/f3b-*-01/`, adjacent logs and explicit
+  `f3b-final-inputs.json`. Every run has its own exact source snapshots, including
+  earlier diagnostic versions; do not require all historical hashes to coincide.
+  The final GPU job was `f3b-profile-triton-combined-b64-01`, W&B `d4fam7qe`.
+  Original retained native weights are reused; no disposable trained weights
+  are retained. Small evidence is stored under
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3b-rt-kernel/`;
+  [receipt](reports/olmo1b-f3b/storage-receipt.json) pins objects/hashes/generations.
+
+**Next review milestone: native RT backward tile fusion and memory.**
+Retain the current custom VJP as a reference. Fuse historical dK/dV updates and
+replace full probability/error arrays with row normalizers plus recomputed tiles
+in bounded, separately checked steps. Incoming adjoints arrive progressively;
+ordinary Flash backward cannot replace the entire recurrent reverse calculation.
+One FP32 B64/H16 matrix is 1 GiB at T512 and 16 GiB at T2048. Also inspect local
+writer/finish VJPs and the discarded Q in permanent full-QKV projection. F3b is
+an intentional review boundary before a substantial backward rewrite.
+
+Full-model F3b coverage selects RT layer0 only; the other 15 layers are ordinary.
+Longer contexts, more RT layers, padded graphs, graph resume, accumulation and
+multi-GPU remain untested with these optimizations. Keep native Q/K math. Finish
+resource cards after relevant optimizations, and perform two-GPU checks when a
+second GPU is available. Do not start a long quality run by inference.
+
 **F3 CUDA-graph integration is complete and assessed (2026-09-22).** Read
 [assessment](reports/olmo1b-f3/assessment.md), [results](reports/olmo1b-f3/results.md),
 [protocol](reports/olmo1b-f3/protocol.md) and [usage](olmo1b-f3-usage.md).
@@ -59,11 +132,8 @@ F3 durable execution record:
   `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3-graph-training/`;
   [receipt](reports/olmo1b-f3/storage-receipt.json) pins objects/hashes/generations.
 
-Next review milestone: brief device profiles at useful batches plus the common
-parameter/throughput/memory/FLOP ledger. Choose the bounded native RT fused-tile
-prototype from measured bottlenecks. Continue genuine two-GPU checks when a
-second GPU is available; there is only one here. Do not launch long learning
-comparisons or resume completed numerical campaigns by default.
+F3's initial profile/prototype follow-up is now completed as F3b above.
+The broader backward and resource-coverage work remains open under V4.
 
 Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
 the O5e recommendation below to run another joint-backbone FBT learning comparison.
@@ -168,7 +238,7 @@ F2 operational record:
   source hashes and every completed/failed diagnostic. Retention receipt is
   docs/reports/olmo1b-f2/storage-receipt.json (generated separately from archive).
 
-Next review milestone: static-layout canonical CE/NextLat/FBT graph integration,
+Historical F2 follow-up (now completed by F3): static-layout canonical CE/NextLat/FBT graph integration,
 changed-token/weight/full-update checks, and graph+ordinary-checkpoint memory/
 throughput near a practical physical batch (B128 eager reference). Preserve
 objective/mask semantics; use the deterministic Flash stack reference for

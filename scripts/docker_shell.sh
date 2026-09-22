@@ -12,6 +12,22 @@ CONTAINER_PROJECT_ROOT="/workspace/cdrm-w-latent"
 DEFAULT_IMAGE="cdrm-w-latent:dev"
 IMAGE="${CDRM_DOCKER_IMAGE:-${DEFAULT_IMAGE}}"
 GPU_MODE="${CDRM_DOCKER_GPUS:-all}"
+FLASH_ATTENTION_SOURCE="${CDRM_FLASH_ATTENTION_SOURCE:-vendor}"
+CONTAINER_PYTHONPATH="${CONTAINER_PROJECT_ROOT}:${CONTAINER_PROJECT_ROOT}/vendors/apex"
+case "${FLASH_ATTENTION_SOURCE}" in
+  vendor)
+    CONTAINER_PYTHONPATH="${CONTAINER_PYTHONPATH}:${CONTAINER_PROJECT_ROOT}/vendors/flash-attention"
+    ;;
+  installed)
+    # Use the image's pinned package without shadowing it with this checkout.
+    # Other vendor paths and the editable recurrent model stay unchanged.
+    ;;
+  *)
+    echo "Invalid CDRM_FLASH_ATTENTION_SOURCE='${FLASH_ATTENTION_SOURCE}'; expected vendor or installed." >&2
+    exit 1
+    ;;
+esac
+CONTAINER_PYTHONPATH="${CONTAINER_PYTHONPATH}:${CONTAINER_PROJECT_ROOT}/vendors/vllm"
 CONTAINER_USER="${CDRM_CONTAINER_USER:-$(id -un)}"
 CACHE_ROOT="${XDG_CACHE_HOME:-${HOME}/.cache}"
 CONTAINER_HOME="${CDRM_CONTAINER_HOME:-${PROJECT_ROOT}/.docker-home}"
@@ -153,7 +169,8 @@ set +e
   -e PYTHONNOUSERSITE=1 \
   "${GCLOUD_ARGS[@]}" \
   -e "CDRM_ROOT=${CONTAINER_PROJECT_ROOT}" \
-  -e "PYTHONPATH=${CONTAINER_PROJECT_ROOT}:${CONTAINER_PROJECT_ROOT}/vendors/apex:${CONTAINER_PROJECT_ROOT}/vendors/flash-attention:${CONTAINER_PROJECT_ROOT}/vendors/vllm" \
+  -e "CDRM_FLASH_ATTENTION_SOURCE=${FLASH_ATTENTION_SOURCE}" \
+  -e "PYTHONPATH=${CONTAINER_PYTHONPATH}" \
   -v "${PROJECT_ROOT}:${CONTAINER_PROJECT_ROOT}" \
   -v "${CACHE_ROOT}:/cache" \
   -v "${CONTAINER_HOME}:/home/${CONTAINER_USER}" \

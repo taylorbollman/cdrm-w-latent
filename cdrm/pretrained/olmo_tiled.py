@@ -32,6 +32,8 @@ class _Invocation:
     attention_precision: str
     autocast_enabled: bool
     autocast_dtype: torch.dtype
+    cast_weights_once: bool = False
+    tile_backend: str = "eager"
 
 
 def _replay(spec: _Invocation, device: torch.device):
@@ -65,6 +67,13 @@ def _mm(a: Tensor, b: Tensor, spec: _Invocation, projection_dtype: torch.dtype) 
 
 
 def _add_tile(query, key, value, valid, numerator, maximum, denominator, spec, dtype):
+    if (spec.tile_backend == "triton" and query.device.type == "cuda"
+            and dtype == torch.bfloat16 and spec.attention_precision == "mixed"
+            and all(tensor.dtype == torch.bfloat16 for tensor in (query, key, value))
+            and spec.config.head_dim in (16, 32, 64, 128)
+            and max(query.shape[-2], key.shape[-2]) <= 256):
+        from .olmo_rt_kernels import add_tile
+        return add_tile(query, key, value, valid, numerator, maximum, denominator)
     score = _mm(query, key.transpose(-1, -2), spec, dtype) / math.sqrt(spec.config.head_dim)
     score = score.masked_fill(~valid[:, None, None, :], -torch.inf)
     merged_max = torch.maximum(maximum, score.max(-1).values)
@@ -111,6 +120,13 @@ class _TiledRecurrence(torch.autograd.Function):
         prefix = past_key.shape[-2]
         query, temporary_key, temporary_value = _project(x, wq, config)
         dtype = query.dtype
+        # A custom forward records no dense activation graph. Cast once per
+        # invocation rather than copying full FP32 matrices at every token.
+        # Original parameter tensors are still saved for the batched VJP;
+        # captured casts execute again and reread updated weights on replay.
+        forward_weights = tuple(w.to(dtype) for w in (wq, wo, wup, wdown)) if (
+            spec.cast_weights_once and spec.autocast_enabled
+        ) else (wq, wo, wup, wdown)
         query = _apply_rope(query, positions, config.rope_freq_constant)
         temporary_key = _apply_rope(temporary_key, positions, config.rope_freq_constant)
         with torch.autocast(x.device.type, enabled=False):
@@ -133,10 +149,10 @@ class _TiledRecurrence(torch.autograd.Function):
         for index in range(length):
             attention = numerator[:, :, index:index + 1] / denominator[:, :, index:index + 1].clamp_min(1e-30).unsqueeze(-1)
             current = x[:, index:index + 1]
-            completed = _finish(current, attention, wo, wup, wdown, config, dtype)
+            completed = _finish(current, attention, *forward_weights[1:], config, dtype)
             outputs.append(completed)
             source = (1.0 - spec.alpha) * current + spec.alpha * completed
-            _, key, value = _project(source, wq, config)
+            _, key, value = _project(source, forward_weights[0], config)
             keys[:, :, index:index + 1] = key
             values[:, :, index:index + 1] = value
             rotated_keys[:, :, index:index + 1] = _apply_rope(key, positions[:, index:index + 1], config.rope_freq_constant)
@@ -260,9 +276,16 @@ class _TiledRecurrence(torch.autograd.Function):
 def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
                           past: tuple[Tensor, Tensor] | None,
                           query_positions: Tensor, key_positions: Tensor, key_valid: Tensor,
-                          attention_precision: str = "mixed"):
+                          attention_precision: str = "mixed", cast_weights_once: bool = False,
+                          tile_backend: str = "eager"):
     if attention_precision not in ("mixed", "fp32"):
         raise ValueError("attention_precision must be 'mixed' or 'fp32'")
+    if type(cast_weights_once) is not bool:
+        raise TypeError("cast_weights_once must be boolean")
+    if tile_backend not in ("eager", "triton"):
+        raise ValueError("tile_backend must be eager or triton")
+    if tile_backend == "triton" and x.device.type != "cuda":
+        raise ValueError("Triton tiles require CUDA; choose eager explicitly on CPU")
     if isinstance(alpha, bool) or not isinstance(alpha, (int, float)) or not math.isfinite(alpha) or not 0 <= alpha <= 1:
         raise ValueError("alpha must be finite and in [0,1]")
     if x.ndim != 3 or min(x.shape) == 0 or x.shape[-1] != layer.config.model_dim:
@@ -273,7 +296,8 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
     else:
         pk, pv = past
     spec = _Invocation(layer.config, float(alpha), attention_precision,
-                       torch.is_autocast_enabled(x.device.type), torch.get_autocast_dtype(x.device.type))
+                       torch.is_autocast_enabled(x.device.type), torch.get_autocast_dtype(x.device.type),
+                       cast_weights_once, tile_backend)
     z, k, v = _TiledRecurrence.apply(
         x, layer.att_proj.weight, layer.attn_out.weight, layer.ff_proj.weight, layer.ff_out.weight,
         pk, pv, query_positions.clone(), key_positions.clone(), key_valid.clone(), spec,
@@ -292,6 +316,8 @@ class OLMoTiledCache:
     model_generation: int = field(repr=False)
     execution_context: RTExecutionContext
     attention_precision: str
+    cast_weights_once: bool = False
+    tile_backend: str = "eager"
 
     @property
     def sequence_length(self):
@@ -325,14 +351,21 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     unchanged ordinary/cache path.
     """
     def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
-                 ordinary_activation_checkpointing=False, device=None, dtype=None):
+                 ordinary_activation_checkpointing=False, cast_weights_once=False,
+                 tile_backend="eager", device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
         if type(ordinary_activation_checkpointing) is not bool:
             raise TypeError("ordinary_activation_checkpointing must be boolean")
+        if type(cast_weights_once) is not bool:
+            raise TypeError("cast_weights_once must be boolean")
+        if tile_backend not in ("eager", "triton"):
+            raise ValueError("tile_backend must be eager or triton")
         super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
         self.attention_precision = attention_precision
         self.ordinary_activation_checkpointing = ordinary_activation_checkpointing
+        self.cast_weights_once = cast_weights_once
+        self.tile_backend = tile_backend
 
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
@@ -360,6 +393,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                 raise ValueError("Cached model generation changed after a model conversion")
             if past_key_values.execution_context != context or past_key_values.attention_precision != self.attention_precision:
                 raise ValueError("Cached execution context or attention precision differs")
+            if (past_key_values.cast_weights_once != self.cast_weights_once
+                    or past_key_values.tile_backend != self.tile_backend):
+                raise ValueError("Cached RT kernel execution differs")
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
             key_valid=valid, attention_mask=mask, is_causal=causal,
@@ -367,7 +403,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             checkpoint_ordinary=checkpoint_ordinary,
         )
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
-                              versions, generation, context, self.attention_precision) if use_cache else None
+                              versions, generation, context, self.attention_precision,
+                              self.cast_weights_once, self.tile_backend) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
@@ -387,6 +424,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     layer, x, alpha=mode.alpha, past=past, query_positions=positions,
                     key_positions=key_positions, key_valid=key_valid,
                     attention_precision=self.attention_precision,
+                    cast_weights_once=self.cast_weights_once, tile_backend=self.tile_backend,
                 )
             elif checkpoint_ordinary:
                 # Bind this invocation's layer/backend/causality now: a closure

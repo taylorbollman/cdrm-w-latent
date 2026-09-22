@@ -75,12 +75,24 @@ at42.1GiB; combinedK2+NextLat B64 reaches10.4k/s at40.8GiB, B12810.8k/s at58.2Gi
 Use B64 for common development checks, preserving memory headroom with96.4% of
 combined B128 throughput. Peak reserved setup and current postcapture memory
 are separate. Deterministic ordinary Flash/no-autocast-cache settings differ
-from F2 timings. Only RT layer0 is selected. The broader F3 fused RT kernel goal
-is still open; next are brief device profiles and the common resource/FLOP
-ledger to choose that prototype. No job is queued.
-Do not resume completed diagnostics or the deferred full-backbone FBT learning
-comparison. Native tiled backward returns parameter gradients normally, but
-does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.
+from F2 timings. Only RT layer0 is selected.
+F3b's bounded forward prototype is now complete: per-invocation weight-cast
+reuse plus a Triton historical attention tile, both opt-in. Read F3b assessment,
+results, usage, FA4 environment note and resource accounting. Twelve GPU reports
+pass, including 48 frozen tiles, 12 tiny blocks, four native correctness cases
+and four capacity cases; 307 scoped CPU tests pass. Fused actual B8/T512 gradient
+relative L2 versus original BF16 is 0.00354 for RT and 0.01007 for combined;
+same-candidate graph and complete AdamW update comparisons are exact. T512 graph
+RT B128 now reaches26.1kinputtokens/s at42.1GiB and combined B64 10.9k/s at40.8GiB,
+about5.7%/4.4% above reference. Only layer0 is RT. The installed FA4/CuTE wheel
+works with the explicit installed-source launcher selector; RT uses Triton, not
+FA4. Analytic parameter/FLOP cards cover all eight combinations, with broader
+runtime coverage still pending. No job is queued.
+The next critical milestone is backward tile fusion and removal of quadratic
+probability/error intermediates. F3b is the planned review point before that
+substantial rewrite. Preserve the current custom VJP as reference and return
+parameter gradients normally. Do not resume completed diagnostics or deferred
+full-backbone FBT learning. Ordinary SDPA dispatch is shape-dependent.
 Two-GPU correctness remains untested and only one H100 is currently exposed.
 Read the handoff
 for current authorization and evidence. Do not infer long-run
