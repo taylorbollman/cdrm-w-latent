@@ -230,3 +230,53 @@ are `results.md`, `final-comparison.json`, `learning-curves.pdf/png` and
 Review these bounded recovery results before extending exposure or enabling RT,
 NextLat, prefix sampling or noise. The queue and finisher do not authorize or
 schedule those follow-up experiments.
+
+## Endpoint-only diagnostic and optimization audit
+
+The follow-up beta/pass grid is **post-hoc development exploration**, described
+in [its separate protocol](reports/olmo1b-o5b/diagnostic-protocol.md). It requires
+both learning arms to have completed, verifies their shared source/data/exposure,
+loads only the final FBT endpoint, and checks that evaluation changes no weights
+or buffers. It neither constructs an optimizer nor creates another checkpoint.
+Run inside the verified GPU container, with a new output directory:
+
+```bash
+python scripts/olmo_o5b_diagnose.py \
+  --artifacts .runtime/olmo1b-step60000/artifacts \
+  --data .runtime/olmo1b-step60000/o4-data-01/prepared \
+  --preflight .runtime/olmo1b-step60000/o5b-preflight-01 \
+  --runs .runtime/olmo1b-step60000/o5b-pilot-01 \
+  --output-dir .runtime/olmo1b-step60000/o5b-diagnostic-01
+```
+
+It saves `report.json`, `results.md` and `diagnostic.pdf/png`, including every
+pass and original-document records. W&B uses the existing pilot group with a
+separate evaluation run. The 128-window beta sweep and 32-window short-prefix
+pass-count sweep remain separate. Selection from this grid is not a held-out
+confirmation of an improved inference setting.
+
+The pure-stdlib optimization audit can run on the host or in the CPU container:
+
+```bash
+python3 scripts/olmo_o5b_health_report.py \
+  --runs .runtime/olmo1b-step60000/o5b-pilot-01 \
+  --output docs/reports/olmo1b-o5b/optimization-summary.json
+```
+
+It requires completed arms and records finite scalar checks, clipping, gradient
+norms, timing/memory, fusion norm fractions, and measured differences between
+the first 100 feedback-disabled updates. Matching inputs and recipes do not
+imply bitwise-identical BF16 training trajectories.
+
+**Legacy metadata loading:** O5b checkpoints serialize the runtime version as
+PyTorch's `TorchVersion` string subclass. The diagnostic loader uses a scoped
+`torch.serialization.safe_globals([torch.torch_version.TorchVersion])` context
+around `torch.load(..., weights_only=True)`. The checkpoint SHA is verified
+first; the scope is restored afterward. No broad unsafe pickle loader is used.
+The same narrow context is required around the frozen `load_training_checkpoint`
+when a future experiment actually resumes one of these optimizer checkpoints.
+The old queue's bare resume command does not install that context. Do not
+silently alter frozen source hashes to work around it: use an explicitly
+recorded compatible invocation/new lineage. Existing training trajectories and
+checkpoint tensors are unaffected. The observed full-model diagnostic load and
+the separately scoped exact-resume tests should not be conflated.
