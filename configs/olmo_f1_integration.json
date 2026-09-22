@@ -1,0 +1,28 @@
+{
+  "schema": "olmo-f1-configuration-v1",
+  "seed": 20260922,
+  "learning_rate": 0.00001,
+  "vocab_chunk_size": 128,
+  "profile_warmup": 3,
+  "profile_repeats": 3,
+  "cases": [
+    {"name": "ordinary", "resume": true},
+    {"name": "nextlat", "nextlat": true},
+    {"name": "rt", "rt_layers": [0]},
+    {"name": "rt-nextlat", "rt_layers": [0], "nextlat": true},
+    {"name": "fbt", "fbt": true},
+    {"name": "fbt-nextlat", "fbt": true, "nextlat": true},
+    {"name": "rt-fbt", "fbt": true, "rt_layers": [0]},
+    {"name": "rt-fbt-nextlat", "fbt": true, "rt_layers": [0], "nextlat": true, "resume": true},
+    {"name": "all-three-k3", "fbt": true, "rt_layers": [0], "nextlat": true, "passes": 3},
+    {"name": "all-three-fractional", "fbt": true, "rt_layers": [0], "nextlat": true, "alpha": 0.37, "beta": 0.35},
+    {"name": "all-three-two-rt-layers", "fbt": true, "rt_layers": [0, 15], "nextlat": true},
+    {"name": "all-three-transition", "fbt": true, "rt_layers": [0], "nextlat": true, "transition": true},
+    {"name": "ordinary-t128", "length": 128, "updates": 2},
+    {"name": "all-three-t128", "fbt": true, "rt_layers": [0], "nextlat": true, "length": 128, "updates": 2},
+    {"name": "ordinary-t512-profile", "batch_size": 1, "length": 512, "updates": 1, "profile": true},
+    {"name": "rt-t512-profile", "rt_layers": [0], "batch_size": 1, "length": 512, "updates": 1, "profile": true},
+    {"name": "fbt-t512-profile", "fbt": true, "batch_size": 1, "length": 512, "updates": 1, "profile": true},
+    {"name": "all-three-t512-profile", "fbt": true, "rt_layers": [0], "nextlat": true, "batch_size": 1, "length": 512, "updates": 1, "profile": true}
+  ]
+}

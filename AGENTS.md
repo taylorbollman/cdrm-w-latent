@@ -33,7 +33,7 @@ W&B tracking.
 
 For pretrained OLMo / RT / FBT / NextLat work, first read
 `docs/fbt-rt-nextlat-handoff.md`, then
-`docs/fbt-rt-nextlat-research-plan-v3.md`. Original OLMo-1B at step 60,000
+`docs/fbt-rt-nextlat-research-plan-v4.md`. Original OLMo-1B at step 60,000
 (approximately 252B tokens) is the selected primary model; its native checkpoint,
 source candidate and tokenizer pins are in the handoff and selection audit.
 O1 native ordinary fidelity/sequential RT and O2 native tiled execution/backward
@@ -53,9 +53,20 @@ ordinary additional-training control. O5e is complete: shared-source ordinary
 continuation on the exact O5c mixed plan beats both fusion-only endpoints in
 code/WikiText NLL, with a140-fold trainable-capacity qualification. Read its
 assessment/results and current handoff. All four full checkpoints are retained;
-no GPU job or further learning is queued. Do not resume completed diagnostics
-or infer authorization for the proposed full-backbone FBT comparison.
-Two-GPU correctness remains untested. Read the handoff
+no GPU job or further learning is queued. The user has reset the next priority
+to functionality, bounded numerical health, integration, parameter/throughput/
+FLOP accounting, Q/K-normalization assessment, native tiled-RT/Flash efficiency
+and multi-GPU execution before quality comparisons. The user approved V4,
+including early profiling. F1 is complete:18actual-checkpoint cases, two exact
+BF16 recovery checks, short online cache parity and244scoped CPU tests pass.
+Read its assessment/results and handoff. Early B1/T512 profiling identifies eager
+RT scheduling/replay/launch overhead as a leading bottleneck; large clipped
+startup gradients remain a bounded F2 diagnostic lead. No further job is queued.
+Do not resume completed diagnostics or the deferred full-backbone FBT learning
+comparison. Native tiled backward returns parameter gradients normally, but
+does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.
+Two-GPU correctness remains untested and only one H100 is currently exposed.
+Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical
 reference evidence; do not resume its superseded next milestone by default.
