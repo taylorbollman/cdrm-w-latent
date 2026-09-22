@@ -1,6 +1,6 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-21. **Read this first after compaction or interruption.**
+Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
@@ -45,82 +45,55 @@ profiling executed 42 zero-LR updates. No adapted research checkpoint or learnin
 run was awaiting resumption at the O3 close. The user authorizes direct PR closure/merges; this
 does not expand research/training scope.
 
-**O4 is now active** on `feat/olmo1b-o4-learning-pilot`, based on O3 merge
-`29fee0dae0f551ef75a29de1d1269e3a69ec8055`. Implementation commit
-`e294ce6735dd7f1a4d8be08e464d4b8336892db6`,
-[draft PR #7](https://github.com/taylorbollman/cdrm-w-latent/pull/7); keep draft
-until the learning comparison has completed and been reviewed. Read the
-[O4 protocol](reports/olmo1b-o4/protocol.md). Scope: four matched code-continuation
-arms, ordinary / ordinary+NextLat / RT / RT+NextLat; original checkpoint, RT
-layer0 only, FBT off. Approximately20–22M valid input tokens/arm:100-update
-alpha-zero LR warmup, >=10M-token/200-update alpha ramp, then at least equal
-actual alpha-one exposure. Source-pinned CodeSearchNet Python and WikiText
-development retention; test splits reserved. No100M+ or FBT run is automatically
-queued. The optional domain question offered code or math; preparation proceeds
-with the stated Python-code default in the absence of contrary steering.
+**O4 is complete and reviewed** on `feat/olmo1b-o4-learning-pilot`, based on
+O3 merge `29fee0dae0f551ef75a29de1d1269e3a69ec8055`; [PR #7](https://github.com/taylorbollman/cdrm-w-latent/pull/7).
+Read [results](reports/olmo1b-o4/results.md), [assessment](reports/olmo1b-o4/assessment.md)
+and [protocol](reports/olmo1b-o4/protocol.md). All four arms completed 2,634
+updates / 20,855,799 valid input tokens (20,771,511 CE targets), original
+checkpoint, batch32, T512, LR1e-5, BF16 mixed, layer0 RT only. Alpha warmup
+ends100, ramp ends1367, final2634. NextLat coefficients fixed1/1; FBT off.
 
-New modules: `lm_data.py`, `lm_evaluation.py`, `lm_schedule.py`; drivers
-`scripts/olmo_lm_prepare_data.py`, `olmo_o4_preflight.py`, `olmo_o4_train.py`.
-Prepared data: `.runtime/olmo1b-step60000/o4-data-01/prepared/manifest.json`.
-25,000,031 unique train CE targets,101,591 windows; no cycling. Native EOS only
-at document ends; stride511/T512 preserves CE targets and omits one KL triple
-per internal window cut. Rows/windows have independent attention context.
-Full preparation/loader source and raw/token/prepared byte hashes are recorded.
+Final 512-window code/retention NLL:
+- Original ordinary: 1.787902 / 3.040993.
+- Ordinary: 1.699360 / 3.173815.
+- Ordinary+NextLat: 1.792776 / 3.390668.
+- RT: 1.706351 / 3.248923.
+- RT+NextLat: 1.799070 / 3.485577.
 
-Runtime destinations (update with actual status before resuming):
-`.runtime/olmo1b-step60000/o4-preflight-01/` for baseline/capacity/configuration;
-`.runtime/olmo1b-step60000/o4-pilot-01/` for arm reports/checkpoints. All arm
-training must use the same frozen preflight configuration/source hashes and
-prepared data; do not silently change code mid-comparison. Each saved optimizer
-checkpoint is uploaded and verified before older local copies are removed.
-Use `env -u GOOGLE_APPLICATION_CREDENTIALS` inside the container for valid GCS
-ADC. Never treat W&B success or a local log alone as checkpoint retention.
+All losses/gradients finite, all updates clipped at1; no restarts. NextLat
+hurts code before RT turns on (update50 alpha0); initial KL~11.49 versus
+CE~1.738 suggests auxiliary adaptation pressure, not an identified numerical
+bug. RT mostly recovers ordinary code quality but has worse retention.
+Single-seed, short recovery evidence; no architecture efficacy conclusion.
 
-O4 preflight passed, W&B
-[mnpa95sr](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/mnpa95sr).
-B32 full-length real-data RT+NextLat profile:2.249s/update,45.99GiB allocated.
-The exact frozen schedule is2,634 updates/20,855,799 input tokens per arm;
-warmup ends100, ramp ends1367, final2634. Ordinary initial512-window code
-NLL1.787902/accuracy62.579%; WikiText development NLL3.040993/accuracy42.141%.
-RT-alpha0 agrees closely; immediatealpha1 codeNLL3.545859/accuracy37.147%,
-retentionNLL5.032289/accuracy23.576%, motivating the gradual conversion.
+Queue `.runtime/olmo1b-step60000/o4-pilot-01/queue.json` and `finish-status.json`
+are **completed**, finished 2026-09-22T03:12Z. No O4 job remains to resume.
+W&B IDs: ordinary `4rhi7s7i`, ordinary-nextlat `tsgun4ax`, RT `uvfoj6id`,
+RT-nextlat `4cpi8hz0`; project `taylorbollman/pretrained-fbt-rt-nextlat`.
+All final `update-002634.pt` optimizer checkpoints retained at
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/<arm>/`.
+See result report for hashes/generations. Initial prepared-data/source archive
+and final evidence archive have verified receipts in the report directory.
+Do not trust the historical nohup PID file or relaunch the completed queue.
 
-The queue is running in container via unified-exec session74807; inspect
-`.runtime/olmo1b-step60000/o4-pilot-01/queue.json` and arm reports for **current**
-status. Order:ordinary,ordinary-nextlat,rt,rt-nextlat. Initial host `nohup`
-attempt did not start a job (empty log/no arm); do not trust its stale PID file.
-Current queue log:`.runtime/olmo1b-step60000/o4-pilot-01-queue.log`.
-Cloud prefix:`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/`.
-Configuration SHA256:`6b7e9168f2aa1afc495d28cfdd84006e5fa3409f66fcc70c17c0fa83c8ff2e20`.
-It records a pre-training recovery-only source amendment; see protocol.
-No core training/model/data source changes are permitted between matched arms
-without explicitly stopping/revising this lineage. Analysis/report-only new
-files can be developed independently. New implementation tests:397 combined
-O1–O4 core tests plus22 runner helper,12 retention and35 report tests:466 distinct
-passing tests, recorded in [test-results](reports/olmo1b-o4/test-results.txt).
+Prepared data remains `.runtime/olmo1b-step60000/o4-data-01/prepared/`;
+25,000,031 unique train CE targets, 101,591 windows, one document/window,
+stride511/T512, EOS only at true ends. Official tests prepared but untouched.
+Preflight/config `.runtime/olmo1b-step60000/o4-preflight-01/`;
+configuration SHA256 `6b7e9168f2aa1afc495d28cfdd84006e5fa3409f66fcc70c17c0fa83c8ff2e20`.
+All arms used identical frozen sources; a documented pre-training amendment
+only added failed-upload resume retry. Never silently change this lineage.
+466 distinct passing implementation tests; source inventory and retention
+receipts, not current mutable code, define the completed experiment.
+For GCS use `env -u GOOGLE_APPLICATION_CREDENTIALS` in container.
 
-Initial source/data/preflight evidence has been verified in GCS under the above
-prefix's `initial/` directory, including68,381,709-byte evidence archive. Receipt:
-[initial-storage-receipt.json](reports/olmo1b-o4/initial-storage-receipt.json).
-The ordinary control's update100 full checkpoint is also verified remotely
-(`ordinary/update-000100.pt`, SHA256
-`0cc6f230144dd9c1eb0d8accd076fa08179f7f9fc4886d8023912702807a23b4`).
-Its live W&B run is
-[4rhi7s7i](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/4rhi7s7i).
-As of22:17UTC it had passed7.5M tokens and was healthy; use actual reports for
-newer status. Other arms are queued, not claimed complete.
-
-Automatic CPU finisher is running in unified-exec session3634, log
-`.runtime/olmo1b-step60000/o4-finish-01.log`; state is
-`o4-pilot-01/finish-status.json`. It waits for all four completed arms, then runs
-the strict analysis reporter to create `docs/reports/olmo1b-o4/results.md`,
-`final-comparison.json`, `learning-curves.pdf/png`, and verifies a final GCS
-evidence upload (`o4-final-retention-01/`, cloud `final/`). It stops without
-claiming completion if the queue stops/fails. If the VM shuts down, resume the
-GPU queue and relaunch this CPU finisher; no external scheduler was created.
-The finisher does not commit reports or merge PRs: after completion, inspect
-results/curves/receipts, update this handoff and PR description, commit evidence
-and close the draft PR. See [O4 usage](olmo1b-o4-usage.md) for stop/resume/report.
+The user asked to assess and continue on 2026-09-22. Proceed with **O5a bounded
+FBT reference/correctness implementation** and short actual-checkpoint checks.
+No O4 extension or long FBT learning run is queued. O5a establishes finite
+shared-stack passes and exact online semantics with independent controls;
+review before choosing the first FBT learning recipe. The adverse O4 NextLat
+result motivates a later auxiliary warm-start/ramp diagnosis, not silently
+changing its coefficients during the FBT correctness milestone.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
