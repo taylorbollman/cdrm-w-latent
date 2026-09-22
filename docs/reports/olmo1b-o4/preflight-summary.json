@@ -1,0 +1,406 @@
+{
+  "baseline": {
+    "ordinary": {
+      "dev": {
+        "batches": 64,
+        "ce_count": 127850,
+        "ce_sum": 228583.21775990888,
+        "documents": 512,
+        "input_tokens": 128362,
+        "mean_nll": 1.7879015859202885,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "next_token_accuracy": 0.6257880328509973,
+        "next_token_correct": 80007,
+        "perplexity": 5.976897292581691,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      },
+      "retention_dev": {
+        "batches": 64,
+        "ce_count": 246910,
+        "ce_sum": 750851.6006952892,
+        "documents": 512,
+        "input_tokens": 247422,
+        "mean_nll": 3.040993077215541,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": []
+        },
+        "next_token_accuracy": 0.42140861042485117,
+        "next_token_correct": 104050,
+        "perplexity": 20.926014067648126,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      }
+    },
+    "rt_alpha0": {
+      "dev": {
+        "batches": 64,
+        "ce_count": 127850,
+        "ce_sum": 228583.24578027608,
+        "documents": 512,
+        "input_tokens": 128362,
+        "mean_nll": 1.7879018050862423,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "next_token_accuracy": 0.6257411028549081,
+        "next_token_correct": 80001,
+        "perplexity": 5.976898602514231,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      },
+      "retention_dev": {
+        "batches": 64,
+        "ce_count": 246910,
+        "ce_sum": 750857.233424803,
+        "documents": 512,
+        "input_tokens": 247422,
+        "mean_nll": 3.0410158901008586,
+        "mode": {
+          "alpha": 0.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "next_token_accuracy": 0.4214491110121097,
+        "next_token_correct": 104060,
+        "perplexity": 20.92649145585249,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      }
+    },
+    "rt_alpha1": {
+      "dev": {
+        "batches": 64,
+        "ce_count": 127850,
+        "ce_sum": 453338.0739805974,
+        "documents": 512,
+        "input_tokens": 128362,
+        "mean_nll": 3.5458590064966553,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "next_token_accuracy": 0.37146656237778647,
+        "next_token_correct": 47492,
+        "perplexity": 34.66945384084829,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      },
+      "retention_dev": {
+        "batches": 64,
+        "ce_count": 246910,
+        "ce_sum": 1242522.5297682902,
+        "documents": 512,
+        "input_tokens": 247422,
+        "mean_nll": 5.032289213755175,
+        "mode": {
+          "alpha": 1.0,
+          "selected_layers": [
+            0
+          ]
+        },
+        "next_token_accuracy": 0.23575796849054312,
+        "next_token_correct": 58211,
+        "perplexity": 153.28351008055014,
+        "positions_per_chunk": 128,
+        "precision": "bf16_mixed",
+        "schema": "olmo-lm-evaluation-v1"
+      }
+    }
+  },
+  "checkpoint": {
+    "hash_basis": "Hub LFS SHA256",
+    "path": "native/model.safetensors",
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+  },
+  "compile": false,
+  "cuda_graphs": false,
+  "data_manifest_sha256": "cbedf88a01c481b0aa7bd0ebd393e2078e569996214073e5406b3dab18f3cc85",
+  "finished_utc": "2026-09-21T22:03:47.096630+00:00",
+  "frozen_configuration_sha256": "6b7e9168f2aa1afc495d28cfdd84006e5fa3409f66fcc70c17c0fa83c8ff2e20",
+  "ordinary_backend": "sdpa",
+  "precision": "bf16_mixed",
+  "profile": [
+    {
+      "attention_precision": "mixed",
+      "baseline_allocated_gib": 14.142448425292969,
+      "batch_size": 16,
+      "cuda_event_seconds": [
+        1.901032958984375,
+        1.881919189453125,
+        1.898273193359375
+      ],
+      "incremental_peak_allocated_gib": 17.211984157562256,
+      "last_step": {
+        "counters": {
+          "ce_positions": 40880,
+          "documents": 80,
+          "input_tokens": 40960,
+          "kl_triples": 40800,
+          "latent_pairs": 40880,
+          "microbatches": 5,
+          "optimizer_updates": 5
+        },
+        "counts": {
+          "ce": 8176,
+          "kl": 8160,
+          "latent": 8176
+        },
+        "gradient_norm_before_clip": 122.93174743652344,
+        "loss_means": {
+          "ce": 4.008144072590508,
+          "kl": 7.408903952205883,
+          "latent": 0.9037850038412732
+        },
+        "loss_sums": {
+          "ce": 32770.5859375,
+          "kl": 60456.65625,
+          "latent": 7389.34619140625
+        },
+        "lr_next": [
+          0.0,
+          0.0
+        ],
+        "lr_used": [
+          0.0,
+          0.0
+        ],
+        "max_grad_norm": 1.0,
+        "objective": 12.320833028637665,
+        "objective_weights": {
+          "ce": 1.0,
+          "kl": 1.0,
+          "latent": 1.0
+        },
+        "optimizer_state_bytes_by_device": {
+          "cpu": 276,
+          "cuda:0": 10075930624
+        },
+        "schema": "olmo-lm-optimizer-step-v1",
+        "update_completed": true
+      },
+      "length": 512,
+      "median_cuda_seconds": 1.898273193359375,
+      "median_wall_seconds": 1.8983028260008723,
+      "mode": {
+        "alpha": 1.0,
+        "selected_layers": [
+          0
+        ]
+      },
+      "nextlat": true,
+      "optimizer_moments_finite": true,
+      "ordinary_backend": "sdpa",
+      "passed": true,
+      "peak_allocated_gib": 31.354432582855225,
+      "peak_reserved_gib": 33.00390625,
+      "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+      "precision": "bf16_mixed",
+      "supervised_tokens_per_second": 4307.0051247957435,
+      "timed_iterations": 3,
+      "valid_input_tokens_per_second": 4315.4337062532695,
+      "wall_seconds": [
+        1.9010913649999566,
+        1.8820298970003932,
+        1.8983028260008723
+      ],
+      "warmup_iterations": 2,
+      "weights_unchanged": true
+    },
+    {
+      "attention_precision": "mixed",
+      "baseline_allocated_gib": 14.140625,
+      "batch_size": 32,
+      "cuda_event_seconds": [
+        2.27955126953125,
+        2.2392763671875,
+        2.248855712890625
+      ],
+      "incremental_peak_allocated_gib": 31.845216274261475,
+      "last_step": {
+        "counters": {
+          "ce_positions": 81760,
+          "documents": 160,
+          "input_tokens": 81920,
+          "kl_triples": 81600,
+          "latent_pairs": 81760,
+          "microbatches": 5,
+          "optimizer_updates": 5
+        },
+        "counts": {
+          "ce": 16352,
+          "kl": 16320,
+          "latent": 16352
+        },
+        "gradient_norm_before_clip": 118.32357788085938,
+        "loss_means": {
+          "ce": 3.848165792028498,
+          "kl": 7.4897216796875,
+          "latent": 0.9066237955410653
+        },
+        "loss_sums": {
+          "ce": 62925.20703125,
+          "kl": 122232.2578125,
+          "latent": 14825.1123046875
+        },
+        "lr_next": [
+          0.0,
+          0.0
+        ],
+        "lr_used": [
+          0.0,
+          0.0
+        ],
+        "max_grad_norm": 1.0,
+        "objective": 12.244511267257064,
+        "objective_weights": {
+          "ce": 1.0,
+          "kl": 1.0,
+          "latent": 1.0
+        },
+        "optimizer_state_bytes_by_device": {
+          "cpu": 276,
+          "cuda:0": 10075930624
+        },
+        "schema": "olmo-lm-optimizer-step-v1",
+        "update_completed": true
+      },
+      "length": 512,
+      "median_cuda_seconds": 2.248855712890625,
+      "median_wall_seconds": 2.2488842780003324,
+      "mode": {
+        "alpha": 1.0,
+        "selected_layers": [
+          0
+        ]
+      },
+      "nextlat": true,
+      "optimizer_moments_finite": true,
+      "ordinary_backend": "sdpa",
+      "passed": true,
+      "peak_allocated_gib": 45.985841274261475,
+      "peak_reserved_gib": 47.08984375,
+      "peak_scope": "complete step including norm clipping and AdamW, excluding subsequent digest/finite-moment checks",
+      "precision": "bf16_mixed",
+      "supervised_tokens_per_second": 7271.16115309406,
+      "timed_iterations": 3,
+      "valid_input_tokens_per_second": 7285.390431280154,
+      "wall_seconds": [
+        2.279609564000566,
+        2.239305727998726,
+        2.2488842780003324
+      ],
+      "warmup_iterations": 2,
+      "weights_unchanged": true
+    }
+  ],
+  "provenance_amendment": {
+    "changed_file": "scripts/olmo_o4_train.py",
+    "new_sha256": "a1cc99b16163e6f0f0942508635e4e0a82a093ff9f818e78deda9559284c3341",
+    "old_sha256": "20ea5ca2a99b2d5c2de91bca123c061cb4590e6851602adb2680c00b084c889f",
+    "previous_source_snapshot": ".runtime/olmo1b-step60000/o4-preflight-01/olmo_o4_train_before_retention_retry.py",
+    "reason": "Before any learning arm, add an explicit cloud-retention retry when resuming a nonfinal checkpoint whose upload failed. No numerical, data, optimizer, scheduling, evaluation or profiling computation changed."
+  },
+  "raw_report_sha256": "0e68c52eb05cbb93c22a85062f2188c41d941395edeb9fc1a46e1cfe783643fd",
+  "rt_attention_precision": "mixed",
+  "runtime": {
+    "cuda": "13.3",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+    "torch": "2.13.0a0+8145d630e8.nv26.06"
+  },
+  "schedule": {
+    "actual_ramp_tokens": 10002783,
+    "actual_ramp_updates": 1267,
+    "alpha1_tokens": 10047535,
+    "alpha1_updates": 1267,
+    "alpha_rule": "before_update_min_actual_ramp_token_and_update_fractions",
+    "available_windows": 101591,
+    "batch_size": 32,
+    "phase_input_tokens": {
+      "alpha1": 10047535,
+      "ramp": 10002783,
+      "warmup": 805481
+    },
+    "phase_updates": {
+      "alpha1": 1267,
+      "ramp": 1267,
+      "warmup": 100
+    },
+    "ramp_end_tokens": 10808264,
+    "ramp_end_update": 1367,
+    "ramp_start_tokens": 805481,
+    "schedule_sha256": "9c2b8343a1c6c8545051b15b033eb3c7f539386a64be13b5e6aa13ccf79a746c",
+    "schema": "olmo-lm-exposure-schedule-v1",
+    "target_budget": {
+      "ramp_min_tokens": 10000000,
+      "ramp_min_updates": 200,
+      "warmup_updates": 100
+    },
+    "total_tokens": 20855799,
+    "total_updates": 2634,
+    "unused_windows": 17303,
+    "used_window_lengths_sha256": "1fff26b6349beb797001b09c3671d141530e485a643168d818520f4383bd7111",
+    "used_windows": 84288,
+    "warmup_updates": 100,
+    "window_lengths_sha256": "ef59a7d6d0d406cb3178df38eda83e38a2d253c214b18093e427d1086ba6fffc"
+  },
+  "schema": "olmo-o4-preflight-summary-v1",
+  "selected_batch_size": 32,
+  "source_hashes": {
+    "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+    "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+    "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+    "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+    "cdrm/pretrained/lm_training.py": "09a7b33eb6928486c8c1d9f52bd2ffc4e0f88fe01baa42527ba56742bfce6a69",
+    "cdrm/pretrained/nextlat.py": "04bf4e4cd9558ad5086170fab8577a3164a8b0a675fc38c9cb33da4e85dbfa3f",
+    "cdrm/pretrained/olmo.py": "53f1f812007d0fa5c90d93a026ff80fc32c138632d08dfcc92689a51c3db9667",
+    "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+    "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+    "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+    "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+    "cdrm/pretrained/olmo_tiled.py": "f9774c8b48d35f5ad4e8371ede70148e8c033d4966d2e997974f0129d041e03c",
+    "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+    "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+    "scripts/experiment_tracking.py": "d0d3c524ba1a152ab2f0baa5ac966f661e9a249cc399dce51e9d52a5ea46d6cc",
+    "scripts/olmo_lm_common.py": "5edfc5fd562b3b6f83ac7bf062ef9d35c914ee0702b6a7dad15361726374b49d",
+    "scripts/olmo_lm_profile.py": "b44bb9daeb4d4779aa605414008790742767529aecc8a8282afa65a023e69b3e",
+    "scripts/olmo_o4_common.py": "6f021559264fcf167e4f15be9b35201f73dc63511bbbf5d563626dd8b3ac211a",
+    "scripts/olmo_o4_preflight.py": "e4142f2699dafe859427e8e676aa5e651a2a1009aebe54f357c0499601a049d1",
+    "scripts/olmo_o4_train.py": "20ea5ca2a99b2d5c2de91bca123c061cb4590e6851602adb2680c00b084c889f",
+    "scripts/olmo_rt_validate.py": "29f79e02564f442eaf17230873493d7412361596b4482f33307c5c180dd012d7",
+    "scripts/olmo_validation.py": "7d1d945201cda0f1bccbd2d6f190f0b9ef5126c2abbf88b9d6b117bc4504bbae"
+  },
+  "started_utc": "2026-09-21T21:59:53.064202+00:00",
+  "status": "passed",
+  "wandb": {
+    "enabled": true,
+    "entity": "taylorbollman",
+    "group": "olmo1b-o4-code-pilot",
+    "mode": "online",
+    "name": "olmo-1b-o4-preflight",
+    "project": "pretrained-fbt-rt-nextlat",
+    "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+    "run_id": "mnpa95sr",
+    "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/mnpa95sr",
+    "status": "synced",
+    "system_stats": false
+  }
+}

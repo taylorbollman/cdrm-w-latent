@@ -1,6 +1,6 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-21. **Read this first after compaction or interruption.**
+Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
@@ -37,13 +37,63 @@ O3 is complete on `feat/olmo1b-nextlat-platform`, based on O2 merge
 and [protocol](reports/olmo1b-o3/protocol.md). The scoped CPU suite passes
 **326 tests**; actual-checkpoint FP32 objective/gradient checks and exact full
 optimizer recovery pass. Bounded BF16 complete-step profiles are recorded below.
-Pause for O3 review before O4 comparative learning or FBT. One H100 is available;
+The user reviewed O3 and authorized continuing to O4. One H100 is available;
 two-GPU correctness requires later hardware. Native checkpoint files and research
 starting weights are unchanged. Four physical optimizer updates were executed
 on disposable diagnostic state (three logical updates, including one replay);
 profiling executed 42 zero-LR updates. No adapted research checkpoint or learning
-run is awaiting resumption. The user authorizes direct PR closure/merges; this
+run was awaiting resumption at the O3 close. The user authorizes direct PR closure/merges; this
 does not expand research/training scope.
+
+**O4 is complete and reviewed** on `feat/olmo1b-o4-learning-pilot`, based on
+O3 merge `29fee0dae0f551ef75a29de1d1269e3a69ec8055`; [PR #7](https://github.com/taylorbollman/cdrm-w-latent/pull/7).
+Read [results](reports/olmo1b-o4/results.md), [assessment](reports/olmo1b-o4/assessment.md)
+and [protocol](reports/olmo1b-o4/protocol.md). All four arms completed 2,634
+updates / 20,855,799 valid input tokens (20,771,511 CE targets), original
+checkpoint, batch32, T512, LR1e-5, BF16 mixed, layer0 RT only. Alpha warmup
+ends100, ramp ends1367, final2634. NextLat coefficients fixed1/1; FBT off.
+
+Final 512-window code/retention NLL:
+- Original ordinary: 1.787902 / 3.040993.
+- Ordinary: 1.699360 / 3.173815.
+- Ordinary+NextLat: 1.792776 / 3.390668.
+- RT: 1.706351 / 3.248923.
+- RT+NextLat: 1.799070 / 3.485577.
+
+All losses/gradients finite, all updates clipped at1; no restarts. NextLat
+hurts code before RT turns on (update50 alpha0); initial KL~11.49 versus
+CE~1.738 suggests auxiliary adaptation pressure, not an identified numerical
+bug. RT mostly recovers ordinary code quality but has worse retention.
+Single-seed, short recovery evidence; no architecture efficacy conclusion.
+
+Queue `.runtime/olmo1b-step60000/o4-pilot-01/queue.json` and `finish-status.json`
+are **completed**, finished 2026-09-22T03:12Z. No O4 job remains to resume.
+W&B IDs: ordinary `4rhi7s7i`, ordinary-nextlat `tsgun4ax`, RT `uvfoj6id`,
+RT-nextlat `4cpi8hz0`; project `taylorbollman/pretrained-fbt-rt-nextlat`.
+All final `update-002634.pt` optimizer checkpoints retained at
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/<arm>/`.
+See result report for hashes/generations. Initial prepared-data/source archive
+and final evidence archive have verified receipts in the report directory.
+Do not trust the historical nohup PID file or relaunch the completed queue.
+
+Prepared data remains `.runtime/olmo1b-step60000/o4-data-01/prepared/`;
+25,000,031 unique train CE targets, 101,591 windows, one document/window,
+stride511/T512, EOS only at true ends. Official tests prepared but untouched.
+Preflight/config `.runtime/olmo1b-step60000/o4-preflight-01/`;
+configuration SHA256 `6b7e9168f2aa1afc495d28cfdd84006e5fa3409f66fcc70c17c0fa83c8ff2e20`.
+All arms used identical frozen sources; a documented pre-training amendment
+only added failed-upload resume retry. Never silently change this lineage.
+466 distinct passing implementation tests; source inventory and retention
+receipts, not current mutable code, define the completed experiment.
+For GCS use `env -u GOOGLE_APPLICATION_CREDENTIALS` in container.
+
+The user asked to assess and continue on 2026-09-22. Proceed with **O5a bounded
+FBT reference/correctness implementation** and short actual-checkpoint checks.
+No O4 extension or long FBT learning run is queued. O5a establishes finite
+shared-stack passes and exact online semantics with independent controls;
+review before choosing the first FBT learning recipe. The adverse O4 NextLat
+result motivates a later auxiliary warm-start/ramp diagnosis, not silently
+changing its coefficients during the FBT correctness milestone.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;

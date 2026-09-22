@@ -39,7 +39,10 @@ source candidate and tokenizer pins are in the handoff and selection audit.
 O1 native ordinary fidelity/sequential RT and O2 native tiled execution/backward
 are complete, with bounded GPU evidence and a documented raw-input roundoff
 qualification. O3 language-model NextLat, optimizer/save-resume and bounded
-single-H100 profiling are complete; review before O4 comparative learning.
+single-H100 profiling are complete. O4
+matched Python continuation is complete; read its results and assessment. The
+user asked to assess and continue: O5a bounded FBT correctness is next. Read
+the current handoff before starting, resuming or extending any run.
 Two-GPU correctness remains untested. Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical
