@@ -133,6 +133,20 @@ arm also records its capture backward. A separate forward/loss/backward timing
 does not advance the optimizer. Full-step measurements include validated input
 copies, clipping, AdamW and scheduling; the region excludes these operations.
 These short timings give directional measurements and remain separately labeled.
+The raw capture_seconds field measures the entire plan.capture call: setup,
+backward warmup, capture, synchronization and validation. In correctness runs
+it also includes initial gradient discovery when not already initialized.
+Interpret it as setup/warmup + capture time, not the duration of the CUDA graph
+capture context alone. This preparation time is outside the timed updates.
+For memory, capture_memory.allocated_gib and capture_memory.reserved_gib are
+current totals immediately after setup: postcapture for the graph arm and
+after warmup for the eager arm. The corresponding peak_ fields are high-water
+marks through setup/capture; top-level row peak_ fields also include timed
+updates and the separate region timing. Warmup allocator cache can be released
+on graph entry, leaving current reserved memory well below its earlier peak.
+Peak reserved memory is therefore not the continuing graph-pool footprint.
+These totals include model and optimizer memory; they do not isolate the graph's
+private pool. Keep current allocated/reserved and both sets of peaks distinct.
 
 After results and assessment are complete, retain all successful and explicitly
 failed diagnostics together. For example, inside the container:

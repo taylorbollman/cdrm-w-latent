@@ -53,3 +53,11 @@ tests/test_olmo_f3_retain.py::test_transport_is_create_only_f3_scoped_and_rechec
 
 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
 247 passed, 10 warnings in 8.08s
+
+Independent reporter suite (CPU container): tests/test_olmo_f3_report.py
+20 passed in 2.39s. Total distinct scoped tests: 267.
+Reporter labeling follow-up: same 20 tests passed in 2.31s; no additional distinct tests.
+Final reporter memory-scope follow-up: same 20 tests passed in 2.36s; total remains 267.
+Reporter execution-count correction: same 20 tests passed in 2.35s; total remains 267.
+Final 13-run reports regenerated: 114 physical optimizer updates comprise 75 eager and 39 graph executions;
+comparison-arm totals are separately 57 eager-arm and 57 graph-arm updates, including eager graph-arm preparation.

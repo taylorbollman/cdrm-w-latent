@@ -11,16 +11,59 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
-**F3 is authorized and in progress (2026-09-22).** Branch
-`feat/olmo1b-f3-combined-cuda-graphs`, base F2 merge `ffe7df3`.
-Read [F3 protocol](reports/olmo1b-f3/protocol.md) and
-[usage](olmo1b-f3-usage.md). The new static-layout path reuses native RT,
-ordinary checkpointing, fusion and selected-position CE/NextLat math. It
-validates fixed masks/documents/positions outside capture and permits changing
-token values and in-place optimizer updates. CUDA graphs capture forward,
-loss and backward; clipping/AdamW/scheduler stay outside. CPU checks pass;
-bounded actual-checkpoint capture/update checks and physical-batch measurements
-are the current work. No long learning run is authorized or queued.
+**F3 CUDA-graph integration is complete and assessed (2026-09-22).** Read
+[assessment](reports/olmo1b-f3/assessment.md), [results](reports/olmo1b-f3/results.md),
+[protocol](reports/olmo1b-f3/protocol.md) and [usage](olmo1b-f3-usage.md).
+The static-layout path reuses native RT, ordinary checkpointing, fusion and
+canonical selected-position CE/NextLat math. It validates fixed masks/documents/
+positions outside capture and accepts new tokens and in-place weight updates.
+Graphs capture forward/loss/backward; clipping/AdamW/scheduler stay outside.
+**No GPU job or learning run is queued.** This closes the graph slice, not the
+broader F3 native RT fused-kernel goal.
+
+F3 durable execution record:
+
+- Branch `feat/olmo1b-f3-combined-cuda-graphs`, base F2 merge `ffe7df3`, frozen
+  runtime/protocol `b402d91`; [PR15](https://github.com/taylorbollman/cdrm-w-latent/pull/15).
+  267 distinct scoped CPU tests pass. All 13 GPU reports have identical source
+  inventories and exact run-local snapshots matching the frozen runtime.
+- Seven correctness cases pass: RT/combined K2 B1/T32 checkpointing off/on,
+  combined K3 B1/T32 on, and RT/combined B8/T512 on. Original/changed tokens,
+  gradient overwrite and changed-weight losses/gradients match bitwise.
+  Three eager versus three graph AdamW updates in each case give exact model,
+  moments, scheduler, counters and metrics: 42 physical updates in total.
+- Six paired capacity cases pass: RT and combined K2 B32/64/128 at T512 with
+  ordinary checkpointing. Three eager preparation and three timed updates per
+  arm add 72 physical updates. Across correctness/capacity: 114 total, with
+  75 executed eagerly and 39 by graph replay; 57 belong to each designated arm.
+  Warmup/capture/region-only backwards do not advance optimizer counters.
+- Graph RT B128: 24,684 input tokens/s, 42.10 GiB peak allocated, 1.36x matched
+  eager speedup. Combined B64: 10,409/s, 40.84 GiB, 1.33x; combined B128:
+  10,801/s, 58.20 GiB, 1.18x. B64 retains 96.4% of combined B128 throughput;
+  use B64 as the common development default, B128 as a measured capacity option.
+- Combined B128 reserved setup peak is 77.95 GiB, current postcapture reserved
+  64.85 GiB; B64 values 64.27/43.33 GiB. Do not confuse these with graph-private
+  allocation. Installed PyTorch already clears unused cache before capture.
+- Runtime: one H100 80GB; BF16 autocast, FP32 params/grads/Adam, TF32 off,
+  deterministic Flash in ordinary layers, autocast weight cache disabled.
+  F2 timings used different execution settings. RT selects only layer0; its
+  native dyadic/custom-VJP math is captured, not replaced with Flash/CuTE.
+  No Q/K normalization change. Large-batch finite checks are not all-gradient
+  parity evidence at those shapes. All-layer RT/distributed/graph resume remain
+  untested. The standard checkpoint boundary needs plan disposal/cleared grads.
+- Outputs: `.runtime/olmo1b-step60000/f3-*-01/` and sibling logs; explicit list
+  in `f3-final-inputs.json`. Capacity queue session54878 exited0; last run
+  finished 2026-09-22T17:41:46UTC. W&B links are in the results. No weights from
+  disposable updates were archived; use the retained original native checkpoint.
+- Small evidence retained under
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3-graph-training/`;
+  [receipt](reports/olmo1b-f3/storage-receipt.json) pins objects/hashes/generations.
+
+Next review milestone: brief device profiles at useful batches plus the common
+parameter/throughput/memory/FLOP ledger. Choose the bounded native RT fused-tile
+prototype from measured bottlenecks. Continue genuine two-GPU checks when a
+second GPU is available; there is only one here. Do not launch long learning
+comparisons or resume completed numerical campaigns by default.
 
 Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
 the O5e recommendation below to run another joint-backbone FBT learning comparison.
@@ -29,8 +72,8 @@ the O5e recommendation below to run another joint-backbone FBT learning comparis
 and [usage](olmo1b-f2-usage.md). B128/T512 with ordinary-block checkpointing is
 a practical common starting point: RT20.2kinputtokens/s at41.4GiB, combined
 K2+NextLat10.5k/s at51.9GiB. Keep native Q/K math. Deterministic Flash SDPA
-provides an exact B8/T512 native-stack graph reference; full combined canonical
-training is still eager. **No GPU job or learning is queued.**
+provides an exact B8/T512 native-stack graph reference. F3 subsequently extended
+capture to combined canonical training as recorded above.
 
 **F1 is complete and assessed (2026-09-22).** The user approved v4 including
 brief early profiling, and authorized this bounded integration milestone.
