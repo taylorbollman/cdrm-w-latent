@@ -45,10 +45,12 @@ user asked to assess and continue: O5a bounded FBT correctness now passes;
 O5b matched ordinary-versus-FBT-only learning and its endpoint diagnostic are
 complete and assessed. O5c fusion-only code versus code/general-text adaptation
 is also complete: mixed training repairs the measured retention deficit while
-the native backbone remains unchanged. No further training is queued. Read the
-handoff and O5c assessment for retained endpoints, recovery metadata and the
-recommended evaluation-only online check; that next diagnostic is not launched. Read
-the current handoff before starting, resuming or extending any run.
+the native backbone remains unchanged. No further training is queued. O5d is complete:
+fixed-weight finite K2/K3/K4 versus exact sequential feedback confirms that the
+repair survives teacher-forced online execution through512-token contexts.
+Read the current handoff and O5d assessment for retained evidence and the
+recommended ordinary additional-training control; that control is not launched.
+Do not relaunch the completed diagnostic or infer new training authorization.
 Two-GPU correctness remains untested. Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical

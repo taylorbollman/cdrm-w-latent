@@ -4,6 +4,54 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**O5d is complete and assessed (2026-09-22).** The user authorized the fixed-weight
+finite K2/K3/K4 versus exact sequential feedback diagnostic after O5c. All16 cases
+passed in30.4minutes, one attempt, no training or checkpoint mutation. Read
+[assessment](reports/olmo1b-o5d/assessment.md), [results](reports/olmo1b-o5d/results.md),
+[protocol](reports/olmo1b-o5d/protocol.md) and [usage](olmo1b-o5d-usage.md).
+No GPU job or further learning is queued. The completed evaluation must not resume.
+
+Main full512-window/max512 results, code / WikiText NLL:
+- Source K2:1.737004 /4.969719; source online:1.742469 /5.101028.
+- Repaired mixed K2:1.720900 /3.061443; mixed online:1.723307 /3.140935.
+- Shared frozen ordinary:1.698216 /3.183361.
+
+The repair survives online: mixed versus source online improves WikiText by
+1.960093 nats, with a remaining mixed online-minus-K2 cost0.079491 (about8.27%
+PPL). Mixed online beats its own frozen ordinary WikiText NLL by0.042427 but
+has worse code NLL and slightly lower token accuracy in both domains. This is
+teacher-forced transfer evidence, not free-running generation or FBT efficacy
+versus an equally additionally trained ordinary model. No numerical instability
+was identified; preserve the current implementation/BF16 settings. Recommended
+next decision: a matched ordinary additional-training control, with adaptation
+capacity/LR/compute differences explicit. **That control is not launched.**
+
+Operational record:
+- Branch `feat/olmo1b-o5d-online-diagnostic`, base O5c merge
+  `ec618060b51e0a7ef472903a50d4009c8dc45ced`; [PR11](https://github.com/taylorbollman/cdrm-w-latent/pull/11).
+  Runtime sources/protocol commit `245e221`; reporting/retention `54daac2`.
+- Run `.runtime/olmo1b-step60000/o5d-diagnostic-01/`, adjacent `.log`,
+  exec19959 completed0,2026-09-22T10:50:24–11:20:48UTC.
+  W&B `jhhx390b`, project `taylorbollman/pretrained-fbt-rt-nextlat`.
+- Source O5b checkpoint and repaired O5c mixed checkpoint use the same SHA/
+  generation pins recorded below. New mixed model-only loader also pins its
+  completed report SHA `020a204ae02d3dfa1af2753f278cb465d73120ca8133258bc8a84272e15afbc8`.
+- Beta1, RT/NextLat off, BF16 mixed/FP32 parameters/nativeSDPA/B8/TF32off,
+  no graphs/compile. First32 max64 plus first512 max512 development windows.
+  Full selection422code docs/127850targets,59Wiki docs/246910targets.
+  No training/test scoring, optimizer creation, state updates or new model copy.
+- All68 state hashes unchanged perendpoint;66native/fixed-scale identical across
+  endpoints. Prior fullK2 and source-short metrics reproduced exactly.109distinct
+  CPUtests pass; independent data/report/state/plot review found no blocker.
+- Evidence prefix `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5d-online-diagnostic/20260922T105024Z/`;
+  final receipt in the report directory. Parents remain at their existing retained
+  object generations; no model upload is duplicated. Local retention directory
+  `.runtime/olmo1b-step60000/o5d-retention-01/`.
+
+Historical O5c statements describing O5d as not launched are superseded by the
+completed O5d record above. RT/NextLat interaction and further training remain
+separate decisions.
+
 **O5c is complete and assessed (2026-09-22).** The user authorized the paired
 fusion-only code versus code/general-text experiment with periodic checkpoints.
 Both arms completed 512 updates / 4,194,304 additional CE targets. Every native
