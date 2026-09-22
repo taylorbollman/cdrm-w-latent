@@ -67,7 +67,13 @@ Operational record:
 
 F2 operational record:
 
-- Branch feat/olmo1b-f2-health-capacity; runtime/protocol commit77ee7bc.
+- Branch `feat/olmo1b-f2-health-capacity`; runtime/protocol commit `77ee7bc`,
+  final diagnostic/report implementation `c705cf4`;
+  [PR14](https://github.com/taylorbollman/cdrm-w-latent/pull/14).
+  Independent final review found no material numerical or scope issues.
+  Small evidence retention is recorded in the
+  [storage receipt](reports/olmo1b-f2/storage-receipt.json), with original native
+  weights referenced at their existing verified object.
   All outputs are under .runtime/olmo1b-step60000/ with matching sibling .log.
 - f2-health-01: six B2/T32 cases; f2-health-t128-01: ordinary/combinedK2/K3
   atB2/T128. Both pass; combined observer loss/gradients are bitwise neutral.

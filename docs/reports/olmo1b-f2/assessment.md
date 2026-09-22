@@ -4,6 +4,10 @@
 [protocol](protocol.md), [usage](../../olmo1b-f2-usage.md) and
 [current plan](../../fbt-rt-nextlat-research-plan-v4.md).
 
+Implementation: [PR14](https://github.com/taylorbollman/cdrm-w-latent/pull/14).
+Independent final review found no material numerical or scope issues.
+The [storage receipt](storage-receipt.json) records verified evidence retention.
+
 **Ordinary-block checkpointing gives us a practical B128/T512 starting point for
 both RT and RT+FBT+NextLat on one H10080GB. Keep native Q/K behavior.** The scale
 probes identify feedback/auxiliary startup sensitivity rather than a demonstrated
