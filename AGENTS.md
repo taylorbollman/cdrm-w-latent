@@ -61,10 +61,13 @@ including early profiling. F1 is complete:18actual-checkpoint cases, two exact
 BF16 recovery checks, short online cache parity and244scoped CPU tests pass.
 Read its assessment/results and handoff. Early B1/T512 profiling identifies eager
 RT scheduling/replay/launch overhead as a leading bottleneck; large clipped
-startup gradients remain a bounded F2 diagnostic lead. The user now authorized
-F2 scale probes, much larger physical-batch sweeps, ordinary-block checkpointing
-and staged CUDA-graph feasibility; read the F2 protocol/current handoff. No
-learning run is queued.
+startup gradients motivated F2, now complete and assessed. Ordinary-only
+checkpointing passes exact BF16 complete-update parity and allows B128/T512:
+RT20.2kinputtokens/s at41.4GiB, combined10.5k/s at51.9GiB. Native Q/K math stays.
+Deterministic Flash SDPA gives exact B8/T512 native-stack graph checks; default
+cuDNN has separately measured eager-repeat variability. Full combined canonical
+training is still eager. Read F2 assessment/results/current handoff for the next
+static-layout loss/FBT/NextLat graph integration milestone. No job is queued.
 Do not resume completed diagnostics or the deferred full-backbone FBT learning
 comparison. Native tiled backward returns parameter gradients normally, but
 does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.

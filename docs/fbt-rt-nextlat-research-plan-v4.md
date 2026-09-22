@@ -7,16 +7,21 @@ The user's new priority is confidence in functionality, numerical health,
 integration and reasonable execution cost, before asking which model wins.
 Completed O1–O5e evidence remains valid within its recorded scope.
 
-**Status: approved; F1 complete and assessed.** The user endorsed this plan,
-explicitly including early profiling. F1 passed all18 actual-checkpoint cases,
-two exact BF16 replays and 244 scoped CPU tests. Read its
-[assessment](reports/olmo1b-f1/assessment.md) and [results](reports/olmo1b-f1/results.md).
-At B1/T512, eager RT costs1.63s/update versus ordinary .068s; the profile points
-to scheduling/replay/launch overhead. The user authorized the next bounded milestone: F2 scale/startup probes and
-early F3/F4 physical-batch scaling, ordinary-block activation checkpointing and
-a staged CUDA-graph feasibility check. Sweep beyond B8 toward comfortable
-H100 capacity, rather than treating accumulation as a substitute for physical
-batch. See the [F2 protocol](reports/olmo1b-f2/protocol.md). No learning run is queued.
+**Status: approved; F1 and F2 complete and assessed.** F1 established integration;
+F2 added bounded numerical attribution, ordinary-only activation checkpointing,
+large physical-batch measurements and a stable native-stack graph reference.
+Read [F2 assessment](reports/olmo1b-f2/assessment.md),
+[results](reports/olmo1b-f2/results.md) and [protocol](reports/olmo1b-f2/protocol.md).
+AtB128/T512 with ordinary checkpointing, RT reaches20.2kinputtokens/s at41.4GiB,
+and combinedK2+NextLat10.5k/s at51.9GiB. Keep native Q/K math: sampled attention
+scales stay bounded throughT128; feedback/KL startup sensitivity is the clearer
+lead. Deterministic Flash SDPA gives exact native-stack graph replay atB8/T512
+with changed tokens/weights and3.29xmicrobenchmark speedup. Automatic cuDNN
+repeat variability is separately documented; no error budgets were widened.
+Next: preserve canonical loss/mask semantics while integrating graphs with
+FBT/NextLat and ordinary checkpointing, then repeat physical-batch memory/timing
+checks. Full combined training is still eager; all-layer RT, formal FLOP
+accounting and actual two-GPU execution remain separate scope. No job is queued.
 The previously proposed full-backbone
 mixed-data FBT learning comparison is deferred, not queued.
 Read the [handoff](fbt-rt-nextlat-handoff.md) first after compaction.

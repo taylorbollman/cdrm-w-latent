@@ -13,6 +13,14 @@ Quality wins and substantial baseline/variant training come after that review.
 
 Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
 the O5e recommendation below to run another joint-backbone FBT learning comparison.
+**F2 is complete and assessed (2026-09-22).** Read its
+[assessment](reports/olmo1b-f2/assessment.md), [results](reports/olmo1b-f2/results.md)
+and [usage](olmo1b-f2-usage.md). B128/T512 with ordinary-block checkpointing is
+a practical common starting point: RT20.2kinputtokens/s at41.4GiB, combined
+K2+NextLat10.5k/s at51.9GiB. Keep native Q/K math. Deterministic Flash SDPA
+provides an exact B8/T512 native-stack graph reference; full combined canonical
+training is still eager. **No GPU job or learning is queued.**
+
 **F1 is complete and assessed (2026-09-22).** The user approved v4 including
 brief early profiling, and authorized this bounded integration milestone.
 All18 cases passed in one actual-checkpoint run: all eight feature combinations,
@@ -57,15 +65,57 @@ Operational record:
   these are F2 scale/startup leads, not evidence that derivatives are wrong
   or that absence of Q/K normalization is the cause.
 
-**F2 authorized and in development on feat/olmo1b-f2-health-capacity.**
-Do not restart completed F1. Read [F2 protocol](reports/olmo1b-f2/protocol.md).
-The user specifically emphasized large physical batches, activation checkpointing
-and CUDA graphs. Scope: fixed-weight activation/per-loss scale probes; T512
-RT/all-three batch sweep beyond B8 toward a65GiB comfortable bound; ordinary-only
-non-reentrant checkpointing preserving RT x/z reconstruction; a separate bare-stack
-CUDA-graph feasibility probe. Full combined canonical training remains eager.
-Preserve native Q/K math pending measured evidence. No learning run is queued.
-Two-GPU work still requires an actual second GPU.
+F2 operational record:
+
+- Branch feat/olmo1b-f2-health-capacity; runtime/protocol commit77ee7bc.
+  All outputs are under .runtime/olmo1b-step60000/ with matching sibling .log.
+- f2-health-01: six B2/T32 cases; f2-health-t128-01: ordinary/combinedK2/K3
+  atB2/T128. Both pass; combined observer loss/gradients are bitwise neutral.
+  Sampled Q/K scales remain bounded; retain native absence of Q/K normalization.
+  Large startup gradients are associated with feedback/KL. K3's large T32
+  gradient is not universal: atT128 K3 norm1171.5 versus K2 1205.1.
+- f2-checkpoint-01: exact actual BF16 complete-update parity, checkpoint off/on,
+  including model/Adam/scheduler/counters. Ordinary non-reentrant checkpoints
+  never replay selected RT forward. Execution flag is default off.
+- f2-capacity-01:23cells,22measured and1OOM,363.1s,132recorded complete updates.
+  RT and combinedK2, T512, physical B1/8/16/32/64/128/256; each arm stopped before
+  attempting512. Three warmup plus three timed steps per measured cell.
+  All measured endpoint states finite. No trained weights retained from fixtures.
+  B128RT=20,176inputtokens/s,41.4GiB allocated; combined=10,490/s,51.9GiB.
+  RTB256=24,196/s,65.116GiB (just above frozen65GiB cutoff); combinedB256OOM.
+  W&B https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/vzn186td.
+- f2-graph-t32-01: historical CPU scalar-copy capture blocker, repaired by two
+  equivalent diagonal-view zero operations. Its exact old source snapshot is
+  retained inside that runtime directory. f2-graph-t32-02 passes all original
+  changed-token/weight/gradient-overwrite checks bitwise;2.91xstack/VJP speedup.
+- f2-graph-t512-b8-01: auto/cuDNN forward exact, gradient budget failed.
+  f2-localize-auto-rt-01 and f2-localize-auto-ordinary-01 demonstrate comparable
+  eager/eager and graph/graph variability (~.3-.5%) even without RT. Traces show
+  ordinary cuDNN fused SDPA. This is not a capture-only discrepancy.
+- f2-graph-flash-t512-b8-01: nondeterministic Flash also fails original budget;
+  f2-graph-cudnn-det-t512-b8-01: strict deterministic cuDNN unavailable.
+  f2-graph-flash-det-t512-b8-01 PASSES every original check bitwise: PyTorch
+  Flash SDPA + deterministic algorithms + configured cuBLAS workspace,
+  B8/T512/RTlayer0/BF16, changed tokens and updated weights included.
+  Stack/VJP eager1.583s versus replay.481s (3.29x), timing allocated17.72GiB,
+  reserved aftercapture28.63GiB. W&B
+  https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/38m1ghdp.
+- Graph probes exclude CE/FBT/NextLat/Adam/padding/cache continuation and disable
+  autocast weight caching in both compared executions. They do not clear whole
+  combined training, checkpointing within capture, B128 capture or all16RT layers.
+  Keep the original failed reports and thresholds; do not relabel them passing.
+- 211 scoped CPU tests pass. Final results, summary, plot and assessment record
+  source hashes and every completed/failed diagnostic. Retention receipt is
+  docs/reports/olmo1b-f2/storage-receipt.json (generated separately from archive).
+
+Next review milestone: static-layout canonical CE/NextLat/FBT graph integration,
+changed-token/weight/full-update checks, and graph+ordinary-checkpoint memory/
+throughput near a practical physical batch (B128 eager reference). Preserve
+objective/mask semantics; use the deterministic Flash stack reference for
+precision localization instead of imposing bitwise checks on nondeterministic
+cuDNN. Measure bottlenecks before a major RT Flash/CuTE rewrite. Full FLOP and
+multi-GPU work remains planned; a second GPU is still unavailable. No quality
+contest or long learning run is queued.
 
 Important context for resumption:
 
