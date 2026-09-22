@@ -41,7 +41,8 @@ are complete, with bounded GPU evidence and a documented raw-input roundoff
 qualification. O3 language-model NextLat, optimizer/save-resume and bounded
 single-H100 profiling are complete. O4
 matched Python continuation is complete; read its results and assessment. The
-user asked to assess and continue: O5a bounded FBT correctness is next. Read
+user asked to assess and continue: O5a bounded FBT correctness now passes;
+O5b learning design remains the next review. Read
 the current handoff before starting, resuming or extending any run.
 Two-GPU correctness remains untested. Read the handoff
 for current authorization and evidence. Do not infer long-run
