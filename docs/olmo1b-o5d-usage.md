@@ -1,5 +1,13 @@
 # O5d finite-pass versus exact sequential feedback diagnostic
 
+**Completed and assessed2026-09-22. Do not relaunch the completed run.**
+See [assessment](reports/olmo1b-o5d/assessment.md) and [results](reports/olmo1b-o5d/results.md).
+The commands below document the original invocation and incomplete-run recovery,
+not another queued evaluation. All16 cases passed in30.4minutes; exec19959 ended0.
+W&B: [jhhx390b](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/jhhx390b).
+Evidence: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5d-online-diagnostic/20260922T105024Z/`;
+[storage receipt](reports/olmo1b-o5d/storage-receipt.json).
+
 Read [protocol](reports/olmo1b-o5d/protocol.md) and the current
 [handoff](fbt-rt-nextlat-handoff.md). Evaluation only: no training or optimizer.
 Use the existing source and mixed checkpoints pinned in `olmo_o5d_common.py`

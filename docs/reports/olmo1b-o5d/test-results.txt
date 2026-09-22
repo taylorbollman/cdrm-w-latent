@@ -3,8 +3,8 @@ O5d focused CPU validation (inside project container, GPU passthrough disabled)
 32 passed: tests/test_olmo_o5d_common.py
 12 passed: tests/test_olmo_o5d_diagnose.py
 31 passed: tests/test_olmo_fbt_evaluation.py (existing evaluator contracts)
-32 passed: tests/test_olmo_o5d_report.py
-107 distinct passing tests in total.
+34 passed: tests/test_olmo_o5d_report.py
+109 distinct passing tests in total.
 
 The loader+driver combined suite independently reran 44 tests; these are
 already included above and are not counted twice. Independent runner review

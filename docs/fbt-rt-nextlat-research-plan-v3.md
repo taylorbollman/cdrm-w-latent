@@ -2,6 +2,14 @@
 
 Updated 2026-09-22. **Current authoritative plan.**
 
+**Current execution status:** O5c fusion-only repair and O5d finite/online
+transfer evaluation are complete. Mixed exact-online WikiText NLL is3.140935
+versus5.101028 at the source, with all native weights unchanged. See the current
+[handoff](fbt-rt-nextlat-handoff.md) and [O5d assessment](reports/olmo1b-o5d/assessment.md).
+No training is queued. A matched ordinary additional-training control is the
+recommended next decision, not launched. Earlier stage-status wording below
+is historical and superseded by the completed records.
+
 **Implementation update:** O1 native import/sequential RT and O2 native RoPE
 tiled forward/backward now pass bounded validation. See
 [O1 results](reports/olmo1b-o1/results.md), [O2 results](reports/olmo1b-o2/results.md)
@@ -452,3 +460,15 @@ compares source and repaired mixed endpoints at beta1, K2/K3/K4 and exact online
 first on32 max64 prefixes and then on the same512 max512 windows used for final
 O5c reporting. Batch8/BF16 and all model math remain unchanged. No training,
 new RT/NextLat arm, beta search or ordinary continuation control is launched.
+
+
+## O5d completed result
+
+All16 source/mixed × short/full × K2/K3/K4/online cases passed in30.4minutes
+with unchanged weights and109passing scoped tests. Full mixed online code/Wiki
+NLL1.723307/3.140935 versus source1.742469/5.101028; mixed online-minus-K2
+cost0.002407/0.079491. The large retention repair survives, while the residual
+execution gap remains measurable. K4 and online have similar aggregate NLL.
+Shared ordinary1.698216/3.183361 is a frozen reference, not an equally trained
+control; mixed online slightly improves WikiText NLL but not code or accuracy.
+The recommended ordinary continuation control remains a subsequent decision.

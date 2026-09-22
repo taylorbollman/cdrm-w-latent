@@ -1,0 +1,42 @@
+{
+  "objects": [
+    {
+      "generation": "1790076367984890",
+      "md5_base64": "6fxyN+p+lKMK0lucj2vMhA==",
+      "sha256": "3d88d5232cff51a93db530703a758993d22a4db25d70a3bdeb3bdcebb819bfe4",
+      "size_bytes": 2384604,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5d-online-diagnostic/20260922T105024Z/evidence.tar.gz",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    },
+    {
+      "generation": "1790076368772252",
+      "md5_base64": "d6aTfnqctymJv8PU0l9wBA==",
+      "sha256": "ad1620f5c9aa56ad91c4e755606a21b9a4fe8796d52733bf3c900927c8b1e426",
+      "size_bytes": 16233,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5d-online-diagnostic/20260922T105024Z/manifest.json",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    }
+  ],
+  "schema": "olmo-o5d-evidence-receipt-v1",
+  "source_checkpoints": {
+    "mixed": {
+      "generation": "1790059437165208",
+      "md5_base64": "xbbALlDUOhStNiu92Cltkw==",
+      "reused_without_upload": true,
+      "sha256": "7bba59ac75478fb15cec5fd0187f306b220da9babb138ebccbf5d88a70609d1a",
+      "size_bytes": 4807843871,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5c-fusion-only/20260922T061000Z/mixed/update-000512.pt",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    },
+    "source": {
+      "generation": "1790055503754266",
+      "md5_base64": "j6t7M1RRn3y+A8UEHUGBrg==",
+      "reused_without_upload": true,
+      "sha256": "99585f5e9d666e8dea3f533749d155b0695b8143a6a313b60fb99f8d157faf66",
+      "size_bytes": 14221991781,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-002634.pt",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    }
+  },
+  "status": "verified"
+}
