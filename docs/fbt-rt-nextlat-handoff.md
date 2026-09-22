@@ -90,7 +90,9 @@ For GCS use `env -u GOOGLE_APPLICATION_CREDENTIALS` in container.
 The user asked to assess and continue on 2026-09-22. O4 was assessed and PR7
 merged as `9bdeddd55514f95e7799bb49b1c37dfba1fbeaa0`. **O5a bounded FBT
 reference/correctness is now implemented and passes** on
-`feat/olmo1b-fbt-reference`, based on that merge. See
+`feat/olmo1b-fbt-reference`, based on that merge. Implementation/evidence commit
+`4a473bfc296f0c0d6b65a8a6d5bb434ab7002c04`,
+[PR #8](https://github.com/taylorbollman/cdrm-w-latent/pull/8). See
 [O5a results](reports/olmo1b-o5a/results.md), [usage](olmo1b-fbt-usage.md), and
 [protocol](reports/olmo1b-o5a/protocol.md). No GPU job remains running, no O4
 extension or long FBT learning run is queued, and no adapted FBT weights exist.
