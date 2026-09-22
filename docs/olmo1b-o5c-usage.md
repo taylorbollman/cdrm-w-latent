@@ -1,6 +1,9 @@
 # O5c fusion-only adaptation operations
 
-This is the authorized paired code/general-text diagnostic following O5b.
+**Completed 2026-09-22. Do not relaunch the completed queue.** Both arms reached
+512 updates; checkpoints and evidence are retained. See the
+[assessment](reports/olmo1b-o5c/assessment.md). This was the authorized paired
+code/general-text diagnostic following O5b.
 Read [protocol](reports/olmo1b-o5c/protocol.md) and the current
 [handoff](fbt-rt-nextlat-handoff.md) before starting or resuming anything.
 
@@ -60,3 +63,11 @@ The final retainer archives named data files, sourceinventory, reports/events,
 plots andparentreceipts, reusing the retained O5b startingcheckpoint/O4base data.
 Prepared generaldata are included in the newinitial archive. No .env or broad
 workspace contents enter archives.
+
+Final runs: [code](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/obv0yofk)
+and [mixed](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/28cum2gv).
+The first queue process ended at mixed startup after a failed NVML query, before
+any mixed training. A fresh container passed checks; retry skipped the completed
+code arm and finished mixed. There was no optimizer-state restart. Preserved
+incident: `docs/reports/olmo1b-o5c/startup-incident.json`. Historical sessions3961
+and78761 are closed. Queue status is completed; no subsequent diagnostic is active.

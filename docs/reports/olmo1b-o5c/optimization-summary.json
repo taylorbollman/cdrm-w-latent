@@ -1,0 +1,135 @@
+{
+  "arms": {
+    "code": {
+      "all_recorded_scalars_finite": true,
+      "checkpoints": [
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 128
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 256
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 384
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 512
+        }
+      ],
+      "clipped_updates": 0,
+      "counters": {
+        "ce_positions": 4194304,
+        "documents": 18194,
+        "input_tokens": 4212498,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "microbatches": 1400,
+        "optimizer_updates": 512
+      },
+      "domain_counts": {
+        "code": {
+          "ce_positions": 4194304,
+          "documents": 18194,
+          "input_tokens": 4212498
+        },
+        "general": {
+          "ce_positions": 0,
+          "documents": 0,
+          "input_tokens": 0
+        }
+      },
+      "frozen_state_unchanged": true,
+      "gradient_norm": {
+        "max": 0.5715746879577637,
+        "median": 0.21057095378637314,
+        "min": 0.16889595985412598
+      },
+      "input_hashes": {
+        "events.jsonl": "9c7b72b54881e527b08e19cc5f338c8f2405a8a409dc06b2089757828bb25c77",
+        "report.json": "e7eae56edbd7df03241d0d2ee52e84928651fe0b101ba3996781bae84a8f69d2"
+      },
+      "peak_allocated_gib": 18.657039165496826,
+      "step_seconds": {
+        "median": 0.4919219605035323,
+        "sum_excluding_evaluation_checkpoint": 252.08799284694396
+      },
+      "updates": 512,
+      "wall_seconds_including_evaluation_checkpoint": 734.614372
+    },
+    "mixed": {
+      "all_recorded_scalars_finite": true,
+      "checkpoints": [
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 128
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 256
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 384
+        },
+        {
+          "retained": true,
+          "size_bytes": 4807843871,
+          "update": 512
+        }
+      ],
+      "clipped_updates": 63,
+      "counters": {
+        "ce_positions": 4194304,
+        "documents": 13946,
+        "input_tokens": 4208250,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "microbatches": 1056,
+        "optimizer_updates": 512
+      },
+      "domain_counts": {
+        "code": {
+          "ce_positions": 2097152,
+          "documents": 9061,
+          "input_tokens": 2106213
+        },
+        "general": {
+          "ce_positions": 2097152,
+          "documents": 4885,
+          "input_tokens": 2102037
+        }
+      },
+      "frozen_state_unchanged": true,
+      "gradient_norm": {
+        "max": 9.28046703338623,
+        "median": 0.4822535067796707,
+        "min": 0.29684337973594666
+      },
+      "input_hashes": {
+        "events.jsonl": "ff0b5b9bd62082560bc2cd95c5de376876bc2a0d9aa6632d438a00edc96e41e9",
+        "report.json": "020a204ae02d3dfa1af2753f278cb465d73120ca8133258bc8a84272e15afbc8"
+      },
+      "peak_allocated_gib": 18.659574031829834,
+      "step_seconds": {
+        "median": 0.39160773049661657,
+        "sum_excluding_evaluation_checkpoint": 204.71767653905408
+      },
+      "updates": 512,
+      "wall_seconds_including_evaluation_checkpoint": 696.757231
+    }
+  },
+  "schema": "olmo-o5c-optimization-health-v1",
+  "scope": "Event scalars and recorded frozen-state checks; not an independent checkpoint replay",
+  "script_sha256": "8010010f60508dd07b2fe0edd481b0d8ec3bfee33ad930d0bd83ad00a60e5f44"
+}

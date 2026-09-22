@@ -417,7 +417,7 @@ separate initially. No larger interaction sweep is authorized. Multi-GPU remains
 untested.
 
 
-### O5c authorized adaptation diagnostic (2026-09-22)
+### O5c completed adaptation diagnostic (2026-09-22)
 
 The user approved fusion-only code versus code/general-text training from the
 completed O5b FBT endpoint, freezing every native parameter including tied
@@ -430,3 +430,15 @@ noRT/NextLat. See the frozen[O5cprotocol](reports/olmo1b-o5c/protocol.md),
 [usage](olmo1b-o5c-usage.md)andhandoffforlive status. Periodic recovery checkpoints
 are explicitly requested; notify user if expected runtime extends tomultiplehours.
 No longer extension or new interaction arms are implicitly added.
+
+O5c is now complete. Mixed final512-window feedback NLL is1.720900code /
+3.061443WikiText, versus1.715954 /4.623289 for code-only and1.737004 /4.969719
+at the shared source endpoint. Every native tensor is fixed; the ordinary pass
+stays1.698216 /3.183361. This supports fusion-input domain adaptation as a
+repair, with a small code tradeoff; no equally additionally trained ordinary
+control has established an FBT advantage. See the O5c assessment and handoff
+for sources, counts, finite-gradient evidence, W&B/GCS endpoints and the one
+pre-training environment retry. No job remains active. Recommended next review:
+unchanged repaired-endpoint finite K2/K3/K4 versus exact online on matched
+prefixes, then a matched ordinary training reference. This next check is a
+proposal and has not been launched; no RT/NextLat interaction sweep is queued.

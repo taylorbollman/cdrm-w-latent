@@ -1,0 +1,41 @@
+{
+  "schema": "olmo-o5c-startup-incident-v1",
+  "utc": "2026-09-22T06:31:00Z",
+  "failed_queue": {
+    "active_arm": "mixed",
+    "arms": {
+      "code": {
+        "exit_code": 0,
+        "report": ".runtime/olmo1b-step60000/o5c-pilot-01/code/report.json",
+        "status": "completed",
+        "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/obv0yofk"
+      },
+      "mixed": {
+        "exit_code": 1,
+        "report": ".runtime/olmo1b-step60000/o5c-pilot-01/mixed/report.json",
+        "status": "failed_before_report",
+        "wandb": null
+      }
+    },
+    "configuration_sha256": "5fafdc28167c117f5c681ff60f784085125186a833dec050837ccc0265b5aa08",
+    "finished_utc": "2026-09-22T06:29:44.184351+00:00",
+    "order": [
+      "code",
+      "mixed"
+    ],
+    "runtime": {
+      "cuda": "13.3",
+      "gpu": "NVIDIA H100 80GB HBM3",
+      "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.173.02",
+      "torch": "2.13.0a0+8145d630e8.nv26.06"
+    },
+    "schema": "olmo-o5c-queue-v1",
+    "started_utc": "2026-09-22T06:16:42.388844+00:00",
+    "status": "stopped",
+    "storage_prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5c-fusion-only/20260922T061000Z"
+  },
+  "traceback": "Traceback (most recent call last):\n  File \"/workspace/cdrm-w-latent/scripts/olmo_o5c_train.py\", line 252, in <module>\n    if __name__ == \"__main__\": main()\n                               ^^^^^^\n  File \"/workspace/cdrm-w-latent/scripts/olmo_o5c_train.py\", line 72, in main\n    runtime = plain_metadata(require_container_gpu())\n                             ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/scripts/olmo_validation.py\", line 31, in require_container_gpu\n    smi = subprocess.run(\n          ^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['nvidia-smi', '--query-gpu=name,memory.total,driver_version', '--format=csv,noheader']' returned non-zero exit status 255.\n",
+  "scope": "Mixed arm failed its initial nvidia-smi query before model load, data consumption, W&B initialization or optimizer updates. Code-only completed safely.",
+  "recovery": "A fresh project container successfully ran nvidia-smi with the identical H100/driver; no reset, reboot, code, data or model change. Retry the same frozen queue, which skips the completed code arm. Cause not established.",
+  "kernel_check": "No contemporaneous NVRM/Xid event found in filtered kernel log."
+}
