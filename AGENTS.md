@@ -43,8 +43,10 @@ single-H100 profiling are complete. O4
 matched Python continuation is complete; read its results and assessment. The
 user asked to assess and continue: O5a bounded FBT correctness now passes;
 O5b matched ordinary-versus-FBT-only learning and its endpoint diagnostic are
-complete and assessed; no training job remains queued. Read its assessment,
-recovery metadata caveat and proposed next experiment in the handoff. Read
+complete and assessed. The user has now authorized O5c: a bounded fusion-only
+code versus code/general-text adaptation pair from the O5b endpoint, with the
+native backbone frozen. Read the handoff for its current preflight/run status,
+recovery instructions and budget; do not relaunch a completed or active queue. Read
 the current handoff before starting, resuming or extending any run.
 Two-GPU correctness remains untested. Read the handoff
 for current authorization and evidence. Do not infer long-run

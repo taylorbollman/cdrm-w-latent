@@ -415,3 +415,18 @@ code/general-text adaptation diagnostic. No further training is queued. Freeze
 its data and exposure before proceeding; keep RT/NextLat and prefix/noise choices
 separate initially. No larger interaction sweep is authorized. Multi-GPU remains
 untested.
+
+
+### O5c authorized adaptation diagnostic (2026-09-22)
+
+The user approved fusion-only code versus code/general-text training from the
+completed O5b FBT endpoint, freezing every native parameter including tied
+embeddings. Exact shared budget512updates ×8192CEtargets=4,194,304 perarm;
+mixed4096CEtargets/domain/update. Use unused code suffix and officialWikiText2
+training documents, with full-document hash exclusions. This slightly reduces
+the proposed5M budget to avoid cycling and matches supervised exposure rather
+than the small segment-context overhead. NewoptimizerLR1e-4,warmup50,beta1,K2,
+noRT/NextLat. See the frozen[O5cprotocol](reports/olmo1b-o5c/protocol.md),
+[usage](olmo1b-o5c-usage.md)andhandoffforlive status. Periodic recovery checkpoints
+are explicitly requested; notify user if expected runtime extends tomultiplehours.
+No longer extension or new interaction arms are implicitly added.

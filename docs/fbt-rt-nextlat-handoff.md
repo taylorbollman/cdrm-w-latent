@@ -4,6 +4,24 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Latest authorization (2026-09-22): O5c fusion-only domain adaptation.** The user
+approved the proposed paired code-only versus code/general-text experiment and
+requested advance notice of multi-hour runs and periodic recovery checkpoints.
+Implementation/preflight pass on `feat/olmo1b-o5c-fusion-adaptation`; O5c
+training is ready to launch after initial GCS retention. Read `docs/reports/olmo1b-o5c/protocol.md`. Both arms
+start at the retained O5b FBT endpoint, freeze every native tensor, and reset a
+fusion-only optimizer. Planned512 updates x8192 CE targets (4.194M/arm), mixed
+50/50 by CE targets. Budget is slightly below proposed5M to use fresh remaining
+code without cycling. Preflight `.runtime/olmo1b-step60000/o5c-preflight-01/` passed;
+W&B`b1yqi0ug`. Physical chunks16: code0.481s/18.64GiB, mixed0.379s/18.61GiB.
+The nonzero H100 step changed exactly the two fusion matrices; all state was
+restored. Authoritative data is`o5c-data-02/prepared`,
+manifestSHA`f837f7f412dee17a304df5f78f4b65571f15163af440adecfc77b88cca8b1490`.
+Both arms share code target/context boundaries; data01 was never trained on.
+138 distinct CPU tests pass. Configuration and sources are now frozen. Historical O5b proposal wording below is superseded by
+this explicit authorization.
+
+
 The user selected **original OLMo-1B at approximately 200–300B pretraining tokens**
 as the new primary model, replacing OpenELM because of uncertainty about its
 layer-wise capacity scaling. We selected **step 60,000, approximately 251–252B**.
