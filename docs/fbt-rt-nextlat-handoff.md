@@ -11,23 +11,67 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
-**F3c historical backward fusion is authorized and in progress (2026-09-22).**
-The user explicitly said proceed after the F3b result. F3b was merged as PR16,
-merge29408ca. Active branch `feat/olmo1b-f3c-rt-backward`; root owns serial GPU work.
-Read [F3c protocol](reports/olmo1b-f3c/protocol.md). Implement the independent
-`backward_tile_backend` opt-in, preserving F3b fused forward/cast reuse as the
-primary reference. Profile complete local VJPs versus historical dK/dV, validate
-frozen tiles/tiny blocks/native B8 graph updates, then bounded B64/B128 capacity.
-Quadratic probability/error removal follows a separate review boundary; no long
-quality run. The baseline profile `f3c-profile-reference-combined-b64-01` passed3/3 checks,
-including observer neutrality and six complete updates:10,858 input tokens/s,
-40.84GiB allocated; W&B `ev8anieg`. Current job is `f3c-tile-probe-01`, root
-exec99192, checking48 frozen tiles+12 blocks. Runtime/protocol remain frozen.
-315 scoped core/kernel/dispatch tests,12 profiler,15 tile-probe and18 native
-validator CPU tests pass. Native validation now counts fused calls after gradient
-initialization, handles zero global references and rechecks protocol hashes.
-The baseline profile retains its earlier exact validator snapshot. Next: native
-RT/combined B8 checks, capacity and candidate profile. Exact snapshots mandatory.
+**F3c historical backward fusion is complete and assessed (2026-09-22).**
+Read the [assessment](reports/olmo1b-f3c/assessment.md),
+[results](reports/olmo1b-f3c/results.md), [protocol](reports/olmo1b-f3c/protocol.md)
+and [usage](olmo1b-f3c-usage.md). The user authorized this after F3b. No GPU or
+quality run is queued. Quadratic-intermediate removal remains the next milestone.
+
+F3c durable execution record:
+
+- Branch `feat/olmo1b-f3c-rt-backward`, base PR16 merge29408ca, core7e93ece;
+  [PR17](https://github.com/taylorbollman/cdrm-w-latent/pull/17).
+  Seven GPU reports pass78/78 gates;36 physical updates comprise18 eager+18 graph.
+  The historical F3b RT reference and warmup/profile backwards are excluded.
+- Independent opt-in `backward_tile_backend="triton"` fuses historical dK/dV,
+  preserving BF16 whole-product rounding, FP32 error/adjoint arithmetic and
+  original gradient ownership. Default eager stays. Both primary arms enable
+  F3b fused forward/cast reuse. Cache/static signatures include the new option.
+  Model/checkpoint/RoPE/normalization/loss/parameter count are unchanged.
+- `f3c-tile-probe-01`:48 frozen tiles+12 tiny blocks pass bitwise versus primary
+  BF16 control;48 standalone+144 block backward calls verified. Maximum tiny
+  FP32 global gradient relative L2 is0.003464. W&B `4r1se0op`.
+- Native combined B8/T512 `f3c-triton-combined-b8-t512-01` passes allfive checks:
+  initial losses exact, gradient globalL2 .00139246, max tensor .00272989, max
+  coordinate/reference-max .00694445, actual511 fused calls. RT-only counterpart
+  `f3c-triton-rt-b8-t512-01` has bitwise initial reference/candidate gradients.
+  Both have exact same-candidate changed-input/weight/overwrite graph checks
+  and three eager versus three graph AdamW/model/moment/scheduler/counter parity.
+  W&B `07awt17o`/`6t9h3z4x`. No numerical gate was widened.
+- Large-batch capacity: combined B64/T51210,973 inputtokens/s at40.84GiB,
+  RT B12826,480/s at42.10GiB, about1.06%/1.45% above F3b forward-optimized
+  reference. Reserved peak/current:63.82/43.40GiB and68.30/44.31GiB respectively.
+  W&B `3exnf0cz`/`hubes8cx`. Three-update medians; initial all-gradient checks
+  were B8, not the capacity batches. Allocated peaks are unchanged.
+- Reference/final combined profiles reproduce10,858/10,977 inputtokens/s;
+  observer-neutrality/all-gradient equality and expected counts pass.
+  Actual CUDA calls128,637→117,205; summed kernel self2.93613→2.90897s.
+  Exactly511 historical backward kernels take7.448ms; forward kernels4.527ms.
+  Direct Triton kernels are incompletely attributed under CPU annotations;
+  do not claim37.85→1.565ms as an isolated-kernel gain. W&B `ev8anieg`/`myh5cmwd`.
+- CPU tests432:315 core/kernel/dispatch/accounting,12profiler,15tileprobe,
+  18nativevalidator,29reporter and43retainer. Independent final audits pass.
+  Native call counts exclude gradient-buffer initialization; zero-reference
+  norms require exact zero; source/protocol hashes are rechecked.
+- Runtime outputs `.runtime/olmo1b-step60000/f3c-*-01/`, sibling logs and explicit
+  `f3c-final-inputs.json`. Queueexec4671 completed0; no job remains. Each run
+  retains its exact source version, including the baseline profile's earlier
+  validator. Preserve stricter oracle/coordinate diagnostics as recorded.
+- Small evidence retained under
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3c-rt-backward/`;
+  [receipt](reports/olmo1b-f3c/storage-receipt.json) pins objects/hashes/generations.
+  Existing native weights are referenced; no disposable trained weights archived.
+
+**Next: remove quadratic probability/error intermediates in checked stages.**
+Retain row normalizers and recompute probabilities inside attention/gradient
+tiles, preserving BF16 whole-product rounding, temporary-self separation, final
+dQ and attached-prefix gradients. Keep the current VJP as reference. One FP32
+B64/H16 attention matrix is1GiB atT512 and16GiB atT2048. Local writer/finish VJPs
+and discarded permanent Q projections remain separate opportunities. The next
+change needs its own bounded protocol and review; do not infer a quality run.
+All actual F3c full-model checks select RT layer0 only. Longer/more-RT-layer,
+padded graphs, graph resume, accumulation and multi-GPU still need validation.
+Keep native Q/K math and finish broader resource cards after relevant changes.
 
 **F3b forward-tile optimization is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3b/assessment.md),
@@ -87,7 +131,7 @@ F3b durable execution record:
   `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3b-rt-kernel/`;
   [receipt](reports/olmo1b-f3b/storage-receipt.json) pins objects/hashes/generations.
 
-**Next review milestone: native RT backward tile fusion and memory.**
+**Historical F3b follow-up: backward tile fusion (now completed as F3c) and memory.**
 Retain the current custom VJP as a reference. Fuse historical dK/dV updates and
 replace full probability/error arrays with row normalizers plus recomputed tiles
 in bounded, separately checked steps. Incoming adjoints arrive progressively;

@@ -2,7 +2,8 @@
 
 Read the [protocol](reports/olmo1b-f3c/protocol.md),
 [F3b execution options](olmo1b-f3b-usage.md) and
-[current handoff](fbt-rt-nextlat-handoff.md). GPU validation is in progress.
+[current handoff](fbt-rt-nextlat-handoff.md) and
+[completed assessment](reports/olmo1b-f3c/assessment.md).
 
 ## Configuration and exact scope
 
