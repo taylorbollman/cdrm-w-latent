@@ -4,6 +4,21 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**O5e is now authorized and in development (2026-09-22).** The user approved
+ordinary additional training after O5d. Read [O5e protocol](reports/olmo1b-o5e/protocol.md).
+Use the same O5b source native backbone and exact O5c data02 mixed plan:512updates,
+4.194M CE targets, physical<=16. Train65native tensors with a single ordinary CE,
+LR1e-5/warmup50; fusion fixed/unused, FBT/RT/NextLat off. This matches data and
+exposure, not capacity or compute, against fusion-only8.39M/LR1e-4. New branch
+`feat/olmo1b-o5e-ordinary-control` from O5d merge
+`1364373cb38714da13bdc4e3c88f05c0ac60dcb9`. O5e preflight01 is active (exec29100), output
+`.runtime/olmo1b-step60000/o5e-preflight-01/` with adjacent log.75 scoped CPU
+tests passed. Preflight will freeze configuration and verify state/capacity;
+training has not launched. Historical wording
+below saying no ordinary training is authorized is superseded by this explicit
+approval. No other learning arm or extension is queued.
+
+
 **O5d is complete and assessed (2026-09-22).** The user authorized the fixed-weight
 finite K2/K3/K4 versus exact sequential feedback diagnostic after O5c. All16 cases
 passed in30.4minutes, one attempt, no training or checkpoint mutation. Read

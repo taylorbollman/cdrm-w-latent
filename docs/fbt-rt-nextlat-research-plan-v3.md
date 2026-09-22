@@ -472,3 +472,13 @@ execution gap remains measurable. K4 and online have similar aggregate NLL.
 Shared ordinary1.698216/3.183361 is a frozen reference, not an equally trained
 control; mixed online slightly improves WikiText NLL but not code or accuracy.
 The recommended ordinary continuation control remains a subsequent decision.
+
+
+## O5e authorized ordinary continuation control
+
+The user approved the ordinary additional-training reference on2026-09-22.
+Use the exact shared native starting state and O5c mixed data/exposure, train
+native weights at1e-5 with one CE, keep fusion unused/fixed and all recurrence
+and NextLat off. See [protocol](reports/olmo1b-o5e/protocol.md) for capacity/compute
+qualifications, preflight and checkpoint/evaluation boundaries. One512-update
+control is authorized; no other learning or automatic extension is queued.

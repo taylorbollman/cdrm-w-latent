@@ -1,0 +1,7 @@
+2026-09-22: GPU-disabled project container
+python -m pytest -q tests/test_olmo_o5e_common.py tests/test_olmo_o5e_train.py tests/test_olmo_o5e_report.py tests/test_olmo_o5c_train.py
+75 passed in 4.85s
+
+Two independent read-only reviews of runner/preflight/protocol: no launch blocker.
+O5e source inventory includes imported O5d endpoint metadata helper.
+All inherited model, optimizer, evaluator and O5b/O5c/O5d runtime sources unchanged.
