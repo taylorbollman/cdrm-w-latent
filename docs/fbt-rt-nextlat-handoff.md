@@ -57,11 +57,15 @@ Operational record:
   these are F2 scale/startup leads, not evidence that derivatives are wrong
   or that absence of Q/K normalization is the cause.
 
-**No GPU job or further learning is queued. Do not restart completed F1.**
-Recommended next review: bounded F2 activation/per-loss gradient-scale probes,
-plus T512 RT/all-three B1/2/4/8 scaling and targeted eager execution work before
-a large Flash/CuTE rewrite. Preserve native Q/K math until evidence warrants
-a separate adaptation. Two-GPU work still requires an actual second GPU.
+**F2 authorized and in development on feat/olmo1b-f2-health-capacity.**
+Do not restart completed F1. Read [F2 protocol](reports/olmo1b-f2/protocol.md).
+The user specifically emphasized large physical batches, activation checkpointing
+and CUDA graphs. Scope: fixed-weight activation/per-loss scale probes; T512
+RT/all-three batch sweep beyond B8 toward a65GiB comfortable bound; ordinary-only
+non-reentrant checkpointing preserving RT x/z reconstruction; a separate bare-stack
+CUDA-graph feasibility probe. Full combined canonical training remains eager.
+Preserve native Q/K math pending measured evidence. No learning run is queued.
+Two-GPU work still requires an actual second GPU.
 
 Important context for resumption:
 

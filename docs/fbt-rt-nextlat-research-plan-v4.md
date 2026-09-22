@@ -12,9 +12,11 @@ explicitly including early profiling. F1 passed all18 actual-checkpoint cases,
 two exact BF16 replays and 244 scoped CPU tests. Read its
 [assessment](reports/olmo1b-f1/assessment.md) and [results](reports/olmo1b-f1/results.md).
 At B1/T512, eager RT costs1.63s/update versus ordinary .068s; the profile points
-to scheduling/replay/launch overhead. The next proposed bounded milestone
-combines F2 scale/startup probes with early F3/F4 batch scaling and execution
-work, before a large fused-kernel rewrite. No further job is queued.
+to scheduling/replay/launch overhead. The user authorized the next bounded milestone: F2 scale/startup probes and
+early F3/F4 physical-batch scaling, ordinary-block activation checkpointing and
+a staged CUDA-graph feasibility check. Sweep beyond B8 toward comfortable
+H100 capacity, rather than treating accumulation as a substitute for physical
+batch. See the [F2 protocol](reports/olmo1b-f2/protocol.md). No learning run is queued.
 The previously proposed full-backbone
 mixed-data FBT learning comparison is deferred, not queued.
 Read the [handoff](fbt-rt-nextlat-handoff.md) first after compaction.

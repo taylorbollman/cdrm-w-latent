@@ -11,12 +11,14 @@ this first-order backend's contract.
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from functools import partial
 import math
 
 import torch
 from torch import Tensor
 from torch.autograd.function import once_differentiable
 from torch.nn import functional as F
+from torch.utils.checkpoint import checkpoint
 
 from .olmo import OLMoBlock, OLMoConfig, _apply_rope
 from .olmo_recurrent import OLMoRTForCausalLM
@@ -92,7 +94,7 @@ def _attention_from_completed(query, temporary_key, temporary_value, permanent_k
     probabilities = scores.softmax(-1) * any_valid
     diagonal_probability = probabilities[:, :, indices, prefix_length + indices]
     historical_probability = probabilities.clone()
-    historical_probability[:, :, indices, prefix_length + indices] = 0
+    historical_probability.diagonal(offset=prefix_length, dim1=-2, dim2=-1).zero_()
     attention = _mm(historical_probability, permanent_value, spec, dtype)
     # Keep the temporary diagonal separate. Subtracting a permanent diagonal
     # after a BF16 PV matmul would mix rounded and unrounded probabilities.
@@ -237,7 +239,7 @@ class _TiledRecurrence(torch.autograd.Function):
                 dkt = self_error.unsqueeze(-1) * q.detach().float() / math.sqrt(config.head_dim)
                 dvt = diagonal_p.unsqueeze(-1) * ga
                 error = probabilities * (_mm(ga, all_values.detach().transpose(-1, -2), spec, dtype) - dot.unsqueeze(-1))
-                error[:, :, indices, prefix + indices] = 0
+                error.diagonal(offset=prefix, dim1=-2, dim2=-1).zero_()
                 dq = _mm(error, all_keys.detach(), spec, dtype) / math.sqrt(config.head_dim)
                 dq += self_error.unsqueeze(-1) * kt.detach().float() / math.sqrt(config.head_dim)
                 dpk = _mm(error[:, :, :, :prefix].transpose(-1, -2), q.detach(), spec, dtype) / math.sqrt(config.head_dim)
@@ -303,12 +305,34 @@ class OLMoTiledOutput:
     past_key_values: OLMoTiledCache | None = None
 
 
+def _ordinary_block_hidden(x, query_positions, key_positions, mask, *, layer,
+                           is_causal, attention_backend):
+    """Cache-free ordinary block, with only its hidden output retained."""
+    hidden, _ = layer(x, past=None, query_positions=query_positions,
+                      key_positions=key_positions, mask=mask,
+                      is_causal=is_causal, attention_backend=attention_backend)
+    return hidden
+
+
 class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
-    def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed", device=None, dtype=None):
+    """Native tiled RT with optional ordinary-block activation checkpointing.
+
+    The opt-in flag is execution metadata, not part of the native checkpoint
+    layout. Callers must record it in their run/resume configuration. During
+    grad-enabled training it checkpoints only ordinary block calls; selected
+    RT blocks retain their existing input/completed-output reconstruction.
+    Checkpointed training is cache-free. Evaluation and no-grad calls use the
+    unchanged ordinary/cache path.
+    """
+    def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
+                 ordinary_activation_checkpointing=False, device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
+        if type(ordinary_activation_checkpointing) is not bool:
+            raise TypeError("ordinary_activation_checkpointing must be boolean")
         super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
         self.attention_precision = attention_precision
+        self.ordinary_activation_checkpointing = ordinary_activation_checkpointing
 
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
@@ -317,6 +341,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             raise TypeError("mode must be an RTMode")
         if any(index >= self.config.num_layers for index in mode.selected_layers):
             raise ValueError("selected_layers contains an index outside the model")
+        checkpoint_ordinary = self.ordinary_activation_checkpointing and self.training and torch.is_grad_enabled()
+        if checkpoint_ordinary and (use_cache or past_key_values is not None):
+            raise ValueError("Ordinary activation checkpointing requires cache-free grad-enabled training")
         x, valid, positions, key_positions, mask, causal = self._prepare_inputs(
             input_ids, inputs_embeds, attention_mask, position_ids, past_key_values,
             cache_type=OLMoTiledCache,
@@ -342,6 +369,14 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     key_positions=key_positions, key_valid=valid,
                     attention_precision=self.attention_precision,
                 )
+            elif checkpoint_ordinary:
+                # Bind this invocation's layer/backend/causality now: a closure
+                # over the loop's `layer` would replay the wrong shared block.
+                ordinary = partial(_ordinary_block_hidden, layer=layer,
+                                   is_causal=causal, attention_backend=self.attention_backend)
+                x = checkpoint(ordinary, x, positions, key_positions, mask,
+                               use_reentrant=False)
+                pair = None
             else:
                 x, pair = layer(x, past=past, query_positions=positions, key_positions=key_positions,
                                 mask=mask, is_causal=causal, attention_backend=self.attention_backend)

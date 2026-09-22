@@ -61,7 +61,10 @@ including early profiling. F1 is complete:18actual-checkpoint cases, two exact
 BF16 recovery checks, short online cache parity and244scoped CPU tests pass.
 Read its assessment/results and handoff. Early B1/T512 profiling identifies eager
 RT scheduling/replay/launch overhead as a leading bottleneck; large clipped
-startup gradients remain a bounded F2 diagnostic lead. No further job is queued.
+startup gradients remain a bounded F2 diagnostic lead. The user now authorized
+F2 scale probes, much larger physical-batch sweeps, ordinary-block checkpointing
+and staged CUDA-graph feasibility; read the F2 protocol/current handoff. No
+learning run is queued.
 Do not resume completed diagnostics or the deferred full-backbone FBT learning
 comparison. Native tiled backward returns parameter gradients normally, but
 does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.
