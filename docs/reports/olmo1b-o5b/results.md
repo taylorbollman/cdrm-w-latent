@@ -1,71 +1,43 @@
-# O5b: matched FBT recovery pilot — running
+# OLMo O5b: ordinary versus FBT continuation
 
-The preflight passed and the two-arm learning queue started on 2026-09-22.
-**Learning results are pending.** This file will be replaced by the strict final
-comparison after both arms complete. [Protocol](protocol.md),
-[usage](../../olmo1b-o5b-usage.md), [handoff](../../fbt-rt-nextlat-handoff.md),
-and [draft PR9](https://github.com/taylorbollman/cdrm-w-latent/pull/9).
+Both arms completed **2,634 updates** and **20,855,799 valid input tokens** (20,771,511 CE targets per pass) from the same original checkpoint and document stream.
 
-## Scope
+Both optimize pass0 CE + pass1 CE (K=2, gamma=1). Ordinary keeps beta zero; FBT ramps feedback. Final results use fixed 512-window development selections. Separate 128-window curves preserve their original sample size.
 
-Native OLMo-1B step60000 (~252B tokens), with the same code stream/order in both
-arms. RT and NextLat are off. Both use two pass losses; the ordinary control
-keeps feedback zero and the FBT arm gradually introduces feedback. Budget per
-arm: 2,634 updates, 20,855,799 valid input tokens, 20,771,511 CE targets. Effective
-batch 32, T512, physical 16 accumulated twice. FP32 parameters/AdamW, BF16 mixed
-computation, native SDPA, no compile/CUDA graphs.
+| Model / inference pass | Code NLL | Code perplexity | Code accuracy | Retention NLL | Retention perplexity | Retention accuracy |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Original checkpoint | 1.787902 | 5.9769 | 62.579% | 3.040993 | 20.9260 | 42.141% |
+| ordinary pass 0 | 1.699385 | 5.4706 | 64.145% | 3.177141 | 23.9781 | 40.857% |
+| ordinary pass 1 | 1.699385 | 5.4706 | 64.145% | 3.177141 | 23.9781 | 40.857% |
+| fbt pass 0 | 1.698216 | 5.4642 | 64.219% | 3.183361 | 24.1277 | 40.738% |
+| fbt pass 1 | 1.737004 | 5.6803 | 63.645% | 4.969719 | 143.9864 | 24.357% |
 
-Native LR 1e-5 after 100-update warmup. Feedback ramp ends at 1,367; the separate
-fusion LR warms to 1e-4 over its first 100 potentially active updates. Prefix
-sampling and hidden jitter are off: this differs from the author reproduction
-and is a first mechanism/recovery pilot, not a replication or efficacy result.
+Differences are left minus right NLL; negative favors left. 95% intervals use 1,000 paired resamples of original-document clusters, combining their windows before calculating token-weighted NLL (seed 20260922).
 
-## Completed validation
+| Finite-pass comparison (512 windows) | Code difference [95% interval] | Retention difference [95% interval] |
+| --- | ---: | ---: |
+| fbt_pass1_minus_ordinary_pass1 | +0.037619 [+0.033360, +0.041884] | +1.792577 [+1.631192, +1.932436] |
+| fbt_pass0_minus_ordinary_pass0 | -0.001168 [-0.002276, -0.000177] | +0.006220 [+0.004203, +0.008625] |
+| fbt_pass1_minus_fbt_pass0 | +0.038787 [+0.034764, +0.042976] | +1.786357 [+1.622878, +1.927292] |
 
-The scoped CPU suite passes 693 tests, including 150 new evaluation, runner,
-report and retention tests. Source implementation commit:
-`4751d508b26887b8873cf43b06acc2b47994067c`.
+![Finite-pass learning curves](learning-curves.png)
 
-Actual H100 complete beta1 steps used full-length real train windows, two warmups
-and three timed updates per candidate, with initialized AdamW state and LR0:
+[Curves PDF](learning-curves.pdf)
 
-| Physical batch / accumulation | Peak allocated | Median step | Valid input tokens/s |
-| --- | ---: | ---: | ---: |
-|32 /1 |74.53GiB |0.909s |18,018 |
-|16 /2, selected |49.60GiB |0.919s |17,821 |
+The following **32-window, maximum-64-token** results use the same short prefixes for finite and exact-online execution. They are separate from the 512-window comparison above.
 
-Both preserve all model/buffer bytes and have finite optimizer state. The
-selection keeps effective batch32 and substantial memory headroom at little
-measured timing cost. These are three-sample eager timings, not tuned throughput.
+| Arm | Code pass0 / finite / online NLL | Retention pass0 / finite / online NLL |
+| --- | ---: | ---: |
+| ordinary | 2.157183 / 2.157183 / 2.157134 | 4.232237 / 4.232237 / 4.232553 |
+| fbt | 2.165378 / 2.200133 / 2.200238 | 4.243235 / 5.083958 / 5.032388 |
 
-Initial 512-window code/retention NLL is 1.787902/3.040993, matching O4's original
-checkpoint. Cold full-strength feedback is highly disruptive: on the 128-window
-subset, pass 1 NLL is 9.569364/11.091882 versus same-window pass 0 values
-1.690766/3.105747. The gradual ramp tests whether learned feedback recovers;
-this cold result neither demonstrates learned benefit nor rules it out.
+![Short-prefix online diagnostic](online-comparison.png)
 
-On identical first 32 short windows capped at 64, beta 0 parallel and exact-online
-NLL differ by about 0.0006 nats with BF16 cached/full execution. Report finite and
-online measures separately and never compare short-prefix NLL with 512-window
-NLL. No new numerical-fidelity claim is implied by finite losses.
+[Online PDF](online-comparison.pdf) · [All results and paired intervals](final-comparison.json)
 
-## Running and retained evidence
+One seed and development subsets only; reserved tests untouched. Equal data exposure and the same two-pass CE objective (pass0 + pass1), not a claim of equal measured compute. No RT or NextLat. Context resets per window; documents counter counts windows, not unique documents. Paired intervals resample original document clusters and do not quantify seed variability. Unknown OLMo pretraining overlap. Token NLL does not establish programming-task success. Exact-online diagnostics are teacher-forced on separate 32-window, maximum-64-token prefixes; they are not free-running generation and must not be equated with 512-token finite-pass evaluations.
 
-- [Ordinary control](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ichekj67)
-  is first; the FBT arm starts automatically after it completes.
-- [Preflight](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/upirj0yb)
-  is completed. [Raw summary](preflight-summary.json), [CPU tests](test-results.txt).
-- Queue: `.runtime/olmo1b-step60000/o5b-pilot-01/queue.json`; automatic CPU
-  report/retention finisher writes `finish-status.json` beside it. Read those
-  files for current status; this launch note is not a live dashboard.
-- Config SHA256:`b26d4f7af7e6888bf0f8720724d2aadc3f4c1ed842dd988ebbedc89545bce626`.
-- Verified [initial storage receipt](initial-storage-receipt.json) references
-  original native weights and the unchanged prepared O4 corpus without uploading
-  duplicate model/data bytes. New prefix:
-  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/`.
-- Each full optimizer checkpoint is retained and verified before removing its
-  older local predecessor. The queue halts on errors or the declared health gate.
+Run and endpoint records:
 
-Review final pass 0/pass 1 losses, retention, paired document intervals and exact
-online behavior before extending exposure or adding another mechanism. This
-single-seed ~21M-token recovery check cannot establish architectural efficacy.
+- [ordinary on W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ichekj67); [checkpoint](gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/ordinary/update-002634.pt), generation `1790052541850455`, SHA256 `738ed2ef2a31a4a52cb28276be3ce4494170c40658025c614f0d3614c8323b6a`.
+- [fbt on W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/gtv1hp98); [checkpoint](gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-002634.pt), generation `1790055503754266`, SHA256 `99585f5e9d666e8dea3f533749d155b0695b8143a6a313b60fb99f8d157faf66`.

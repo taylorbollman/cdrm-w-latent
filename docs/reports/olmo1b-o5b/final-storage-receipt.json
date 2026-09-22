@@ -1,0 +1,115 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "objects": [
+    {
+      "generation": "1790055544764274",
+      "md5_base64": "JKhkG7kVh8QDYPgUb24jnw==",
+      "sha256": "c87153e8d36c32746c57ce9d6429409a0061311f3928d4cf66475a7e3c45c60e",
+      "size_bytes": 2611834,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/final/evidence.tar.gz"
+    },
+    {
+      "generation": "1790055544973499",
+      "md5_base64": "qCOaCHrSMVwueVz9FC4D5g==",
+      "sha256": "c8b78bedd6f86b364707c59f9c37c5d4183766690e40dc6accc41a13aaa751fe",
+      "size_bytes": 38645,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/final/manifest.json"
+    }
+  ],
+  "phase": "final",
+  "prepared_data_references": [
+    {
+      "generation": "1790028911751263",
+      "md5_base64": "DrQDiCwzpwoZW1cnnUHsqw==",
+      "reused_without_upload": true,
+      "sha256": "ab0d8f4e0f39b9e9107f37dcc3da0d509beec760d828dc3a2c3b7c77b36888f4",
+      "size_bytes": 68381709,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/evidence.tar.gz"
+    },
+    {
+      "generation": "1790028912626318",
+      "md5_base64": "BgskcfIaByszAnljzvXM9w==",
+      "reused_without_upload": true,
+      "sha256": "51c39dcffa9f21ed85254058b3fb1c37520c583a2ec4024501c102704571cf35",
+      "size_bytes": 18385,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/manifest.json"
+    }
+  ],
+  "receipt_object": {
+    "generation": "1790055545184996",
+    "md5_base64": "X7+7l7o3fcp3livfCWAosA==",
+    "sha256": "4a966080855c2639c395e43f62e254affb1f7f4f635dcd93b0f67bfefdaaaf16",
+    "size_bytes": 5042,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/final/storage-receipt.json"
+  },
+  "schema": "olmo-o5b-evidence-receipt-v1",
+  "status": "verified",
+  "training_checkpoint_references": {
+    "fbt": [
+      {
+        "generation": "1790052949723444",
+        "md5_base64": "g5LPQZiGjR+jxDghisBpVw==",
+        "reused_without_upload": true,
+        "sha256": "118e14fddaa07788c6371a840b242f9f99a8d9c08d1c736d0588b97dbe298e72",
+        "size_bytes": 14154881129,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-000100.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      },
+      {
+        "generation": "1790054228949291",
+        "md5_base64": "S8MU2VAfqWS81Op6GWDEKw==",
+        "reused_without_upload": true,
+        "sha256": "728e4567bc1dd64134759fdfd0e5c27ae2c684d81a44644927a9e4a2ff24480a",
+        "size_bytes": 14221991781,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-001367.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      },
+      {
+        "generation": "1790055503754266",
+        "md5_base64": "j6t7M1RRn3y+A8UEHUGBrg==",
+        "reused_without_upload": true,
+        "sha256": "99585f5e9d666e8dea3f533749d155b0695b8143a6a313b60fb99f8d157faf66",
+        "size_bytes": 14221991781,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-002634.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      }
+    ],
+    "ordinary": [
+      {
+        "generation": "1790049996570026",
+        "md5_base64": "22BvcSuhCM2MJ/NFKSIfDA==",
+        "reused_without_upload": true,
+        "sha256": "dc8560e0316e907db058598f55fabeb497fa76495a8e440a1a0b0c330f9be28b",
+        "size_bytes": 14154881129,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/ordinary/update-000100.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      },
+      {
+        "generation": "1790051273389060",
+        "md5_base64": "yIAgFm0K4UoAiLh//UT8tw==",
+        "reused_without_upload": true,
+        "sha256": "69b2e466fd7617fbe7df99d12fff2da3228ca0fb11218468f27e6ded6d517b99",
+        "size_bytes": 14154881129,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/ordinary/update-001367.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      },
+      {
+        "generation": "1790052541850455",
+        "md5_base64": "dQddFvXdEAK+hkgiS5ADnQ==",
+        "reused_without_upload": true,
+        "sha256": "738ed2ef2a31a4a52cb28276be3ce4494170c40658025c614f0d3614c8323b6a",
+        "size_bytes": 14154881129,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/ordinary/update-002634.pt",
+        "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+      }
+    ]
+  }
+}

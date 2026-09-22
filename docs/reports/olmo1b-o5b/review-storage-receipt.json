@@ -1,0 +1,45 @@
+{
+  "evaluated_checkpoint": {
+    "generation": "1790055503754266",
+    "md5_base64": "j6t7M1RRn3y+A8UEHUGBrg==",
+    "sha256": "99585f5e9d666e8dea3f533749d155b0695b8143a6a313b60fb99f8d157faf66",
+    "size_bytes": 14221991781,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/fbt/update-002634.pt",
+    "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+  },
+  "objects": [
+    {
+      "generation": "1790055857043869",
+      "md5_base64": "eoS/3CvmonmzS4ACpJg72A==",
+      "sha256": "f0fe077d76ad3be5b8186a03812b69e2f8f230c653a6f819aa468234d80b7230",
+      "size_bytes": 665824,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/review/evidence.tar.gz",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    },
+    {
+      "generation": "1790055862877024",
+      "md5_base64": "N9QsJFYoIzi7ouXzWFjiQw==",
+      "sha256": "167212e32a4194cb0113074a9c8b40eda37aac50966ba5cdf3f2a2a61dbaabc0",
+      "size_bytes": 10840,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/review/manifest.json",
+      "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+    }
+  ],
+  "parent_evidence_receipt": {
+    "generation": "1790055545184996",
+    "md5_base64": "X7+7l7o3fcp3livfCWAosA==",
+    "sha256": "4a966080855c2639c395e43f62e254affb1f7f4f635dcd93b0f67bfefdaaaf16",
+    "size_bytes": 5042,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/final/storage-receipt.json"
+  },
+  "receipt_object": {
+    "generation": "1790055868646005",
+    "md5_base64": "bTrR7UMoD8/d5z//AjRkNA==",
+    "sha256": "20a0625957df9f3a2e6b18c557c51a7a85226a14026183fb3d7ba3e93da5de34",
+    "size_bytes": 1716,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/review/storage-receipt.json",
+    "verification": "GCS generation, size, server MD5 and SHA256 metadata verified"
+  },
+  "schema": "olmo-o5b-review-receipt-v1",
+  "status": "verified"
+}

@@ -1,0 +1,380 @@
+{
+  "arms": {
+    "fbt": {
+      "clipping": {
+        "above_limit": 2634,
+        "fraction_above_limit": 1.0,
+        "limits": [
+          1.0
+        ],
+        "updates": 2634
+      },
+      "data_cursor": 84288,
+      "event_selection": {
+        "raw_update_events": 2634,
+        "selected_updates": 2634,
+        "selection": "latest recorded occurrence per update; duplicates require recorded resumptions",
+        "superseded_update_events": 0
+      },
+      "exposure": {
+        "ce_positions": 20771511,
+        "documents": 84288,
+        "input_tokens": 20855799,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "microbatches": 5268,
+        "optimizer_updates": 2634
+      },
+      "finished_utc": "2026-09-22T05:38:41.584676+00:00",
+      "finite_event_check": {
+        "checked_float_values": 66695,
+        "passed": true,
+        "scope": "all JSON event floats, including superseded audit events; not a scan of model tensors"
+      },
+      "gate_observations": {
+        "explicit_gate_events": [],
+        "final_status": "completed",
+        "qualification": "Completion does not imply satisfactory retention; the frozen gate requires severe loss in both domains."
+      },
+      "gradient_norm_before_clip": {
+        "count": 2634,
+        "max": 21.1442928314209,
+        "maximum_beta": 1.0,
+        "maximum_pass_ce_means": [
+          1.3927863590794676,
+          2.215086218701594
+        ],
+        "maximum_update": 1491,
+        "mean": 5.151812432295641,
+        "median": 5.042977571487427,
+        "min": 3.8884308338165283,
+        "p95": 6.177020788192749,
+        "p99": 7.080238399505616
+      },
+      "last100": {
+        "first_update": 2535,
+        "fraction_definition": "fusion_norm_squared / (backbone_norm_squared + fusion_norm_squared); zero when both norms are zero",
+        "fusion_squared_norm_fraction": {
+          "count": 100,
+          "max": 0.004789747562545107,
+          "mean": 0.0026170731824152003,
+          "median": 0.00255608815615997,
+          "min": 0.0021458116407583098,
+          "p95": 0.0030684648450178455,
+          "p99": 0.003674502962312346
+        },
+        "gradient_norm_before_clip": {
+          "count": 100,
+          "max": 5.671751976013184,
+          "mean": 4.631958184242248,
+          "median": 4.635396718978882,
+          "min": 4.03275728225708,
+          "p95": 5.009269833564758,
+          "p99": 5.603379893302918
+        },
+        "group_gradient_norm_after_clip": {
+          "backbone": {
+            "count": 100,
+            "max": 0.9989264011383057,
+            "mean": 0.9986903959512711,
+            "median": 0.9987209141254425,
+            "min": 0.9976021647453308,
+            "p95": 0.998882246017456,
+            "p99": 0.9989199692010879
+          },
+          "fusion": {
+            "count": 100,
+            "max": 0.06920799612998962,
+            "mean": 0.05105835035443306,
+            "median": 0.050557756796479225,
+            "min": 0.04632290080189705,
+            "p95": 0.05539289116859435,
+            "p99": 0.06061150919646029
+          }
+        },
+        "last_update": 2634,
+        "pass_ce_mean_over_updates": [
+          1.5641371090586844,
+          1.5987431277584714
+        ]
+      },
+      "peak_allocated_gib": {
+        "count": 2634,
+        "max": 49.60185098648071,
+        "maximum_update": 633,
+        "mean": 49.53927547241941,
+        "median": 49.55315923690796,
+        "min": 40.48668432235718,
+        "p95": 49.55859375,
+        "p99": 49.57294431686401
+      },
+      "resumptions": [],
+      "status": "completed",
+      "step_seconds": {
+        "count": 2634,
+        "max": 1.0063970219998737,
+        "mean": 0.7577325423017867,
+        "median": 0.7510951259973808,
+        "min": 0.7028044239996234,
+        "p95": 0.8083260381012224,
+        "p99": 0.8987917852214015
+      }
+    },
+    "ordinary": {
+      "clipping": {
+        "above_limit": 2634,
+        "fraction_above_limit": 1.0,
+        "limits": [
+          1.0
+        ],
+        "updates": 2634
+      },
+      "data_cursor": 84288,
+      "event_selection": {
+        "raw_update_events": 2634,
+        "selected_updates": 2634,
+        "selection": "latest recorded occurrence per update; duplicates require recorded resumptions",
+        "superseded_update_events": 0
+      },
+      "exposure": {
+        "ce_positions": 20771511,
+        "documents": 84288,
+        "input_tokens": 20855799,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "microbatches": 5268,
+        "optimizer_updates": 2634
+      },
+      "finished_utc": "2026-09-22T04:49:19.249145+00:00",
+      "finite_event_check": {
+        "checked_float_values": 66695,
+        "passed": true,
+        "scope": "all JSON event floats, including superseded audit events; not a scan of model tensors"
+      },
+      "gate_observations": {
+        "explicit_gate_events": [],
+        "final_status": "completed",
+        "qualification": "Completion does not imply satisfactory retention; the frozen gate requires severe loss in both domains."
+      },
+      "gradient_norm_before_clip": {
+        "count": 2634,
+        "max": 10.402379989624023,
+        "maximum_beta": 0.0,
+        "maximum_pass_ce_means": [
+          1.345660291914642,
+          1.345660291914642
+        ],
+        "maximum_update": 1491,
+        "mean": 4.932619516380646,
+        "median": 4.871241092681885,
+        "min": 3.883981943130493,
+        "p95": 5.666806411743164,
+        "p99": 6.498098640441895
+      },
+      "last100": {
+        "first_update": 2535,
+        "fraction_definition": "fusion_norm_squared / (backbone_norm_squared + fusion_norm_squared); zero when both norms are zero",
+        "fusion_squared_norm_fraction": {
+          "count": 100,
+          "max": 0.0,
+          "mean": 0.0,
+          "median": 0.0,
+          "min": 0.0,
+          "p95": 0.0,
+          "p99": 0.0
+        },
+        "gradient_norm_before_clip": {
+          "count": 100,
+          "max": 5.656198024749756,
+          "mean": 4.70083872795105,
+          "median": 4.697378158569336,
+          "min": 4.104250431060791,
+          "p95": 5.086174631118774,
+          "p99": 5.528021907806397
+        },
+        "group_gradient_norm_after_clip": {
+          "backbone": {
+            "count": 100,
+            "max": 0.9999999403953552,
+            "mean": 0.9999998015165329,
+            "median": 0.9999998211860657,
+            "min": 0.9999997019767761,
+            "p95": 0.9999998807907104,
+            "p99": 0.9999998813867569
+          },
+          "fusion": {
+            "count": 100,
+            "max": 0.0,
+            "mean": 0.0,
+            "median": 0.0,
+            "min": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        },
+        "last_update": 2634,
+        "pass_ce_mean_over_updates": [
+          1.5606822858333453,
+          1.5606822858333453
+        ]
+      },
+      "peak_allocated_gib": {
+        "count": 2634,
+        "max": 49.30483818054199,
+        "maximum_update": 633,
+        "mean": 49.253742823930246,
+        "median": 49.25621557235718,
+        "min": 40.48668432235718,
+        "p95": 49.261925506591794,
+        "p99": 49.27656003952026
+      },
+      "resumptions": [],
+      "status": "completed",
+      "step_seconds": {
+        "count": 2634,
+        "max": 0.9529024269941146,
+        "mean": 0.7509667107893708,
+        "median": 0.7442684685011045,
+        "min": 0.6944922920010868,
+        "p95": 0.8018267560481035,
+        "p99": 0.8976514314771339
+      }
+    }
+  },
+  "created_utc": "2026-09-22T05:39:56.688760+00:00",
+  "first100_warmup": {
+    "all_structural_fields_match": true,
+    "both_beta_zero": true,
+    "difference_convention": "FBT minus ordinary",
+    "exact_non_timing_matching_updates": [],
+    "exact_non_timing_update_matches": 0,
+    "gradient_norm_before_clip": {
+      "exact_matches": 0,
+      "fbt_at_maximum": 5.69870662689209,
+      "max_absolute_difference": 2.5426321029663086,
+      "maximum_difference_update": 79,
+      "mean_absolute_difference": 0.053571586608886716,
+      "mean_signed_difference": -0.03403282165527344,
+      "ordinary_at_maximum": 8.241338729858398,
+      "p95_absolute_difference": 0.1949470043182368,
+      "updates": 100
+    },
+    "group_gradient_norm_after_clip": {
+      "backbone": {
+        "exact_matches": 37,
+        "fbt_at_maximum": 0.9999998807907104,
+        "max_absolute_difference": 1.1920928955078125e-07,
+        "maximum_difference_update": 5,
+        "mean_absolute_difference": 4.9471855163574216e-08,
+        "mean_signed_difference": -7.748603820800782e-09,
+        "ordinary_at_maximum": 0.9999997615814209,
+        "p95_absolute_difference": 1.1920928955078125e-07,
+        "updates": 100
+      },
+      "fusion": {
+        "exact_matches": 100,
+        "fbt_at_maximum": 0.0,
+        "max_absolute_difference": 0.0,
+        "maximum_difference_update": 1,
+        "mean_absolute_difference": 0.0,
+        "mean_signed_difference": 0.0,
+        "ordinary_at_maximum": 0.0,
+        "p95_absolute_difference": 0.0,
+        "updates": 100
+      }
+    },
+    "objective": {
+      "exact_matches": 1,
+      "fbt_at_maximum": 3.3944227884749547,
+      "max_absolute_difference": 0.004477716879447424,
+      "maximum_difference_update": 91,
+      "mean_absolute_difference": 0.0005585400096580973,
+      "mean_signed_difference": 5.934551926262799e-05,
+      "ordinary_at_maximum": 3.3899450715955073,
+      "p95_absolute_difference": 0.0014752570152229078,
+      "updates": 100
+    },
+    "pass_ce": {
+      "0": {
+        "exact_matches": 1,
+        "fbt_at_maximum": 1.6972113942374774,
+        "max_absolute_difference": 0.002238858439723712,
+        "maximum_difference_update": 91,
+        "mean_absolute_difference": 0.00027927000482904865,
+        "mean_signed_difference": 2.9672759631313994e-05,
+        "ordinary_at_maximum": 1.6949725357977536,
+        "p95_absolute_difference": 0.0007376285076114539,
+        "updates": 100
+      },
+      "1": {
+        "exact_matches": 1,
+        "fbt_at_maximum": 1.6972113942374774,
+        "max_absolute_difference": 0.002238858439723712,
+        "maximum_difference_update": 91,
+        "mean_absolute_difference": 0.00027927000482904865,
+        "mean_signed_difference": 2.9672759631313994e-05,
+        "ordinary_at_maximum": 1.6949725357977536,
+        "p95_absolute_difference": 0.0007376285076114539,
+        "updates": 100
+      }
+    },
+    "qualification": "Matched metadata does not establish exact replay. Differences are observations; this report does not identify their numerical cause.",
+    "structural_fields": {
+      "beta": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "counters": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "counts": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "lr_next": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "lr_used": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "max_grad_norm": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "objective_weights": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "optimizer_state_bytes_by_device": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "stack_input_tokens": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      },
+      "update_completed": {
+        "matching_updates": 100,
+        "mismatch_updates": []
+      }
+    },
+    "updates_compared": 100
+  },
+  "input_sha256": {
+    "fbt": {
+      "events.jsonl": "c04a12a269b2c8f6abfdda14c7fcd045a6239503f95257a8f5e3a232d53e01e3",
+      "report.json": "1e9de0339fcc86efa0eb7856a09d3a7c58e1dec65df9c4b53b696a7548569ab1"
+    },
+    "ordinary": {
+      "events.jsonl": "5f22de6e92cfd470936c4196d72642599b0a1c7b2d6c15943f5a43ab1e2f90c5",
+      "report.json": "d5269719b2983f200a99e8c4932eee48c9fbb917ff19b23317cd4631ad021217"
+    }
+  },
+  "qualification": "Recorded optimizer observations only. Finite loss/norms do not demonstrate acceptable task quality or validate all tensor numerics. The pass CE average here is an unweighted descriptive average over updates, not held-out token-weighted NLL. Timing excludes checkpoint/evaluation work. Norm fractions do not determine parameter-update magnitudes.",
+  "schema": "olmo-o5b-optimization-summary-v1",
+  "script_sha256": "64897c79f2339388a62c82a9ecded6ab4065bb4c224e58a6730e38f13abda14d",
+  "status": "completed"
+}

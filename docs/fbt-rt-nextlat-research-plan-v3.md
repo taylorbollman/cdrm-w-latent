@@ -21,7 +21,13 @@ O5b: one matched ordinary-versus-FBT-only recovery pilot, about20.856M input
 tokens per arm. Its [frozen protocol](reports/olmo1b-o5b/protocol.md) specifies
 K2/gamma1 in both arms, no RT/NextLat, separate native/fusion learning rates,
 gradual feedback introduction, and finite-pass plus short online evaluation.
-Further learning remains staged. Historical planning-status statements
+O5b is now complete: feedback recovers most code quality but leaves a large
+general-language retention deficit, while its ordinary pass remains near the
+control. A fixed-weight beta/pass diagnostic localizes the main effect to using
+feedback; extra passes do not rescue it on short prefixes. See
+[assessment](reports/olmo1b-o5b/assessment.md). Next proposed experiment is a
+small frozen-backbone, fusion-only domain-adaptation comparison; it is not
+launched. Further learning remains staged. Historical planning-status statements
 below describe checkpoint selection, before the implementation evidence.
 
 This replaces the model
@@ -403,7 +409,9 @@ of logs. Read the handoff for container and retention recovery details.
 **Current review boundary:** O4 has completed and been assessed. All four arms
 received20.856M valid input tokens and2,634 updates; final checkpoints/evidence
 are retained. O5a FBT implementation and bounded correctness also pass.
-The user authorized O5b's bounded two-arm pilot; see the handoff for live status.
-Review that comparison before extending exposure, adding RT/NextLat, or changing
-prefix sampling/noise. No larger interaction sweep is authorized. Multi-GPU
-remains untested.
+O5b and its evaluation-only endpoint diagnostic are complete and assessed.
+See the handoff for retained endpoints and the proposed fusion-only code versus
+code/general-text adaptation diagnostic. No further training is queued. Freeze
+its data and exposure before proceeding; keep RT/NextLat and prefix/noise choices
+separate initially. No larger interaction sweep is authorized. Multi-GPU remains
+untested.

@@ -2,8 +2,9 @@
 
 This is the operational guide for the bounded, paired FBT learning pilot. The
 preflight passed and selected physical16 accumulated twice (49.60GiB), retaining
-effective batch32. **Learning results are pending.** Read the runtime
-`report.json` and `queue.json` for status. The [frozen protocol](reports/olmo1b-o5b/protocol.md)
+effective batch32. **Both learning arms and the endpoint diagnostic are complete.** Read
+[results](reports/olmo1b-o5b/results.md) and [assessment](reports/olmo1b-o5b/assessment.md);
+commands below are reproduction/recovery instructions, not a queue to relaunch. The [frozen protocol](reports/olmo1b-o5b/protocol.md)
 defines the experiment; the [handoff](fbt-rt-nextlat-handoff.md) records current
 authorization. [O5a usage](olmo1b-fbt-usage.md) covers the model semantics and
 bounded correctness evidence.
