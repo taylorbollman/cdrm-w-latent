@@ -25,6 +25,7 @@ EXTRA_PROJECT_FILES = {
     "scripts/olmo_tiled_retain.py", "scripts/olmo_retain.py", "scripts/openelm_retain.py",
     "scripts/docker_shell.sh", "docker/requirements-docker.txt",
     "AGENTS.md", "docs/fbt-rt-nextlat-handoff.md", "docs/fbt-rt-nextlat-research-plan-v4.md",
+    "docs/olmo1b-f1-usage.md", "configs/olmo_f1_integration.json",
     "tests/test_olmo_f1_retain.py",
 }
 RUNTIME_FILES = {

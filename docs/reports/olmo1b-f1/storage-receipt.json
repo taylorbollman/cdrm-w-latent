@@ -1,0 +1,40 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "kind": "storage-receipt",
+  "objects": [
+    {
+      "generation": "1790092036330262",
+      "md5_base64": "e+9cOU8UEXBRNp1pmWh0OA==",
+      "sha256": "d5eded73f55ad403855657ce89b14268200a0581bd2e57d900b63c75be7c1bfa",
+      "size_bytes": 588413,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f1-integration/20260922T154616Z/evidence.tar.gz",
+      "verification": "GCS size/server MD5 and SHA256 metadata match local evidence bytes"
+    },
+    {
+      "generation": "1790092036542089",
+      "md5_base64": "aInpRwv5NlNbZO8jwsMDJA==",
+      "sha256": "6c9d37e7fed8152da6d2226324db1a1acb668aae7d20fff02532edb3263cf12f",
+      "size_bytes": 25552,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f1-integration/20260922T154616Z/retention-manifest.json",
+      "verification": "GCS size/server MD5 and SHA256 metadata match local evidence bytes"
+    }
+  ],
+  "receipt_object": {
+    "generation": "1790092036756993",
+    "md5_base64": "ENjFu/xxiXQEKSzCvpxFOQ==",
+    "sha256": "babae42c43b5e22be4479dc1d3caf83d562dcb45bfa7c31d4e7a057b38c5b026",
+    "size_bytes": 1457,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f1-integration/20260922T154616Z/storage-receipt.json",
+    "verification": "GCS size/server MD5 and SHA256 metadata match local evidence bytes"
+  },
+  "schema": "olmo-f1-retention-v1",
+  "status": "verified"
+}

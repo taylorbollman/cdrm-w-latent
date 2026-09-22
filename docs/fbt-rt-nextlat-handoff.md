@@ -13,16 +13,54 @@ Quality wins and substantial baseline/variant training come after that review.
 
 Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
 the O5e recommendation below to run another joint-backbone FBT learning comparison.
-**The user approved v4 and authorized F1**, including brief early profiling
-to locate actual bottlenecks. F1 development is in progress on
-`feat/olmo1b-f1-integration`, based on O5e merge `9139783`:
-a common eight-mode integration runner/ledger, reusing existing tiny math checks
-and adding bounded repeated updates on the actual checkpoint.
-The frozen [F1 protocol](reports/olmo1b-f1/protocol.md) and
-[configuration](../configs/olmo_f1_integration.json) define 18 bounded cases,
-including two recovery checks and four brief T512 profiles.
-Do not launch broader learning or the later kernel/QK/distributed stages by
-mistaking this milestone for a long training authorization.
+**F1 is complete and assessed (2026-09-22).** The user approved v4 including
+brief early profiling, and authorized this bounded integration milestone.
+All18 cases passed in one actual-checkpoint run: all eight feature combinations,
+K3/fractional/transition/two-RT-layer cases, representative T128/T512 updates,
+two exact BF16 checkpoint replays, and a short exact online cache check.
+Read [assessment](reports/olmo1b-f1/assessment.md),
+[results](reports/olmo1b-f1/results.md),
+[capability ledger](reports/olmo1b-f1/capability-ledger.json),
+[protocol](reports/olmo1b-f1/protocol.md) and [usage](olmo1b-f1-usage.md).
+
+Operational record:
+
+- Branch `feat/olmo1b-f1-integration`, base O5e merge `9139783`;
+  frozen runtime/protocol commit `c9524ca`.
+- Run .runtime/olmo1b-step60000/f1-integration-01, adjacent .log;
+  exec55172 completed0, 2026-09-22T15:31:17–15:41:34UTC, 615.86seconds.
+  [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8patkvpi).
+- 72 retained-counter updates, 86 microbatches, 19,512 valid input tokens;
+  two duplicate recovery replays give 74 physical optimizer executions.
+  These are operational fixtures, not corpus/quality evidence.
+- 244 distinct scoped CPU tests pass. Independent final source/objective/
+  ownership/counters/recovery/cache audit passes. Runtime sources unchanged.
+- Both disposable full recovery checkpoints were deleted after exact successful
+  replay. Model/optimizer/scheduler/counters/fixture and subsequent CPU/CUDA
+  RNG checks are retained in the report. Reuse the original retained weights.
+- Small evidence retained and verified at
+  gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f1-integration/20260922T154616Z/.
+  [Receipt](reports/olmo1b-f1/storage-receipt.json); archive588,413bytes,
+  generation1790092036330262, SHA256
+  d5eded73f55ad403855657ce89b14268200a0581bd2e57d900b63c75be7c1bfa.
+  The native checkpoint is referenced at its existing verified object.
+- B1/T512 median full-step seconds / inputtokens-per-second / peakallocatedGiB:
+  ordinary .0676 /7571 /18.40; RT1.6266 /315 /18.40;
+  FBT .1043 /4910 /18.68; all-three1.6803 /305 /20.40.
+  RT selects layer0, FBT K2; half the input positions carry CE targets.
+- All four profiles show cuDNN fused SDPA in ordinary blocks; RT remains eager.
+  Large custom-backward/forward CPU and launch durations make batch scaling
+  and eager scheduling/replay the leading efficiency investigation.
+- All56 retained preclip-norm observations clipped at1. Random fusion/NextLat
+  produce large norms, especially K3 (initial2805.8 versus K2combined887.7);
+  these are F2 scale/startup leads, not evidence that derivatives are wrong
+  or that absence of Q/K normalization is the cause.
+
+**No GPU job or further learning is queued. Do not restart completed F1.**
+Recommended next review: bounded F2 activation/per-loss gradient-scale probes,
+plus T512 RT/all-three B1/2/4/8 scaling and targeted eager execution work before
+a large Flash/CuTE rewrite. Preserve native Q/K math until evidence warrants
+a separate adaptation. Two-GPU work still requires an actual second GPU.
 
 Important context for resumption:
 
@@ -42,8 +80,8 @@ Important context for resumption:
   functionality work. Changing comparison loss weighting is a later decision.
 - Read-only container inventory exposed one H100 80GB. Two-GPU checks need an
   actual second GPU and can start on the existing validated backend.
-- F1 actual-checkpoint execution is authorized after scoped tests. No learning
-  comparison is queued. O1–O5e reports and checkpoints remain historical evidence.
+- F1 actual-checkpoint execution is complete. No learning comparison is queued.
+  O1–O5e reports and checkpoints remain historical evidence.
 
 ## Latest completed milestone: O5e
 

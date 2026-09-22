@@ -7,9 +7,15 @@ The user's new priority is confidence in functionality, numerical health,
 integration and reasonable execution cost, before asking which model wins.
 Completed O1–O5e evidence remains valid within its recorded scope.
 
-**Status: approved; F1 implementation in progress.** The user endorsed this
-plan, explicitly including brief early profiling to identify actual bottlenecks.
-F1 development and its bounded checks are authorized. The previously proposed full-backbone
+**Status: approved; F1 complete and assessed.** The user endorsed this plan,
+explicitly including early profiling. F1 passed all18 actual-checkpoint cases,
+two exact BF16 replays and 244 scoped CPU tests. Read its
+[assessment](reports/olmo1b-f1/assessment.md) and [results](reports/olmo1b-f1/results.md).
+At B1/T512, eager RT costs1.63s/update versus ordinary .068s; the profile points
+to scheduling/replay/launch overhead. The next proposed bounded milestone
+combines F2 scale/startup probes with early F3/F4 batch scaling and execution
+work, before a large fused-kernel rewrite. No further job is queued.
+The previously proposed full-backbone
 mixed-data FBT learning comparison is deferred, not queued.
 Read the [handoff](fbt-rt-nextlat-handoff.md) first after compaction.
 

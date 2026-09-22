@@ -57,8 +57,11 @@ no GPU job or further learning is queued. The user has reset the next priority
 to functionality, bounded numerical health, integration, parameter/throughput/
 FLOP accounting, Q/K-normalization assessment, native tiled-RT/Flash efficiency
 and multi-GPU execution before quality comparisons. The user approved V4,
-including early profiling; F1 development and bounded actual-checkpoint
-integration checks are authorized and in progress. Read its protocol and handoff.
+including early profiling. F1 is complete:18actual-checkpoint cases, two exact
+BF16 recovery checks, short online cache parity and244scoped CPU tests pass.
+Read its assessment/results and handoff. Early B1/T512 profiling identifies eager
+RT scheduling/replay/launch overhead as a leading bottleneck; large clipped
+startup gradients remain a bounded F2 diagnostic lead. No further job is queued.
 Do not resume completed diagnostics or the deferred full-backbone FBT learning
 comparison. Native tiled backward returns parameter gradients normally, but
 does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.
