@@ -22,8 +22,10 @@ from scripts.olmo_f3_graph_training import (
     case_for, new_plan, build_optimizer, changed_batch, backend_context,
     state_health, timed, OnlineTracker,
 )
+from scripts.olmo_f3b_validate import new_plan as variant_plan
 
-SOURCES = tuple(sorted(set(F3_SOURCES) | {"scripts/olmo_f3b_profile.py"}))
+SOURCES = tuple(sorted(set(F3_SOURCES) | {"scripts/olmo_f3b_profile.py",
+    "scripts/olmo_f3b_validate.py", "cdrm/pretrained/olmo_rt_kernels.py"}))
 
 
 @contextmanager
@@ -62,6 +64,7 @@ def profile_rows(profile):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=("rt", "combined"), required=True)
+    parser.add_argument("--variant", choices=("reference", "cast_once", "triton"), default="reference")
     parser.add_argument("--batch-size", type=int, choices=(32,64,128), required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--artifacts", type=Path, default=ROOT/".runtime/olmo1b-step60000/artifacts")
@@ -81,7 +84,7 @@ def main(argv=None):
     report = {"schema": "olmo-f3b-profile-v1", "status": "running",
         "runtime": {k:str(v) for k,v in runtime.items()},
         "started_utc": datetime.now(timezone.utc).isoformat(),
-        "configuration": {"case":args.case,"batch_size":args.batch_size,"length":512,
+        "configuration": {"case":args.case,"variant":args.variant,"batch_size":args.batch_size,"length":512,
             "rt_layers":[0],"checkpointing":True,"precision":"bf16_mixed",
             "ordinary_backend":"flash","autocast_weight_cache":False,**determinism},
         "source_hashes": {p:sha256_file(ROOT/p) for p in SOURCES}}
@@ -96,7 +99,9 @@ def main(argv=None):
         tokenizer = load_native_tokenizer(args.artifacts)
         case = case_for(args.case,batch=args.batch_size,length=512)
         with backend_context("flash"):
-            model, plan = new_plan(state,tokenizer,case,args)
+            from scripts.olmo_f1_common import build_model
+            model = build_model(state,case)
+            plan = variant_plan(model,changed_batch(tokenizer,case,0),case.mode(),args.variant)
             optimizer,scheduler = build_optimizer(model)
             counters = TrainingCounters()
             for step in range(3):
@@ -104,10 +109,6 @@ def main(argv=None):
                     scheduler=scheduler,counters=counters)
             plan.capture(warmup=10)
             records=[]
-            def complete():
-                records.append(plan.optimizer_step(optimizer,
-                    changed_batch(tokenizer,case,3+len(records)),replay=True,
-                    scheduler=scheduler,counters=counters))
             # Pre-create CPU fixture batches so fixture construction is not timed.
             batches=[changed_batch(tokenizer,case,3+i) for i in range(3)]
             def complete_timed():
