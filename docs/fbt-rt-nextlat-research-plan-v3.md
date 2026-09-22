@@ -1,6 +1,12 @@
 # OLMo-1B / RT / FBT / NextLat research plan
 
-Updated 2026-09-22. **Current authoritative plan.**
+Updated 2026-09-22. **Historical plan, superseded by
+[v4](fbt-rt-nextlat-research-plan-v4.md).**
+
+The user has moved the immediate priority to functionality, bounded numerical
+health, integration and single/multi-GPU execution costs. The next learning
+comparison proposed below is deferred. Keep this document as the historical
+model-selection/design record; consult v4 and the current handoff for next work.
 
 **Current execution status:** O5c fusion-only repair, O5d finite/online transfer
 and O5e matched ordinary continuation are complete. O5e ordinary reaches

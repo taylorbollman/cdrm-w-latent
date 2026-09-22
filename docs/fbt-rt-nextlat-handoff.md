@@ -4,6 +4,49 @@ Updated 2026-09-22. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Priority reset, 2026-09-22: functionality and execution before quality.**
+The user now wants confidence that RT, FBT and NextLat work separately and
+together, with bounded numerical/gradient checks where concerns exist, reasonable
+efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
+decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
+Quality wins and substantial baseline/variant training come after that review.
+
+Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
+the O5e recommendation below to run another joint-backbone FBT learning comparison.
+**The user approved v4 and authorized F1**, including brief early profiling
+to locate actual bottlenecks. F1 development is in progress on
+`feat/olmo1b-f1-integration`, based on O5e merge `9139783`:
+a common eight-mode integration runner/ledger, reusing existing tiny math checks
+and adding bounded repeated updates on the actual checkpoint.
+The frozen [F1 protocol](reports/olmo1b-f1/protocol.md) and
+[configuration](../configs/olmo_f1_integration.json) define 18 bounded cases,
+including two recovery checks and four brief T512 profiles.
+Do not launch broader learning or the later kernel/QK/distributed stages by
+mistaking this milestone for a long training authorization.
+
+Important context for resumption:
+
+- All eight RT/FBT/NextLat combinations already have tiny independent
+  objective/gradient coverage; the gap is broader actual-runtime integration.
+- FBT K counts total shared-stack passes including ordinary pass 0. RT applies
+  to extra FBT passes; FBT K1 does not exercise RT. Standalone RT remains possible.
+- Native selected RT blocks use eager PyTorch tiling/custom backward, not a
+  Flash/CuTE RT kernel. Ordinary layers use SDPA; actual fused backend dispatch
+  depends on shape/masks and must be traced. Current RT backward has quadratic
+  probability intermediates despite forward input/output reconstruction.
+- Native custom backward returns parameter gradients normally. The historical
+  vendor warning about hidden parameter-gradient writes does not apply here.
+- Preserve native absence of Q/K normalization initially; diagnose scale health
+  before making a separate progressive-normalization model change.
+- Preserve the current pass0 + gamma * mean(extra-pass losses) objective during
+  functionality work. Changing comparison loss weighting is a later decision.
+- Read-only container inventory exposed one H100 80GB. Two-GPU checks need an
+  actual second GPU and can start on the existing validated backend.
+- F1 actual-checkpoint execution is authorized after scoped tests. No learning
+  comparison is queued. O1–O5e reports and checkpoints remain historical evidence.
+
+## Latest completed milestone: O5e
+
 **O5e is complete and assessed (2026-09-22).** The ordinary additional-training
 control completed512updates /4,194,304CE targets on the exact O5c mixed plan,
 from the same O5b native state. It trains65native tensors with one ordinary CE,
@@ -24,9 +67,11 @@ and34.3% below online. The frozen-ordinary advantage in O5c/O5d does not establi
 an advantage over ordinary adaptation. Qualification:1.177B trainable native
 parameters versus8.39M fusion, different LR/compute and initial forward functions;
 this is equal data/exposure, not a pure architecture ablation or general FBT verdict.
-Recommended next decision: shared-source/data full-backbone+fusion FBT training
+Historical recommendation, now deferred by the v4 priority reset:
+shared-source/data full-backbone+fusion FBT training
 against this reusable ordinary control, with finite-pass CE weighting explicitly
-specified, before RT/NextLat interactions. **That next comparison is not launched.**
+specified, before a quality comparison of RT/NextLat interactions.
+**That next learning comparison is not launched or queued.**
 
 Operational record:
 - Branch `feat/olmo1b-o5e-ordinary-control`, base O5d merge
