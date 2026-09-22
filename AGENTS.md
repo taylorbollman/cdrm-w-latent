@@ -87,8 +87,11 @@ RT B128 now reaches26.1kinputtokens/s at42.1GiB and combined B64 10.9k/s at40.8G
 about5.7%/4.4% above reference. Only layer0 is RT. The installed FA4/CuTE wheel
 works with the explicit installed-source launcher selector; RT uses Triton, not
 FA4. Analytic parameter/FLOP cards cover all eight combinations, with broader
-runtime coverage still pending. No job is queued.
-The next critical milestone is backward tile fusion and removal of quadratic
+runtime coverage still pending. F3b jobs are complete; see the current F3c
+handoff for active execution.
+The user has now authorized F3c: historical backward tile fusion is in progress
+on feat/olmo1b-f3c-rt-backward, based on PR16 merge29408ca. Read its protocol and
+current handoff; root owns GPU execution. Subsequent work is removal of quadratic
 probability/error intermediates. F3b is the planned review point before that
 substantial rewrite. Preserve the current custom VJP as reference and return
 parameter gradients normally. Do not resume completed diagnostics or deferred

@@ -11,6 +11,24 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F3c historical backward fusion is authorized and in progress (2026-09-22).**
+The user explicitly said proceed after the F3b result. F3b was merged as PR16,
+merge29408ca. Active branch `feat/olmo1b-f3c-rt-backward`; root owns serial GPU work.
+Read [F3c protocol](reports/olmo1b-f3c/protocol.md). Implement the independent
+`backward_tile_backend` opt-in, preserving F3b fused forward/cast reuse as the
+primary reference. Profile complete local VJPs versus historical dK/dV, validate
+frozen tiles/tiny blocks/native B8 graph updates, then bounded B64/B128 capacity.
+Quadratic probability/error removal follows a separate review boundary; no long
+quality run. The baseline profile `f3c-profile-reference-combined-b64-01` passed3/3 checks,
+including observer neutrality and six complete updates:10,858 input tokens/s,
+40.84GiB allocated; W&B `ev8anieg`. Current job is `f3c-tile-probe-01`, root
+exec99192, checking48 frozen tiles+12 blocks. Runtime/protocol remain frozen.
+315 scoped core/kernel/dispatch tests,12 profiler,15 tile-probe and18 native
+validator CPU tests pass. Native validation now counts fused calls after gradient
+initialization, handles zero global references and rechecks protocol hashes.
+The baseline profile retains its earlier exact validator snapshot. Next: native
+RT/combined B8 checks, capacity and candidate profile. Exact snapshots mandatory.
+
 **F3b forward-tile optimization is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3b/assessment.md),
 [results](reports/olmo1b-f3b/results.md), [protocol](reports/olmo1b-f3b/protocol.md)

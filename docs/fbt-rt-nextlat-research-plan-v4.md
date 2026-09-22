@@ -33,11 +33,13 @@ covers all eight combinations analytically, including reconstruction and actual
 loss work; broader runtime cards remain pending. The optimized device profile
 confirms fused tile dispatch and reduced kernel/copy counts.
 
-**Next: native RT backward fusion and removal of quadratic probability/error
-intermediates**, retaining the current custom VJP as reference. This forward
+**F3c is now authorized and in progress: native RT backward fusion**, followed
+by separately checked removal of quadratic probability/error
+intermediates, retaining the current custom VJP as reference. This forward
 prototype is the planned review point before a substantial backward rewrite.
 The broader F3 completion gate, long-context/more-RT-layer execution, remaining
-F4 runtime cards and actual two-GPU checks are still open. No job is queued.
+F4 runtime cards and actual two-GPU checks are still open. See the handoff for
+the active F3c queue; no quality run is queued.
 The full-backbone mixed-data FBT learning comparison remains deferred.
 Read the [handoff](fbt-rt-nextlat-handoff.md) first after compaction.
 
