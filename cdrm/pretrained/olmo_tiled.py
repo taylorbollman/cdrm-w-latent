@@ -360,29 +360,46 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                 raise ValueError("Cached model generation changed after a model conversion")
             if past_key_values.execution_context != context or past_key_values.attention_precision != self.attention_precision:
                 raise ValueError("Cached execution context or attention precision differs")
+        hidden, present = self._forward_prepared(
+            x, mode=mode, positions=positions, key_positions=key_positions,
+            key_valid=valid, attention_mask=mask, is_causal=causal,
+            past_key_values=past_key_values, use_cache=use_cache,
+            checkpoint_ordinary=checkpoint_ordinary,
+        )
+        cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
+                              versions, generation, context, self.attention_precision) if use_cache else None
+        return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
+
+    def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
+                          attention_mask, is_causal, past_key_values=None,
+                          use_cache=False, checkpoint_ordinary=False):
+        """Native layer loop after caller validation; static entries are cache-free.
+
+        The public forward retains all input/cache guards and cache construction.
+        Prepared static callers validate their owned fixed layout before capture
+        and between replays. This helper changes no layer or checkpoint math.
+        """
         present = []
         for index, layer in enumerate(self.layers):
             past = None if past_key_values is None else past_key_values.key_values[index]
             if index in mode.selected_layers:
                 x, pair = tiled_recurrent_layer(
                     layer, x, alpha=mode.alpha, past=past, query_positions=positions,
-                    key_positions=key_positions, key_valid=valid,
+                    key_positions=key_positions, key_valid=key_valid,
                     attention_precision=self.attention_precision,
                 )
             elif checkpoint_ordinary:
                 # Bind this invocation's layer/backend/causality now: a closure
                 # over the loop's `layer` would replay the wrong shared block.
                 ordinary = partial(_ordinary_block_hidden, layer=layer,
-                                   is_causal=causal, attention_backend=self.attention_backend)
-                x = checkpoint(ordinary, x, positions, key_positions, mask,
+                                   is_causal=is_causal, attention_backend=self.attention_backend)
+                x = checkpoint(ordinary, x, positions, key_positions, attention_mask,
                                use_reentrant=False)
                 pair = None
             else:
                 x, pair = layer(x, past=past, query_positions=positions, key_positions=key_positions,
-                                mask=mask, is_causal=causal, attention_backend=self.attention_backend)
+                                mask=attention_mask, is_causal=is_causal, attention_backend=self.attention_backend)
             if use_cache:
                 present.append(pair)
         hidden = self.norm(x)
-        cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
-                              versions, generation, context, self.attention_precision) if use_cache else None
-        return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
+        return hidden, tuple(present)

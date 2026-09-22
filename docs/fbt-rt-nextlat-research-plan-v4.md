@@ -7,21 +7,25 @@ The user's new priority is confidence in functionality, numerical health,
 integration and reasonable execution cost, before asking which model wins.
 Completed O1–O5e evidence remains valid within its recorded scope.
 
-**Status: approved; F1 and F2 complete and assessed.** F1 established integration;
-F2 added bounded numerical attribution, ordinary-only activation checkpointing,
-large physical-batch measurements and a stable native-stack graph reference.
-Read [F2 assessment](reports/olmo1b-f2/assessment.md),
-[results](reports/olmo1b-f2/results.md) and [protocol](reports/olmo1b-f2/protocol.md).
-AtB128/T512 with ordinary checkpointing, RT reaches20.2kinputtokens/s at41.4GiB,
-and combinedK2+NextLat10.5k/s at51.9GiB. Keep native Q/K math: sampled attention
-scales stay bounded throughT128; feedback/KL startup sensitivity is the clearer
-lead. Deterministic Flash SDPA gives exact native-stack graph replay atB8/T512
-with changed tokens/weights and3.29xmicrobenchmark speedup. Automatic cuDNN
-repeat variability is separately documented; no error budgets were widened.
-Next: preserve canonical loss/mask semantics while integrating graphs with
-FBT/NextLat and ordinary checkpointing, then repeat physical-batch memory/timing
-checks. Full combined training is still eager; all-layer RT, formal FLOP
-accounting and actual two-GPU execution remain separate scope. No job is queued.
+**Status: approved; F1, F2 and the F3 CUDA-graph integration slice are complete.**
+Read [F3 assessment](reports/olmo1b-f3/assessment.md),
+[results](reports/olmo1b-f3/results.md) and [usage](olmo1b-f3-usage.md).
+Canonical RT/FBT/NextLat forward/loss/backward now runs in CUDA graphs with
+ordinary-block checkpointing. Clipping, AdamW and scheduler stay outside capture
+and are included in complete-step timings. Seven actual-checkpoint cases pass
+exact loss/gradient/full-update comparisons, including RT and combined B8/T512;
+267 distinct scoped CPU tests pass. No numerical budget was widened.
+At T512, graph RT B128 reaches 24.7k input tokens/s at 42.1 GiB peak allocated;
+combined K2+NextLat B64 reaches 10.4k/s at 40.8 GiB, and B128 10.8k/s at 58.2 GiB.
+Use B64 for common development checks: it retains 96.4% of combined B128
+throughput with more headroom. Setup reserved peaks and current postcapture
+memory are recorded separately. These paired results use deterministic ordinary
+Flash SDPA and disabled autocast weight caching; F2 timings used a different
+execution policy. Keep native Q/K math, as supported by the bounded F2 probes.
+Next: brief device profiles and the common resource/FLOP ledger, then select a
+bounded native RT fused-tile prototype from the remaining bottlenecks. The RT
+kernel is still native tiled PyTorch inside the graph; the broader F3 kernel goal,
+all-layer RT and actual two-GPU execution are not complete. No job is queued.
 The previously proposed full-backbone
 mixed-data FBT learning comparison is deferred, not queued.
 Read the [handoff](fbt-rt-nextlat-handoff.md) first after compaction.
@@ -277,12 +281,22 @@ documented. A new normalization branch, if needed, gets its own checked scope.
 
 ## 6. F3 — Attention backend and native RT efficiency
 
+**Completed slice (2026-09-22):** fixed-layout CUDA graphs now cover canonical
+RT/FBT/NextLat training with ordinary activation checkpointing. The bounded
+correctness and B32/64/128 results are in the F3 report linked above. Ordinary
+Flash dispatch is verified for the unpadded graph layouts; the selected RT block
+still needs its own fused-kernel work. This section's broader completion gate
+remains open. Use short device profiles before choosing the next prototype.
+
 ### Current distinction
 
 Ordinary OLMo attention calls PyTorch SDPA. A prior bounded fixture observed
 cuDNN fused attention, but the configuration label “sdpa” does not guarantee
-FlashAttention for every shape and mask. FBT currently supplies an explicit
-validity/causal mask, so a mask-free ordinary trace is insufficient evidence.
+FlashAttention for every shape and mask. The public eager FBT path supplies an
+explicit validity/causal mask; F3's prepared path lowers proven all-valid
+single-document rows to an equivalent implicit causal mask. Padded and online
+dispatch still need their own evidence, so a mask-free ordinary trace is
+insufficient for them.
 PyTorch selects implementations subject to input constraints.
 [SDPA documentation](https://docs.pytorch.org/docs/main/generated/torch.nn.functional.scaled_dot_product_attention.html),
 [backend selector](https://docs.pytorch.org/docs/main/generated/torch.nn.attention.sdpa_kernel.html).
@@ -466,10 +480,11 @@ remain deferred.
 
 ## 10. Execution order and durable operation
 
-- First PR: F1 runner/ledger and its bounded actual-runtime checks, plus the small
-  health/dispatch observations needed to choose F2/F3 work.
-- Next: resolve concrete F2 concerns and develop F3 in reviewable pieces.
-  F4 begins with early measurements and is finalized after relevant changes.
+- Completed: F1 integration, F2 health/checkpointing, and the F3 canonical
+  CUDA-graph integration slice, each with bounded actual-runtime evidence.
+- Next: brief device profiles and F4 common resource/FLOP cards, then develop
+  the remaining F3 fused RT work in reviewable pieces based on the bottlenecks.
+  Finalize resource cards after relevant execution changes.
 - F5 starts when a second GPU is available, independent of quality results
   or completion of the fused-kernel work. Then perform F6 readiness review.
 - Kernel engineering is the largest uncertain effort. Initial checks and profiles

@@ -65,9 +65,19 @@ startup gradients motivated F2, now complete and assessed. Ordinary-only
 checkpointing passes exact BF16 complete-update parity and allows B128/T512:
 RT20.2kinputtokens/s at41.4GiB, combined10.5k/s at51.9GiB. Native Q/K math stays.
 Deterministic Flash SDPA gives exact B8/T512 native-stack graph checks; default
-cuDNN has separately measured eager-repeat variability. Full combined canonical
-training is still eager. Read F2 assessment/results/current handoff for the next
-static-layout loss/FBT/NextLat graph integration milestone. No job is queued.
+cuDNN has separately measured eager-repeat variability. F3's canonical combined
+CUDA-graph integration is now complete: seven actual-checkpoint cases have exact
+loss/gradient/full-Adam parity; six paired B32/64/128 capacity checks and 267 scoped
+CPU tests pass. Read F3 assessment/results/usage and the current handoff.
+Graphs capture forward/loss/backward with ordinary checkpointing; clipping,
+AdamW and scheduler remain outside. At T512, graph RT B128 reaches24.7kinputtokens/s
+at42.1GiB; combinedK2+NextLat B64 reaches10.4k/s at40.8GiB, B12810.8k/s at58.2GiB.
+Use B64 for common development checks, preserving memory headroom with96.4% of
+combined B128 throughput. Peak reserved setup and current postcapture memory
+are separate. Deterministic ordinary Flash/no-autocast-cache settings differ
+from F2 timings. Only RT layer0 is selected. The broader F3 fused RT kernel goal
+is still open; next are brief device profiles and the common resource/FLOP
+ledger to choose that prototype. No job is queued.
 Do not resume completed diagnostics or the deferred full-backbone FBT learning
 comparison. Native tiled backward returns parameter gradients normally, but
 does not yet use a Flash/CuTE RT kernel; ordinary SDPA dispatch is shape-dependent.
