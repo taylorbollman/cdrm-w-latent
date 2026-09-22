@@ -11,6 +11,17 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F3 is authorized and in progress (2026-09-22).** Branch
+`feat/olmo1b-f3-combined-cuda-graphs`, base F2 merge `ffe7df3`.
+Read [F3 protocol](reports/olmo1b-f3/protocol.md) and
+[usage](olmo1b-f3-usage.md). The new static-layout path reuses native RT,
+ordinary checkpointing, fusion and selected-position CE/NextLat math. It
+validates fixed masks/documents/positions outside capture and permits changing
+token values and in-place optimizer updates. CUDA graphs capture forward,
+loss and backward; clipping/AdamW/scheduler stay outside. CPU checks pass;
+bounded actual-checkpoint capture/update checks and physical-batch measurements
+are the current work. No long learning run is authorized or queued.
+
 Read the new **[v4 plan](fbt-rt-nextlat-research-plan-v4.md)**. It supersedes
 the O5e recommendation below to run another joint-backbone FBT learning comparison.
 **F2 is complete and assessed (2026-09-22).** Read its
