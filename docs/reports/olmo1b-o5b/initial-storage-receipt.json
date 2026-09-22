@@ -1,0 +1,56 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "objects": [
+    {
+      "generation": "1790049526757525",
+      "md5_base64": "xVkR4+DeN0WFkd/VE+0gtA==",
+      "sha256": "87ddd8ef65607c7087ee1ceaeb75e9bcd3ca6f43edc1ac085f74079a80991b31",
+      "size_bytes": 1109754,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/initial/evidence.tar.gz"
+    },
+    {
+      "generation": "1790049526988315",
+      "md5_base64": "BPqhgGGJVHab5TY6+43sFg==",
+      "sha256": "f017f0333ee5f394733f355f60559632b1e855631829760842e34ca75e1d5981",
+      "size_bytes": 30868,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/initial/manifest.json"
+    }
+  ],
+  "phase": "initial",
+  "prepared_data_references": [
+    {
+      "generation": "1790028911751263",
+      "md5_base64": "DrQDiCwzpwoZW1cnnUHsqw==",
+      "reused_without_upload": true,
+      "sha256": "ab0d8f4e0f39b9e9107f37dcc3da0d509beec760d828dc3a2c3b7c77b36888f4",
+      "size_bytes": 68381709,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/evidence.tar.gz"
+    },
+    {
+      "generation": "1790028912626318",
+      "md5_base64": "BgskcfIaByszAnljzvXM9w==",
+      "reused_without_upload": true,
+      "sha256": "51c39dcffa9f21ed85254058b3fb1c37520c583a2ec4024501c102704571cf35",
+      "size_bytes": 18385,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o4-code-pilot/20260921T220500Z/initial/manifest.json"
+    }
+  ],
+  "receipt_object": {
+    "generation": "1790049527207139",
+    "md5_base64": "GjT4qMG50FcLO3Y7C03tZw==",
+    "sha256": "f6d51b88043683a2bd3844fda45b7987f65403bd79d184ef57e3585c48ba12fb",
+    "size_bytes": 2102,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/initial/storage-receipt.json"
+  },
+  "schema": "olmo-o5b-evidence-receipt-v1",
+  "status": "verified",
+  "training_checkpoint_references": {}
+}

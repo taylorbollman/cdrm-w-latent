@@ -94,8 +94,8 @@ reference/correctness is now implemented and passes** on
 `4a473bfc296f0c0d6b65a8a6d5bb434ab7002c04`,
 [PR #8](https://github.com/taylorbollman/cdrm-w-latent/pull/8). See
 [O5a results](reports/olmo1b-o5a/results.md), [usage](olmo1b-fbt-usage.md), and
-[protocol](reports/olmo1b-o5a/protocol.md). No GPU job remains running, no O4
-extension or long FBT learning run is queued, and no adapted FBT weights exist.
+[protocol](reports/olmo1b-o5a/protocol.md). At the O5a close no GPU job remained running and no adapted FBT weights
+existed. O5b is now authorized below; do not treat that historical status as live.
 
 New modules `cdrm/pretrained/olmo_fbt.py` and `fbt_training.py`; no existing
 backbone/training math modified. Pinned author-reproduction source snapshot
@@ -143,15 +143,104 @@ the source/report archive and read-only reused O1 checkpoint. Prefix:
 Local retention `.runtime/olmo1b-step60000/o5a-retention-01/`; schema
 `olmo-fbt-reference-v1`. No research checkpoint was generated.
 
-**Next review:** choose O5b ordinary-versus-FBT-only adaptation, without NextLat
-initially. K2/gamma1 has total CE weight 2, so use a new ordinary control with
-matching pass-loss weight (e.g. K2/beta0/no RT); O4's single-CE control is contextual,
-not automatically compatible. Freeze beta/newbranch warmup, prefix mixin/jitter
-policy and exposure, profile actual T512 capacity, then evaluate per-pass and
-exact online code/retention. The O4 NextLat startup shock suggests a separate
-later predictor-only warm start/component-gradient diagnosis, not changing
-multiple mechanisms together in the first FBT control. Review this milestone
-before allocating a large learning budget; distributed remains untested.
+**O5b is complete and assessed.** Both matched arms finished2,634 updates /
+20,855,799 valid input tokens each, with no restart/health-gate stop. User asked
+to proceed; we supervised completion and added one bounded **evaluation-only**
+endpoint diagnostic to understand the observed feedback-specific retention loss.
+No longer training budget or new learning arm was added. Read
+[results](reports/olmo1b-o5b/results.md), [assessment](reports/olmo1b-o5b/assessment.md),
+[diagnostic](reports/olmo1b-o5b/diagnostic/results.md),
+[protocol](reports/olmo1b-o5b/protocol.md) and [usage](olmo1b-o5b-usage.md).
+
+Branch `feat/olmo1b-o5b-fbt-pilot`, base O5a merge
+`4a3e19630b8c5b0ad87eb228d5d471f5c382da6e`; [PR9](https://github.com/taylorbollman/cdrm-w-latent/pull/9).
+Learning source/evidence commit `4751d508b26887b8873cf43b06acc2b47994067c`;
+follow-up helpers/protocol commit `7b6b199`.
+
+Frozen recipe:
+- Original step60000 weights and O4 prepared data/order; RT and NextLat **off**.
+- Ordinary K2/beta0; FBT K2/gradual beta0→1; gamma1 and two CE losses in both.
+  O4's single-CE control is contextual, not substituted for the matched control.
+- Effective batch32,T512; physical16 accumulated twice. FP32 parameters/AdamW,
+  BF16 mixed, native SDPA, no TF32/compile/graphs/distributed.
+- Native LR1e-5, fusion LR1e-4; native warmup100; first nonzero beta update102
+  starts fusion LR1e-6, reaching1e-4 at201. Ramp ends1367, final2634.
+- No prefix sampling or hidden jitter; deliberate source-recipe departures.
+- Same84,288 windows /20,771,511 CE targets,41,711,598 stack-input positions
+  per arm. Native fusion scale0.0370765589, unchanged O5a fusion semantics.
+
+Final512-window code/retention NLL:
+- Original:1.787902 /3.040993.
+- Matched ordinary:1.699385 /3.177141.
+- FBT pass0:1.698216 /3.183361.
+- FBT feedback pass1:1.737004 /4.969719.
+
+FBT versus ordinary costs+0.037619 code NLL (paired document95% interval
+[+.033360,+.041884]) and+1.792577 retention ([+1.631192,+1.932436]). Ordinary
+path is largely preserved; no feedback benefit at this budget. Still improving
+at beta1, so not an asymptotic or general architectural verdict. All recorded
+scalars finite; EVERY update clipped at1. Norm medians/maxima4.871/10.402
+ordinary,5.043/21.144 FBT. All full checkpoint parameters/moments finite.
+Do not equate numerical execution health with satisfactory retention.
+
+Post-hoc diagnostic `.runtime/olmo1b-step60000/o5b-diagnostic-01/`, W&B
+`nw0l3ol8`, **passed** with model/buffer hashes unchanged,13 fixed cases.
+128-window K2 beta0/.25/.5/.75/1 codeNLL:
+1.599637/1.609754/1.622601/1.620166/1.634389;
+retention:3.249787/3.284040/3.367670/3.608247/5.014280.
+Every tested positive beta remains worse than this checkpoint's ordinary path.
+Short32-window/max64 beta1 K2/K3/K4/online retention:
+5.083958/5.013408/5.033363/5.032388; code~2.200–2.201 throughout.
+More refinement does not rescue quality on this short subset (only6 original
+retention documents). Intermediate beta mitigates input-path damage but does not
+show a benefit. The original final512 evaluation and these128/32 subsets must
+remain separate; no reserved tests used or best-beta confirmation claimed.
+
+Operational close:
+- Queue `.runtime/olmo1b-step60000/o5b-pilot-01/queue.json` and `finish-status.json`
+  are **completed**. Ordinary ended04:49UTC; FBT and finisher ended05:39UTC
+  on2026-09-22. Endpoint diagnostic ended05:40UTC. No GPU job remains to resume.
+- Historical exec sessions42624(queue),69027(finisher),2507(diagnostic) are
+  completed; do not relaunch them. Reports/events remain authoritative.
+- W&B: ordinary`ichekj67`, FBT`gtv1hp98`, preflight`upirj0yb`, diagnostic`nw0l3ol8`,
+  under`taylorbollman/pretrained-fbt-rt-nextlat`.
+- Config SHA256:`b26d4f7af7e6888bf0f8720724d2aadc3f4c1ed842dd988ebbedc89545bce626`.
+  Preflight `.runtime/olmo1b-step60000/o5b-preflight-01/` passed; physical16accum2
+  used49.60GiB and0.919s/full-length step versus74.53GiB/0.909s physical32.
+- Scope tests:693 passing OLMo CPU tests from the implementation, plus37 new
+  diagnostic/health tests. No frozen model/training/evaluation source changed.
+- Verified storage prefix:
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-o5b-code-pilot/20260922T040000Z/`.
+  Initial and final paired receipts are in the report directory. Follow-up
+  interpretation/diagnostic evidence is separately retained under`review/`.
+- Final ordinary checkpoint`ordinary/update-002634.pt`,SHA256
+  `738ed2ef2a31a4a52cb28276be3ce4494170c40658025c614f0d3614c8323b6a`,
+  generation1790052541850455.
+- Final FBT checkpoint`fbt/update-002634.pt`,SHA256
+  `99585f5e9d666e8dea3f533749d155b0695b8143a6a313b60fb99f8d157faf66`,
+  generation1790055503754266. Latest local full checkpoints remain in arm dirs;
+  older checkpoints were removed locally only after cloud verification.
+
+**Recovery caveat:** actual O5b checkpoints include `TorchVersion` runtime metadata.
+Weights-only loading needs the narrow scoped allowance implemented by
+`scripts/olmo_o5b_diagnose.py:load_endpoint_payload`. Apply the same context
+around frozen `load_training_checkpoint` for any future optimizer resume; the
+old queue's bare resume command does not install it. Do not switch to a broad
+unsafe pickle loader or silently mutate frozen sources. This was found and
+regression-tested during actual endpoint loading; checkpoint bytes are unchanged.
+No actual full-optimizer O5b replay was performed. Beta-zero warmups also show
+small numerical trajectory differences despite matching data/LRs/counts; see
+optimization-summary.json rather than claiming bitwise cross-run replay.
+
+**Next review:** recommended small fusion-only code-versus-code/general-text
+adaptation comparison, from this completed FBT endpoint with native backbone
+frozen. Candidate~5M valid input tokens per arm; freeze data/mixing/exposure and
+profile before launching. Use fresh general training documents excluding all
+retention dev/test; equal total exposure means unequal code exposure, report both.
+This is a proposal, **not launched**. No blind50–100M extension, new RT/NextLat
+interaction sweep or multi-GPU test is queued. O4's NextLat startup shock remains
+a separately staged warm-start/component-gradient question. These results do not
+veto later interaction hypotheses; they identify an adaptation confound to resolve.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
