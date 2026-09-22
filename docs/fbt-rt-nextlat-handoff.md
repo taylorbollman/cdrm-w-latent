@@ -50,7 +50,7 @@ O3 merge `29fee0dae0f551ef75a29de1d1269e3a69ec8055`; [PR #7](https://github.com/
 Read [results](reports/olmo1b-o4/results.md), [assessment](reports/olmo1b-o4/assessment.md)
 and [protocol](reports/olmo1b-o4/protocol.md). All four arms completed 2,634
 updates / 20,855,799 valid input tokens (20,771,511 CE targets), original
-checkpoint, batch32, T512, LR1e-5, BF16 mixed, layer0 RT only. Alpha warmup
+checkpoint, batch32, T512, LR1e-5, BF16 mixed, layer 0 RT only. Alpha warmup
 ends100, ramp ends1367, final2634. NextLat coefficients fixed1/1; FBT off.
 
 Final 512-window code/retention NLL:
@@ -87,13 +87,69 @@ only added failed-upload resume retry. Never silently change this lineage.
 receipts, not current mutable code, define the completed experiment.
 For GCS use `env -u GOOGLE_APPLICATION_CREDENTIALS` in container.
 
-The user asked to assess and continue on 2026-09-22. Proceed with **O5a bounded
-FBT reference/correctness implementation** and short actual-checkpoint checks.
-No O4 extension or long FBT learning run is queued. O5a establishes finite
-shared-stack passes and exact online semantics with independent controls;
-review before choosing the first FBT learning recipe. The adverse O4 NextLat
-result motivates a later auxiliary warm-start/ramp diagnosis, not silently
-changing its coefficients during the FBT correctness milestone.
+The user asked to assess and continue on 2026-09-22. O4 was assessed and PR7
+merged as `9bdeddd55514f95e7799bb49b1c37dfba1fbeaa0`. **O5a bounded FBT
+reference/correctness is now implemented and passes** on
+`feat/olmo1b-fbt-reference`, based on that merge. See
+[O5a results](reports/olmo1b-o5a/results.md), [usage](olmo1b-fbt-usage.md), and
+[protocol](reports/olmo1b-o5a/protocol.md). No GPU job remains running, no O4
+extension or long FBT learning run is queued, and no adapted FBT weights exist.
+
+New modules `cdrm/pretrained/olmo_fbt.py` and `fbt_training.py`; no existing
+backbone/training math modified. Pinned author-reproduction source snapshot
+`_fbt_reference/` at `7037c60924870aca6e30fac95212b0c7caee052d` is static evidence,
+not executed. Core API:
+- `OLMoFBT(loaded_rt_capable_backbone, FBTConfig(norm_eps=1e-5,seed=20260922))`;
+  two new D-by-D matrices uniform ±sqrt(3/D), independent RNG; native embedding
+  RMS output scale fixed buffer 0.03707655891776085, explicit FP32 RMS reductions.
+- `FBTMode(enabled=True,num_passes=2,beta=1,rt_mode=RTMode(()))`. Pass0 ordinary,
+  fresh extra-pass KVs, attached previous-pass post-finalnorm feedback at t-1.
+  K1 ordinary; disabled FBT runs standalone RT; beta0 does not disable RT writes.
+  **`RTMode(())` is ordinary; `RTMode()` historically selects layer 0.**
+- `forward_online(...,FBTOnlineMode(beta,rt_mode),past_key_values=FBTOnlineCache)`
+  consumes the fresh previous-token state; no K. Requires RT-capable backbone,
+  uses an empty selected-layer set for FBT-only. Full-prefix mask/document IDs, current
+  positions. Cache rejects changed modes, weights/fusion/buffers, conversion,
+  autocast/gradient contexts; strong storage refs catch child dtype roundtrips.
+  No ordinary-prefix injection/switch, packing, jitter or sampled prefix mixin.
+- `FBTNextLatLM(core,NextLatConfig,enabled,gamma=1)` wraps per-pass objectives.
+  One shared predictor; pass0 + gamma*mean(extra losses). Counts remain data
+  positions once. Aggregate CE is not final-pass NLL. Save gamma/config/modes
+  explicitly with existing training checkpoint API.
+
+549 distinct CPU tests pass: 526 model/platform plus 23 retention, including
+60 new FBT math/platform checks (28 core + 9 adversarial + 23 objectives/platform). Tiny full optimizer replay
+is bitwise exact across third update, optimizer/scheduler/counters/RNG/cursor.
+Actual H100 B1/T8 FP32 validates finiteK1/K2/K3, beta0/.37/1, selectedlayer 0
+alpha.37/1, all active 65/67/71 parameter gradients, exact online prefix oracle and
+chunk continuation, NextLat off/on objectives. Largest FP32 tensorgradient
+relativeL2 is1.50e-5. K9 finite convergence matches exact online to~1e-6.
+One BF16 mixed combined check is finite with1.51% global gradient difference vsFP32,
+2.23% worst tensor L2: descriptive, not long-context, batch or training clearance.
+Every model/buffer byte remains unchanged. Actual full-model input-gradient checks
+are not added; tiny raw-cotangent input/cache/cross-pass coverage is retained.
+
+Actual report `.runtime/olmo1b-step60000/o5a-validation-01/report.json` and log
+`.runtime/olmo1b-step60000/o5a-validation-01.log`; selected full report copied to
+`docs/reports/olmo1b-o5a/validation-summary.json`. W&B
+[ii69nrrg](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ii69nrrg).
+Run took 57.54 s once fixture/model validation started, peak 20.89 GiB for paired
+models/gradients; that is correctness scratch, not training capacity evidence.
+Verified [retention receipt](reports/olmo1b-o5a/storage-receipt.json) identifies
+the source/report archive and read-only reused O1 checkpoint. Prefix:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-fbt-reference/20260922T033600Z/`.
+Local retention `.runtime/olmo1b-step60000/o5a-retention-01/`; schema
+`olmo-fbt-reference-v1`. No research checkpoint was generated.
+
+**Next review:** choose O5b ordinary-versus-FBT-only adaptation, without NextLat
+initially. K2/gamma1 has total CE weight 2, so use a new ordinary control with
+matching pass-loss weight (e.g. K2/beta0/no RT); O4's single-CE control is contextual,
+not automatically compatible. Freeze beta/newbranch warmup, prefix mixin/jitter
+policy and exposure, profile actual T512 capacity, then evaluate per-pass and
+exact online code/retention. The O4 NextLat startup shock suggests a separate
+later predictor-only warm start/component-gradient diagnosis, not changing
+multiple mechanisms together in the first FBT control. Review this milestone
+before allocating a large learning budget; distributed remains untested.
 
 O1 implementation branch: `feat/olmo1b-native-rt-reference`, based on `e894fe0`
 (planning PR #3). The O1 source hashes are in the selected validation reports;
@@ -126,7 +182,7 @@ source/evidence, not an unrecorded working tree, defines tested behavior.
   not long-sequence fused-backend gradient or learning-equivalence clearance.
 - Exact actual-model recovery: save after update2, rebuild, reload, repeat update3.
   Model, AdamW moments, scheduler, counters, CPU/CUDA next RNG draws and update
-  metrics match bit-for-bit. LR1e-5 with two-update warmup; FP32, layer0 RT.
+  metrics match bit-for-bit. LR1e-5 with two-update warmup; FP32, layer 0 RT.
   Disposable 15,114,028,075-byte checkpoint SHA256
   `8d615b49730f8c8e1292fac008596977e1fdc754e0f78366293418a05b6fba22`
   was deleted after passing; full hashes/fixtures/evidence retained. No need to
@@ -134,7 +190,7 @@ source/evidence, not an unrecorded working tree, defines tested behavior.
   and Python/NumPy/explicit data-generator RNG.
 - Profile: `.runtime/olmo1b-step60000/lm-profile-01/report.json`, W&B
   [zbrcek8g](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zbrcek8g).
-  BF16 default SDPA + mixed tiled attention; layer0 RT only; FP32 parameters,
+  BF16 default SDPA + mixed tiled attention; layer 0 RT only; FP32 parameters,
   real initialized AdamW moments, clipping, LR0. Three warmups/three timed steps.
   RT+NextLat B1/B4/B8,T512: 1.496/1.587/1.626 seconds, 342/1,290/2,519 valid
   input tokens/s, 19.61/20.37/23.99 GiB allocated peaks. B8 reserved25.79 GiB.
@@ -144,7 +200,7 @@ source/evidence, not an unrecorded working tree, defines tested behavior.
   retaining all such activations. Validation chunk8; profile chunk128 positions.
   O2 backward still reconstructs quadratic attention and uses per-position VJPs.
   No compile/graphs, FBT, distributed, packed-document attention or cached LM
-  objective training clearance. Only layer0 is recurrent in actual-model checks.
+  objective training clearance. Only layer 0 is recurrent in actual-model checks.
 - CPU record: `.runtime/olmo1b-step60000/lm-cpu-suite.log`, copied to
   [test-results.txt](reports/olmo1b-o3/test-results.txt): 326 passed, 41 warnings.
   Compact machine-readable record: [summary](reports/olmo1b-o3/validation-summary.json).
@@ -186,7 +242,7 @@ source/evidence, not an unrecorded working tree, defines tested behavior.
   policies remain available; this is bounded observation, not learning clearance.
 - Profile: `.runtime/olmo1b-step60000/tiled-profile-01/report.json`, W&B
   [em18z6bm](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/em18z6bm).
-  Full model (RT layer0 only), BF16 B1/T512: 1.464 s forward/backward,
+  Full model (RT layer 0 only), BF16 B1/T512: 1.464 s forward/backward,
   350 tokens/s, 9.509 GiB operational peak; no optimizer. B4/T512 block-only
   1,388 tokens/s. Eager tiled B1/T128 is slower than scan (1.6x FP32/1.4x BF16).
   Entire backbone remains resident even for block-only measurements. Memory

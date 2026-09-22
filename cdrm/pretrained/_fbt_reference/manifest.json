@@ -1,0 +1,22 @@
+{
+  "repository": "xidulu/Full-bandwidth-transformer",
+  "revision": "7037c60924870aca6e30fac95212b0c7caee052d",
+  "retrieved_utc": "2026-09-22T03:19:57.926269+00:00",
+  "purpose": "Static source evidence only; neither imported nor executed",
+  "files": [
+    {
+      "file": "gpt.py",
+      "upstream_path": "nanochat/gpt.py",
+      "url": "https://raw.githubusercontent.com/xidulu/Full-bandwidth-transformer/7037c60924870aca6e30fac95212b0c7caee052d/nanochat/gpt.py",
+      "bytes": 47190,
+      "sha256": "bee2292e7f56fe683dbb0e44413c44ef97b47779ee3dd8130bbae6b59673f1a2"
+    },
+    {
+      "file": "LICENSE",
+      "upstream_path": "LICENSE",
+      "url": "https://raw.githubusercontent.com/xidulu/Full-bandwidth-transformer/7037c60924870aca6e30fac95212b0c7caee052d/LICENSE",
+      "bytes": 1072,
+      "sha256": "42bb09f339a8af8b90d3b4969b6f6e4ba4aff3b5c614103b031fccdf71c8f772"
+    }
+  ]
+}

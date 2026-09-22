@@ -15,8 +15,8 @@ and [usage](olmo1b-nextlat-platform-usage.md). Two-GPU correctness remains untes
 O4 is complete: ordinary continuation wins this short comparison, RT largely
 recovers code quality with a retention cost, and NextLat hurts both measures.
 See [results](reports/olmo1b-o4/results.md) and [assessment](reports/olmo1b-o4/assessment.md).
-The user asked to assess and continue; O5a now covers bounded FBT correctness.
-Further learning remains staged. Historical planning-status statements
+The user asked to assess and continue; O5a FBT reference/correctness now passes.
+See [O5a results](reports/olmo1b-o5a/results.md). Further learning remains staged. Historical planning-status statements
 below describe checkpoint selection, before the implementation evidence.
 
 This replaces the model
@@ -397,6 +397,6 @@ of logs. Read the handoff for container and retention recovery details.
 
 **Current review boundary:** O4 has completed and been assessed. All four arms
 received20.856M valid input tokens and2,634 updates; final checkpoints/evidence
-are retained. Continue with O5a FBT implementation and bounded correctness,
-then review before selecting FBT learning or NextLat adaptation diagnostics.
+are retained. O5a FBT implementation and bounded correctness also pass;
+review before selecting FBT learning or NextLat adaptation diagnostics.
 No additional long learning run is queued. Multi-GPU remains untested.
