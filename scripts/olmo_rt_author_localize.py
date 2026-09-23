@@ -261,10 +261,10 @@ def main(argv=None):
         batch = full_batch(tokenizer, case, 0)
         report["batch"] = tree_digests(vars(batch))
         before = parameter_signature(model)
-        plan = new_plan(model, batch, case.mode(), "recompute")
-        report["prepared_layout"] = plan.forward_layout.metadata
-        save("capture_actual_native_input_and_cotangent")
         with backend_context("flash"):
+            plan = new_plan(model, batch, case.mode(), "recompute")
+            report["prepared_layout"] = plan.forward_layout.metadata
+            save("capture_actual_native_input_and_cotangent")
             captured, capture = capture_native_fixture(plan)
         report["capture"] = capture
         if parameter_signature(model) != before:
