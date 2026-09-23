@@ -173,22 +173,40 @@ def statistics(value):
         "maximum_abs": float(cpu.abs().max()), "minimum": float(cpu.min()), "maximum": float(cpu.max())}
 
 
-def capture_native_fixture(plan):
+def compare_parameter_gradients(candidate, reference):
+    """Report exact replay and raw metrics, without treating norms as equality."""
+    ownership = bool(reference) and set(candidate) == set(reference)
+    gradients = {name: tensor_metrics(candidate[name], reference[name])
+                 for name in sorted(candidate.keys() & reference.keys())}
+    finite = bool(gradients) and all(row["finite"] for row in gradients.values())
+    exact = ownership and finite and all(row["bitwise_equal"] for row in gradients.values())
+    return {"ownership_matches": ownership, "finite": finite, "all_bitwise_equal": exact,
+        "global_parameter_relative_l2": global_gradient_l2(gradients.values()), "gradients": gradients,
+        "qualification": "Exact replay is established only when all_bitwise_equal is true; matching norms alone is insufficient."}
+
+
+def capture_native_fixture(plan, *, backend="native"):
+    """Capture one native/author pass; default preserves the original API."""
+    if backend not in {"native", "author"}:
+        raise ValueError("Capture backend must be native or author")
     target = plan.model.backbone.backbone.layers[0]
-    original = olmo_tiled.tiled_recurrent_layer
+    module = olmo_tiled if backend == "native" else olmo_author
+    function = "tiled_recurrent_layer" if backend == "native" else "author_tiled_recurrent_layer"
+    original = getattr(module, function)
     observed = {}
-    def layer_call(layer, x, **kwargs):
-        output, pair = original(layer, x, **kwargs)
+    def layer_call(layer, x, *args, **kwargs):
+        result = original(layer, x, *args, **kwargs)
+        output = result[0] if backend == "native" else result
         if layer is target:
             if observed:
-                raise AssertionError("Expected one block-0 invocation in one native RT-only pass")
+                raise AssertionError("Expected one block-0 invocation in one RT-only pass")
             observed.update(x=x.detach().clone(), output=output.detach().clone())
             def save_cotangent(gradient):
                 observed["cotangent"] = gradient.detach().clone()
             output.register_hook(save_cotangent)
-        return output, pair
+        return result
     plan.validate_execution()
-    with patch.object(olmo_tiled, "tiled_recurrent_layer", layer_call):
+    with patch.object(module, function, layer_call):
         with torch.autocast("cuda", dtype=torch.bfloat16, cache_enabled=False):
             result = plan.loss_sums()
             objective = normalized_objective(result)
@@ -197,6 +215,7 @@ def capture_native_fixture(plan):
         raise AssertionError("Did not capture exact block-0 input/output/incoming cotangent")
     return observed, {"objective": float(objective.detach()), "ce_sum": float(result.sums["ce"].detach()),
         "counts": dict(plan.counts), "input_tokens": plan.input_tokens,
+        "backend": backend,
         "ordinary_flash": "deterministic Flash context, same frozen integration stack",
         "backward_calls": 1, "physical_optimizer_updates": 0}
 
@@ -227,7 +246,9 @@ def main(argv=None):
         "configuration": {"batch_size": 8, "length": 512, "case": "rt", "selected_rt_layers": [0, 15],
             "supervision": "full", "ce_chunk_size": 2048, "seed": SEED, "gaussian_seed": SEED + 91,
             "fixed_block": 0, "normalization": "actual mean-CE cotangent; Gaussian matched to its global L2",
-            "arms": list(ARMS), "tf32": False, "physical_optimizer_updates": 0},
+            "arms": list(ARMS), "tf32": False, "physical_optimizer_updates": 0,
+            "full_model_backward_calls": 2, "local_vjp_calls": 9,
+            "additional_author_own_cotangent": True},
         "source_hashes": {source: sha256_file(ROOT / source) for source in SOURCES},
         "protocol_sha256": sha256_file(PROTOCOL), "started_utc": datetime.now(timezone.utc).isoformat(),
         "physical_optimizer_updates": 0, "checks": [], "local_snapshots": []}
@@ -261,6 +282,7 @@ def main(argv=None):
         batch = full_batch(tokenizer, case, 0)
         report["batch"] = tree_digests(vars(batch))
         before = parameter_signature(model)
+        versions = tuple((name, parameter._version) for name, parameter in model.named_parameters())
         with backend_context("flash"):
             plan = new_plan(model, batch, case.mode(), "recompute")
             report["prepared_layout"] = plan.forward_layout.metadata
@@ -275,15 +297,40 @@ def main(argv=None):
         layer = model.backbone.backbone.layers[0]
         layer_hashes = tree_digests(dict(layer.named_parameters()))
         captured_output = captured["output"].detach().cpu()
+        native_full_gradients = {name: parameter.grad.detach().cpu().clone()
+            for name, parameter in layer.named_parameters() if parameter.grad is not None}
         model.zero_grad(set_to_none=True)
-        del plan, model, captured, tokenizer
+        del plan, captured
+        set_backend(model, "author")
+        with backend_context("flash"):
+            plan = new_plan(model, batch, case.mode(), "recompute")
+            report["author_prepared_layout"] = plan.forward_layout.metadata
+            save("capture_actual_author_input_and_cotangent")
+            author_captured, author_capture = capture_native_fixture(plan, backend="author")
+        report["author_capture"] = author_capture
+        author_g = author_captured["cotangent"]
+        author_captured_output = author_captured["output"].detach().cpu()
+        report["capture_inputs_identical"] = torch.equal(author_captured["x"], x)
+        report["capture_positions_identical"] = torch.equal(plan.forward_layout.position_ids, positions)
+        report["full_model_parameters_unchanged"] = (parameter_signature(model) == before and versions ==
+            tuple((name, parameter._version) for name, parameter in model.named_parameters()))
+        if not all(report[key] for key in ("capture_inputs_identical", "capture_positions_identical", "full_model_parameters_unchanged")):
+            raise AssertionError("Native/author captures changed input/positions/weight state")
+        report["actual_cotangent_comparison"] = tensor_metrics(author_g.detach().cpu(), g.detach().cpu())
+        report["captured_block_output_comparison"] = tensor_metrics(author_captured_output, captured_output)
+        author_full_gradients = {name: parameter.grad.detach().cpu().clone()
+            for name, parameter in layer.named_parameters() if parameter.grad is not None}
+        report["full_model_block0_parameter_comparison"] = compare_parameter_gradients(author_full_gradients, native_full_gradients)
+        model.zero_grad(set_to_none=True)
+        del plan, model, author_captured, tokenizer
         gc.collect()
         torch.cuda.empty_cache()
         random_g = normalize_gaussian(g)
         report["fixed_tensors"] = {"input": statistics(x), "actual_cotangent": statistics(g),
+            "author_actual_cotangent": statistics(author_g),
             "gaussian_cotangent": statistics(random_g), "positions": tree_digests(positions)}
         report["block_parameters"] = layer_hashes
-        fixed_hashes = (tensor_digest(x), tensor_digest(g), tensor_digest(random_g))
+        fixed_hashes = (tensor_digest(x), tensor_digest(g), tensor_digest(random_g), tensor_digest(author_g))
         snapshots = {}
         for arm in ARMS:
             save("actual_cotangent/" + arm)
@@ -303,6 +350,8 @@ def main(argv=None):
                 report["native_local_matches_captured_forward"] = tensor_metrics(snapshot["output"], captured_output)
                 if not report["native_local_matches_captured_forward"]["bitwise_equal"]:
                     raise AssertionError("Local native forward differs from captured block-0 forward")
+                report["native_local_vs_full_model_parameter_gradients"] = compare_parameter_gradients(
+                    snapshot["parameter_gradients"], native_full_gradients)
             if arm == "author_legacy_separate_self_mixed":
                 check = tensor_metrics(snapshot["output"], snapshots["author_legacy_mixed"]["output"])
                 report["separate_self_forward_unchanged"] = check
@@ -312,6 +361,22 @@ def main(argv=None):
             if arm in {"native_fp32", "native_mixed", "author_legacy_mixed"}:
                 snapshots[arm] = snapshot
             save()
+        save("author_own_cotangent/author_legacy_mixed")
+        own_author = local_vjp(layer, x, author_g, tables, "author_legacy_mixed")
+        if not own_author["finite"]:
+            raise FloatingPointError("Nonfinite author own-cotangent local diagnostic")
+        report["local_snapshots"].append({"direction": "author_actual", "arm": "author_legacy_mixed",
+            "finite": own_author["finite"], "ownership_preserved": own_author["ownership_preserved"],
+            "reconstruction": own_author["reconstruction"]})
+        report["author_local_matches_captured_forward"] = tensor_metrics(own_author["output"], author_captured_output)
+        report["author_local_vs_full_model_parameter_gradients"] = compare_parameter_gradients(
+            own_author["parameter_gradients"], author_full_gradients)
+        own_author["arm"] = "author_legacy_mixed_own_cotangent"
+        publish(compare_local(own_author, snapshots["author_legacy_mixed"], name="author_own_vs_native_cotangent"))
+        report["own_cotangent_replays_exact"] = all(report[key]["all_bitwise_equal"] for key in (
+            "native_local_vs_full_model_parameter_gradients", "author_local_vs_full_model_parameter_gradients")) and report["author_local_matches_captured_forward"]["bitwise_equal"]
+        report["own_cotangent_replay_qualification"] = "Incoming-trajectory attribution requires exact own-cotangent parameter replay; any mismatch remains unresolved."
+        del own_author, native_full_gradients, author_full_gradients
         del snapshots, snapshot
         for arm in ("native_mixed", "author_legacy_mixed"):
             save("gaussian_cotangent/" + arm)
@@ -325,7 +390,7 @@ def main(argv=None):
                 gaussian_reference = snapshot
             else:
                 publish(compare_local(snapshot, gaussian_reference, name="gaussian_direction_author_vs_native_mixed", policy="bf16"))
-        report["fixed_tensors_unchanged"] = fixed_hashes == (tensor_digest(x), tensor_digest(g), tensor_digest(random_g))
+        report["fixed_tensors_unchanged"] = fixed_hashes == (tensor_digest(x), tensor_digest(g), tensor_digest(random_g), tensor_digest(author_g))
         report["block_parameters_unchanged"] = layer_hashes == tree_digests(dict(layer.named_parameters()))
         if not report["fixed_tensors_unchanged"] or not report["block_parameters_unchanged"]:
             raise AssertionError("Diagnostic changed its fixed input/cotangent/weight fixture")

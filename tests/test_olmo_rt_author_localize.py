@@ -3,6 +3,8 @@
 These establish harness semantics, not GPU mixed-precision qualification.
 """
 from copy import deepcopy
+from contextlib import nullcontext
+from types import SimpleNamespace
 
 import pytest
 import torch
@@ -150,3 +152,70 @@ def test_separate_self_override_is_restored_on_failure():
             assert olmo_author._helper is not original
             raise RuntimeError("injected")
     assert olmo_author._helper is original
+
+
+@pytest.mark.parametrize("backend", ["native", "author"])
+@pytest.mark.parametrize("fail", [False, True])
+def test_full_model_interception_records_fixed_cotangent_and_restores_dispatch(monkeypatch, backend, fail):
+    # Exercise interception only: replace CUDA autocast and recurrence with a
+    # transparent CPU linear fixture, not a silent CPU fallback of main().
+    layer = torch.nn.Linear(3, 3, bias=False)
+    x = torch.randn(2, 4, 3, requires_grad=True)
+    expected_output = layer(x).detach()
+    native_calls, author_calls, validations = [], [], []
+
+    def native(target, values, **kwargs):
+        native_calls.append(target)
+        return target(values), None
+
+    def author(target, values, *args, **kwargs):
+        author_calls.append(target)
+        return target(values)
+
+    monkeypatch.setattr(local.olmo_tiled, "tiled_recurrent_layer", native)
+    monkeypatch.setattr(local.olmo_author, "author_tiled_recurrent_layer", author)
+    monkeypatch.setattr(local.torch, "autocast", lambda *args, **kwargs: nullcontext())
+    monkeypatch.setattr(local, "normalized_objective", lambda result: result.sums["ce"])
+
+    def loss_sums():
+        if backend == "native":
+            output, _ = local.olmo_tiled.tiled_recurrent_layer(layer, x)
+        else:
+            output = local.olmo_author.author_tiled_recurrent_layer(layer, x, None)
+        if fail:
+            raise RuntimeError("injected after intercepted forward")
+        return SimpleNamespace(sums={"ce": output.square().sum()})
+
+    plan = SimpleNamespace(model=SimpleNamespace(backbone=SimpleNamespace(
+        backbone=SimpleNamespace(layers=[layer]))), counts={"ce": 8}, input_tokens=8,
+        validate_execution=lambda: validations.append(True), loss_sums=loss_sums)
+    if fail:
+        with pytest.raises(RuntimeError, match="injected"):
+            local.capture_native_fixture(plan, backend=backend)
+    else:
+        captured, metadata = local.capture_native_fixture(plan, backend=backend)
+        assert torch.equal(captured["x"], x)
+        assert torch.equal(captured["output"], expected_output)
+        torch.testing.assert_close(captured["cotangent"], 2 * expected_output, atol=0, rtol=0)
+        assert not any(captured[key].requires_grad for key in ("x", "output", "cotangent"))
+        assert metadata["physical_optimizer_updates"] == 0 and metadata["backward_calls"] == 1
+        assert layer.weight.grad is not None and torch.isfinite(layer.weight.grad).all()
+    assert validations == [True]
+    assert native_calls == ([layer] if backend == "native" else [])
+    assert author_calls == ([layer] if backend == "author" else [])
+    assert local.olmo_tiled.tiled_recurrent_layer is native
+    assert local.olmo_author.author_tiled_recurrent_layer is author
+
+
+def test_own_parameter_gradient_comparison_distinguishes_exactness_error_and_ownership():
+    reference = {"a": torch.tensor([3., 4.]), "b": torch.tensor([0.])}
+    same = local.compare_parameter_gradients({n: v.clone() for n, v in reference.items()}, reference)
+    assert same["finite"] and same["ownership_matches"] and same["all_bitwise_equal"]
+    assert same["global_parameter_relative_l2"] == 0
+    altered = local.compare_parameter_gradients({"a": torch.tensor([6., 8.]), "b": torch.tensor([0.])}, reference)
+    assert altered["finite"] and altered["ownership_matches"] and not altered["all_bitwise_equal"]
+    assert altered["global_parameter_relative_l2"] == 1
+    missing = local.compare_parameter_gradients({"a": reference["a"]}, reference)
+    assert not missing["ownership_matches"] and not missing["all_bitwise_equal"]
+    nonfinite = local.compare_parameter_gradients({"a": torch.tensor([float("nan"), 4.]), "b": reference["b"]}, reference)
+    assert not nonfinite["finite"] and not nonfinite["all_bitwise_equal"]

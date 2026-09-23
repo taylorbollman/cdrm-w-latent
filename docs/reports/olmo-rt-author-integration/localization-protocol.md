@@ -6,10 +6,15 @@ updates or quality training. Do not change numerical budgets after observation.
 
 Use original OLMo-1B step60000, the same deterministic RT-only B8/T512 full-CE
 fixture at update0, selected RT layers0/15, CE2048, ordinary deterministic Flash
-and ordinary activation checkpointing. Run exactly one native mixed forward and
-mean-CE backward, intercepting the actual block0 input, completed output and
-incoming output cotangent. Restore the interception even after failure. This
-captures the true loss direction before clipping; never normalize this cotangent.
+and ordinary activation checkpointing. Run one native and one author mixed
+forward/mean-CE backward on exactly the same unchanged weights and examples,
+intercepting each actual block0 input, completed output and incoming output
+cotangent. Restore interception even after failure. These are two full-model
+backwards and zero optimizer updates. Clear native gradient buffers before the
+author pass. Prove both captures use identical block0 input and RoPE positions,
+preserving full-model parameter identities/version counters. Record the direct
+incoming-cotangent comparison and all four block0 parameter gradients from both
+full-model passes. Neither captured cotangent is normalized.
 
 Free the rest of the model and hold block0 weights, input, positions and incoming
 cotangent fixed. Evaluate local VJPs for native mixed, author legacy mixed,
@@ -25,6 +30,17 @@ Also compare native and author legacy mixed with exactly the same actual input
 and a deterministic Gaussian cotangent rescaled to the original cotangent's
 global L2 norm. This changes direction without introducing a different overall
 adjoint magnitude. It is not an additional Gaussian-input benchmark.
+
+Preserve the original eight local VJPs and their fixed native cotangent. Add
+exactly one ninth VJP: author legacy mixed with its own captured actual incoming
+cotangent, the same input and unchanged weights. Compare its parameter gradients
+with the author full-model block0 gradients, and likewise compare the existing
+native local VJP with its full-model gradients. Record actual tensor errors and
+bitwise equality, rather than relying on norm agreement. Also compare author
+local gradients under its two incoming cotangents. If own-cotangent replay is
+not exact, keep that limitation explicit; do not claim incoming-trajectory
+attribution from a mismatched replay. This does not by itself clear the remaining
+full-model BF16 discrepancy or identify its upstream origin.
 
 One explicitly diagnostic author legacy arm changes only backward reconstructed
 attention: remove the permanent diagonal before PV and add temporary self

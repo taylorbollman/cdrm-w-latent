@@ -21,3 +21,21 @@ ownership; finite CPU mixed-arm smoke checks; Gaussian norm/RNG isolation;
 diagnostic-screen semantics; temporary helper restoration after exceptions.
 The separate-self diagnostic's compiled GPU behavior and the actual pretrained
 input/cotangent results remain for the bounded GPU run.
+
+Final incoming-cotangent extension
+---------------------------------
+This records the completed focused run after importing the 524fa89 Flash-scope
+fix and adding the second full-model capture plus ninth local VJP.
+
+Exact command:
+CDRM_DOCKER_GPUS=none bash /home/taylorbollman/cdrm-w-latent/scripts/docker_shell.sh bash -lc 'cd /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree && PYTHONPATH=$PWD python -m pytest -q tests/test_olmo_rt_author_localize.py'
+
+Observed result:
+25 passed, 14 warnings in 3.18s
+Exit code: 0
+
+The five additional tests cover native/author interception success and failure
+restoration, exact captured x/y/incoming cotangent, and parameter-gradient
+comparison for exact, altered, missing and nonfinite tensors. The known
+torch.jit warnings remain unchanged. No broader suite or GPU test was run by
+the implementation agent for this extension.
