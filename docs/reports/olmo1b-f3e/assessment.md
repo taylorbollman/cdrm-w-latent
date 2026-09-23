@@ -163,3 +163,4 @@ interpretation. Source inventories, per-tensor error ratios, graph counters and
 full optimizer boundaries are validated independently of aggregate pass flags.
 The half-batch headroom follow-up was the protocol's anticipated adaptation;
 it did not change numerical budgets or replace the successful B128 evidence.
+Implementation and closeout: [PR19](https://github.com/taylorbollman/cdrm-w-latent/pull/19).

@@ -25,6 +25,7 @@ F3e durable execution record:
   runtime/protocol `543d243`, reporting/retention `de3e6b9`. No runtime changes
   during GPU work. Sixteen reports pass48/48 gates;96 physical updates comprise
   48 eager+48 graph. All474 scoped CPU tests pass. No failed attempts.
+  Review: [PR19](https://github.com/taylorbollman/cdrm-w-latent/pull/19).
 - No model/kernel/numerical-policy change. Reuse F3d recompute, cast reuse,
   Triton historical tiles, ordinary deterministic Flash/checkpointing and
   canonical BF16 CUDA graphs. Native checkpoint/RoPE/QK/parameters stay fixed.
