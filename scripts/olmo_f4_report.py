@@ -709,15 +709,48 @@ def plot(summary, output):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.ticker import FuncFormatter
     output=Path(output); output.mkdir(parents=True,exist_ok=True)
     rows=summary["full_steps"]
     if not rows: return []
-    figure, axes=plt.subplots(1,2,figsize=(max(12, len(rows)*.7),5),layout="constrained")
-    labels=[f"{row['case']}\nB{row['batch_size']} T{row['length']}" for row in rows]
-    for axis,field,title in ((axes[0],"input_tokens_per_second","Full-update input tokens/s"),
-                             (axes[1],"peak_allocated_gib","Peak allocated GiB, including setup")):
-        axis.bar(range(len(rows)),[row[field] for row in rows]); axis.set_title(title)
-        axis.set_xticks(range(len(rows)),labels,rotation=30,ha="right",fontsize=8)
+    cases = [case for case in FEATURES if any(row["case"] == case for row in rows)]
+    batches = sorted({row["batch_size"] for row in rows})
+    labels = {"ordinary":"Ordinary", "rt":"RT", "fbt":"FBT", "nextlat":"NextLat",
+        "rt-fbt":"RT +\nFBT *", "rt-nextlat":"RT +\nNextLat",
+        "fbt-nextlat":"FBT +\nNextLat", "combined":"RT + FBT\n+ NextLat"}
+    figure, axes = plt.subplots(1, 2, figsize=(15, 5.6))
+    figure.subplots_adjust(left=.06, right=.985, bottom=.23, top=.80, wspace=.20)
+    width = .36 if len(batches) == 2 else .52
+    colors = {64:"#356DA9", 96:"#E69138"}
+    for axis, field, title, ylabel in (
+        (axes[0], "input_tokens_per_second", "Full-update throughput", "Input tokens/s"),
+        (axes[1], "peak_allocated_gib", "Peak allocated memory, including setup", "GiB"),
+    ):
+        for index, batch in enumerate(batches):
+            selected = [row for row in rows if row["batch_size"] == batch]
+            offset = (index - (len(batches)-1)/2) * .40
+            # Plot each recorded median directly; do not average or rewrite rows.
+            positions = [cases.index(row["case"]) + offset for row in selected]
+            axis.bar(positions, [row[field] for row in selected], width=width,
+                     color=colors.get(batch), label=f"B{batch}", zorder=3)
+        axis.set_title(title, fontsize=12, pad=12)
+        axis.set_ylabel(ylabel)
+        axis.set_xticks(range(len(cases)), [labels[case] for case in cases], fontsize=9)
+        axis.set_xlim(-.65, len(cases)-.35)
+        axis.set_ylim(bottom=0)
+        axis.grid(axis="y", color="#DDDDDD", linewidth=.7, zorder=0)
+        axis.spines[["top", "right"]].set_visible(False)
+    axes[0].yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value/1000:g}k" if value else "0"))
+    handles, legend_labels = axes[0].get_legend_handles_labels()
+    figure.legend(handles, legend_labels, title="Physical batch per GPU", loc="upper center",
+                  bbox_to_anchor=(.5, .98), ncol=len(batches), frameon=False)
+    caption = "T512; three-update medians. RT uses layers (0,15); FBT uses K2."
+    if "rt-fbt" in cases:
+        caption += "\n* RT + FBT retains its failed initial gradient screen; resource results do not clear it."
+    missing96 = [case for case in cases if not any(row["case"] == case and row["batch_size"] == 96 for row in rows)]
+    if missing96:
+        caption += "\nB96 not measured: " + ", ".join(missing96) + ". Missing bars are not zero measurements."
+    figure.text(.06, .035, caption, fontsize=9, ha="left", va="bottom", color="#333333")
     paths=[]
     for suffix in ("pdf","png"):
         path=output/f"feature-training-resources.{suffix}"; figure.savefig(path,dpi=180); paths.append(str(path))

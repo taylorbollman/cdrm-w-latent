@@ -1,0 +1,35 @@
+{
+  "continuation_decision": "docs/reports/olmo1b-f4/continuation-decision.md",
+  "frozen_runtime": "397885b62077e7b8a8b574e819f108a1dbc72e29",
+  "protocol": "docs/reports/olmo1b-f4/protocol.md",
+  "roundoff_dirs": [
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-01",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-02"
+  ],
+  "runtime_dirs": [
+    ".runtime/olmo1b-step60000/f4-ordinary-correctness-b1-t32",
+    ".runtime/olmo1b-step60000/f4-nextlat-correctness-b1-t32",
+    ".runtime/olmo1b-step60000/f4-fbt-correctness-b1-t32",
+    ".runtime/olmo1b-step60000/f4-fbt-nextlat-correctness-b1-t32",
+    ".runtime/olmo1b-step60000/f4-rt-nextlat-correctness-b8-t512",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-correctness-b8-t512",
+    ".runtime/olmo1b-step60000/f4-combined-correctness-b1-t32",
+    ".runtime/olmo1b-step60000/f4-ordinary-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-rt-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-nextlat-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-rt-nextlat-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-fbt-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-fbt-nextlat-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-combined-capacity-b64-t512",
+    ".runtime/olmo1b-step60000/f4-ordinary-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-rt-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-nextlat-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-rt-nextlat-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-fbt-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-fbt-nextlat-capacity-b96-t512",
+    ".runtime/olmo1b-step60000/f4-combined-capacity-b96-t512"
+  ],
+  "skipped": []
+}

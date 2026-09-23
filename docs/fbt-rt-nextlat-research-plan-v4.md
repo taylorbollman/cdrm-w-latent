@@ -7,6 +7,21 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
+**F4 training resource matrix is complete with a retained numerical qualification.**
+Read the [F4 assessment](reports/olmo1b-f4/assessment.md),
+[results](reports/olmo1b-f4/results.md) and
+[roundoff diagnosis](reports/olmo1b-f4/roundoff-assessment.md).
+All eight modes have finite B64/B96 full-update measurements; B64 remains
+our common default. RT+FBT narrowly failed the unchanged BF16 coordinate
+screen; graph/Adam checks are exact, and full FP32 memory implementations agree
+closely. Both BF16 control and candidate show about18% gradientL2 difference
+from full FP32 at this initialization. This remains a qualification, not a
+blanket precision clearance. No core math or Q/K change was made. Read the
+handoff for235 scoped tests, retained evidence and resource operating points.
+Next: recovery/accumulation, padding and online resource readiness, plus a
+bounded transition/clipped-update precision follow-up before substantial
+learning if warranted. Genuine multi-GPU requires a second GPU.
+
 **Status: F1/F2 and F3 through F3e are complete within their measured scopes.**
 Read the [F3e assessment](reports/olmo1b-f3e/assessment.md),
 [results](reports/olmo1b-f3e/results.md) and [usage](olmo1b-f3e-usage.md).
@@ -37,9 +52,8 @@ historical attention pair area, not full-step work/time. Historical recompute
 backward remains fused. Native RT does not use FA4/CuTE. Defaults still retain
 materialized reference; no architecture, checkpoint, RoPE or loss change.
 
-**Next:** finish F4 feature-combination runtime cards using a representative
-multi-layer selection, then graph recovery/accumulation, padding and online
-readiness. Analytic parameter/FLOP cards now explicitly support recompute and
+**Next after F4 training cards:** graph recovery/accumulation, padding and
+online readiness, retaining the F4 numerical qualification. Analytic parameter/FLOP cards now explicitly support recompute and
 actual loss-mask counts. Combined training/deployable parameters are
 1,267,879,936/1,185,153,024; RT selection and pass reuse add no weights. Actual
 multi-GPU work needs a second GPU. Local writer/finish VJPs, discarded permanent-Q
@@ -390,13 +404,18 @@ match ordinary-transformer throughput despite its sequential dependencies.
 
 ## 7. F4 — Single-GPU parameter, throughput, memory and FLOP cards
 
-**F4 training-resource matrix active (2026-09-23):** the user approved the
-next milestone. Follow the [frozen protocol](reports/olmo1b-f4/protocol.md): all
-eight independent toggles at common B64/T512, RT `(0,15)`, K2, same checkpoint
-and objective masks. Bounded missing graph checks, separate operator audits
-and conditional B96 scaling follow. F3e long-context/K3 evidence is reused
-with its original scope. This completes training cards only; finite prefill
-and exact-online/decode cards remain in readiness work. No quality sweep.
+**F4 training-resource matrix complete (2026-09-23), with qualification:**
+[assessment](reports/olmo1b-f4/assessment.md), [results](reports/olmo1b-f4/results.md),
+[frozen protocol](reports/olmo1b-f4/protocol.md). All eight independent toggles
+were measured at common B64/T512 and B96/T512, RT `(0,15)`, K2, same checkpoint
+and masks. RT+FBT retains a failed coordinate screen and the broader BF16
+sensitivity is documented. All capacity checks are finite; that does not clear
+numerical qualifications. B96 materially helps RT and RT+NextLat; the larger
+FBT combinations have tight setup headroom. Ordinary/all-three B64 reach
+31.11k/9.89k input tokens/s, with26.74/39.09GiB allocated and37.17/60.46GiB
+reserved peaks. Operator traces reconcile the dense ledger. This completes
+training cards only; finite prefill/exact-online cards remain in readiness.
+F3e long-context/K3 evidence retains its original scope. No quality sweep.
 
 **F3b accounting slice complete:** [resource derivation](olmo-resource-accounting.md)
 and the F3b report provide all eight analytic cards, with20 tests including actual

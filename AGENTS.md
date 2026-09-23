@@ -127,6 +127,22 @@ not full-step arithmetic/time. Recompute backward is fused through2048. Padded
 graphs, graph recovery/accumulation and genuine multi-GPU remain untested.
 Direct Triton CPU observer attribution undercounts kernels; use device
 traces/full-step timings. Two-GPU checks need a second GPU; one H100 is exposed.
+F4 training resource cards are complete with a retained numerical qualification.
+Read F4 assessment/results/roundoff-assessment/operator-audit and current handoff.
+All eight B64/B96 capacity cases have finite full updates. At B64/T512,
+ordinary/RT/NextLat/RT+NextLat/FBT/RT+FBT/FBT+NextLat/combined reach
+31.11k/19.44k/24.03k/16.44k/15.80k/12.14k/12.18k/9.89k input tokens/s.
+B64 is the common default; B96 helps RT/RT+NextLat, but larger FBT combinations
+reserve 73.9–78.4 GiB. The 23 main reports pass 46/47 gates, with 132 updates
+in successful reports; separate roundoff has six more. 235 scoped CPU tests pass.
+RT+FBT B8/T512 has one MLP coordinate ratio of 6.3492%, missing the unchanged
+6.25% limit; the failed gate stays. Candidate graph/full-Adam comparisons are
+exact; FP32 materialized/recompute global L2 is 3.04e-6. Both BF16 control and
+candidate differ about 18% from full-FP32 gradients at initialization; retain
+this qualification, not numerical clearance. No core math/QK change or
+quality run. Main runtime397885b, diagnostic949731b; failed probe01 context
+construction is retained separately. Next: recovery/accumulation, padding/online
+readiness, and a bounded precision follow-up as needed before learning.
 Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical
