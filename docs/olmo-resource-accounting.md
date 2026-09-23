@@ -1,7 +1,9 @@
 # Native OLMo resource accounting
 
 The estimator in [`resource_estimates.py`](../cdrm/pretrained/resource_estimates.py)
-counts the current implementation's matrix arithmetic. It deliberately does not
+counts the materialized-backward implementation's matrix arithmetic. The F3d
+opt-in recompute path needs the explicit correction below; its new option is not
+yet an argument of the estimator. The estimator deliberately does not
 translate parameter count into `6NT`, or treat estimated FLOPs as measured device
 utilization. CUDA graphs reduce scheduling overhead without removing the matrix
 work counted here.
@@ -105,12 +107,24 @@ Let `E=T(T-1)/2` be strict-causal historical pairs. The RT attention matmuls are
 
 Every strict-causal pair appears once in the forward and reverse tile sums,
 including non-power-of-two lengths. The temporary diagonal uses pointwise
-operations and is outside the matrix-only estimate. RT's current backward also
+operations and is outside the matrix-only estimate. The materialized reference also
 materializes full-square FP32 score/probability/error arrays. A single
 `[B,H,T,T]` FP32 tensor is `4BHT²` bytes: at `H=16,T=512`, 1 GiB for B64 or 2 GiB
 for B128. Several arrays can coexist; neither this per-array number nor a sum of
 all named tensors is a measured peak. It identifies a quadratic storage term
-for future fused-backward work.
+in the retained materialized reference.
+
+F3d's opt-in `backward_memory="recompute"` removes those complete backward
+attention arrays, retaining row statistics and bounded query/key workspace.
+It adds QK reconstruction in the reverse historical tiles (`2BDE`) and in the
+final query-gradient stage (`2BDT²`). For the same no-prefix matrix accounting,
+add **`2BD(E+T²)` per selected RT invocation** to the existing estimate. At
+B64/T512/D2048 this is about0.103 TFLOPs/update for one invocation; multiply
+by the actual number of RT layers/feedback calls. Dense, loss and parameter
+counts are unchanged. Softmax/pointwise work and kernel tile padding remain
+excluded, so this small matrix-work addition does not predict wall time.
+The complete model is not claimed to use linear memory: ordinary/padded masks,
+long-context eager forward fallback and other model allocations are separate.
 
 ## Passes, fusion, predictor and vocabulary losses
 

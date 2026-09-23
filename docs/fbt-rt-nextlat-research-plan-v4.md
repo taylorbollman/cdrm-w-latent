@@ -1,48 +1,43 @@
 # OLMo / RT / FBT / NextLat: functionality and execution plan
 
-Updated 2026-09-22. **Current authoritative forward plan.**
+Updated 2026-09-23. **Current authoritative forward plan.**
 
 This supersedes the next-experiment queue in [v3](fbt-rt-nextlat-research-plan-v3.md).
 The user's new priority is confidence in functionality, numerical health,
 integration and reasonable execution cost, before asking which model wins.
 Completed O1–O5e evidence remains valid within its recorded scope.
 
-**Status: approved; F1, F2, graph integration, forward and historical backward fusion are complete.**
-Read the [F3c assessment](reports/olmo1b-f3c/assessment.md),
-[results](reports/olmo1b-f3c/results.md) and [usage](olmo1b-f3c-usage.md), plus
-[F3b](reports/olmo1b-f3b/assessment.md) for the forward change and FA4 environment.
-Canonical RT/FBT/NextLat training runs in CUDA graphs with ordinary checkpointing.
-Clipping, AdamW and scheduler stay outside capture and are included in timing.
-F3b adds per-forward cast reuse and historical forward fusion; F3c adds an
-independent historical backward tile. All remain opt-in, with the eager path
-retained as reference. Native checkpoint/RoPE/loss/QK math/parameters are unchanged.
-Ordinary layers use deterministic Flash; RT tiles use Triton. Installed FA4/CuTE
-passes its separate smoke, after source selection was corrected.
+**Status: approved; F1/F2 and F3 graph, forward/backward fusion and bounded
+backward workspace are complete within their measured scopes.** Read the
+[F3d assessment](reports/olmo1b-f3d/assessment.md),
+[results](reports/olmo1b-f3d/results.md) and [usage](olmo1b-f3d-usage.md).
+Ten final GPU reports pass 90 gates and 428 scoped CPU tests pass. RT and combined
+K2+NextLat have exact same-candidate graph/full-Adam parity throughT1024.
+Initial gradients versus materialized F3c pass unchanged budgets, with maximum
+aggregate relative L2 .00237615 across the three native checks.
 
-F3c's seven GPU reports/78 gates and432 scoped CPU tests pass. All48 frozen tiles
-and12 tiny blocks equal the BF16 backward control bitwise. Actual RT B8/T512
-initial losses/gradients are exact; combined gradient relative L2 is0.00139246
-with exact initial losses. Both pass exact same-candidate graph/full-Adam updates.
-At T512, RT B128 reaches26.48k input tokens/s at42.10GiB allocated and combined
-K2+NextLat B64 reaches10.97k/s at40.84GiB, about1.45%/1.06% above the F3b forward
-optimized path. These are warmed three-update medians. B64 remains the common
-development point with headroom; reserved peak/current values are separate.
-Only layer0 is RT in these full-model checks. Keep native Q/K math.
+Opt-in `backward_memory="recompute"` removes full backward probability/error
+arrays. In three fresh paired capacity cases it saves 1.75–3.50 GiB allocated
+with 0.39–0.74% lower measured throughput. RT B128/T512 now reaches26.26kinput tokens/s
+at 38.60 GiB; combined B64/T512 10.93k/s at 39.09 GiB; combined B16/T1024 8.58k/s
+at 31.29 GiB. Isolated reconstruction workspace grows approximately linearly through
+T2048. Complete-model memory is not claimed linear. Materialized remains default.
 
-The common analytic parameter/FLOP ledger covers all eight feature combinations;
-broader runtime cards are still pending. The final profile verifies511 fused
-backward tiles, reduced kernel counts and exact observer neutrality. Direct
-Triton child time is incompletely attributed in CPU observer ranges; use actual
-device kernels and complete-step timings for performance claims.
+Ordinary layers use deterministic PyTorch Flash, selected RT tiles use Triton.
+Forward rectangles larger than 256 retain eager fallback; recompute backward
+supports historical rectangles through 2048. Installed FA4/CuTE passed its separate
+F3b smoke, not native RT integration. Native checkpoint/RoPE/loss/QK math and
+parameter counts stay fixed. All F3d full-model checks select only layer 0 for RT.
 
-**Next: remove quadratic probability/error intermediates**, retaining row
-normalizers and recomputing tiles with preserved BF16 product boundaries,
-temporary-self separation and query/prefix gradients. Historical backward fusion
-is the completed review point; the memory rewrite remains separate. The broader
-F3 gate, longer contexts/more RT layers, F4 runtime cards and actual two-GPU checks
-are open. No GPU or quality run is queued. The full-backbone mixed-data FBT
-learning comparison remains deferred. Read the [handoff](fbt-rt-nextlat-handoff.md)
-first after compaction.
+**Next:** bounded multi-layer/all-layer RT and longer-context integration/resource
+coverage using the new path, then complete F4 runtime cards. The analytic ledger
+covers all eight combinations; its current estimator remains materialized and
+now documents the recompute correction. Native T2048 complete updates, padded
+graphs, graph recovery/accumulation and actual two-GPU execution remain open.
+Local writer/finish VJPs and discarded permanent-Q computation are separate
+performance opportunities. Preserve native Q/K math. No GPU or quality run is
+queued; deferred quality comparisons need a later decision. Read the
+[handoff](fbt-rt-nextlat-handoff.md) first after compaction.
 
 ## 1. Scope and working principles
 
@@ -301,7 +296,8 @@ correctness and B32/64/128 results are in the F3 report. F3b subsequently valida
 weight-cast reuse and a fused historical forward tile, with matched capacity
 checks and before/after profiles. Ordinary Flash dispatch is verified for these
 unpadded graph layouts. F3c now validates historical dK/dV fusion and its full-update integration.
-Quadratic probability/error removal remains, so the broader gate stays open.
+F3d removes quadratic backward probability/error buffers in an opt-in checked path.
+Broader layer/context/backend coverage still keeps the full gate open.
 
 ### Current distinction
 
@@ -321,9 +317,10 @@ F3b adds an optional Triton historical tile for BF16 Q/K/V, head dimensions
 16/32/64/128 and rectangles up to256 on either side; unsupported shapes/precision
 use the recorded eager fallback. At the tested T512 all511 historical rectangles
 are fused. This is not an FA4 call. Forward retains inputs and completed outputs
-for recomputation. Current backward reconstructs attention with quadratic
-probability/error intermediates; retained forward activations alone do not
-establish linear backward memory.
+for recomputation. The retained materialized backward reconstructs quadratic probability/error
+intermediates; F3d now offers bounded attention workspace via row statistics
+and tile recomputation. Retained forward activations alone do not establish
+linear complete-model memory.
 
 The relevant vendor RT implementation also uses compiled PyTorch tile helpers;
 its ordinary Flash hooks and installed FA4 dependency are not evidence of a
@@ -362,8 +359,9 @@ its public interface supplies this RT forward/backward contract.
 [Official FlashAttention repository](https://github.com/Dao-AILab/flash-attention).
 The first fused-tile prototype is a review point before a substantial rewrite.
 F3b completed that forward review point, and F3c subsequently validated dyadic
-historical dK/dV fusion with FP32 adjoints and BF16 product boundaries. Next,
-replace full probability/error storage with row normalizers and recomputed tiles.
+historical dK/dV fusion with FP32 adjoints and BF16 product boundaries. F3d now
+replaces full probability/error storage with row normalizers and recomputed tiles
+within the tested opt-in scope.
 The optimized profile also motivates inspecting local writer/finish VJPs and
 the full permanent QKV projection whose Q is discarded. Stage these separately
 so numerical ownership and memory improvements remain attributable.
@@ -512,12 +510,12 @@ remain deferred.
 ## 10. Execution order and durable operation
 
 - Completed: F1 integration, F2 health/checkpointing, F3 canonical CUDA graphs,
-  F3b forward historical-tile fusion/cast reuse and F3c historical backward fusion,
+  F3b forward historical-tile fusion/cast reuse, F3c historical backward fusion
+  and F3d bounded backward attention workspace,
   each with before/after profiles and bounded native checks.
   F4 analytic parameter/FLOP cards are complete; runtime coverage remains partial.
-- Next: review the bounded F3c result, then remove quadratic intermediates in
-  separately checked stages. Finish broader
-  layer/context/feature resource cards after relevant execution changes.
+- Next: review F3d, then broaden optimized RT layer/context integration and
+  finish feature/resource cards. Keep native Q/K math and materialized reference.
 - F5 starts when a second GPU is available, independent of quality results
   or completion of the fused-kernel work. Then perform F6 readiness review.
 - Kernel engineering is the largest uncertain effort. Initial checks and profiles

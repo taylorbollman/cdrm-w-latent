@@ -94,14 +94,25 @@ initial losses equal bitwise and global gradient relative L2 is0.00139246. Both
 have exact same-candidate graph/full-Adam parity. T512 RT B128 reaches26.48k
 inputtokens/s; combined B64 10.97k/s, about1.45%/1.06% additional gains with
 unchanged allocated peaks. Read F3c assessment/results/usage and current handoff.
-No GPU or quality run is queued. Next is removal of quadratic probability/error
-intermediates, preserving normalizers, product rounding, temporary-self and
-prefix/query gradients. Keep the current custom VJP as reference. Actual fused
-backward dispatch is verified; CPU observer attribution undercounts direct
-Triton kernels, so use device traces/full-step timings. All actual full-model
-F3c measurements still select RT layer0. Do not resume completed diagnostics or
-deferred full-backbone FBT learning. Ordinary SDPA dispatch is shape-dependent.
-Two-GPU correctness remains untested and only one H100 is currently exposed.
+F3d bounded backward workspace is complete: opt-in backward_memory="recompute"
+retains row statistics and recomputes attention/adjoint tiles, preserving BF16
+whole-product rounding, temporary self and query/prefix gradients. Materialized
+stays default/reference. Ten final reports pass 90 gates;428 scoped CPU tests pass.
+RT B8/T512 and combined B8/T512/B2T1024 initial gradient global L2 versus F3c is
+.00089227/.00237615/.00224863; same-candidate graph/full-Adam parity is exact.
+Fresh capacity saves 1.75–3.50 GiB with 0.39–0.74% lower throughput: RT B128/T512
+26.26k/s at 38.60 GiB; combined B64/T512 10.93k/s at 39.09 GiB; B16/T1024 8.58k/s
+at 31.29 GiB. Isolated reconstruction memory is approximately linear throughT2048;
+full-model memory is not. Read F3d assessment/results/usage and handoff. One
+failed capture attempt (fixed scalar indexing) and an earlier probe are retained
+separately from the final10-run selection. Native Q/K math remains unchanged.
+No GPU or quality run is queued. Next is broader optimized RT layer/context
+integration and F4 runtime cards. Only RT layer 0 is selected in actual F3d
+full-model checks. Forward rectangles above 256 still use eager fallback;
+recompute backward is fused through 2048. Native T2048 complete updates, more/all
+RT layers, padded graphs, graph recovery/accumulation and genuine multi-GPU remain
+untested. Direct Triton CPU observer attribution undercounts kernels; use device
+traces/full-step timings. Two-GPU checks need a second GPU; one H100 is exposed.
 Read the handoff
 for current authorization and evidence. Do not infer long-run
 authorization from platform work. Completed OpenELM code/results are historical
