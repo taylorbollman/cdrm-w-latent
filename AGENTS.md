@@ -60,7 +60,7 @@ Fixed-real-input/shared-cotangent block0 gradients agree at.003327 mixed and
 each own local VJP exactly reproduces its full-model block0 raw gradients. No
 local backward arithmetic fix is supported by the tested separate-self probe.
 Read the handoff/results for limitations, retained failures, source pins and
-next functional milestone. Finalize PR25/evidence retention, then pause; GPU is
+next functional milestone. Evidence retention is verified (493 members); pause for review. GPU is
 idle and no quality training is queued. Prior F4 qualifications remain open.
 
 Prior user-directed investigation: CE integration and the refreshed original

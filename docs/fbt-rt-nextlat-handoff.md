@@ -109,7 +109,9 @@ adopting author mixed precision, separately assess full-stack FP32/precision
 sensitivity. The older functional roadmap (graph recovery/accumulation, padded
 online execution, real multi-GPU) remains the next broader work; no quality run,
 Q/K-normalization change or further GPU job is queued. Existing F4 qualifications
-remain open. Finalize verified GCS retention and PR25, then pause for review.
+remain open. All493 evidence members and the existing checkpoint reference are verified at
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-author-integration/20260923T202735Z/`.
+The comparison is complete; pause for review.
 
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
