@@ -11,6 +11,16 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F4 training resource cards are active (2026-09-23).** User authorized the
+next review milestone. Branch `feat/olmo1b-f4-resource-cards`, base `deecfe6`.
+Read the frozen [protocol](reports/olmo1b-f4/protocol.md). All eight independent
+RT/FBT/NextLat switches will use common B64/T512; RT selects `(0,15)`, FBT K2.
+Six previously unmeasured graph combinations get bounded correctness checks;
+a short combined repeat provides an operator trace. One conditional B96 check
+per cell follows only after the common matrix. No model/kernel or Q/K change.
+Training-only resource scope: prefill/online, recovery/accumulation/padding and
+actual two-GPU readiness remain later work. No quality training is queued.
+
 **F3e multiple-selected-layer integration is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3e/assessment.md), [results](reports/olmo1b-f3e/results.md),
 [protocol](reports/olmo1b-f3e/protocol.md) and [usage](olmo1b-f3e-usage.md).
