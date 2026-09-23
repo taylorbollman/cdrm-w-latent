@@ -40,6 +40,9 @@ Use explicit `reuse_rope=True, kv_only_writes=True` for the improved native arm,
 CE2048/KL128, cast reuse/Triton/recompute as before. Existing qualifications stay.
 GPU queue ended idle; no learning run. Raw evidence is under
 `.runtime/olmo-rt-efficiency/`, W&B group`olmo-rt-efficiency`; see its storage receipt.
+Reports`429857a`; [PR23](https://github.com/taylorbollman/cdrm-w-latent/pull/23).
+All977 evidence members and the native checkpoint reference are verified at
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/`.
 
 Next, without further approval: author-derived RoPE implementation and matched
 comparison. Read [source audit](reports/olmo-rt-author-comparison/author-port-audit.md).

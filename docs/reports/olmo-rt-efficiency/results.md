@@ -8,7 +8,8 @@ establish performance parity with the authors or resolve the existing broader
 BF16/full-FP32 qualification.
 
 Runtime/protocol: `3fd27e0`; report/retention helpers: `072155e`; base PR22 merge:
-`70650a8`. See [protocol](protocol.md), [usage](usage.md), [summary](summary.json),
+`70650a8`; final reports `429857a`. Review: [PR23](https://github.com/taylorbollman/cdrm-w-latent/pull/23).
+See [protocol](protocol.md), [usage](usage.md), [summary](summary.json),
 [profile audit](profile-audit.md), and [throughput PDF](throughput.pdf).
 The summary explicitly selects every run, with raw report hashes and W&B URLs.
 Online tracking: [pretrained-fbt-rt-nextlat](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat),
@@ -137,6 +138,10 @@ includes the reverse-order repetitions. Exact source snapshots, reports, logs,
 two compressed traces, plots, test evidence and the original checkpoint reference
 are retained through the [storage receipt](storage-receipt.json). Diagnostic
 few-update weights are disposable; the native checkpoint is already retained.
+Verified GCS prefix:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/`.
+Server size/MD5, SHA metadata and downloaded SHA256 match; both exact compressed
+traces and all977 selected evidence members are retained.
 
 The earlier F4 RT+FBT coordinate miss and roughly18% BF16/full-FP32 initialization
 gradient difference remain qualified. No broad precision clearance, long-run

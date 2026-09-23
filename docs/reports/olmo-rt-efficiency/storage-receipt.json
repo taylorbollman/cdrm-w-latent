@@ -1,0 +1,84 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "current_source_differences": {
+    "check-combined-control-rope": {},
+    "check-combined-rope-both": {},
+    "check-ordinary-rope": {},
+    "check-rt-control-rope": {},
+    "check-rt-rope-both": {},
+    "combined-b64-both": {},
+    "combined-b64-both-repeat": {},
+    "combined-b64-control": {},
+    "combined-b64-control-repeat": {},
+    "combined-b64-rope": {},
+    "combined-b64-rope-repeat": {},
+    "ordinary-b64-control": {},
+    "ordinary-b64-control-repeat": {},
+    "ordinary-b64-rope": {},
+    "ordinary-b64-rope-repeat": {},
+    "rt-b64-both": {},
+    "rt-b64-both-repeat": {},
+    "rt-b64-control": {},
+    "rt-b64-control-repeat": {},
+    "rt-b64-rope": {},
+    "rt-b64-rope-repeat": {}
+  },
+  "members": 977,
+  "objects": [
+    {
+      "generation": "1790189938168264",
+      "md5_base64": "h/w68eMSUbc2TR7JLb3Rew==",
+      "sha256": "58c14403e1b54b26bd1f9e7e8340069997a9d89d37eda42e9ca4a7393ad0f28c",
+      "size_bytes": 15241641,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/evidence.tar.gz",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    },
+    {
+      "generation": "1790189938527538",
+      "md5_base64": "UtL1asxNhb7cP/FdzZHRGQ==",
+      "sha256": "4d9924f0d9119e178cf58c39516e8da0a9e37848dac3fe36f16741e522ad1fa4",
+      "size_bytes": 297121,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/retention-manifest.json",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    }
+  ],
+  "physical_optimizer_updates": 158,
+  "profile_bytes": 15240452,
+  "profile_count": 2,
+  "profiles": {
+    "rt-b64-both": {
+      "trace_bytes": 6736334,
+      "trace_file": "operator-trace.json.gz",
+      "trace_sha256": "84013554fda4a5c97fc190a53260de99b2ab3255b4d9b39bd5cae44ccc334648"
+    },
+    "rt-b64-control": {
+      "trace_bytes": 8504118,
+      "trace_file": "operator-trace.json.gz",
+      "trace_sha256": "33cdf5979c9aacfd2fb603af66994e898f9f5b84b692e04605beae6e2ebd4853"
+    }
+  },
+  "receipt_object": {
+    "generation": "1790189938745821",
+    "md5_base64": "iF9TLp0EBXd6VcxSLwL/Kg==",
+    "sha256": "bf36b81a83c2e6e25085079fe6509fcd1b7b452e17c047bda90722db3d61c166",
+    "size_bytes": 2742,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/storage-receipt.json",
+    "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+  },
+  "runs": 21,
+  "schema": "olmo-rt-efficiency-retention-v1",
+  "source_pairs_checked": 882,
+  "status": "verified",
+  "statuses": {
+    "passed": 21
+  },
+  "weights_uploaded": false
+}
