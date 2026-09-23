@@ -11,7 +11,7 @@ Completed O1–O5e evidence remains valid within its recorded scope.
 backward workspace are complete within their measured scopes.** Read the
 [F3d assessment](reports/olmo1b-f3d/assessment.md),
 [results](reports/olmo1b-f3d/results.md) and [usage](olmo1b-f3d-usage.md).
-Ten final GPU reports pass 90 gates and 428 scoped CPU tests pass . RT and combined
+Ten final GPU reports pass 90 gates and 428 scoped CPU tests pass. RT and combined
 K2+NextLat have exact same-candidate graph/full-Adam parity throughT1024.
 Initial gradients versus materialized F3c pass unchanged budgets, with maximum
 aggregate relative L2 .00237615 across the three native checks.

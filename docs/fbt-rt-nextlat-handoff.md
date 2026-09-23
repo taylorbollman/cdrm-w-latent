@@ -19,9 +19,10 @@ The user explicitly authorized this milestone. No GPU or quality run is queued.
 F3d durable execution record:
 
 - Branch `feat/olmo1b-f3d-rt-memory`, base 70e86e2, initial runtime b85337c,
-  final runtime 40305d8; reporting/retention 62ab5de. Ten final GPU reports pass
+  final runtime 40305d8; reporting/retention 62ab5de;
+  [PR18](https://github.com/taylorbollman/cdrm-w-latent/pull/18). Ten final GPU reports pass
   90/90 gates; 54 actual updates comprise 27 eager+27 graph. 428 scoped CPU tests
-  pass . The two historical diagnostics are retained separately from final counts.
+  pass. The two historical diagnostics are retained separately from final counts.
 - Opt-in `backward_memory="recompute"` retains row normalizers and reconstructs
   probabilities in bounded attention/gradient tiles. BF16 full-product rounding,
   temporary self, query/prefix gradients and normal autograd ownership remain.
@@ -31,7 +32,7 @@ F3d durable execution record:
   14 raw-cotangent blocks and 3 reconstruction memory sizes. All block forward/
   cache outputs are exact;13/14 block gradients are exact, worst global L2
   7.92e-7. Worst block versus FP32 is .003489. 392 recompute calls verified.
-  Preserve 22 stricter diagnostic flags; primary budgets all pass . W&B puvm7gux.
+  Preserve 22 stricter diagnostic flags; primary budgets all pass. W&B puvm7gux.
 - Native RT B8/T512, combined K2+NextLat B8/T512 and combined B2/T1024 initial
   gradient global L2 versus F3c is .00089227/.00237615/.00224863. Losses are exact.
   Same-candidate changed-input/weight/overwrite graph and three-versus-three

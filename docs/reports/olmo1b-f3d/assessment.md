@@ -111,7 +111,7 @@ on this single-GPU machine; no two-GPU result is implied.
 Probe01 passed on runtime b85337c. Native RT attempt01 then passed its initial
 gradient screen but failed CUDA capture: indexed scalar zeroing tried a CPU
 copy. Runtime40305d8 replaces it with an equivalent diagonal-view zero.
-Native attempt02 and the full final probe pass . Probe01/02 numerical results
+Native attempt02 and the full final probe pass. Probe01/02 numerical results
 and fixture hashes are identical; only allocation-observer operation counts
 change. No optimizer update happened in failed attempt01. Its error, W&B run
 and exact earlier source remain retained rather than silently overwritten.

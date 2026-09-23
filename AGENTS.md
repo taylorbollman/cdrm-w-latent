@@ -97,7 +97,7 @@ unchanged allocated peaks. Read F3c assessment/results/usage and current handoff
 F3d bounded backward workspace is complete: opt-in backward_memory="recompute"
 retains row statistics and recomputes attention/adjoint tiles, preserving BF16
 whole-product rounding, temporary self and query/prefix gradients. Materialized
-stays default/reference. Ten final reports pass 90 gates;428 scoped CPU tests pass .
+stays default/reference. Ten final reports pass 90 gates;428 scoped CPU tests pass.
 RT B8/T512 and combined B8/T512/B2T1024 initial gradient global L2 versus F3c is
 .00089227/.00237615/.00224863; same-candidate graph/full-Adam parity is exact.
 Fresh capacity saves 1.75–3.50 GiB with 0.39–0.74% lower throughput: RT B128/T512
