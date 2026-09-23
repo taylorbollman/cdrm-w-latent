@@ -27,8 +27,11 @@ chunk2048 reaches73.52k, setupreserved76.78GiB (tight). FullCE B32/H32 gives
 alone is82.36k/99.25k. The paper uses GELU, smaller vocabulary, ALiBi, compilation,
 no ordinary checkpointing, and global512 from physical32 microbatches; its
 ordinary recipe does not establish physical512. We have not reproduced153k.
-All raw reports/sources/traces are retained; see the storage receipt in the
-report directory. GPU idle; no further experiment queued. This user-requested
+All raw reports/sources/traces are retained under
+`olmo-ordinary-throughput/20260923T172332Z/`; see the storage receipt in the
+report directory. The1,556,831-byte archive SHA256 is
+`e23637d8768550b571a7a0ca4f766e3e4ff847c841ff6908b995a2e2b90f3f45`.
+Server metadata and downloaded bytes were checked. GPU idle; no further experiment queued. This user-requested
 ordinary investigation precedes the existing graph-readiness queue. Proposed
 next: bounded larger-CE-chunk integration check and a refreshed original16-layer
 ordinary baseline before interpreting RT relative throughput or prioritizing FA.

@@ -114,8 +114,10 @@ this user-requested ordinary-throughput investigation precedes it.
 [Protocol](protocol.md), [summary](summary.json), [CPU test log](test-results.txt),
 [paper comparison](paper-comparison.md), [profile audit](profile-audit.md).
 Exact per-run sources, protocol, raw reports and both compressed traces are
-retained locally and selected for GCS retention; the final storage receipt
-records verified objects. Random disposable weights need not be retained;
+retained locally and verified in GCS under
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-throughput/20260923T172332Z/`.
+The [storage receipt](storage-receipt.json) records server hashes and downloaded
+SHA256 verification:327 evidence members,1,556,831 compressed bytes. Random disposable weights need not be retained;
 initialization/token seeds and source snapshots are recorded. No checkpoint
 from the pretrained research line was changed. Final GPU is idle.
 
