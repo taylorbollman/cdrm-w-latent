@@ -1,0 +1,121 @@
+F3e scoped CPU validation: 474 unique tests passed (340 core + 31 validator + 103 reporter/retainer).
+All execution used GPU-disabled project containers; GPU diagnostics ran separately on H100.
+The final reporter/retainer run supersedes its earlier 85-test count.
+
+core-test-results.txt
+
+=============
+== PyTorch ==
+=============
+
+NVIDIA Release 26.06 (build 337426143)
+PyTorch Version 2.13.0a0+8145d63
+Container image Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright (c) 2014-2024 Facebook Inc.
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (c) 2015      Google Inc.
+Copyright (c) 2015      Yangqing Jia
+Copyright (c) 2013-2016 The Caffe contributors
+All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+........................................................................ [ 21%]
+........................................................................ [ 42%]
+........................................................................ [ 63%]
+........................................................................ [ 84%]
+....................................................                     [100%]
+=============================== warnings summary ===============================
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[adjacent-k2-materialized]
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[adjacent-k2-recompute]
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[spread-k3-materialized]
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[spread-k3-recompute]
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[all-k2-materialized]
+tests/test_olmo_multilayer_execution.py::test_static_multilayer_objective_and_all_gradients_match_native_history_oracle[all-k2-recompute]
+  /workspace/cdrm-w-latent/cdrm/pretrained/_olmo_reference/model.py:1019: UserWarning: Embedding size is not a multiple of 128! This could hurt throughput performance.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+340 passed, 6 warnings in 8.63s
+
+validator-test-results.txt
+
+=============
+== PyTorch ==
+=============
+
+NVIDIA Release 26.06 (build 337426143)
+PyTorch Version 2.13.0a0+8145d63
+Container image Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright (c) 2014-2024 Facebook Inc.
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (c) 2015      Google Inc.
+Copyright (c) 2015      Yangqing Jia
+Copyright (c) 2013-2016 The Caffe contributors
+All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+...............................                                          [100%]
+31 passed in 1.93s
+
+reporting-test-results.txt
+F3e reporting and retention CPU validation, 2026-09-23
+These are two separately completed CPU container commands; no GPU execution.
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_f3e_report.py'
+.......................................................                  [100%]
+55 passed in 2.41s
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_f3e_retain.py'
+..............................                                           [100%]
+30 passed, 1 warning in 2.47s
+Warning: google.api_core reports future October 2026 minimum grpcio >=1.83.0 (installed 1.81.0); create-only fake transport test passes.
+
+Combined: 85 passed. The full repository/core validation is recorded separately.
+
+Real completed report smoke:
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python scripts/olmo_f3e_report.py --runtime-dir .runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b1-t32-01 --output-dir .runtime/olmo1b-step60000/f3e-reporter-smoke'
+{"status": "passed", "checks": 5}
+
+Final integrity/coverage revision:
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_f3e_report.py tests/test_olmo_f3e_retain.py'
+........................................................................ [ 69%]
+...............................                                          [100%]
+103 passed, 1 warning in 4.43s
+Same google.api_core future grpcio minimum warning as above.
+Final unique reporting/retention test count: 103 (supersedes the earlier 85).
+
+Final helper revalidated all 4 currently completed native reports without GPU work:
+{"runs": 4, "status": "passed", "checks": 20, "updates": {"eager": 12, "graph": 12, "total": 24}}
+

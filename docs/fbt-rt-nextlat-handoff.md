@@ -23,6 +23,22 @@ K3 shared feedback, native T2048 and bounded larger-batch resource cards. No
 quality run is authorized by this functionality milestone. Exact queue/results
 will be added below as execution progresses; do not resume historical F3d jobs.
 
+F3e active execution record:
+
+- Frozen runtime/protocol commit `543d243`; scoped CPU regression340 plus31
+  validator tests pass. Independent four-layer sequential-reference tests cover
+  complete multi-pass losses/gradients, attached caches and frozen upper layers.
+- First native combined spread2 B1/T32 passes5/5, all comparisons bitwise,
+  full Adam/state parity exact; observed62 forward and62 recompute history tiles.
+  W&B `dgnuec4q`. It is a small smoke, not clearance for larger contexts.
+- Queue session66490 runs `.runtime/olmo1b-step60000/f3e-next-queue.py`, logging
+  to `f3e-next-queue.log` with fixed matrix in `f3e-queue-plan.json`. All GPU
+  commands enter the project Docker container. Completed runs are never
+  overwritten; any failure stops this serialized queue for assessment.
+- Fifteen runs planned: eight correctness and seven capacity; all16 stress is
+  last. Final input manifest is written only upon successful queue completion.
+  Check run-local reports/logs after interruption. No quality training runs.
+
 **F3d bounded backward workspace is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3d/assessment.md), [results](reports/olmo1b-f3d/results.md),
 [protocol](reports/olmo1b-f3d/protocol.md) and [usage](olmo1b-f3d-usage.md).
