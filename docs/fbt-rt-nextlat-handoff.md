@@ -11,6 +11,17 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**Proposed next milestone, 2026-09-23:** the user requested a plan to optimize
+our current RT before comparing with an author-derived RoPE backend. Read
+[RT efficiency and comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
+First review point: separately measure immutable RoPE-table reuse and K/V-only
+permanent writes, preserving native parameters, math and graph contracts. Then
+propose a restricted author-derived native-RoPE reference/tiled implementation
+and matched large-batch block/stack comparison. This would precede the older
+graph recovery/accumulation queue. **Plan only: no implementation or GPU run has
+been started or newly authorized by this planning request.** Existing numerical
+qualifications remain open; performance parity with the authors is unestablished.
+
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md),
 [usage](reports/olmo-ce-integration/usage.md), and
