@@ -121,5 +121,16 @@
       "length": 512,
       "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-all16-b8-t512-01"
     }
+  ],
+  "conditional_followups": [
+    {
+      "stage": "capacity",
+      "case": "rt",
+      "layout": "spread2",
+      "batch": 64,
+      "length": 512,
+      "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b64-t512-01",
+      "trigger": "Successful B128/T512 run peaked at 76.796875 GiB reserved; execute half batch for comfortable setup headroom, per frozen protocol. Preserve successful B128 evidence."
+    }
   ]
 }

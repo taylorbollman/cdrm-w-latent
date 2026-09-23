@@ -1,0 +1,273 @@
+[
+  {
+    "backward_memory": "recompute",
+    "batch_size": 1,
+    "case": "combined",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 32,
+    "run": "f3e-recompute-combined-spread2-b1-t32-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 8,
+    "case": "combined",
+    "layout": "adjacent2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-adjacent2-b8-t512-01",
+    "selected_rt_layers": [
+      0,
+      1
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 8,
+    "case": "combined",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-spread2-b8-t512-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 8,
+    "case": "rt",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-rt-spread2-b8-t512-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 4,
+    "case": "combined",
+    "layout": "spread4",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-spread4-b4-t512-01",
+    "selected_rt_layers": [
+      0,
+      5,
+      10,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 1,
+    "case": "combined-k3",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 32,
+    "run": "f3e-recompute-combined-k3-spread2-b1-t32-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 1,
+    "case": "combined",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 2048,
+    "run": "f3e-recompute-combined-spread2-b1-t2048-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 64,
+    "case": "combined",
+    "layout": "single",
+    "layout_role": "single_layer_reference",
+    "length": 512,
+    "run": "f3e-recompute-combined-single-b64-t512-01",
+    "selected_rt_layers": [
+      0
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 64,
+    "case": "combined",
+    "layout": "adjacent2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-adjacent2-b64-t512-01",
+    "selected_rt_layers": [
+      0,
+      1
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 64,
+    "case": "combined",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-spread2-b64-t512-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 64,
+    "case": "combined",
+    "layout": "spread4",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-combined-spread4-b64-t512-01",
+    "selected_rt_layers": [
+      0,
+      5,
+      10,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 64,
+    "case": "rt",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-rt-spread2-b64-t512-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 128,
+    "case": "rt",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 512,
+    "run": "f3e-recompute-rt-spread2-b128-t512-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 8,
+    "case": "combined",
+    "layout": "spread2",
+    "layout_role": "primary_multi_layer_integration",
+    "length": 2048,
+    "run": "f3e-recompute-combined-spread2-b8-t2048-01",
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 1,
+    "case": "combined",
+    "layout": "all16",
+    "layout_role": "optional_all_layer_stress",
+    "length": 32,
+    "run": "f3e-recompute-combined-all16-b1-t32-01",
+    "selected_rt_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "stage": "correctness",
+    "status": "passed"
+  },
+  {
+    "backward_memory": "recompute",
+    "batch_size": 8,
+    "case": "combined",
+    "layout": "all16",
+    "layout_role": "optional_all_layer_stress",
+    "length": 512,
+    "run": "f3e-recompute-combined-all16-b8-t512-01",
+    "selected_rt_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "stage": "capacity",
+    "status": "passed"
+  }
+]

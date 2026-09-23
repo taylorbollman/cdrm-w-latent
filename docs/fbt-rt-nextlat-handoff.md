@@ -11,33 +11,68 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
-**F3e is authorized and in progress (2026-09-23).** The user clarifies that the
-main experiment will use more than one RT layer, but need not use all layers.
-The [prospective protocol](reports/olmo1b-f3e/protocol.md) therefore prioritizes
-adjacent layers `(0,1)`, separated layers `(0,15)` and four layers `(0,5,10,15)`.
-All16 is a separate stress case, not an assumed experiment default. Branch
-`feat/olmo1b-f3e-multilayer-rt` starts at PR18 merge `9af736e`. Reuse F3d recompute,
-native Q/K math, ordinary Flash/checkpointing and canonical CUDA graphs. Check
-independent CPU references, actual-checkpoint gradients/full Adam updates,
-K3 shared feedback, native T2048 and bounded larger-batch resource cards. No
-quality run is authorized by this functionality milestone. Exact queue/results
-will be added below as execution progresses; do not resume historical F3d jobs.
+**F3e multiple-selected-layer integration is complete (2026-09-23).** Read the
+[assessment](reports/olmo1b-f3e/assessment.md), [results](reports/olmo1b-f3e/results.md),
+[protocol](reports/olmo1b-f3e/protocol.md) and [usage](olmo1b-f3e-usage.md).
+The user expects more than one RT layer, but has not chosen all-layer RT or a
+placement. Adjacent `(0,1)`, separated `(0,15)` and four `(0,5,10,15)` are the
+primary execution checks; all16 is separately labeled stress. No quality run is
+queued. Main architecture selection remains open.
 
-F3e active execution record:
+F3e durable execution record:
 
-- Frozen runtime/protocol commit `543d243`; scoped CPU regression340 plus31
-  validator tests pass. Independent four-layer sequential-reference tests cover
-  complete multi-pass losses/gradients, attached caches and frozen upper layers.
-- First native combined spread2 B1/T32 passes5/5, all comparisons bitwise,
-  full Adam/state parity exact; observed62 forward and62 recompute history tiles.
-  W&B `dgnuec4q`. It is a small smoke, not clearance for larger contexts.
-- Queue session66490 runs `.runtime/olmo1b-step60000/f3e-next-queue.py`, logging
-  to `f3e-next-queue.log` with fixed matrix in `f3e-queue-plan.json`. All GPU
-  commands enter the project Docker container. Completed runs are never
-  overwritten; any failure stops this serialized queue for assessment.
-- Fifteen runs planned: eight correctness and seven capacity; all16 stress is
-  last. Final input manifest is written only upon successful queue completion.
-  Check run-local reports/logs after interruption. No quality training runs.
+- Branch `feat/olmo1b-f3e-multilayer-rt`, base PR18 merge `9af736e`;
+  runtime/protocol `543d243`, reporting/retention `de3e6b9`. No runtime changes
+  during GPU work. Sixteen reports pass48/48 gates;96 physical updates comprise
+  48 eager+48 graph. All474 scoped CPU tests pass. No failed attempts.
+- No model/kernel/numerical-policy change. Reuse F3d recompute, cast reuse,
+  Triton historical tiles, ordinary deterministic Flash/checkpointing and
+  canonical BF16 CUDA graphs. Native checkpoint/RoPE/QK/parameters stay fixed.
+  Added reusable per-layer validation and recompute-aware resource accounting.
+- Eight correctness runs: combined spread2 B1/T32; combined adjacent2/spread2
+  and RT-only spread2 B8/T512; combined spread4 B4/T512; combined K3 spread2
+  B1/T32; combined spread2 B1/T2048; separate all16 B1/T32 stress. All initial
+  losses bitwise; all same-candidate graph checks and full Adam/state exact.
+  Global gradient relative L2 versus materialized is respectively
+  0/.00462952/.00729182/.00591965/.00648270/0/.00747728/0. Unchanged budgets pass.
+  Worst tensor L2 .014221 and max/reference-peak .045455. This is not a new
+  full-native BF16-versus-FP32 campaign; independent tiny FP32 oracles also pass.
+- Combined B64/T512 fresh input tokens/s: single10,933; adjacent2 9,895;
+  spread2 9,889; spread4 8,310. Allocated peaks all39.09GiB, setup reserved
+  60.3–60.9GiB and postcapture current41.4–41.8GiB. Three-update medians are
+  directional; equal overall peaks do not imply zero incremental RT memory.
+  Combined two-layer matrix work is657.84–701.12TFLOPs/update, four-layer
+  684.23–724.62, excluding nonmatrix/optimizer/launch/communication work.
+- RT-only spread2 B128/T512 passes22,720tokens/s, allocated46.106GiB but
+  reserved peak76.797GiB (current49.039). Protocol-authorized half-batch
+  headroom follow-up B64 passes19,445tokens/s, allocated32.247GiB, reserved
+  peak47.963GiB/current34.5GiB. Prefer B64 for conservative development;
+  retain B128 as successful higher-throughput evidence with tighter setup headroom.
+- Combined spread2 B8/T2048 passes4,708tokens/s, allocated31.289GiB/reserved
+  peak44.432GiB. All16 B8/T512 passes939tokens/s at25.440GiB/32.543GiB;
+  this small-batch stress is not optimized all-layer throughput or a full
+  T512 all-gradient comparison. Actual all16 equivalence is only B1/T32.
+- Combined counts:1,267,879,936 active training and1,185,153,024 deployable;
+  NextLat82,726,912 is training-only. RT-only active1,176,764,416; the harness
+  also retains8,388,608 frozen fusion weights, explicitly counted resident.
+  RT selection and FBT pass sharing add no parameters.
+- T512 forward tiles are fused. T2048 two-layer calls:4088 fused+6 fallback;
+  those six cover75.0366% of historical attention pair area, not full-step
+  arithmetic/time. Backward historical recompute tiles stay fused. Native RT
+  remains Triton, not FA4. Profile long context before extending its kernels.
+- Queue66490 and headroom81397 completed0. Final exact selection is
+  `.runtime/olmo1b-step60000/f3e-final-inputs.json`; fixed/adaptive matrix is
+  `docs/reports/olmo1b-f3e/execution-plan.json`. Every run has W&B, original
+  source/protocol snapshots and checked raw JSON. Small GCS evidence lives under
+  `olmo1b-f3e-multi-rt/`; see the [receipt](reports/olmo1b-f3e/storage-receipt.json).
+  Reuse pinned native weights; disposable few-update states are not retained.
+
+**Next review milestone:** complete F4 feature-combination runtime cards with a
+representative multi-layer selection, then graph recovery/accumulation, padding
+and online readiness. Genuine F5 needs a second GPU; only one H100 is exposed.
+Keep native Q/K math. The existing AccumulateGrad stream warning remains visible;
+single-GPU parity passes, DDP ownership is still untested. No learning experiment
+or architecture/placement choice is implied by this functionality milestone.
 
 **F3d bounded backward workspace is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3d/assessment.md), [results](reports/olmo1b-f3d/results.md),
@@ -94,11 +129,10 @@ F3d durable execution record:
   evidence under `olmo1b-f3d-rt-memory/`, including both historical attempts.
   Original native weights are referenced, no disposable trained weights retained.
 
-**Next review milestone:** bounded more-RT-layer/longer-context integration using
-recompute, then broader F4 runtime cards. Keep the materialized reference and
-native Q/K math. A second GPU is needed for actual F5. No quality run is implied.
-The [resource ledger](olmo-resource-accounting.md) retains the materialized
-estimator and documents the additional recompute matrix work explicitly.
+**Historical F3d follow-up:** multi-layer/long-context integration is now
+complete as F3e above. The [resource ledger](olmo-resource-accounting.md) now
+accepts explicit recompute work while keeping the materialized default. Current
+next steps are F4 and subsequent readiness work described above.
 
 **F3c historical backward fusion is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3c/assessment.md),

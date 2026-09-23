@@ -3,44 +3,49 @@
 Updated 2026-09-23. **Current authoritative forward plan.**
 
 This supersedes the next-experiment queue in [v3](fbt-rt-nextlat-research-plan-v3.md).
-The user's new priority is confidence in functionality, numerical health,
-integration and reasonable execution cost, before asking which model wins.
-Completed O1–O5e evidence remains valid within its recorded scope.
+The priority is functionality, numerical health, integration and reasonable
+execution cost before quality comparisons. Completed O1–O5e evidence remains
+valid within its recorded scope.
 
-**Status: approved; F1/F2 and F3 graph, forward/backward fusion and bounded
-backward workspace are complete within their measured scopes.** Read the
-[F3d assessment](reports/olmo1b-f3d/assessment.md),
-[results](reports/olmo1b-f3d/results.md) and [usage](olmo1b-f3d-usage.md).
-Ten final GPU reports pass 90 gates and 428 scoped CPU tests pass. RT and combined
-K2+NextLat have exact same-candidate graph/full-Adam parity throughT1024.
-Initial gradients versus materialized F3c pass unchanged budgets, with maximum
-aggregate relative L2 .00237615 across the three native checks.
+**Status: F1/F2 and F3 through F3e are complete within their measured scopes.**
+Read the [F3e assessment](reports/olmo1b-f3e/assessment.md),
+[results](reports/olmo1b-f3e/results.md) and [usage](olmo1b-f3e-usage.md).
+Sixteen F3e GPU reports pass48 gates;474 scoped CPU tests pass. Actual native
+checks now cover multiple selected RT layers, shared K3 feedback and T2048.
+The user expects more than one RT layer but has not prescribed all layers or
+placement. Primary layouts are `(0,1)`, `(0,15)` and `(0,5,10,15)`; all16 remains
+separate stress, with B1/T32 full equivalence and B8/T512 finite capacity updates.
 
-Opt-in `backward_memory="recompute"` removes full backward probability/error
-arrays. In three fresh paired capacity cases it saves 1.75–3.50 GiB allocated
-with 0.39–0.74% lower measured throughput. RT B128/T512 now reaches26.26kinput tokens/s
-at 38.60 GiB; combined B64/T512 10.93k/s at 39.09 GiB; combined B16/T1024 8.58k/s
-at 31.29 GiB. Isolated reconstruction workspace grows approximately linearly through
-T2048. Complete-model memory is not claimed linear. Materialized remains default.
+Recompute-versus-materialized BF16 gradients pass the unchanged budgets
+(maximum global relative L2 .007477). All initial forward losses, same-candidate
+graph checks and complete Adam/state comparisons are exact. This extends
+bounded functionality coverage, not sustained learning stability or a new
+full-native BF16-versus-FP32 comparison. Native Q/K math remains unchanged.
 
-Ordinary layers use deterministic PyTorch Flash, selected RT tiles use Triton.
-Forward rectangles larger than 256 retain eager fallback; recompute backward
-supports historical rectangles through 2048. Installed FA4/CuTE passed its separate
-F3b smoke, not native RT integration. Native checkpoint/RoPE/loss/QK math and
-parameter counts stay fixed. All F3d full-model checks select only layer 0 for RT.
+With FBT K2+NextLat at common B64/T512, single/two/four RT layers reach
+10.93k/9.89k/8.31k input tokens/s, all around39.09GiB peak allocated and
+60–61GiB peak reserved during setup. RT-only spread2 B64 reaches19.45k/s at
+32.25GiB allocated/47.96GiB peak reserved; B128 reaches22.72k/s but reserves
+76.80GiB during setup, so B64 is the conservative development reference.
+Combined spread2 B8/T2048 reaches4.71k/s at31.29GiB allocated. These are
+three-update medians with explicit batch/length scope, not maximum-batch searches.
 
-**In progress: F3e**, bounded multi-layer RT and longer-context integration/resource
-coverage using the new path, then complete F4 runtime cards. The user expects more
-than one RT layer but has not chosen all-layer RT. Prioritize `(0,1)`, `(0,15)` and
-`(0,5,10,15)`; all16 is a separate stress case. See the
-[frozen prospective protocol](reports/olmo1b-f3e/protocol.md). The analytic ledger
-covers all eight combinations; its estimator now accepts explicit recompute work
-while preserving the materialized default. Native T2048 complete updates, padded
-graphs, graph recovery/accumulation and actual two-GPU execution remain open.
-Local writer/finish VJPs and discarded permanent-Q computation are separate
-performance opportunities. Preserve native Q/K math. Bounded F3e GPU validation
-is authorized; no quality run is queued. Quality comparisons need a later decision. Read the
-[handoff](fbt-rt-nextlat-handoff.md) first after compaction.
+Ordinary layers use deterministic PyTorch Flash/checkpointing; selected RT tiles
+use Triton and F3d bounded-workspace backward. Forward rectangles larger than256
+retain eager fallback: atT2048 only six two-layer calls account for75.04% of
+historical attention pair area, not full-step work/time. Historical recompute
+backward remains fused. Native RT does not use FA4/CuTE. Defaults still retain
+materialized reference; no architecture, checkpoint, RoPE or loss change.
+
+**Next:** finish F4 feature-combination runtime cards using a representative
+multi-layer selection, then graph recovery/accumulation, padding and online
+readiness. Analytic parameter/FLOP cards now explicitly support recompute and
+actual loss-mask counts. Combined training/deployable parameters are
+1,267,879,936/1,185,153,024; RT selection and pass reuse add no weights. Actual
+multi-GPU work needs a second GPU. Local writer/finish VJPs, discarded permanent-Q
+and longer forward kernels remain profiling-led performance opportunities.
+No GPU or quality run is queued. Read the [handoff](fbt-rt-nextlat-handoff.md)
+first after compaction.
 
 ## 1. Scope and working principles
 
@@ -514,12 +519,12 @@ remain deferred.
 
 - Completed: F1 integration, F2 health/checkpointing, F3 canonical CUDA graphs,
   F3b forward historical-tile fusion/cast reuse, F3c historical backward fusion
-  and F3d bounded backward attention workspace,
-  each with before/after profiles and bounded native checks.
+  F3d bounded backward attention workspace and F3e multi-layer/context
+  integration, each with bounded native checks and resource evidence.
   F4 analytic parameter/FLOP cards are complete; runtime coverage remains partial.
-- In progress: F3e broadens optimized RT layer/context integration, prioritizing
-  two/four selected layers and treating all16 separately. Then finish F4 feature/
-  resource cards. Keep native Q/K math and materialized reference.
+- Next: complete F4 feature/runtime cards with multiple selected RT layers,
+  then remaining graph/online readiness. Keep native Q/K math, the materialized
+  reference and the separate scope of all16 stress evidence.
 - F5 starts when a second GPU is available, independent of quality results
   or completion of the fused-kernel work. Then perform F6 readiness review.
 - Kernel engineering is the largest uncertain effort. Initial checks and profiles
