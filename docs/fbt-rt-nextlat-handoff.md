@@ -15,7 +15,9 @@ Quality wins and substantial baseline/variant training come after that review.
 F4's31.1k ordinary throughput against the paper's153k and requested six layers
 with physicalB512. Read [results](reports/olmo-ordinary-throughput/results.md),
 [paper comparison](reports/olmo-ordinary-throughput/paper-comparison.md) and
-[profile audit](reports/olmo-ordinary-throughput/profile-audit.md). Runtime71fbccd;
+[profile audit](reports/olmo-ordinary-throughput/profile-audit.md).
+Review: [PR21](https://github.com/taylorbollman/cdrm-w-latent/pull/21).
+Runtime71fbccd; final reports6b61bf6, retentioncd98afd;
 seven runs pass,42 physical updates,9 scoped CPU tests. Native random six-layer
 SwiGLU8192-per-branch model has505,675,776 active parameters. No RT/FBT/NextLat,
 kernel, model math, production default, or existing numerical gate changed.
