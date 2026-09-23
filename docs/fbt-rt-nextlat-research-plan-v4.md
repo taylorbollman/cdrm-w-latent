@@ -7,6 +7,23 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
+**CE integration and original 16-layer baseline complete (2026-09-23).** Read
+[results](reports/olmo-ce-integration/results.md) and
+[usage](reports/olmo-ce-integration/usage.md). Optional independent CE2048/KL128
+preserves historical defaults and loss semantics. Six GPU reports pass 18 gates,
+36 physical updates, and 152 scoped CPU tests. Native B64/T512 matched half-CE
+throughput improves 31.11k to 39.19k input tokens/s (+26%); full CE reaches 36.63k,
+with unchanged 26.74 GiB allocated / 37.17 GiB setup reserved peaks. Native
+ordinary/NextLat/combined chunk-comparison gradients pass; same-candidate graph
+and three-update Adam comparisons are exact. Dao CE was source/import-audited,
+not adopted or GPU-tested. No default, Q/K, RoPE or RT math change.
+
+Next: resume graph recovery/save-resume, accumulation, padding and online
+readiness. Use recorded CE2048/KL128 in new bounded development and matched CE
+settings in future throughput comparisons. Existing RT+FBT precision caveats
+remain open; require a second GPU for distributed checks. No long quality run
+or additional GPU experiment is queued.
+
 **User-requested ordinary throughput investigation complete (2026-09-23).**
 Read its [results](reports/olmo-ordinary-throughput/results.md). Seven bounded
 six-layer runs identify avoidable CE chunk overhead:128→2048 positions improves
@@ -14,10 +31,9 @@ B64 halfCE57.4k→92.8k inputtokens/s and physicalB51243.9k→93.1k. FullCE B512
 reaches73.5k; B32 without ordinary checkpointing88.9k. The paper's ordinary
 recipe uses micro32/global512, GELU, smaller vocabulary, compilation and no
 ordinary checkpointing. The quoted153k is not reproduced, and F4's31k is not
-an optimized ordinary baseline. No production defaults or math changed. Before
-resuming graph readiness/RT performance interpretation, propose a bounded
-larger-CE-chunk integration check and refreshed16-layer ordinary measurements.
-No further GPU work is queued; retain existing numerical qualifications.
+an optimized ordinary baseline. No production defaults or math changed. Its
+larger-CE-chunk follow-up is now complete as recorded above. Retain existing
+numerical qualifications.
 
 **F4 training resource matrix is complete with a retained numerical qualification.**
 Read the [F4 assessment](reports/olmo1b-f4/assessment.md),

@@ -1,0 +1,55 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "current_source_differences": {
+    "combined-b8-correctness": {},
+    "nextlat-b8-correctness": {},
+    "ordinary-b64-full-c2048": {},
+    "ordinary-b64-half-c128": {},
+    "ordinary-b64-half-c2048": {},
+    "ordinary-b8-correctness": {}
+  },
+  "members": 289,
+  "objects": [
+    {
+      "generation": "1790185852620885",
+      "md5_base64": "LUdERyOGf8O+K3SStNgheg==",
+      "sha256": "20a3ca5b95a34c82002ad2adc41ca68dafcfbf0b382044aa7e0ad34ff477151d",
+      "size_bytes": 1153289,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ce-integration/20260923T175051Z/evidence.tar.gz",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    },
+    {
+      "generation": "1790185852858920",
+      "md5_base64": "ZFHHoTECBpegKssYcNSfbA==",
+      "sha256": "e4f5b20497abdb8a8d9d9eaf0fe0457bebbd495a0e1aeab14246e532a2e907f4",
+      "size_bytes": 77920,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ce-integration/20260923T175051Z/retention-manifest.json",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    }
+  ],
+  "physical_optimizer_updates": 36,
+  "receipt_object": {
+    "generation": "1790185853090011",
+    "md5_base64": "rPJ9ZLORPYhgCv8GyS+GWw==",
+    "sha256": "bd453e847f6ae91dab930f57da16f5c2ec2215c3aa3cf12ef25115b7e5bcb358",
+    "size_bytes": 1817,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ce-integration/20260923T175051Z/storage-receipt.json",
+    "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+  },
+  "runs": 6,
+  "schema": "olmo-ce-integration-retention-v1",
+  "source_pairs_checked": 246,
+  "status": "verified",
+  "statuses": {
+    "passed": 6
+  },
+  "weights_uploaded": false
+}
