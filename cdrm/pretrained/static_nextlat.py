@@ -179,7 +179,7 @@ def compute_static_nextlat_loss_sums(
     if counts["ce"]:
         sums["ce"] = _chunked_sum(
             _ce_chunk, hidden.index_select(0, layout.ce_source_indices), readout_weight,
-            tokens.index_select(0, layout.ce_source_indices + 1), config.vocab_chunk_size,
+            tokens.index_select(0, layout.ce_source_indices + 1), config.effective_ce_chunk_size,
             weight_second=True,
         )
     if counts["latent"] or counts["kl"]:

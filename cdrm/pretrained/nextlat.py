@@ -39,12 +39,17 @@ class NextLatConfig:
     # Number of selected positions per projection; every chunk still uses the
     # complete vocabulary. Checkpointing bounds retained vocabulary activations.
     vocab_chunk_size: int = 32
+    # Optional CE-only position chunk. None preserves the historical shared
+    # chunk size; KL continues to use vocab_chunk_size independently.
+    ce_chunk_size: int | None = None
 
     def __post_init__(self) -> None:
         if type(self.model_dim) is not int or self.model_dim <= 0:
             raise ValueError("model_dim must be a positive integer")
         if type(self.vocab_chunk_size) is not int or self.vocab_chunk_size <= 0:
             raise ValueError("vocab_chunk_size must be a positive integer")
+        if self.ce_chunk_size is not None and (type(self.ce_chunk_size) is not int or self.ce_chunk_size <= 0):
+            raise ValueError("ce_chunk_size must be None or a positive integer")
         if type(self.seed) is not int or not 0 <= self.seed < 2**63:
             raise ValueError("seed must be an integer in [0, 2**63)")
         if type(self.bias) is not bool:
@@ -66,8 +71,17 @@ class NextLatConfig:
     def hidden_dim(self) -> int:
         return 128 * round((2 * self.model_dim * self.proj_factor) / 128)
 
+    @property
+    def effective_ce_chunk_size(self) -> int:
+        return self.vocab_chunk_size if self.ce_chunk_size is None else self.ce_chunk_size
+
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        values = asdict(self)
+        # Historical checkpoints compare this dictionary exactly. An unset
+        # optional override must retain their original serialized schema.
+        if self.ce_chunk_size is None:
+            values.pop("ce_chunk_size")
+        return values
 
     @classmethod
     def from_dict(cls, values: dict[str, Any]) -> NextLatConfig:
@@ -263,7 +277,7 @@ def compute_nextlat_loss_sums(hidden_states: Tensor, token_embeddings: Tensor,
     ce = masks["ce"]
     if counts["ce"]:
         sums["ce"] = _chunked_sum(_ce_chunk, hidden_states[:, :-1][ce], readout_weight,
-                                  batch.input_ids[:, 1:][ce], config.vocab_chunk_size,
+                                  batch.input_ids[:, 1:][ce], config.effective_ce_chunk_size,
                                   weight_second=True)
     if counts["latent"] or counts["kl"]:
         if predictor is None:
