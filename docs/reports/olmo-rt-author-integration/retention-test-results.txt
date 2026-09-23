@@ -1,0 +1,52 @@
+OLMo author RT integration: evidence-helper CPU validation
+========================================================
+
+This record preserves completed commands and observed results. It is not a
+second execution or a verbatim copy of container startup output. All report,
+Git repository and retention fixtures are synthetic and local; no GPU, cloud,
+checkpoint weights or credentials are used. Primary runtime files were not
+edited by this test/review task.
+
+Host working directory:
+/home/taylorbollman/cdrm-w-latent/.runtime/olmo-author-integration-worktree
+
+Exact command:
+CDRM_DOCKER_GPUS=none bash /home/taylorbollman/cdrm-w-latent/scripts/docker_shell.sh bash -lc 'cd /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree && PYTHONPATH=$PWD python -m pytest -q tests/test_olmo_rt_author_integration_evidence.py'
+
+Initial draft suite result:
+32 passed, 14 warnings in 5.69s
+Exit code: 0
+
+The suite was then extended with preparation-fixture cohort matching,
+resource-accounting corruption and queue-artifact allowlist/symlink tests.
+Fixtures were updated for the finalized reporter's strict unpadded-mask and
+prepared-layout hash checks. The same command was run again.
+
+Final observed result:
+40 passed, 14 warnings in 6.16s
+Exit code: 0
+
+All fourteen warnings were the existing PyTorch deprecation warning:
+"torch.jit.script_method is deprecated. Please switch to torch.compile or torch.export."
+
+Coverage:
+- Every reporter-required source is included in the integration runtime snapshot.
+- Explicit per-run Git revisions, source/protocol snapshots and finished statuses.
+- Failed preload and compatibility-screen reports retain their distinct status;
+  operational success cannot erase a failed numerical compatibility gate.
+- Full-CE mask hashes, unpadded shape/count contracts, parameter identity and
+  required graph/raw checks.
+- Compiler fallback, missing compile evidence and disabled recompile-limit guards.
+- Initial/preparation/timed tensor hashes, initial auxiliary-weight hashes and
+  runtime configuration must agree within same-shape comparison cohorts.
+- Model/optimizer/gradient ownership, unique shared parameters, component sums
+  and replacement of native RT matrix work by the audited author schedule.
+- Retention recomputes derived throughput/resource/status fields from raw reports.
+- Explicit local-file allowlists exclude weights, credentials and unrelated
+  runs; queue artifacts do not recurse, follow symlinks or duplicate run logs.
+
+Independent read-only harness review found one finalization bug before GPU
+execution: PreparedFBTLayout.metadata was called as metadata(), although it is
+a property. Root corrected that call. Full-CE batch-factory wiring, state/Adam
+restoration, ordinary Flash observer and author RT accounting otherwise passed
+review. Runtime GPU behavior still requires the planned integration runs.
