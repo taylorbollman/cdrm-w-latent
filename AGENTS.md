@@ -31,13 +31,19 @@ W&B tracking.
 
 # Pretrained model handoff
 
-Latest user-directed investigation: ordinary six-layer throughput is complete.
-Read `docs/reports/olmo-ordinary-throughput/results.md` and current handoff before
-resuming the older graph-readiness queue. Seven bounded runs expose CE chunk128
-overhead; chunk2048 gives61.75% more B64 throughput without changing the objective.
-No production defaults changed, and the paper's153k throughput is not reproduced.
-Next proposed work is loss-chunk integration and refreshed ordinary baseline;
-no further run is queued and RT+FBT precision qualifications remain open.
+Latest user-directed investigation: CE integration and the refreshed original
+16-layer ordinary baseline are complete. Read
+`docs/reports/olmo-ce-integration/results.md` and the current handoff. Optional
+`NextLatConfig.ce_chunk_size=2048` separates CE grouping from KL128; None preserves
+historical defaults/config dictionaries. Six GPU reports pass 18 gates and 36
+physical updates; 152 scoped CPU tests pass. B64/T512 half-CE throughput improves
+31.11k to 39.19k input tokens/s (+26%); full CE reaches 36.63k. Peak allocated/setup
+reserved stay 26.74/37.17 GiB. Native ordinary/NextLat/combined gradients pass the
+chunk comparison; same-candidate graph and Adam checks are exact. Runtime0d39a22.
+Dao CE was audited, not adopted or GPU-tested; no projection fusion. No defaults,
+Q/K or model math changed. Next: graph recovery/accumulation, padding/online
+readiness; use matched CE settings for future performance comparisons. GPU idle,
+no learning run queued, and prior RT+FBT precision qualifications remain open.
 
 For pretrained OLMo / RT / FBT / NextLat work, first read
 `docs/fbt-rt-nextlat-handoff.md`, then

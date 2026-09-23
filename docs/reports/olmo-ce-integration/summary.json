@@ -1,0 +1,133 @@
+{
+  "capacity": [
+    {
+      "ce_chunk": 128,
+      "ce_targets_per_second": 15557.056539207459,
+      "flb_tokens_per_second": 32478.322978469707,
+      "full_update_wall_seconds": [
+        1.05340721498942,
+        1.052830147993518,
+        1.0531555219786242
+      ],
+      "input_tokens_per_second": 31114.113078414917,
+      "name": "ordinary-b64-half-c128",
+      "peak_allocated_gib": 26.73592185974121,
+      "setup_peak_reserved_gib": 37.16796875,
+      "steady_peak_reserved_gib": 28.666015625,
+      "supervision": "half",
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/josij5s0"
+    },
+    {
+      "ce_chunk": 2048,
+      "ce_targets_per_second": 19595.290115419128,
+      "flb_tokens_per_second": 41207.973357001545,
+      "full_update_wall_seconds": [
+        0.8361192870070226,
+        0.8352934700087644,
+        0.8375976620009169
+      ],
+      "input_tokens_per_second": 39190.580230838255,
+      "name": "ordinary-b64-half-c2048",
+      "peak_allocated_gib": 26.73592185974121,
+      "setup_peak_reserved_gib": 37.166015625,
+      "steady_peak_reserved_gib": 28.6640625,
+      "supervision": "half",
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/jbioj0tf"
+    },
+    {
+      "ce_chunk": 2048,
+      "ce_targets_per_second": 36561.10838280981,
+      "flb_tokens_per_second": 38336.843867516654,
+      "full_update_wall_seconds": [
+        0.8950202760170214,
+        0.8945024220156483,
+        0.8934788680053316
+      ],
+      "input_tokens_per_second": 36632.65654011472,
+      "name": "ordinary-b64-full-c2048",
+      "peak_allocated_gib": 26.736043453216553,
+      "setup_peak_reserved_gib": 37.166015625,
+      "steady_peak_reserved_gib": 28.6640625,
+      "supervision": "full",
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/jxvijbeb"
+    }
+  ],
+  "correctness": [
+    {
+      "auxiliary_exact": true,
+      "case": "ordinary",
+      "global_gradient_relative_l2": 0.004079366767584755,
+      "graph_and_updates_exact": true,
+      "max_loss_relative_l2": 9.650965125465442e-08,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ffarowa7",
+      "worst_tensor_l2": 0.006134034609172048,
+      "worst_tensor_max": 0.010362694300518135
+    },
+    {
+      "auxiliary_exact": true,
+      "case": "nextlat",
+      "global_gradient_relative_l2": 0.0018275552519866785,
+      "graph_and_updates_exact": true,
+      "max_loss_relative_l2": 9.650965125465442e-08,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/cezvyrjl",
+      "worst_tensor_l2": 0.0032445669263927814,
+      "worst_tensor_max": 0.00625
+    },
+    {
+      "auxiliary_exact": true,
+      "case": "combined",
+      "global_gradient_relative_l2": 0.006551594105105944,
+      "graph_and_updates_exact": true,
+      "max_loss_relative_l2": 9.650965125465442e-08,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/qf5e6gnf",
+      "worst_tensor_l2": 0.011543404982906628,
+      "worst_tensor_max": 0.02564102564102564
+    }
+  ],
+  "cpu_tests": 152,
+  "gates": 18,
+  "paired_throughput_gain_percent": 25.95756829728275,
+  "physical_optimizer_updates": 36,
+  "runs": [
+    {
+      "name": "ordinary-b8-correctness",
+      "report_path": ".runtime/olmo-ce-integration/ordinary-b8-correctness/report.json",
+      "report_sha256": "a58ddd57221ea85345c4e0a8b1fe95bd7de1726d922e660d3a0adea26eecc6a6",
+      "status": "passed"
+    },
+    {
+      "name": "nextlat-b8-correctness",
+      "report_path": ".runtime/olmo-ce-integration/nextlat-b8-correctness/report.json",
+      "report_sha256": "131a2002a590024596794ee3e2c4c30c949bc8c361eb77d9ac084cb0b38ee858",
+      "status": "passed"
+    },
+    {
+      "name": "combined-b8-correctness",
+      "report_path": ".runtime/olmo-ce-integration/combined-b8-correctness/report.json",
+      "report_sha256": "f90cc9741930ffaffbc4ca36c5c0df6c188191e6a750e6bf8c274fe31d6af224",
+      "status": "passed"
+    },
+    {
+      "name": "ordinary-b64-half-c128",
+      "report_path": ".runtime/olmo-ce-integration/ordinary-b64-half-c128/report.json",
+      "report_sha256": "93aba844b2811b470cabad5d8abaf1d095d3cad8f65d51b6d0845485dc1db91c",
+      "status": "passed"
+    },
+    {
+      "name": "ordinary-b64-half-c2048",
+      "report_path": ".runtime/olmo-ce-integration/ordinary-b64-half-c2048/report.json",
+      "report_sha256": "58da4dc6533c750cda053037914cde2c92dc99f97a3a6b53867ee77bcd649275",
+      "status": "passed"
+    },
+    {
+      "name": "ordinary-b64-full-c2048",
+      "report_path": ".runtime/olmo-ce-integration/ordinary-b64-full-c2048/report.json",
+      "report_sha256": "2c91ab35cef605827d79396dc1288c5140f7ca56dfa2e60f2ef3f2d629ea9c27",
+      "status": "passed"
+    }
+  ],
+  "runtime_commit": "0d39a22",
+  "schema": "olmo-ce-integration-summary-v1",
+  "source_pairs_checked": 246,
+  "status": "completed"
+}

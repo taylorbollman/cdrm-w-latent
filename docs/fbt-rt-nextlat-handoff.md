@@ -11,6 +11,47 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**CE integration and original 16-layer baseline complete (2026-09-23).** Read
+[results](reports/olmo-ce-integration/results.md),
+[usage](reports/olmo-ce-integration/usage.md), and
+[Dao CE audit](reports/olmo-ce-integration/dao-ce-audit.md).
+Runtime/protocol `0d39a22`, base PR21 merge `4528b37`. Six GPU reports pass all
+18 gates, with 36 physical updates and 152 scoped CPU tests (30 new). All 246
+run/source pairs match the frozen revision and snapshots. The selected raw
+reports/W&B links are in [summary](reports/olmo-ce-integration/summary.json).
+
+- New opt-in `NextLatConfig.ce_chunk_size=2048` groups CE selected positions
+  independently from `vocab_chunk_size=128` for KL. All vocabulary rows remain.
+  `None` and `to_dict()` preserve old defaults and exact config dictionaries;
+  explicit overrides serialize. Rebuild static layouts/graphs after changes.
+  Historical exact resumes retain saved settings. Evaluation chunking is separate.
+- Native step60000, 16 layers, B64/T512, BF16 mixed, ordinary checkpointing,
+  deterministic PyTorch Flash and CUDA graphs: matched half-CE control 31,114
+  versus candidate 39,191 input tokens/s (+25.96%); full CE 36,633/s. Allocated
+  peak 26.74 GiB and setup reserved peak 37.17 GiB in all arms. Each has three
+  preparation plus three timed updates; no learning or sustained-rate claim.
+- Native B8/T512 ordinary/NextLat/combined CE128-versus2048 global gradient L2
+  is 0.4079%/0.1828%/0.6552%; worst tensor L2/max ratio 1.1543%/2.5641%.
+  Maximum CE relative loss difference 9.65e-8; auxiliary losses are bitwise.
+  Same-candidate graph loss/gradients and three-update Adam/model/moments/
+  schedule/counters are exact in all three. Combined uses RT layers0/15, K2,
+  unchanged optimized RT/recompute and KL128. All eight switches tested on CPU.
+- Dao optimized CE imports without new dependencies, but receives materialized
+  logits rather than fusing the readout. Prior CE2048 profile puts named CE
+  kernels at 4.09% of device time. Audit only: no Dao GPU test or adoption.
+  Consider a bounded loss/checkpoint/graph probe later; RoPE/SwiGLU stay separate.
+- The [storage receipt](reports/olmo-ce-integration/storage-receipt.json) records
+  verified retained sources, reports, logs and checkpoint reference. Disposable
+  few-update weights are omitted. GPU idle, no training or further run queued.
+
+Use explicit CE2048/KL128 for new bounded native development checks; production
+defaults remain unchanged. Remeasure matched CE configurations before comparing
+new ordinary throughput to historical RT/FBT/NextLat rates. The broader next
+milestone is graph recovery/save-resume and accumulation, padding/online
+readiness, plus the existing bounded precision follow-up before learning.
+These CE results do not clear F4's RT+FBT coordinate miss or broader BF16/FP32
+sensitivity. Q/K stays native. Genuine multi-GPU still needs a second GPU.
+
 **Ordinary throughput diagnostic complete (2026-09-23).** The user questioned
 F4's31.1k ordinary throughput against the paper's153k and requested six layers
 with physicalB512. Read [results](reports/olmo-ordinary-throughput/results.md),
@@ -34,9 +75,7 @@ All raw reports/sources/traces are retained under
 report directory. The1,556,831-byte archive SHA256 is
 `e23637d8768550b571a7a0ca4f766e3e4ff847c841ff6908b995a2e2b90f3f45`.
 Server metadata and downloaded bytes were checked. GPU idle; no further experiment queued. This user-requested
-ordinary investigation precedes the existing graph-readiness queue. Proposed
-next: bounded larger-CE-chunk integration check and a refreshed original16-layer
-ordinary baseline before interpreting RT relative throughput or prioritizing FA.
+ordinary investigation motivated the now-completed CE integration above.
 Do not silently change all feature defaults or clear the F4 precision qualification.
 
 **F4 training resource cards are complete, with a retained numerical qualification
