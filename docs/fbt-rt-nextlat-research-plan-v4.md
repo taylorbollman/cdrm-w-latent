@@ -390,6 +390,14 @@ match ordinary-transformer throughput despite its sequential dependencies.
 
 ## 7. F4 — Single-GPU parameter, throughput, memory and FLOP cards
 
+**F4 training-resource matrix active (2026-09-23):** the user approved the
+next milestone. Follow the [frozen protocol](reports/olmo1b-f4/protocol.md): all
+eight independent toggles at common B64/T512, RT `(0,15)`, K2, same checkpoint
+and objective masks. Bounded missing graph checks, separate operator audits
+and conditional B96 scaling follow. F3e long-context/K3 evidence is reused
+with its original scope. This completes training cards only; finite prefill
+and exact-online/decode cards remain in readiness work. No quality sweep.
+
 **F3b accounting slice complete:** [resource derivation](olmo-resource-accounting.md)
 and the F3b report provide all eight analytic cards, with20 tests including actual
 small matmul traces. The estimated RT/combined B64/T512 update costs for the

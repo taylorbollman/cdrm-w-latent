@@ -1,7 +1,7 @@
 {
   "schema": "olmo-f4-queue-v1",
   "base": "deecfe6",
-  "frozen_runtime": "PENDING",
+  "frozen_runtime": "397885b62077e7b8a8b574e819f108a1dbc72e29",
   "protocol": "docs/reports/olmo1b-f4/protocol.md",
   "jobs": [
     {
@@ -216,5 +216,11 @@
   "reused_evidence": [
     "docs/reports/olmo1b-f3e/summary.json",
     "docs/reports/olmo1b-f3e/storage-receipt.json"
+  ],
+  "continuation_decision": "docs/reports/olmo1b-f4/continuation-decision.md",
+  "roundoff_runtime": "949731b",
+  "roundoff_dirs": [
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-01",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-02"
   ]
 }

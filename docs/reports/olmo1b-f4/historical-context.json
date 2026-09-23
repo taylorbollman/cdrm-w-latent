@@ -1,0 +1,549 @@
+{
+  "schema": "olmo-f4-historical-context-v1",
+  "source_summary": "docs/reports/olmo1b-f3e/summary.json",
+  "source_summary_sha256": "8fc3b18310fba4451d3560f29616ce288c0c452cebbbd1c60d4073880e3c40e8",
+  "source_protocol": "docs/reports/olmo1b-f3e/protocol.md",
+  "source_runtime_commit": "543d243",
+  "source_merge_commit": "deecfe6",
+  "storage_receipt": "docs/reports/olmo1b-f3e/storage-receipt.json",
+  "counts_as_new_f4_updates": false,
+  "scope": "Reuse original shapes and numerical/backend qualifications only. Does not establish all-eight long-context, all16 throughput optimization, prefill/decode, recovery, accumulation, padding or multi-GPU readiness.",
+  "runs": [
+    {
+      "name": "f3e-recompute-combined-spread2-b8-t512-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 8,
+        "case": "combined",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 8,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 512,
+          "name": "combined",
+          "nextlat": true,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 512,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 2,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b8-t512-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 2,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "02df46641fc048785870dff77710b80deee0dd69ae47ddcfd2a83acafd103cfc",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/w3ukvlle"
+    },
+    {
+      "name": "f3e-recompute-rt-spread2-b8-t512-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 8,
+        "case": "rt",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 8,
+          "beta": 1.0,
+          "fbt": false,
+          "length": 512,
+          "name": "rt",
+          "nextlat": false,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 512,
+        "mode": {
+          "beta": 1.0,
+          "enabled": false,
+          "num_passes": 1,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b8-t512-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 2,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "6bf92388dc0202c616bd33910adc0dfc6d3ea120ba22b146b8bf712f15d86074",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ku9zhzsl"
+    },
+    {
+      "name": "f3e-recompute-combined-spread4-b4-t512-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 4,
+        "case": "combined",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 4,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 512,
+          "name": "combined",
+          "nextlat": true,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            5,
+            10,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread4",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 512,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 2,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              5,
+              10,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-spread4-b4-t512-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 4,
+        "selected_rt_layers": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "91cec47925523535fc36faec5f4d13fbf913a1962d994ef213a31a4b1c53774f",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/srv816ia"
+    },
+    {
+      "name": "f3e-recompute-combined-k3-spread2-b1-t32-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 1,
+        "case": "combined-k3",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 1,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 32,
+          "name": "combined-k3",
+          "nextlat": true,
+          "passes": 3,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 32,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 3,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-k3-spread2-b1-t32-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 4,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "63b34a8e2b92dd1bbe6d999bdf121622e86ef64306eb63b1cf440ae900a69e46",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zz37c2sy"
+    },
+    {
+      "name": "f3e-recompute-combined-spread2-b1-t2048-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 1,
+        "case": "combined",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 1,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 2048,
+          "name": "combined",
+          "nextlat": true,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 2048,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 2,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b1-t2048-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 2,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "6bca7fded11940a54eb3a4f6d6aa0102a66204fe518ba2ab39d862cce3395f2a",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/a8trttyh"
+    },
+    {
+      "name": "f3e-recompute-rt-spread2-b128-t512-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 128,
+        "case": "rt",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 128,
+          "beta": 1.0,
+          "fbt": false,
+          "length": 512,
+          "name": "rt",
+          "nextlat": false,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 512,
+        "mode": {
+          "beta": 1.0,
+          "enabled": false,
+          "num_passes": 1,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b128-t512-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 2,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "capacity",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "cc34a0d818583f0c276c5b3122c0a71f73a6cde186068936dd3ff816acfce118",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ty6gzibh"
+    },
+    {
+      "name": "f3e-recompute-combined-spread2-b8-t2048-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 8,
+        "case": "combined",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 8,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 2048,
+          "name": "combined",
+          "nextlat": true,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "spread2",
+        "layout_role": "primary_multi_layer_integration",
+        "length": 2048,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 2,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b8-t2048-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 2,
+        "selected_rt_layers": [
+          0,
+          15
+        ],
+        "stage": "capacity",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "7f76bd8d505fabf91d14e0907a09b1fb087ffc47424ced98ee2322c53d638b25",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/hmwy4z58"
+    },
+    {
+      "name": "f3e-recompute-combined-all16-b1-t32-01",
+      "configuration": {
+        "artifacts": "/workspace/cdrm-w-latent/.runtime/olmo1b-step60000/artifacts",
+        "autocast_weight_cache": false,
+        "backward_memory": "recompute",
+        "backward_tile_backend": "triton",
+        "batch_size": 1,
+        "case": "combined",
+        "case_specification": {
+          "alpha": 1.0,
+          "batch_size": 1,
+          "beta": 1.0,
+          "fbt": true,
+          "length": 32,
+          "name": "combined",
+          "nextlat": true,
+          "passes": 2,
+          "profile": false,
+          "resume": false,
+          "rt_layers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15
+          ],
+          "transition": false,
+          "updates": 3
+        },
+        "cast_weights_once": true,
+        "forward_tile_backend": "triton",
+        "layout": "all16",
+        "layout_role": "optional_all_layer_stress",
+        "length": 32,
+        "mode": {
+          "beta": 1.0,
+          "enabled": true,
+          "num_passes": 2,
+          "rt_mode": {
+            "alpha": 1.0,
+            "selected_layers": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15
+            ]
+          }
+        },
+        "ordinary_activation_checkpointing": true,
+        "ordinary_attention_backend": "deterministic_flash",
+        "output_dir": ".runtime/olmo1b-step60000/f3e-recompute-combined-all16-b1-t32-01",
+        "precision": "bf16_mixed",
+        "rt_block_calls_per_forward_backward": 16,
+        "selected_rt_layers": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "stage": "correctness",
+        "tf32": false,
+        "variant": "recompute"
+      },
+      "status": "passed",
+      "report_sha256": "0c83487950d388ea1bbd9fc2b3cb784ccaa0016bbbfe6b506258302197cb0cee",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/szexamab"
+    }
+  ]
+}

@@ -21,6 +21,28 @@ per cell follows only after the common matrix. No model/kernel or Q/K change.
 Training-only resource scope: prefill/online, recovery/accumulation/padding and
 actual two-GPU readiness remain later work. No quality training is queued.
 
+F4 queue77851 stopped at RT+FBT B8/T512 initial reference comparison: one
+MLP tensor (layer11.ff_proj) coordinate error6.3492% exceeds unchanged6.25%
+screen; globalL2 1.0206%, tensorL2 .8389%, exact forward/dispatch pass. Five
+prior correctness reports pass25 gates. Keep the failed report.
+Bounded diagnosis02 completed at runtime`949731b`,
+`.runtime/olmo1b-step60000/f4-rt-fbt-roundoff-02`: all BF16 repeats and candidate
+graph/three-update Adam comparisons exact; eager history reduces coordinate
+error to4.875%; FP32 material/recompute globalL2 3.04e-6. Both BF16 controls
+and candidate differ from fullFP32 by about18% in gradientL2; do not claim
+full precision clearance. Read [continuation decision](reports/olmo1b-f4/continuation-decision.md).
+Main runtime/protocol freeze`397885b` remains unchanged; **resource-only queue
+12166 is active**, `.runtime/olmo1b-step60000/f4-continued-queue.log`. RT+FBT
+failed numerical screen remains in final inputs and tables; not a learning run.
+Originalscreen_cleared remainsFalse. No model/kernel/QK change.
+Roundoff attempt01 (`c8f2311`) failed before backward because its static plan
+was prepared outside the fixed backend context; only that harness construction
+was corrected. Retain its historical snapshots as zero-update failed probe.
+Final native inputs `.runtime/olmo1b-step60000/f4-final-inputs.json`; roundoff01/02
+are separate diagnostic inputs (six successful Adam updates only in02).
+Reporting/retention helpers and CPUtests are implemented, being reviewed; final
+resource assessment/GCSretention/PR closeout pending the serial GPU queue.
+
 **F3e multiple-selected-layer integration is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3e/assessment.md), [results](reports/olmo1b-f3e/results.md),
 [protocol](reports/olmo1b-f3e/protocol.md) and [usage](olmo1b-f3e-usage.md).
