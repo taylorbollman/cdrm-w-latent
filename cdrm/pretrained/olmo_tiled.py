@@ -35,6 +35,7 @@ class _Invocation:
     cast_weights_once: bool = False
     tile_backend: str = "eager"
     backward_tile_backend: str = "eager"
+    backward_memory: str = "materialized"
 
 
 def _replay(spec: _Invocation, device: torch.device):
@@ -229,10 +230,22 @@ class _TiledRecurrence(torch.autograd.Function):
             all_keys = torch.cat((rotated_prefix, rotated_current), dim=-2)
             all_values = torch.cat((pvg, vr), dim=-2)
             with torch.no_grad():
-                probabilities, attention = _attention_from_completed(
-                    q.detach(), kt.detach(), vt.detach(), all_keys.detach(), all_values.detach(),
-                    valid, prefix, spec, dtype,
-                )
+                if spec.backward_memory == "recompute":
+                    from . import olmo_rt_memory
+                    # Match the reference matrix operand casts once, including
+                    # prefixes whose raw cache dtype differs from projections.
+                    attention_dtype = torch.float32 if spec.attention_precision == "fp32" else dtype
+                    memory_keys = all_keys.detach().to(attention_dtype)
+                    memory_values = all_values.detach().to(attention_dtype)
+                    maximum, denominator, diagonal_p, attention = olmo_rt_memory.attention_from_completed(
+                        q.detach(), kt.detach(), vt.detach(), memory_keys, memory_values,
+                        valid, prefix, spec, dtype,
+                    )
+                else:
+                    probabilities, attention = _attention_from_completed(
+                        q.detach(), kt.detach(), vt.detach(), all_keys.detach(), all_values.detach(),
+                        valid, prefix, spec, dtype,
+                    )
                 dk = torch.zeros(shape, device=x.device, dtype=torch.float32)
                 dv = torch.zeros_like(dk)
                 ga = torch.zeros_like(dk)
@@ -264,25 +277,39 @@ class _TiledRecurrence(torch.autograd.Function):
                         width = index & -index
                         queries = slice(index, min(length, index + width))
                         keys_slice = slice(index - width, index)
-                        p = probabilities[:, :, queries, prefix + index - width:prefix + index]
-                        dkey, dvalue = _historical_backward_tile(
-                            p, ga[:, :, queries], vr.detach()[:, :, keys_slice],
-                            q.detach()[:, :, queries], dot[:, :, queries], spec, dtype,
-                        )
+                        if spec.backward_memory == "recompute":
+                            history = slice(prefix + index - width, prefix + index)
+                            dkey, dvalue = olmo_rt_memory.historical_backward(
+                                q.detach()[:, :, queries], memory_keys[:, :, history], memory_values[:, :, history],
+                                ga[:, :, queries], dot[:, :, queries], maximum[:, :, queries],
+                                denominator[:, :, queries], valid[:, history], spec, dtype,
+                            )
+                        else:
+                            p = probabilities[:, :, queries, prefix + index - width:prefix + index]
+                            dkey, dvalue = _historical_backward_tile(
+                                p, ga[:, :, queries], vr.detach()[:, :, keys_slice],
+                                q.detach()[:, :, queries], dot[:, :, queries], spec, dtype,
+                            )
                         dv[:, :, keys_slice] += dvalue
                         dk[:, :, keys_slice] += dkey
             with torch.no_grad():
-                indices = torch.arange(length, device=x.device)
-                diagonal_p = probabilities[:, :, indices, prefix + indices]
-                self_error = diagonal_p * ((ga * vt.detach().float()).sum(-1) - dot)
-                dkt = self_error.unsqueeze(-1) * q.detach().float() / math.sqrt(config.head_dim)
-                dvt = diagonal_p.unsqueeze(-1) * ga
-                error = probabilities * (_mm(ga, all_values.detach().transpose(-1, -2), spec, dtype) - dot.unsqueeze(-1))
-                error.diagonal(offset=prefix, dim1=-2, dim2=-1).zero_()
-                dq = _mm(error, all_keys.detach(), spec, dtype) / math.sqrt(config.head_dim)
-                dq += self_error.unsqueeze(-1) * kt.detach().float() / math.sqrt(config.head_dim)
-                dpk = _mm(error[:, :, :, :prefix].transpose(-1, -2), q.detach(), spec, dtype) / math.sqrt(config.head_dim)
-                dpv = _mm(probabilities[:, :, :, :prefix].transpose(-1, -2), ga, spec, dtype)
+                if spec.backward_memory == "recompute":
+                    dq, dkt, dvt, dpk, dpv = olmo_rt_memory.query_and_prefix_backward(
+                        q.detach(), kt.detach(), vt.detach(), memory_keys, memory_values,
+                        ga, dot, maximum, denominator, diagonal_p, valid, prefix, spec, dtype,
+                    )
+                else:
+                    indices = torch.arange(length, device=x.device)
+                    diagonal_p = probabilities[:, :, indices, prefix + indices]
+                    self_error = diagonal_p * ((ga * vt.detach().float()).sum(-1) - dot)
+                    dkt = self_error.unsqueeze(-1) * q.detach().float() / math.sqrt(config.head_dim)
+                    dvt = diagonal_p.unsqueeze(-1) * ga
+                    error = probabilities * (_mm(ga, all_values.detach().transpose(-1, -2), spec, dtype) - dot.unsqueeze(-1))
+                    error.diagonal(offset=prefix, dim1=-2, dim2=-1).zero_()
+                    dq = _mm(error, all_keys.detach(), spec, dtype) / math.sqrt(config.head_dim)
+                    dq += self_error.unsqueeze(-1) * kt.detach().float() / math.sqrt(config.head_dim)
+                    dpk = _mm(error[:, :, :, :prefix].transpose(-1, -2), q.detach(), spec, dtype) / math.sqrt(config.head_dim)
+                    dpv = _mm(probabilities[:, :, :, :prefix].transpose(-1, -2), ga, spec, dtype)
             replayed_finished = _finish(xg, attention.detach(), *weights[1:], config, dtype)
             gradients = torch.autograd.grad(
                 (q, kt, vt, rotated_current, kr, vr, rotated_prefix, pvg, replayed_finished),
@@ -300,7 +327,8 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
                           past: tuple[Tensor, Tensor] | None,
                           query_positions: Tensor, key_positions: Tensor, key_valid: Tensor,
                           attention_precision: str = "mixed", cast_weights_once: bool = False,
-                          tile_backend: str = "eager", backward_tile_backend: str = "eager"):
+                          tile_backend: str = "eager", backward_tile_backend: str = "eager",
+                          backward_memory: str = "materialized"):
     if attention_precision not in ("mixed", "fp32"):
         raise ValueError("attention_precision must be 'mixed' or 'fp32'")
     if type(cast_weights_once) is not bool:
@@ -313,6 +341,8 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
         raise ValueError("backward_tile_backend must be eager or triton")
     if backward_tile_backend == "triton" and x.device.type != "cuda":
         raise ValueError("Triton backward tiles require CUDA; choose eager explicitly on CPU")
+    if backward_memory not in ("materialized", "recompute"):
+        raise ValueError("backward_memory must be materialized or recompute")
     if isinstance(alpha, bool) or not isinstance(alpha, (int, float)) or not math.isfinite(alpha) or not 0 <= alpha <= 1:
         raise ValueError("alpha must be finite and in [0,1]")
     if x.ndim != 3 or min(x.shape) == 0 or x.shape[-1] != layer.config.model_dim:
@@ -324,7 +354,7 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
         pk, pv = past
     spec = _Invocation(layer.config, float(alpha), attention_precision,
                        torch.is_autocast_enabled(x.device.type), torch.get_autocast_dtype(x.device.type),
-                       cast_weights_once, tile_backend, backward_tile_backend)
+                       cast_weights_once, tile_backend, backward_tile_backend, backward_memory)
     z, k, v = _TiledRecurrence.apply(
         x, layer.att_proj.weight, layer.attn_out.weight, layer.ff_proj.weight, layer.ff_out.weight,
         pk, pv, query_positions.clone(), key_positions.clone(), key_valid.clone(), spec,
@@ -346,6 +376,7 @@ class OLMoTiledCache:
     cast_weights_once: bool = False
     tile_backend: str = "eager"
     backward_tile_backend: str = "eager"
+    backward_memory: str = "materialized"
 
     @property
     def sequence_length(self):
@@ -380,7 +411,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     """
     def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
                  ordinary_activation_checkpointing=False, cast_weights_once=False,
-                 tile_backend="eager", backward_tile_backend="eager", device=None, dtype=None):
+                 tile_backend="eager", backward_tile_backend="eager", backward_memory="materialized",
+                 device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
         if type(ordinary_activation_checkpointing) is not bool:
@@ -391,12 +423,15 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             raise ValueError("tile_backend must be eager or triton")
         if backward_tile_backend not in ("eager", "triton"):
             raise ValueError("backward_tile_backend must be eager or triton")
+        if backward_memory not in ("materialized", "recompute"):
+            raise ValueError("backward_memory must be materialized or recompute")
         super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
         self.attention_precision = attention_precision
         self.ordinary_activation_checkpointing = ordinary_activation_checkpointing
         self.cast_weights_once = cast_weights_once
         self.tile_backend = tile_backend
         self.backward_tile_backend = backward_tile_backend
+        self.backward_memory = backward_memory
 
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
@@ -426,7 +461,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                 raise ValueError("Cached execution context or attention precision differs")
             if (past_key_values.cast_weights_once != self.cast_weights_once
                     or past_key_values.tile_backend != self.tile_backend
-                    or past_key_values.backward_tile_backend != self.backward_tile_backend):
+                    or past_key_values.backward_tile_backend != self.backward_tile_backend
+                    or past_key_values.backward_memory != self.backward_memory):
                 raise ValueError("Cached RT kernel execution differs")
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
@@ -437,7 +473,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
                               versions, generation, context, self.attention_precision,
                               self.cast_weights_once, self.tile_backend,
-                              self.backward_tile_backend) if use_cache else None
+                              self.backward_tile_backend, self.backward_memory) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
@@ -458,7 +494,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     key_positions=key_positions, key_valid=key_valid,
                     attention_precision=self.attention_precision,
                     cast_weights_once=self.cast_weights_once, tile_backend=self.tile_backend,
-                    backward_tile_backend=self.backward_tile_backend,
+                    backward_tile_backend=self.backward_tile_backend, backward_memory=self.backward_memory,
                 )
             elif checkpoint_ordinary:
                 # Bind this invocation's layer/backend/causality now: a closure

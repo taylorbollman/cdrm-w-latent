@@ -1,6 +1,6 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-22. **Read this first after compaction or interruption.**
+Updated 2026-09-23. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
@@ -10,6 +10,20 @@ together, with bounded numerical/gradient checks where concerns exist, reasonabl
 efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
+
+**F3d is active (2026-09-23), explicitly authorized.** Branch
+`feat/olmo1b-f3d-rt-memory`, base70e86e2. Implement opt-in
+`backward_memory="recompute"`, retain materialized F3c default/reference;
+[prospective protocol](reports/olmo1b-f3d/protocol.md). Root owns core/native
+validation; agents own recompute kernel, bounded probes and independent checks.
+No quality training. GPU diagnostics will use new `f3d-*` output directories.
+Driver/library mismatch blocked initial container launch: running580.173.02
+versus installed580.178.04. Only the telemetry collector held devices; it and
+persistence were briefly stopped, idle modules reloaded, services restarted.
+Container now verifies H10080GB /driver580.178.04. Fabric manager reports no
+NVSwitch device; single-GPU CUDA availability is to be checked by the probes.
+No model data or previous run changed. CPU tests pass initial reference checks.
+Update this active record with final reports before closing the milestone.
 
 **F3c historical backward fusion is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3c/assessment.md),
