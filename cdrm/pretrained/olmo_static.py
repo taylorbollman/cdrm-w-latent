@@ -114,6 +114,8 @@ class PreparedFBTLayout:
             self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
             self.base.tile_backend, self.base.backward_tile_backend, self.base.backward_memory,
             self.base.reuse_rope, self.base.kv_only_writes,
+            self.base.rt_implementation, self.base.author_precision, self.base.author_compiled_helpers,
+            self.base.author_bwd_mlp_chunks, self.base.author_autocast_cache,
             tuple((name, id(module), type(module), module.training) for name, module in self.core.named_modules()))
 
     def _owned_tensors(self):
@@ -143,6 +145,10 @@ class PreparedFBTLayout:
             "position_ids_sha256": _digest(self._positions_cpu), "feedback_eligible_sha256": _digest(self._eligible_cpu),
             "document_contract": "one independent document per row; no cache or packed documents",
             "loss_masks_owned_here": False, "reuse_rope": self.base.reuse_rope,
+            "rt_implementation": self.base.rt_implementation, "author_precision": self.base.author_precision,
+            "author_compiled_helpers": self.base.author_compiled_helpers,
+            "author_bwd_mlp_chunks": self.base.author_bwd_mlp_chunks,
+            "author_autocast_cache": self.base.author_autocast_cache,
             "rope_tables_owned_here": self.rope_tables is not None,
             "rope_table_bytes": 0 if self.rope_tables is None else sum(
                 tensor.numel() * tensor.element_size() for tensor in (self.rope_tables.cos, self.rope_tables.sin))}
@@ -177,10 +183,17 @@ class PreparedFBTLayout:
             raise ValueError("Prepared fixed model buffers changed")
         if self.core.readout_weight is not self.core.token_embeddings.weight:
             raise ValueError("Native tied embedding/readout ownership changed")
+        # K1 is an ordinary bootstrap, even if future passes select RT blocks.
+        active_rt = RTMode(()) if mode.enabled and mode.num_passes == 1 else mode.rt_mode
+        self.base._validate_author_scope(active_rt, all_tokens_valid=self.all_tokens_valid)
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
             "cast_weights_once": self.base.cast_weights_once, "tile_backend": self.base.tile_backend,
             "backward_tile_backend": self.base.backward_tile_backend, "backward_memory": self.base.backward_memory,
             "reuse_rope": self.base.reuse_rope, "kv_only_writes": self.base.kv_only_writes,
+            "rt_implementation": self.base.rt_implementation, "author_precision": self.base.author_precision,
+            "author_compiled_helpers": self.base.author_compiled_helpers,
+            "author_bwd_mlp_chunks": self.base.author_bwd_mlp_chunks,
+            "author_autocast_cache": self.base.author_autocast_cache,
             "training": self.core.training, "attention_backend": self.base.attention_backend,
             "attention_precision": self.base.attention_precision, "grad_enabled": torch.is_grad_enabled(),
             "inference_mode": torch.is_inference_mode_enabled(),
@@ -201,6 +214,7 @@ class PreparedFBTLayout:
         return self.base._forward_prepared(embeddings, mode=mode,
             positions=self.position_ids, key_positions=self.position_ids, key_valid=self.valid_mask,
             attention_mask=self.attention_mask, is_causal=self.is_causal,
+            all_tokens_valid=self.all_tokens_valid,
             query_rope=self.rope_tables, key_rope=self.rope_tables,
             checkpoint_ordinary=self.base.ordinary_activation_checkpointing and self.base.training and torch.is_grad_enabled())[0]
 

@@ -420,6 +420,11 @@ class OLMoTiledCache:
     backward_memory: str = "materialized"
     reuse_rope: bool = False
     kv_only_writes: bool = False
+    rt_implementation: str = "native"
+    author_precision: str = "author_legacy"
+    author_compiled_helpers: bool = True
+    author_bwd_mlp_chunks: int = 4
+    author_autocast_cache: bool = True
 
     @property
     def sequence_length(self):
@@ -444,7 +449,7 @@ def _ordinary_block_hidden(x, query_positions, key_positions, mask, *, layer,
 
 
 class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
-    """Native tiled RT with optional ordinary-block activation checkpointing.
+    """Tiled RT with optional ordinary-block activation checkpointing.
 
     The opt-in flag is execution metadata, not part of the native checkpoint
     layout. Callers must record it in their run/resume configuration. During
@@ -452,11 +457,21 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     RT blocks retain their existing input/completed-output reconstruction.
     Checkpointed training is cache-free. Evaluation and no-grad calls use the
     unchanged ordinary/cache path.
+
+    ``rt_implementation="author"`` opts selected RT blocks into the author's
+    writer-VJP schedule. It requires reused FP32 RoPE tables, full-strength
+    recurrence and unpadded, cache-free calls. The separate author precision,
+    compilation, MLP-chunk and autocast-cache options describe that backend;
+    native tile/backward/attention-precision options do not change its math.
+    Ordinary blocks, including FBT's bootstrap, keep their existing backend.
     """
     def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
                  ordinary_activation_checkpointing=False, cast_weights_once=False,
                  tile_backend="eager", backward_tile_backend="eager", backward_memory="materialized",
                  reuse_rope=False, kv_only_writes=False,
+                 rt_implementation="native", author_precision="author_legacy",
+                 author_compiled_helpers=True, author_bwd_mlp_chunks=4,
+                 author_autocast_cache=True,
                  device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
@@ -472,6 +487,16 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             raise ValueError("backward_tile_backend must be eager or triton")
         if backward_memory not in ("materialized", "recompute"):
             raise ValueError("backward_memory must be materialized or recompute")
+        if rt_implementation not in ("native", "author"):
+            raise ValueError("rt_implementation must be native or author")
+        if author_precision not in ("author_legacy", "fp32_state"):
+            raise ValueError("author_precision must be author_legacy or fp32_state")
+        if type(author_compiled_helpers) is not bool or type(author_autocast_cache) is not bool:
+            raise TypeError("author_compiled_helpers and author_autocast_cache must be boolean")
+        if type(author_bwd_mlp_chunks) is not int or author_bwd_mlp_chunks < 1:
+            raise ValueError("author_bwd_mlp_chunks must be a positive integer")
+        if rt_implementation == "author" and not reuse_rope:
+            raise ValueError("Author RT requires explicit reuse_rope=True")
         super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
         self.attention_precision = attention_precision
         self.ordinary_activation_checkpointing = ordinary_activation_checkpointing
@@ -481,6 +506,40 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         self.backward_memory = backward_memory
         self.reuse_rope = reuse_rope
         self.kv_only_writes = kv_only_writes
+        self.rt_implementation = rt_implementation
+        self.author_precision = author_precision
+        self.author_compiled_helpers = author_compiled_helpers
+        self.author_bwd_mlp_chunks = author_bwd_mlp_chunks
+        self.author_autocast_cache = author_autocast_cache
+
+    def _validate_author_scope(self, mode, *, all_tokens_valid,
+                               past_key_values=None, use_cache=False):
+        """Check fixed author scope without reading any device tensor.
+
+        Public callers prove validity outside capture. Prepared layouts supply
+        their owned CPU-derived flag and validate it before graph preparation.
+        An empty selection remains the ordinary implementation in either mode.
+        """
+        if self.rt_implementation not in ("native", "author"):
+            raise ValueError("rt_implementation must be native or author")
+        if self.rt_implementation != "author" or not mode.selected_layers:
+            return
+        if not self.reuse_rope:
+            raise ValueError("Author RT requires explicit reuse_rope=True")
+        if mode.alpha != 1.0:
+            raise ValueError("Author RT supports only full-strength alpha=1 recurrence")
+        if past_key_values is not None or use_cache:
+            raise ValueError("Author RT does not support a prefix or exported cache")
+        if type(all_tokens_valid) is not bool or not all_tokens_valid:
+            raise ValueError("Author RT requires a validated unpadded layout (all_tokens_valid=True)")
+        if self.author_compiled_helpers and self.readout_weight.device.type != "cuda":
+            raise ValueError("Compiled author helpers require CUDA; explicitly disable them for CPU checks")
+        if any(weight.dtype != torch.float32 for index in mode.selected_layers
+               for weight in self.layers[index].parameters()):
+            raise ValueError("Author RT requires unchanged native FP32 projection weights")
+        device_type = self.readout_weight.device.type
+        if torch.is_autocast_enabled(device_type) and torch.get_autocast_dtype(device_type) != torch.bfloat16:
+            raise ValueError("Author RT supports FP32 or BF16 mixed precision only")
 
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
@@ -496,6 +555,13 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             input_ids, inputs_embeds, attention_mask, position_ids, past_key_values,
             cache_type=OLMoTiledCache,
         )
+        # This dynamic validation boundary is outside prepared graph bodies.
+        # The common mask-free case needs no device reduction/synchronization.
+        all_tokens_valid = None
+        if self.rt_implementation == "author" and mode.selected_layers:
+            all_tokens_valid = True if attention_mask is None and past_key_values is None else bool(valid.all())
+            self._validate_author_scope(mode, all_tokens_valid=all_tokens_valid,
+                                        past_key_values=past_key_values, use_cache=use_cache)
         versions = self._parameter_versions() if use_cache or past_key_values is not None else ()
         generation = getattr(self, "_rt_cache_generation", 0)
         context = self._execution_context(x.device)
@@ -513,31 +579,41 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     or past_key_values.backward_tile_backend != self.backward_tile_backend
                     or past_key_values.backward_memory != self.backward_memory
                     or past_key_values.reuse_rope != self.reuse_rope
-                    or past_key_values.kv_only_writes != self.kv_only_writes):
+                    or past_key_values.kv_only_writes != self.kv_only_writes
+                    or past_key_values.rt_implementation != self.rt_implementation
+                    or past_key_values.author_precision != self.author_precision
+                    or past_key_values.author_compiled_helpers != self.author_compiled_helpers
+                    or past_key_values.author_bwd_mlp_chunks != self.author_bwd_mlp_chunks
+                    or past_key_values.author_autocast_cache != self.author_autocast_cache):
                 raise ValueError("Cached RT kernel execution differs")
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
             key_valid=valid, attention_mask=mask, is_causal=causal,
             past_key_values=past_key_values, use_cache=use_cache,
             checkpoint_ordinary=checkpoint_ordinary,
+            all_tokens_valid=all_tokens_valid,
         )
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
                               versions, generation, context, self.attention_precision,
                               self.cast_weights_once, self.tile_backend,
                               self.backward_tile_backend, self.backward_memory,
-                              self.reuse_rope, self.kv_only_writes) if use_cache else None
+                              self.reuse_rope, self.kv_only_writes, self.rt_implementation,
+                              self.author_precision, self.author_compiled_helpers,
+                              self.author_bwd_mlp_chunks, self.author_autocast_cache) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
                           attention_mask, is_causal, past_key_values=None,
                           use_cache=False, checkpoint_ordinary=False,
-                          query_rope=None, key_rope=None):
+                          query_rope=None, key_rope=None, all_tokens_valid=None):
         """Native layer loop after caller validation; static entries are cache-free.
 
         The public forward retains all input/cache guards and cache construction.
         Prepared static callers validate their owned fixed layout before capture
         and between replays. This helper changes no layer or checkpoint math.
         """
+        self._validate_author_scope(mode, all_tokens_valid=all_tokens_valid,
+                                    past_key_values=past_key_values, use_cache=use_cache)
         if not self.reuse_rope and (query_rope is not None or key_rope is not None):
             raise ValueError("Prepared RoPE tables require reuse_rope")
         if (query_rope is None) != (key_rope is None):
@@ -549,7 +625,18 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         present = []
         for index, layer in enumerate(self.layers):
             past = None if past_key_values is None else past_key_values.key_values[index]
-            if index in mode.selected_layers:
+            if index in mode.selected_layers and self.rt_implementation == "author":
+                # Import only when this opt-in backend actually executes. It
+                # owns no model parameters and returns gradients to these exact
+                # existing packed weights through explicit Function inputs.
+                from .olmo_author import author_tiled_recurrent_layer
+                x = author_tiled_recurrent_layer(layer, x, query_rope,
+                    precision_policy=self.author_precision,
+                    compiled_helpers=self.author_compiled_helpers,
+                    bwd_mlp_chunks=self.author_bwd_mlp_chunks,
+                    autocast_cache=self.author_autocast_cache)
+                pair = None  # Author scope above forbids any exported cache.
+            elif index in mode.selected_layers:
                 x, pair = tiled_recurrent_layer(
                     layer, x, alpha=mode.alpha, past=past, query_positions=positions,
                     key_positions=key_positions, key_valid=key_valid,

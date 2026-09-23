@@ -1,0 +1,65 @@
+OLMo author RT integration: completed CPU evidence
+=================================================
+
+These records preserve the commands and observed results from completed tool
+calls. They are not a second execution or a verbatim copy of container startup
+output. GPU passthrough was explicitly disabled, and the imported package path
+was checked before testing. The primary GPU runtime was not modified.
+
+Worktree: /home/taylorbollman/cdrm-w-latent/.runtime/olmo-author-integration-worktree
+Base commit: 6eea309383b4b87a950aefdf4e194c8250b06857
+Changes tested: uncommitted author-selector integration in olmo_tiled.py and
+olmo_static.py, with the existing native tests below.
+
+Native/static/RoPE/KV/training regression command
+----------------------------------------------
+Host working directory: /home/taylorbollman/cdrm-w-latent
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'cd /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree && export PYTHONPATH="$PWD:$PYTHONPATH" && python -c "import cdrm; print(cdrm.__file__); assert cdrm.__file__.startswith(\"/workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree/\")" && python -m pytest -q tests/test_olmo_tiled.py tests/test_olmo_static.py tests/test_olmo_rope_reuse.py tests/test_olmo_kv_writes.py tests/test_static_training.py'
+
+Observed import:
+/workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree/cdrm/__init__.py
+
+Observed pytest result:
+152 passed, 9 warnings in 6.45s
+Exit code: 0
+
+All nine warnings were the existing tiny-model reference warning:
+"Embedding size is not a multiple of 128! This could hurt throughput performance."
+
+The new author-integration cases are recorded separately below. These CPU
+checks establish functionality and routing only, not CUDA Flash execution,
+graph correctness, GPU memory usage or throughput.
+
+Focused author-integration command
+----------------------------------
+Host working directory:
+/home/taylorbollman/cdrm-w-latent/.runtime/olmo-author-integration-worktree
+
+CDRM_DOCKER_GPUS=none bash /home/taylorbollman/cdrm-w-latent/scripts/docker_shell.sh bash -lc 'cd /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree && PYTHONPATH=$PWD python -m pytest -q tests/test_olmo_author_integration.py'
+
+Initial observed pytest result:
+1 failed, 41 passed, 14 warnings in 3.84s
+Exit code: 1
+
+The failure was in the new structural routing test, before model execution:
+the fixture requested attention_backend="flash", but OLMoForCausalLM accepts
+only "sdpa" or "math". CUDA callers select Flash through the external SDPA
+backend context. The test was corrected to request/observe "sdpa", then
+explicitly substitute CPU math inside its routing observer. No core code or
+numerical tolerance changed to resolve this test-fixture error.
+
+The identical command was then run after that correction.
+Final observed pytest result:
+42 passed, 14 warnings in 3.85s
+Exit code: 0
+
+All fourteen warnings were the existing PyTorch deprecation warning:
+"torch.jit.script_method is deprecated. Please switch to torch.compile or torch.export."
+
+Coverage: public/prepared ordinary, RT, K2 and K3 pass states and raw gradients;
+canonical/static NextLat losses and every parameter gradient; K3 shared-call
+autograd.grad without real leaf .grad side effects; unchanged checkpoint keys
+and tied embedding/readout ownership; no host tensor reads in prepared
+forward/backward; ordinary SDPA routing; unsupported active RT scope; inactive
+padded ordinary/K1 bypass; constructor and static/cache metadata guards.
