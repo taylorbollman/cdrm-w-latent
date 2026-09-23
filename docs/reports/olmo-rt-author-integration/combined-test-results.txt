@@ -1,0 +1,55 @@
+
+=============
+== PyTorch ==
+=============
+
+NVIDIA Release 26.06 (build 337426143)
+PyTorch Version 2.13.0a0+8145d63
+Container image Copyright (c) 2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+Copyright (c) 2014-2024 Facebook Inc.
+Copyright (c) 2011-2014 Idiap Research Institute (Ronan Collobert)
+Copyright (c) 2012-2014 Deepmind Technologies    (Koray Kavukcuoglu)
+Copyright (c) 2011-2012 NEC Laboratories America (Koray Kavukcuoglu)
+Copyright (c) 2011-2013 NYU                      (Clement Farabet)
+Copyright (c) 2006-2010 NEC Laboratories America (Ronan Collobert, Leon Bottou, Iain Melvin, Jason Weston)
+Copyright (c) 2006      Idiap Research Institute (Samy Bengio)
+Copyright (c) 2001-2004 Idiap Research Institute (Ronan Collobert, Samy Bengio, Johnny Mariethoz)
+Copyright (c) 2015      Google Inc.
+Copyright (c) 2015      Yangqing Jia
+Copyright (c) 2013-2016 The Caffe contributors
+All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+WARNING: The NVIDIA Driver was not detected.  GPU functionality will not be available.
+   Use the NVIDIA Container Toolkit to start this container with GPU support; see
+   https://docs.nvidia.com/datacenter/cloud-native/ .
+
+........................................................................ [ 30%]
+........................................................................ [ 61%]
+........................................................................ [ 91%]
+....................                                                     [100%]
+=============================== warnings summary ===============================
+../../../../usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:365: 14 warnings
+  /usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+    warnings.warn(
+
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected0-0.0]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected0-0.37]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected0-1.0]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected1-0.0]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected1-0.37]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected1-1.0]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected2-0.0]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected2-0.37]
+tests/test_olmo_tiled.py::test_tiled_full_model_matches_scan_and_independent_native_history_oracle[selected2-1.0]
+  /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree/cdrm/pretrained/_olmo_reference/model.py:1019: UserWarning: Embedding size is not a multiple of 128! This could hurt throughput performance.
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+236 passed, 23 warnings in 8.53s

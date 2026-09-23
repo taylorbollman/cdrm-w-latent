@@ -1,0 +1,3991 @@
+{
+  "capacity": [
+    {
+      "backend": "native",
+      "batch_size": 64,
+      "case": "rt",
+      "ce_targets_per_second": 22387.00595332131,
+      "comparison_signature": "3b8391867dbff53bd3e5389d0009106910cb1c4c4ea9fae3b9fe7791d2470b39",
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          1.4176788330078125,
+          1.417674560546875,
+          1.4167867431640624
+        ],
+        "median_cuda_seconds": 1.417674560546875,
+        "median_wall_seconds": 1.4177391220000573,
+        "wall_seconds": [
+          1.4177392120182049,
+          1.4177391220000573,
+          1.4168507870053872
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 23112.855878430557,
+      "full_update": {
+        "cuda_seconds": [
+          1.4598968505859375,
+          1.4597974853515625,
+          1.460823486328125,
+          1.4611015625,
+          1.4613734130859375
+        ],
+        "median_cuda_seconds": 1.460823486328125,
+        "median_wall_seconds": 1.4608474249835126,
+        "wall_seconds": [
+          1.4599572630249895,
+          1.4598233090073336,
+          1.4608474249835126,
+          1.4611256909847725,
+          1.4613972390070558
+        ]
+      },
+      "input_tokens_per_second": 22430.81614109689,
+      "length": 512,
+      "name": "capacity-rt-native-b64",
+      "parameters": {
+        "active": 1176764416,
+        "owned_parameter_tensors": 67,
+        "resident": 1185153024
+      },
+      "precision": "bf16_mixed",
+      "resources": {
+        "analytic_matrix_work": {
+          "assumptions": [
+            "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+            "Native temporary-QKV/permanent-KV dyadic RT/custom VJP; no cached prefix or padding.",
+            "All active weights trainable; attached pass gradients and positive pass coefficients.",
+            "Loss masks change selected readout/predictor work, not dense backbone execution.",
+            "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+            "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."
+          ],
+          "backward_memory": "recompute",
+          "components": [
+            {
+              "description": "",
+              "maximum": 61572651155456,
+              "minimum": 61572651155456,
+              "name": "ordinary_dense_forward"
+            },
+            {
+              "description": "Input and weight VJPs for each ordinary dense projection.",
+              "maximum": 123145302310912,
+              "minimum": 123145302310912,
+              "name": "ordinary_dense_backward"
+            },
+            {
+              "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+              "maximum": 61572651155456,
+              "minimum": 46179488366592,
+              "name": "ordinary_dense_checkpoint_recompute"
+            },
+            {
+              "description": "QK and PV, causal useful to full-square arithmetic.",
+              "maximum": 1924145348608,
+              "minimum": 963951722496,
+              "name": "ordinary_attention_forward"
+            },
+            {
+              "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+              "maximum": 4810363371520,
+              "minimum": 1927903444992,
+              "name": "ordinary_attention_backward"
+            },
+            {
+              "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+              "maximum": 1924145348608,
+              "minimum": 963951722496,
+              "name": "ordinary_attention_checkpoint_recompute"
+            },
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 2748779069440,
+              "minimum": 2748779069440,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 2199023255552,
+              "minimum": 2199023255552,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 14293651161088,
+              "minimum": 14293651161088,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 7146825580544,
+              "minimum": 7146825580544,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 5497558138880,
+              "minimum": 5497558138880,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 13743895347200,
+              "minimum": 13743895347200,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 205755777024,
+              "minimum": 205755777024,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 206024212480,
+              "minimum": 206024212480,
+              "name": "rt_attention_probability_recompute"
+            },
+            {
+              "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+              "maximum": 0,
+              "minimum": 0,
+              "name": "fusion_dense_forward_backward"
+            },
+            {
+              "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+              "maximum": 26954006790144,
+              "minimum": 26954006790144,
+              "name": "ce_readout_forward_recompute_backward"
+            }
+          ],
+          "input_tokens_per_update": 32768,
+          "kv_only_writes": true,
+          "matrix_flops_maximum": 338527309004800,
+          "matrix_flops_minimum": 318331299037184,
+          "objective_positions_across_passes": {
+            "ce": 32704,
+            "kl": 0,
+            "latent": 0,
+            "predictor": 0
+          },
+          "objective_positions_per_update": {
+            "ce": 32704,
+            "kl": 0,
+            "latent": 0,
+            "predictor": 0
+          },
+          "ordinary_block_calls_per_microbatch": 14,
+          "parameter_counts": {
+            "backbone": 1176764416,
+            "deployable_inference": 1176764416,
+            "fusion": 0,
+            "nextlat_training_only": 0,
+            "training_architecture": 1176764416
+          },
+          "pass_token_work_per_update": 32768,
+          "rt_backward_memory": "recompute",
+          "rt_block_calls_per_microbatch": 2,
+          "rt_implementation": "native",
+          "schema": "olmo-training-resource-estimate-v1"
+        },
+        "loss_work": {
+          "ce_targets": 32704,
+          "kl_triples": 0,
+          "latent_pairs": 0,
+          "predictor_positions": 0
+        },
+        "observed_parameters": {
+          "deployable_inference_declared": 1176764416,
+          "executed_declared": 1176764416,
+          "gradient_participating": 1176764416,
+          "optimizer_owned": 1176764416,
+          "registered_unique": 1185153024,
+          "resident_parameter_bytes": 4740612096,
+          "trainable": 1176764416
+        },
+        "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls."
+      },
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "setup_memory": {
+        "allocated_gib": 17.72481107711792,
+        "peak_allocated_gib": 32.07643795013428,
+        "peak_reserved_gib": 50.310546875,
+        "reserved_gib": 50.310546875
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 17.72481107711792,
+        "peak_allocated_gib": 18.494342803955078,
+        "peak_reserved_gib": 50.310546875,
+        "reserved_gib": 50.310546875
+      }
+    },
+    {
+      "backend": "author",
+      "batch_size": 64,
+      "case": "rt",
+      "ce_targets_per_second": 22381.8860483751,
+      "comparison_signature": "3b8391867dbff53bd3e5389d0009106910cb1c4c4ea9fae3b9fe7791d2470b39",
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          1.4184298095703125,
+          1.419535888671875,
+          1.4203870849609375
+        ],
+        "median_cuda_seconds": 1.419535888671875,
+        "median_wall_seconds": 1.4196067150041927,
+        "wall_seconds": [
+          1.4184863080154173,
+          1.4196067150041927,
+          1.4204600719967857
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 23082.449282372705,
+      "full_update": {
+        "cuda_seconds": [
+          1.4591273193359375,
+          1.461154052734375,
+          1.4605352783203125,
+          1.4618876953125,
+          1.4625484619140625
+        ],
+        "median_cuda_seconds": 1.461154052734375,
+        "median_wall_seconds": 1.4611815969983581,
+        "wall_seconds": [
+          1.4591891980089713,
+          1.4611815969983581,
+          1.460559609986376,
+          1.4619122170261107,
+          1.4625732639979105
+        ]
+      },
+      "input_tokens_per_second": 22425.686216767223,
+      "length": 512,
+      "name": "capacity-rt-author-b64",
+      "parameters": {
+        "active": 1176764416,
+        "owned_parameter_tensors": 67,
+        "resident": 1185153024
+      },
+      "precision": "bf16_mixed",
+      "resources": {
+        "analytic_matrix_work": {
+          "assumptions": [
+            "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+            "All active weights trainable; attached pass gradients and positive pass coefficients.",
+            "Loss masks change selected readout/predictor work, not dense backbone execution.",
+            "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+            "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+            "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+            "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+          ],
+          "backward_memory": "materialized",
+          "components": [
+            {
+              "description": "",
+              "maximum": 61572651155456,
+              "minimum": 61572651155456,
+              "name": "ordinary_dense_forward"
+            },
+            {
+              "description": "Input and weight VJPs for each ordinary dense projection.",
+              "maximum": 123145302310912,
+              "minimum": 123145302310912,
+              "name": "ordinary_dense_backward"
+            },
+            {
+              "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+              "maximum": 61572651155456,
+              "minimum": 46179488366592,
+              "name": "ordinary_dense_checkpoint_recompute"
+            },
+            {
+              "description": "QK and PV, causal useful to full-square arithmetic.",
+              "maximum": 1924145348608,
+              "minimum": 963951722496,
+              "name": "ordinary_attention_forward"
+            },
+            {
+              "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+              "maximum": 4810363371520,
+              "minimum": 1927903444992,
+              "name": "ordinary_attention_backward"
+            },
+            {
+              "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+              "maximum": 1924145348608,
+              "minimum": 963951722496,
+              "name": "ordinary_attention_checkpoint_recompute"
+            },
+            {
+              "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+              "maximum": 0,
+              "minimum": 0,
+              "name": "fusion_dense_forward_backward"
+            },
+            {
+              "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+              "maximum": 26954006790144,
+              "minimum": 26954006790144,
+              "name": "ce_readout_forward_recompute_backward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "author_rt_dense_forward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "author_rt_attention_forward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 43430709297152,
+              "minimum": 43430709297152,
+              "name": "author_rt_dense_backward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 617669984256,
+              "minimum": 617669984256,
+              "name": "author_rt_attention_backward"
+            }
+          ],
+          "input_tokens_per_update": 32768,
+          "kv_only_writes": true,
+          "matrix_flops_maximum": 335984419930112,
+          "matrix_flops_minimum": 315788409962496,
+          "objective_positions_across_passes": {
+            "ce": 32704,
+            "kl": 0,
+            "latent": 0,
+            "predictor": 0
+          },
+          "objective_positions_per_update": {
+            "ce": 32704,
+            "kl": 0,
+            "latent": 0,
+            "predictor": 0
+          },
+          "ordinary_block_calls_per_microbatch": 14,
+          "parameter_counts": {
+            "backbone": 1176764416,
+            "deployable_inference": 1176764416,
+            "fusion": 0,
+            "nextlat_training_only": 0,
+            "training_architecture": 1176764416
+          },
+          "pass_token_work_per_update": 32768,
+          "rt_backward_memory": "materialized",
+          "rt_block_calls_per_microbatch": 2,
+          "rt_component_replacement": {
+            "calls": 2,
+            "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+            "per_call_author_ledger": {
+              "assumptions": [
+                "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+                "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+                "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+                "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+                "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+                "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+                "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+                "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+                "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+              ],
+              "backend": "author",
+              "backward_matrix_flops": 22024189640704,
+              "backward_memory": "materialized",
+              "batch_size": 64,
+              "block_calls": 1,
+              "block_token_work": 32768,
+              "forward_matrix_flops": 5016387584000,
+              "head_dim": 128,
+              "input_tokens": 32768,
+              "kv_only_writes": true,
+              "matrix_breakdown": {
+                "backward": {
+                  "attention": 308834992128,
+                  "dense": 21715354648576,
+                  "total": 22024189640704
+                },
+                "forward": {
+                  "attention": 68585259008,
+                  "dense": 4947802324992,
+                  "total": 5016387584000
+                },
+                "total": {
+                  "attention": 377420251136,
+                  "dense": 26663156973568,
+                  "total": 27040577224704
+                }
+              },
+              "mlp_intermediate_size": 8192,
+              "model_dim": 2048,
+              "native_arm": null,
+              "num_heads": 16,
+              "parameters_per_layer": 67108864,
+              "schema": "olmo-rt-block-resources-v1",
+              "sequence_length": 512,
+              "total_matrix_flops": 27040577224704,
+              "unique_parameters": 67108864
+            },
+            "removed_native_components": [
+              {
+                "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+                "maximum": 9895604649984,
+                "minimum": 9895604649984,
+                "name": "rt_dense_forward"
+              },
+              {
+                "description": "",
+                "maximum": 2748779069440,
+                "minimum": 2748779069440,
+                "name": "rt_batched_projection_reconstruction"
+              },
+              {
+                "description": "",
+                "maximum": 2199023255552,
+                "minimum": 2199023255552,
+                "name": "rt_local_writer_forward_and_input_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 14293651161088,
+                "minimum": 14293651161088,
+                "name": "rt_local_finish_forward_and_input_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 7146825580544,
+                "minimum": 7146825580544,
+                "name": "rt_finish_reconstruction"
+              },
+              {
+                "description": "",
+                "maximum": 5497558138880,
+                "minimum": 5497558138880,
+                "name": "rt_batched_projection_vjps"
+              },
+              {
+                "description": "Final attended tensor is detached: WO has weight VJP only here.",
+                "maximum": 13743895347200,
+                "minimum": 13743895347200,
+                "name": "rt_batched_finish_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 137170518016,
+                "minimum": 137170518016,
+                "name": "rt_attention_dyadic_forward"
+              },
+              {
+                "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+                "maximum": 274877906944,
+                "minimum": 274877906944,
+                "name": "rt_attention_completed_reconstruction"
+              },
+              {
+                "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+                "maximum": 205755777024,
+                "minimum": 205755777024,
+                "name": "rt_attention_reverse_history"
+              },
+              {
+                "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+                "maximum": 274877906944,
+                "minimum": 274877906944,
+                "name": "rt_attention_final_query_vjp"
+              },
+              {
+                "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+                "maximum": 206024212480,
+                "minimum": 206024212480,
+                "name": "rt_attention_probability_recompute"
+              }
+            ]
+          },
+          "rt_implementation": "author",
+          "schema": "olmo-training-resource-estimate-v1"
+        },
+        "loss_work": {
+          "ce_targets": 32704,
+          "kl_triples": 0,
+          "latent_pairs": 0,
+          "predictor_positions": 0
+        },
+        "observed_parameters": {
+          "deployable_inference_declared": 1176764416,
+          "executed_declared": 1176764416,
+          "gradient_participating": 1176764416,
+          "optimizer_owned": 1176764416,
+          "registered_unique": 1185153024,
+          "resident_parameter_bytes": 4740612096,
+          "trainable": 1176764416
+        },
+        "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls."
+      },
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "setup_memory": {
+        "allocated_gib": 17.72481107711792,
+        "peak_allocated_gib": 26.777670860290527,
+        "peak_reserved_gib": 45.3828125,
+        "reserved_gib": 45.3828125
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 17.72481107711792,
+        "peak_allocated_gib": 18.494342803955078,
+        "peak_reserved_gib": 45.3828125,
+        "reserved_gib": 45.3828125
+      }
+    },
+    {
+      "backend": "native",
+      "batch_size": 64,
+      "case": "combined",
+      "ce_targets_per_second": 11173.90323038624,
+      "comparison_signature": "c3b9434f497ebc8587f155c0e1cc09e8a5d877bc3336d44dadc1b701e149d390",
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          2.877567138671875,
+          2.880219970703125,
+          2.882547119140625
+        ],
+        "median_cuda_seconds": 2.880219970703125,
+        "median_wall_seconds": 2.880297805008013,
+        "wall_seconds": [
+          2.8776311380206607,
+          2.880297805008013,
+          2.8826263009977993
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 11376.601385810118,
+      "full_update": {
+        "cuda_seconds": [
+          2.926052490234375,
+          2.92678466796875,
+          2.925211181640625,
+          2.92780810546875,
+          2.927098876953125
+        ],
+        "median_cuda_seconds": 2.92678466796875,
+        "median_wall_seconds": 2.926819690997945,
+        "wall_seconds": [
+          2.926125558995409,
+          2.926819690997945,
+          2.925245038990397,
+          2.9278429670084734,
+          2.9271356090030167
+        ]
+      },
+      "input_tokens_per_second": 11195.769968606175,
+      "length": 512,
+      "name": "capacity-combined-native-b64",
+      "parameters": {
+        "active": 1267879936,
+        "owned_parameter_tensors": 71,
+        "resident": 1267879936
+      },
+      "precision": "bf16_mixed",
+      "resources": {
+        "analytic_matrix_work": {
+          "assumptions": [
+            "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+            "Native temporary-QKV/permanent-KV dyadic RT/custom VJP; no cached prefix or padding.",
+            "All active weights trainable; attached pass gradients and positive pass coefficients.",
+            "Loss masks change selected readout/predictor work, not dense backbone execution.",
+            "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+            "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."
+          ],
+          "backward_memory": "recompute",
+          "components": [
+            {
+              "description": "",
+              "maximum": 131941395333120,
+              "minimum": 131941395333120,
+              "name": "ordinary_dense_forward"
+            },
+            {
+              "description": "Input and weight VJPs for each ordinary dense projection.",
+              "maximum": 263882790666240,
+              "minimum": 263882790666240,
+              "name": "ordinary_dense_backward"
+            },
+            {
+              "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+              "maximum": 131941395333120,
+              "minimum": 98956046499840,
+              "name": "ordinary_dense_checkpoint_recompute"
+            },
+            {
+              "description": "QK and PV, causal useful to full-square arithmetic.",
+              "maximum": 4123168604160,
+              "minimum": 2065610833920,
+              "name": "ordinary_attention_forward"
+            },
+            {
+              "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+              "maximum": 10307921510400,
+              "minimum": 4131221667840,
+              "name": "ordinary_attention_backward"
+            },
+            {
+              "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+              "maximum": 4123168604160,
+              "minimum": 2065610833920,
+              "name": "ordinary_attention_checkpoint_recompute"
+            },
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 2748779069440,
+              "minimum": 2748779069440,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 2199023255552,
+              "minimum": 2199023255552,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 14293651161088,
+              "minimum": 14293651161088,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 7146825580544,
+              "minimum": 7146825580544,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 5497558138880,
+              "minimum": 5497558138880,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 13743895347200,
+              "minimum": 13743895347200,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 205755777024,
+              "minimum": 205755777024,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 206024212480,
+              "minimum": 206024212480,
+              "name": "rt_attention_probability_recompute"
+            },
+            {
+              "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+              "maximum": 1646046216192,
+              "minimum": 1646046216192,
+              "name": "fusion_dense_forward_backward"
+            },
+            {
+              "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+              "maximum": 53908013580288,
+              "minimum": 53908013580288,
+              "name": "ce_readout_forward_recompute_backward"
+            },
+            {
+              "description": "Shared predictor once per union source position per pass; all three dense layers trainable.",
+              "maximum": 32464403693568,
+              "minimum": 32464403693568,
+              "name": "nextlat_predictor_forward_backward"
+            },
+            {
+              "description": "Teacher+student forward, both checkpoint replays, student-state VJP only; readout detached.",
+              "maximum": 33758442946560,
+              "minimum": 33758442946560,
+              "name": "kl_readout_forward_recompute_backward"
+            }
+          ],
+          "input_tokens_per_update": 32768,
+          "kv_only_writes": true,
+          "matrix_flops_maximum": 724720790011904,
+          "matrix_flops_minimum": 681443625795584,
+          "objective_positions_across_passes": {
+            "ce": 65408,
+            "kl": 32768,
+            "latent": 65408,
+            "predictor": 65408
+          },
+          "objective_positions_per_update": {
+            "ce": 32704,
+            "kl": 16384,
+            "latent": 32704,
+            "predictor": 32704
+          },
+          "ordinary_block_calls_per_microbatch": 30,
+          "parameter_counts": {
+            "backbone": 1176764416,
+            "deployable_inference": 1185153024,
+            "fusion": 8388608,
+            "nextlat_training_only": 82726912,
+            "training_architecture": 1267879936
+          },
+          "pass_token_work_per_update": 65536,
+          "rt_backward_memory": "recompute",
+          "rt_block_calls_per_microbatch": 2,
+          "rt_implementation": "native",
+          "schema": "olmo-training-resource-estimate-v1"
+        },
+        "loss_work": {
+          "ce_targets": 32704,
+          "kl_triples": 16384,
+          "latent_pairs": 32704,
+          "predictor_positions": 32704
+        },
+        "observed_parameters": {
+          "deployable_inference_declared": 1185153024,
+          "executed_declared": 1267879936,
+          "gradient_participating": 1267879936,
+          "optimizer_owned": 1267879936,
+          "registered_unique": 1267879936,
+          "resident_parameter_bytes": 5071519744,
+          "trainable": 1267879936
+        },
+        "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls."
+      },
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "setup_memory": {
+        "allocated_gib": 19.054981231689453,
+        "peak_allocated_gib": 38.9229621887207,
+        "peak_reserved_gib": 65.640625,
+        "reserved_gib": 65.640625
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 19.054981231689453,
+        "peak_allocated_gib": 19.82451295852661,
+        "peak_reserved_gib": 65.640625,
+        "reserved_gib": 65.640625
+      }
+    },
+    {
+      "backend": "author",
+      "batch_size": 64,
+      "case": "combined",
+      "ce_targets_per_second": 11164.678105243978,
+      "comparison_signature": "c3b9434f497ebc8587f155c0e1cc09e8a5d877bc3336d44dadc1b701e149d390",
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          2.881908935546875,
+          2.88406396484375,
+          2.8829208984375
+        ],
+        "median_cuda_seconds": 2.8829208984375,
+        "median_wall_seconds": 2.8830008220102172,
+        "wall_seconds": [
+          2.881981459999224,
+          2.8841471080086194,
+          2.8830008220102172
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 11365.93501806635,
+      "full_update": {
+        "cuda_seconds": [
+          2.92915234375,
+          2.929307373046875,
+          2.93029833984375,
+          2.928292724609375,
+          2.92844287109375
+        ],
+        "median_cuda_seconds": 2.92915234375,
+        "median_wall_seconds": 2.9292380569968373,
+        "wall_seconds": [
+          2.9292380569968373,
+          2.92934843400144,
+          2.930335565994028,
+          2.9283290290040895,
+          2.9284781299938913
+        ]
+      },
+      "input_tokens_per_second": 11186.526790381442,
+      "length": 512,
+      "name": "capacity-combined-author-b64",
+      "parameters": {
+        "active": 1267879936,
+        "owned_parameter_tensors": 71,
+        "resident": 1267879936
+      },
+      "precision": "bf16_mixed",
+      "resources": {
+        "analytic_matrix_work": {
+          "assumptions": [
+            "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+            "All active weights trainable; attached pass gradients and positive pass coefficients.",
+            "Loss masks change selected readout/predictor work, not dense backbone execution.",
+            "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+            "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+            "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+            "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+          ],
+          "backward_memory": "materialized",
+          "components": [
+            {
+              "description": "",
+              "maximum": 131941395333120,
+              "minimum": 131941395333120,
+              "name": "ordinary_dense_forward"
+            },
+            {
+              "description": "Input and weight VJPs for each ordinary dense projection.",
+              "maximum": 263882790666240,
+              "minimum": 263882790666240,
+              "name": "ordinary_dense_backward"
+            },
+            {
+              "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+              "maximum": 131941395333120,
+              "minimum": 98956046499840,
+              "name": "ordinary_dense_checkpoint_recompute"
+            },
+            {
+              "description": "QK and PV, causal useful to full-square arithmetic.",
+              "maximum": 4123168604160,
+              "minimum": 2065610833920,
+              "name": "ordinary_attention_forward"
+            },
+            {
+              "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+              "maximum": 10307921510400,
+              "minimum": 4131221667840,
+              "name": "ordinary_attention_backward"
+            },
+            {
+              "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+              "maximum": 4123168604160,
+              "minimum": 2065610833920,
+              "name": "ordinary_attention_checkpoint_recompute"
+            },
+            {
+              "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+              "maximum": 1646046216192,
+              "minimum": 1646046216192,
+              "name": "fusion_dense_forward_backward"
+            },
+            {
+              "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+              "maximum": 53908013580288,
+              "minimum": 53908013580288,
+              "name": "ce_readout_forward_recompute_backward"
+            },
+            {
+              "description": "Shared predictor once per union source position per pass; all three dense layers trainable.",
+              "maximum": 32464403693568,
+              "minimum": 32464403693568,
+              "name": "nextlat_predictor_forward_backward"
+            },
+            {
+              "description": "Teacher+student forward, both checkpoint replays, student-state VJP only; readout detached.",
+              "maximum": 33758442946560,
+              "minimum": 33758442946560,
+              "name": "kl_readout_forward_recompute_backward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "author_rt_dense_forward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "author_rt_attention_forward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 43430709297152,
+              "minimum": 43430709297152,
+              "name": "author_rt_dense_backward"
+            },
+            {
+              "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+              "maximum": 617669984256,
+              "minimum": 617669984256,
+              "name": "author_rt_attention_backward"
+            }
+          ],
+          "input_tokens_per_update": 32768,
+          "kv_only_writes": true,
+          "matrix_flops_maximum": 722177900937216,
+          "matrix_flops_minimum": 678900736720896,
+          "objective_positions_across_passes": {
+            "ce": 65408,
+            "kl": 32768,
+            "latent": 65408,
+            "predictor": 65408
+          },
+          "objective_positions_per_update": {
+            "ce": 32704,
+            "kl": 16384,
+            "latent": 32704,
+            "predictor": 32704
+          },
+          "ordinary_block_calls_per_microbatch": 30,
+          "parameter_counts": {
+            "backbone": 1176764416,
+            "deployable_inference": 1185153024,
+            "fusion": 8388608,
+            "nextlat_training_only": 82726912,
+            "training_architecture": 1267879936
+          },
+          "pass_token_work_per_update": 65536,
+          "rt_backward_memory": "materialized",
+          "rt_block_calls_per_microbatch": 2,
+          "rt_component_replacement": {
+            "calls": 2,
+            "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+            "per_call_author_ledger": {
+              "assumptions": [
+                "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+                "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+                "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+                "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+                "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+                "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+                "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+                "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+                "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+              ],
+              "backend": "author",
+              "backward_matrix_flops": 22024189640704,
+              "backward_memory": "materialized",
+              "batch_size": 64,
+              "block_calls": 1,
+              "block_token_work": 32768,
+              "forward_matrix_flops": 5016387584000,
+              "head_dim": 128,
+              "input_tokens": 32768,
+              "kv_only_writes": true,
+              "matrix_breakdown": {
+                "backward": {
+                  "attention": 308834992128,
+                  "dense": 21715354648576,
+                  "total": 22024189640704
+                },
+                "forward": {
+                  "attention": 68585259008,
+                  "dense": 4947802324992,
+                  "total": 5016387584000
+                },
+                "total": {
+                  "attention": 377420251136,
+                  "dense": 26663156973568,
+                  "total": 27040577224704
+                }
+              },
+              "mlp_intermediate_size": 8192,
+              "model_dim": 2048,
+              "native_arm": null,
+              "num_heads": 16,
+              "parameters_per_layer": 67108864,
+              "schema": "olmo-rt-block-resources-v1",
+              "sequence_length": 512,
+              "total_matrix_flops": 27040577224704,
+              "unique_parameters": 67108864
+            },
+            "removed_native_components": [
+              {
+                "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+                "maximum": 9895604649984,
+                "minimum": 9895604649984,
+                "name": "rt_dense_forward"
+              },
+              {
+                "description": "",
+                "maximum": 2748779069440,
+                "minimum": 2748779069440,
+                "name": "rt_batched_projection_reconstruction"
+              },
+              {
+                "description": "",
+                "maximum": 2199023255552,
+                "minimum": 2199023255552,
+                "name": "rt_local_writer_forward_and_input_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 14293651161088,
+                "minimum": 14293651161088,
+                "name": "rt_local_finish_forward_and_input_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 7146825580544,
+                "minimum": 7146825580544,
+                "name": "rt_finish_reconstruction"
+              },
+              {
+                "description": "",
+                "maximum": 5497558138880,
+                "minimum": 5497558138880,
+                "name": "rt_batched_projection_vjps"
+              },
+              {
+                "description": "Final attended tensor is detached: WO has weight VJP only here.",
+                "maximum": 13743895347200,
+                "minimum": 13743895347200,
+                "name": "rt_batched_finish_vjp"
+              },
+              {
+                "description": "",
+                "maximum": 137170518016,
+                "minimum": 137170518016,
+                "name": "rt_attention_dyadic_forward"
+              },
+              {
+                "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+                "maximum": 274877906944,
+                "minimum": 274877906944,
+                "name": "rt_attention_completed_reconstruction"
+              },
+              {
+                "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+                "maximum": 205755777024,
+                "minimum": 205755777024,
+                "name": "rt_attention_reverse_history"
+              },
+              {
+                "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+                "maximum": 274877906944,
+                "minimum": 274877906944,
+                "name": "rt_attention_final_query_vjp"
+              },
+              {
+                "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+                "maximum": 206024212480,
+                "minimum": 206024212480,
+                "name": "rt_attention_probability_recompute"
+              }
+            ]
+          },
+          "rt_implementation": "author",
+          "schema": "olmo-training-resource-estimate-v1"
+        },
+        "loss_work": {
+          "ce_targets": 32704,
+          "kl_triples": 16384,
+          "latent_pairs": 32704,
+          "predictor_positions": 32704
+        },
+        "observed_parameters": {
+          "deployable_inference_declared": 1185153024,
+          "executed_declared": 1267879936,
+          "gradient_participating": 1267879936,
+          "optimizer_owned": 1267879936,
+          "registered_unique": 1267879936,
+          "resident_parameter_bytes": 5071519744,
+          "trainable": 1267879936
+        },
+        "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls."
+      },
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "setup_memory": {
+        "allocated_gib": 19.055194854736328,
+        "peak_allocated_gib": 36.52897787094116,
+        "peak_reserved_gib": 66.390625,
+        "reserved_gib": 66.390625
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 19.055194854736328,
+        "peak_allocated_gib": 19.824726581573486,
+        "peak_reserved_gib": 66.390625,
+        "reserved_gib": 66.390625
+      }
+    }
+  ],
+  "checkpoint": {
+    "hash_basis": "Hub LFS SHA256",
+    "path": "native/model.safetensors",
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+  },
+  "comparison_groups": [
+    {
+      "author_gain_fraction": -0.0008255955821396821,
+      "batch_size": 64,
+      "case": "combined",
+      "comparison_signature": "c3b9434f497ebc8587f155c0e1cc09e8a5d877bc3336d44dadc1b701e149d390",
+      "fixture_scope": "Identical recorded initial/timed tensor hashes, auxiliary weight hashes, checkpoint and execution settings. No fixture data or weights retained.",
+      "length": 512,
+      "median_run_input_tokens_per_second": {
+        "author": 11186.526790381442,
+        "native": 11195.769968606175
+      },
+      "precision": "bf16_mixed",
+      "runs": [
+        "capacity-combined-native-b64",
+        "capacity-combined-author-b64"
+      ]
+    },
+    {
+      "author_gain_fraction": -0.00022869985190898667,
+      "batch_size": 64,
+      "case": "rt",
+      "comparison_signature": "3b8391867dbff53bd3e5389d0009106910cb1c4c4ea9fae3b9fe7791d2470b39",
+      "fixture_scope": "Identical recorded initial/timed tensor hashes, auxiliary weight hashes, checkpoint and execution settings. No fixture data or weights retained.",
+      "length": 512,
+      "median_run_input_tokens_per_second": {
+        "author": 22425.686216767223,
+        "native": 22430.81614109689
+      },
+      "precision": "bf16_mixed",
+      "runs": [
+        "capacity-rt-native-b64",
+        "capacity-rt-author-b64"
+      ]
+    }
+  ],
+  "created_utc": "2026-09-23T20:22:18.184630+00:00",
+  "physical_optimizer_updates": 44,
+  "plots": [
+    "throughput.png",
+    "throughput.pdf"
+  ],
+  "qualification": "Explicit finished selection, not an all-passed assertion. Numerical compatibility and operational gates are separate. Five-update full-LM benchmarks are not learning runs; K2 throughput counts input tokens only.",
+  "resource_cards": [
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+          "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+          "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+        ],
+        "backward_memory": "materialized",
+        "components": [
+          {
+            "description": "",
+            "maximum": 7696581394432,
+            "minimum": 7696581394432,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 15393162788864,
+            "minimum": 15393162788864,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 7696581394432,
+            "minimum": 5772436045824,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 240518168576,
+            "minimum": 120493965312,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 601295421440,
+            "minimum": 240987930624,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 240518168576,
+            "minimum": 120493965312,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 0,
+            "minimum": 0,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 3369250848768,
+            "minimum": 3369250848768,
+            "name": "ce_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 1236950581248,
+            "minimum": 1236950581248,
+            "name": "author_rt_dense_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 17146314752,
+            "minimum": 17146314752,
+            "name": "author_rt_attention_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 5428838662144,
+            "minimum": 5428838662144,
+            "name": "author_rt_dense_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 77208748032,
+            "minimum": 77208748032,
+            "name": "author_rt_attention_backward"
+          }
+        ],
+        "input_tokens_per_update": 4096,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 41998052491264,
+        "matrix_flops_minimum": 39473551245312,
+        "objective_positions_across_passes": {
+          "ce": 4088,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "objective_positions_per_update": {
+          "ce": 4088,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "ordinary_block_calls_per_microbatch": 14,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1176764416,
+          "fusion": 0,
+          "nextlat_training_only": 0,
+          "training_architecture": 1176764416
+        },
+        "pass_token_work_per_update": 4096,
+        "rt_backward_memory": "materialized",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_component_replacement": {
+          "calls": 2,
+          "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+          "per_call_author_ledger": {
+            "assumptions": [
+              "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+              "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+              "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+              "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+              "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+              "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+              "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+              "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+              "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+            ],
+            "backend": "author",
+            "backward_matrix_flops": 2753023705088,
+            "backward_memory": "materialized",
+            "batch_size": 8,
+            "block_calls": 1,
+            "block_token_work": 4096,
+            "forward_matrix_flops": 627048448000,
+            "head_dim": 128,
+            "input_tokens": 4096,
+            "kv_only_writes": true,
+            "matrix_breakdown": {
+              "backward": {
+                "attention": 38604374016,
+                "dense": 2714419331072,
+                "total": 2753023705088
+              },
+              "forward": {
+                "attention": 8573157376,
+                "dense": 618475290624,
+                "total": 627048448000
+              },
+              "total": {
+                "attention": 47177531392,
+                "dense": 3332894621696,
+                "total": 3380072153088
+              }
+            },
+            "mlp_intermediate_size": 8192,
+            "model_dim": 2048,
+            "native_arm": null,
+            "num_heads": 16,
+            "parameters_per_layer": 67108864,
+            "schema": "olmo-rt-block-resources-v1",
+            "sequence_length": 512,
+            "total_matrix_flops": 3380072153088,
+            "unique_parameters": 67108864
+          },
+          "removed_native_components": [
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 1236950581248,
+              "minimum": 1236950581248,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 343597383680,
+              "minimum": 343597383680,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 1786706395136,
+              "minimum": 1786706395136,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 893353197568,
+              "minimum": 893353197568,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 687194767360,
+              "minimum": 687194767360,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 1717986918400,
+              "minimum": 1717986918400,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 17146314752,
+              "minimum": 17146314752,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 34359738368,
+              "minimum": 34359738368,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 25719472128,
+              "minimum": 25719472128,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 34359738368,
+              "minimum": 34359738368,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 25753026560,
+              "minimum": 25753026560,
+              "name": "rt_attention_probability_recompute"
+            }
+          ]
+        },
+        "rt_implementation": "author",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 4088,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "predictor_positions": 0
+      },
+      "name": "verify-rt-author-b8",
+      "observed_parameters": {
+        "deployable_inference_declared": 1176764416,
+        "executed_declared": 1176764416,
+        "gradient_participating": 1176764416,
+        "optimizer_owned": null,
+        "registered_unique": 1185153024,
+        "resident_parameter_bytes": 4740612096,
+        "trainable": 1176764416
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "failed"
+    },
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+          "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+          "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+        ],
+        "backward_memory": "materialized",
+        "components": [
+          {
+            "description": "",
+            "maximum": 16492674416640,
+            "minimum": 16492674416640,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 32985348833280,
+            "minimum": 32985348833280,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 16492674416640,
+            "minimum": 12369505812480,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 515396075520,
+            "minimum": 258201354240,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 1288490188800,
+            "minimum": 516402708480,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 515396075520,
+            "minimum": 258201354240,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 205755777024,
+            "minimum": 205755777024,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 6738501697536,
+            "minimum": 6738501697536,
+            "name": "ce_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Shared predictor once per union source position per pass; all three dense layers trainable.",
+            "maximum": 4058050461696,
+            "minimum": 4058050461696,
+            "name": "nextlat_predictor_forward_backward"
+          },
+          {
+            "description": "Teacher+student forward, both checkpoint replays, student-state VJP only; readout detached.",
+            "maximum": 4219805368320,
+            "minimum": 4219805368320,
+            "name": "kl_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 1236950581248,
+            "minimum": 1236950581248,
+            "name": "author_rt_dense_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 17146314752,
+            "minimum": 17146314752,
+            "name": "author_rt_attention_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 5428838662144,
+            "minimum": 5428838662144,
+            "name": "author_rt_dense_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 77208748032,
+            "minimum": 77208748032,
+            "name": "author_rt_attention_backward"
+          }
+        ],
+        "input_tokens_per_update": 4096,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 90272237617152,
+        "matrix_flops_minimum": 84862592090112,
+        "objective_positions_across_passes": {
+          "ce": 8176,
+          "kl": 4096,
+          "latent": 8176,
+          "predictor": 8176
+        },
+        "objective_positions_per_update": {
+          "ce": 4088,
+          "kl": 2048,
+          "latent": 4088,
+          "predictor": 4088
+        },
+        "ordinary_block_calls_per_microbatch": 30,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1185153024,
+          "fusion": 8388608,
+          "nextlat_training_only": 82726912,
+          "training_architecture": 1267879936
+        },
+        "pass_token_work_per_update": 8192,
+        "rt_backward_memory": "materialized",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_component_replacement": {
+          "calls": 2,
+          "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+          "per_call_author_ledger": {
+            "assumptions": [
+              "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+              "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+              "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+              "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+              "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+              "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+              "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+              "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+              "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+            ],
+            "backend": "author",
+            "backward_matrix_flops": 2753023705088,
+            "backward_memory": "materialized",
+            "batch_size": 8,
+            "block_calls": 1,
+            "block_token_work": 4096,
+            "forward_matrix_flops": 627048448000,
+            "head_dim": 128,
+            "input_tokens": 4096,
+            "kv_only_writes": true,
+            "matrix_breakdown": {
+              "backward": {
+                "attention": 38604374016,
+                "dense": 2714419331072,
+                "total": 2753023705088
+              },
+              "forward": {
+                "attention": 8573157376,
+                "dense": 618475290624,
+                "total": 627048448000
+              },
+              "total": {
+                "attention": 47177531392,
+                "dense": 3332894621696,
+                "total": 3380072153088
+              }
+            },
+            "mlp_intermediate_size": 8192,
+            "model_dim": 2048,
+            "native_arm": null,
+            "num_heads": 16,
+            "parameters_per_layer": 67108864,
+            "schema": "olmo-rt-block-resources-v1",
+            "sequence_length": 512,
+            "total_matrix_flops": 3380072153088,
+            "unique_parameters": 67108864
+          },
+          "removed_native_components": [
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 1236950581248,
+              "minimum": 1236950581248,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 343597383680,
+              "minimum": 343597383680,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 1786706395136,
+              "minimum": 1786706395136,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 893353197568,
+              "minimum": 893353197568,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 687194767360,
+              "minimum": 687194767360,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 1717986918400,
+              "minimum": 1717986918400,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 17146314752,
+              "minimum": 17146314752,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 34359738368,
+              "minimum": 34359738368,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 25719472128,
+              "minimum": 25719472128,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 34359738368,
+              "minimum": 34359738368,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 25753026560,
+              "minimum": 25753026560,
+              "name": "rt_attention_probability_recompute"
+            }
+          ]
+        },
+        "rt_implementation": "author",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 4088,
+        "kl_triples": 2048,
+        "latent_pairs": 4088,
+        "predictor_positions": 4088
+      },
+      "name": "verify-combined-author-b8",
+      "observed_parameters": {
+        "deployable_inference_declared": 1185153024,
+        "executed_declared": 1267879936,
+        "gradient_participating": 1267879936,
+        "optimizer_owned": null,
+        "registered_unique": 1267879936,
+        "resident_parameter_bytes": 5071519744,
+        "trainable": 1267879936
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "failed"
+    },
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "Native temporary-QKV/permanent-KV dyadic RT/custom VJP; no cached prefix or padding.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."
+        ],
+        "backward_memory": "recompute",
+        "components": [
+          {
+            "description": "",
+            "maximum": 61572651155456,
+            "minimum": 61572651155456,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 123145302310912,
+            "minimum": 123145302310912,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 61572651155456,
+            "minimum": 46179488366592,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 1924145348608,
+            "minimum": 963951722496,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 4810363371520,
+            "minimum": 1927903444992,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 1924145348608,
+            "minimum": 963951722496,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+            "maximum": 9895604649984,
+            "minimum": 9895604649984,
+            "name": "rt_dense_forward"
+          },
+          {
+            "description": "",
+            "maximum": 2748779069440,
+            "minimum": 2748779069440,
+            "name": "rt_batched_projection_reconstruction"
+          },
+          {
+            "description": "",
+            "maximum": 2199023255552,
+            "minimum": 2199023255552,
+            "name": "rt_local_writer_forward_and_input_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 14293651161088,
+            "minimum": 14293651161088,
+            "name": "rt_local_finish_forward_and_input_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 7146825580544,
+            "minimum": 7146825580544,
+            "name": "rt_finish_reconstruction"
+          },
+          {
+            "description": "",
+            "maximum": 5497558138880,
+            "minimum": 5497558138880,
+            "name": "rt_batched_projection_vjps"
+          },
+          {
+            "description": "Final attended tensor is detached: WO has weight VJP only here.",
+            "maximum": 13743895347200,
+            "minimum": 13743895347200,
+            "name": "rt_batched_finish_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 137170518016,
+            "minimum": 137170518016,
+            "name": "rt_attention_dyadic_forward"
+          },
+          {
+            "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+            "maximum": 274877906944,
+            "minimum": 274877906944,
+            "name": "rt_attention_completed_reconstruction"
+          },
+          {
+            "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+            "maximum": 205755777024,
+            "minimum": 205755777024,
+            "name": "rt_attention_reverse_history"
+          },
+          {
+            "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+            "maximum": 274877906944,
+            "minimum": 274877906944,
+            "name": "rt_attention_final_query_vjp"
+          },
+          {
+            "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+            "maximum": 206024212480,
+            "minimum": 206024212480,
+            "name": "rt_attention_probability_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 0,
+            "minimum": 0,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 26954006790144,
+            "minimum": 26954006790144,
+            "name": "ce_readout_forward_recompute_backward"
+          }
+        ],
+        "input_tokens_per_update": 32768,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 338527309004800,
+        "matrix_flops_minimum": 318331299037184,
+        "objective_positions_across_passes": {
+          "ce": 32704,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "objective_positions_per_update": {
+          "ce": 32704,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "ordinary_block_calls_per_microbatch": 14,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1176764416,
+          "fusion": 0,
+          "nextlat_training_only": 0,
+          "training_architecture": 1176764416
+        },
+        "pass_token_work_per_update": 32768,
+        "rt_backward_memory": "recompute",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_implementation": "native",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 32704,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "predictor_positions": 0
+      },
+      "name": "capacity-rt-native-b64",
+      "observed_parameters": {
+        "deployable_inference_declared": 1176764416,
+        "executed_declared": 1176764416,
+        "gradient_participating": 1176764416,
+        "optimizer_owned": 1176764416,
+        "registered_unique": 1185153024,
+        "resident_parameter_bytes": 4740612096,
+        "trainable": 1176764416
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "passed"
+    },
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+          "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+          "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+        ],
+        "backward_memory": "materialized",
+        "components": [
+          {
+            "description": "",
+            "maximum": 61572651155456,
+            "minimum": 61572651155456,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 123145302310912,
+            "minimum": 123145302310912,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 61572651155456,
+            "minimum": 46179488366592,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 1924145348608,
+            "minimum": 963951722496,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 4810363371520,
+            "minimum": 1927903444992,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 1924145348608,
+            "minimum": 963951722496,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 0,
+            "minimum": 0,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 26954006790144,
+            "minimum": 26954006790144,
+            "name": "ce_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 9895604649984,
+            "minimum": 9895604649984,
+            "name": "author_rt_dense_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 137170518016,
+            "minimum": 137170518016,
+            "name": "author_rt_attention_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 43430709297152,
+            "minimum": 43430709297152,
+            "name": "author_rt_dense_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 617669984256,
+            "minimum": 617669984256,
+            "name": "author_rt_attention_backward"
+          }
+        ],
+        "input_tokens_per_update": 32768,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 335984419930112,
+        "matrix_flops_minimum": 315788409962496,
+        "objective_positions_across_passes": {
+          "ce": 32704,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "objective_positions_per_update": {
+          "ce": 32704,
+          "kl": 0,
+          "latent": 0,
+          "predictor": 0
+        },
+        "ordinary_block_calls_per_microbatch": 14,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1176764416,
+          "fusion": 0,
+          "nextlat_training_only": 0,
+          "training_architecture": 1176764416
+        },
+        "pass_token_work_per_update": 32768,
+        "rt_backward_memory": "materialized",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_component_replacement": {
+          "calls": 2,
+          "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+          "per_call_author_ledger": {
+            "assumptions": [
+              "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+              "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+              "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+              "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+              "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+              "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+              "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+              "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+              "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+            ],
+            "backend": "author",
+            "backward_matrix_flops": 22024189640704,
+            "backward_memory": "materialized",
+            "batch_size": 64,
+            "block_calls": 1,
+            "block_token_work": 32768,
+            "forward_matrix_flops": 5016387584000,
+            "head_dim": 128,
+            "input_tokens": 32768,
+            "kv_only_writes": true,
+            "matrix_breakdown": {
+              "backward": {
+                "attention": 308834992128,
+                "dense": 21715354648576,
+                "total": 22024189640704
+              },
+              "forward": {
+                "attention": 68585259008,
+                "dense": 4947802324992,
+                "total": 5016387584000
+              },
+              "total": {
+                "attention": 377420251136,
+                "dense": 26663156973568,
+                "total": 27040577224704
+              }
+            },
+            "mlp_intermediate_size": 8192,
+            "model_dim": 2048,
+            "native_arm": null,
+            "num_heads": 16,
+            "parameters_per_layer": 67108864,
+            "schema": "olmo-rt-block-resources-v1",
+            "sequence_length": 512,
+            "total_matrix_flops": 27040577224704,
+            "unique_parameters": 67108864
+          },
+          "removed_native_components": [
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 2748779069440,
+              "minimum": 2748779069440,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 2199023255552,
+              "minimum": 2199023255552,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 14293651161088,
+              "minimum": 14293651161088,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 7146825580544,
+              "minimum": 7146825580544,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 5497558138880,
+              "minimum": 5497558138880,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 13743895347200,
+              "minimum": 13743895347200,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 205755777024,
+              "minimum": 205755777024,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 206024212480,
+              "minimum": 206024212480,
+              "name": "rt_attention_probability_recompute"
+            }
+          ]
+        },
+        "rt_implementation": "author",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 32704,
+        "kl_triples": 0,
+        "latent_pairs": 0,
+        "predictor_positions": 0
+      },
+      "name": "capacity-rt-author-b64",
+      "observed_parameters": {
+        "deployable_inference_declared": 1176764416,
+        "executed_declared": 1176764416,
+        "gradient_participating": 1176764416,
+        "optimizer_owned": 1176764416,
+        "registered_unique": 1185153024,
+        "resident_parameter_bytes": 4740612096,
+        "trainable": 1176764416
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "passed"
+    },
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "Native temporary-QKV/permanent-KV dyadic RT/custom VJP; no cached prefix or padding.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."
+        ],
+        "backward_memory": "recompute",
+        "components": [
+          {
+            "description": "",
+            "maximum": 131941395333120,
+            "minimum": 131941395333120,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 263882790666240,
+            "minimum": 263882790666240,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 131941395333120,
+            "minimum": 98956046499840,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 4123168604160,
+            "minimum": 2065610833920,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 10307921510400,
+            "minimum": 4131221667840,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 4123168604160,
+            "minimum": 2065610833920,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+            "maximum": 9895604649984,
+            "minimum": 9895604649984,
+            "name": "rt_dense_forward"
+          },
+          {
+            "description": "",
+            "maximum": 2748779069440,
+            "minimum": 2748779069440,
+            "name": "rt_batched_projection_reconstruction"
+          },
+          {
+            "description": "",
+            "maximum": 2199023255552,
+            "minimum": 2199023255552,
+            "name": "rt_local_writer_forward_and_input_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 14293651161088,
+            "minimum": 14293651161088,
+            "name": "rt_local_finish_forward_and_input_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 7146825580544,
+            "minimum": 7146825580544,
+            "name": "rt_finish_reconstruction"
+          },
+          {
+            "description": "",
+            "maximum": 5497558138880,
+            "minimum": 5497558138880,
+            "name": "rt_batched_projection_vjps"
+          },
+          {
+            "description": "Final attended tensor is detached: WO has weight VJP only here.",
+            "maximum": 13743895347200,
+            "minimum": 13743895347200,
+            "name": "rt_batched_finish_vjp"
+          },
+          {
+            "description": "",
+            "maximum": 137170518016,
+            "minimum": 137170518016,
+            "name": "rt_attention_dyadic_forward"
+          },
+          {
+            "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+            "maximum": 274877906944,
+            "minimum": 274877906944,
+            "name": "rt_attention_completed_reconstruction"
+          },
+          {
+            "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+            "maximum": 205755777024,
+            "minimum": 205755777024,
+            "name": "rt_attention_reverse_history"
+          },
+          {
+            "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+            "maximum": 274877906944,
+            "minimum": 274877906944,
+            "name": "rt_attention_final_query_vjp"
+          },
+          {
+            "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+            "maximum": 206024212480,
+            "minimum": 206024212480,
+            "name": "rt_attention_probability_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 1646046216192,
+            "minimum": 1646046216192,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 53908013580288,
+            "minimum": 53908013580288,
+            "name": "ce_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Shared predictor once per union source position per pass; all three dense layers trainable.",
+            "maximum": 32464403693568,
+            "minimum": 32464403693568,
+            "name": "nextlat_predictor_forward_backward"
+          },
+          {
+            "description": "Teacher+student forward, both checkpoint replays, student-state VJP only; readout detached.",
+            "maximum": 33758442946560,
+            "minimum": 33758442946560,
+            "name": "kl_readout_forward_recompute_backward"
+          }
+        ],
+        "input_tokens_per_update": 32768,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 724720790011904,
+        "matrix_flops_minimum": 681443625795584,
+        "objective_positions_across_passes": {
+          "ce": 65408,
+          "kl": 32768,
+          "latent": 65408,
+          "predictor": 65408
+        },
+        "objective_positions_per_update": {
+          "ce": 32704,
+          "kl": 16384,
+          "latent": 32704,
+          "predictor": 32704
+        },
+        "ordinary_block_calls_per_microbatch": 30,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1185153024,
+          "fusion": 8388608,
+          "nextlat_training_only": 82726912,
+          "training_architecture": 1267879936
+        },
+        "pass_token_work_per_update": 65536,
+        "rt_backward_memory": "recompute",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_implementation": "native",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 32704,
+        "kl_triples": 16384,
+        "latent_pairs": 32704,
+        "predictor_positions": 32704
+      },
+      "name": "capacity-combined-native-b64",
+      "observed_parameters": {
+        "deployable_inference_declared": 1185153024,
+        "executed_declared": 1267879936,
+        "gradient_participating": 1267879936,
+        "optimizer_owned": 1267879936,
+        "registered_unique": 1267879936,
+        "resident_parameter_bytes": 5071519744,
+        "trainable": 1267879936
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "passed"
+    },
+    {
+      "analytic_matrix_work": {
+        "assumptions": [
+          "Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
+          "All active weights trainable; attached pass gradients and positive pass coefficients.",
+          "Loss masks change selected readout/predictor work, not dense backbone execution.",
+          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
+          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic.",
+          "Selected RT calls use the audited author-derived matrix schedule; other layers and objectives retain native accounting.",
+          "Repeated FBT calls multiply RT arithmetic, not unique parameter counts."
+        ],
+        "backward_memory": "materialized",
+        "components": [
+          {
+            "description": "",
+            "maximum": 131941395333120,
+            "minimum": 131941395333120,
+            "name": "ordinary_dense_forward"
+          },
+          {
+            "description": "Input and weight VJPs for each ordinary dense projection.",
+            "maximum": 263882790666240,
+            "minimum": 263882790666240,
+            "name": "ordinary_dense_backward"
+          },
+          {
+            "description": "Non-reentrant early stop can skip the final FF-down matmul; full replay is the upper estimate.",
+            "maximum": 131941395333120,
+            "minimum": 98956046499840,
+            "name": "ordinary_dense_checkpoint_recompute"
+          },
+          {
+            "description": "QK and PV, causal useful to full-square arithmetic.",
+            "maximum": 4123168604160,
+            "minimum": 2065610833920,
+            "name": "ordinary_attention_forward"
+          },
+          {
+            "description": "Four gradient matmuls; upper estimate also includes one Flash QK reconstruction.",
+            "maximum": 10307921510400,
+            "minimum": 4131221667840,
+            "name": "ordinary_attention_backward"
+          },
+          {
+            "description": "Replayed attention forward; separate from kernel-internal backward reconstruction.",
+            "maximum": 4123168604160,
+            "minimum": 2065610833920,
+            "name": "ordinary_attention_checkpoint_recompute"
+          },
+          {
+            "description": "Two D-by-D projections on every suffix position; attached input and weight VJPs.",
+            "maximum": 1646046216192,
+            "minimum": 1646046216192,
+            "name": "fusion_dense_forward_backward"
+          },
+          {
+            "description": "Forward + checkpoint replay + state VJP + tied-weight VJP.",
+            "maximum": 53908013580288,
+            "minimum": 53908013580288,
+            "name": "ce_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Shared predictor once per union source position per pass; all three dense layers trainable.",
+            "maximum": 32464403693568,
+            "minimum": 32464403693568,
+            "name": "nextlat_predictor_forward_backward"
+          },
+          {
+            "description": "Teacher+student forward, both checkpoint replays, student-state VJP only; readout detached.",
+            "maximum": 33758442946560,
+            "minimum": 33758442946560,
+            "name": "kl_readout_forward_recompute_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 9895604649984,
+            "minimum": 9895604649984,
+            "name": "author_rt_dense_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 137170518016,
+            "minimum": 137170518016,
+            "name": "author_rt_attention_forward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 43430709297152,
+            "minimum": 43430709297152,
+            "name": "author_rt_dense_backward"
+          },
+          {
+            "description": "Audited author block schedule multiplied by actual shared RT calls; no duplicated parameter ownership.",
+            "maximum": 617669984256,
+            "minimum": 617669984256,
+            "name": "author_rt_attention_backward"
+          }
+        ],
+        "input_tokens_per_update": 32768,
+        "kv_only_writes": true,
+        "matrix_flops_maximum": 722177900937216,
+        "matrix_flops_minimum": 678900736720896,
+        "objective_positions_across_passes": {
+          "ce": 65408,
+          "kl": 32768,
+          "latent": 65408,
+          "predictor": 65408
+        },
+        "objective_positions_per_update": {
+          "ce": 32704,
+          "kl": 16384,
+          "latent": 32704,
+          "predictor": 32704
+        },
+        "ordinary_block_calls_per_microbatch": 30,
+        "parameter_counts": {
+          "backbone": 1176764416,
+          "deployable_inference": 1185153024,
+          "fusion": 8388608,
+          "nextlat_training_only": 82726912,
+          "training_architecture": 1267879936
+        },
+        "pass_token_work_per_update": 65536,
+        "rt_backward_memory": "materialized",
+        "rt_block_calls_per_microbatch": 2,
+        "rt_component_replacement": {
+          "calls": 2,
+          "parameter_accounting": "Use outer model parameter_counts/observed inventory; inner one-block parameters are descriptive only.",
+          "per_call_author_ledger": {
+            "assumptions": [
+              "Multiply-add counts as two FLOPs; counts describe matrix arithmetic, not measured hardware instructions or time.",
+              "Every configured layer is a distinct RT block called once; no parameter sharing or extra passes.",
+              "All block weights and the stack input require gradients; full-strength recurrence, no prefix cache, no padding.",
+              "Native packed QKV and value/gate SwiGLU parameters; nonaffine LayerNorm contributes no parameters.",
+              "Backward includes the implementation's reconstruction, local VJPs and batched parameter VJPs.",
+              "Author reverse singleton tiles are pointwise and excluded; native singleton pairs remain in matrix products.",
+              "Excluded: embeddings, final normalization, vocabulary readout, CE/NextLat/FBT/objectives, optimizer/clipping, communication.",
+              "Excluded: normalization, RoPE, nonlinearities, softmax and all other pointwise arithmetic, casts, gather/scatter, launch overhead and hardware padding.",
+              "Compiled fusion or chunking can change runtime and workspace without changing these logical matrix counts."
+            ],
+            "backend": "author",
+            "backward_matrix_flops": 22024189640704,
+            "backward_memory": "materialized",
+            "batch_size": 64,
+            "block_calls": 1,
+            "block_token_work": 32768,
+            "forward_matrix_flops": 5016387584000,
+            "head_dim": 128,
+            "input_tokens": 32768,
+            "kv_only_writes": true,
+            "matrix_breakdown": {
+              "backward": {
+                "attention": 308834992128,
+                "dense": 21715354648576,
+                "total": 22024189640704
+              },
+              "forward": {
+                "attention": 68585259008,
+                "dense": 4947802324992,
+                "total": 5016387584000
+              },
+              "total": {
+                "attention": 377420251136,
+                "dense": 26663156973568,
+                "total": 27040577224704
+              }
+            },
+            "mlp_intermediate_size": 8192,
+            "model_dim": 2048,
+            "native_arm": null,
+            "num_heads": 16,
+            "parameters_per_layer": 67108864,
+            "schema": "olmo-rt-block-resources-v1",
+            "sequence_length": 512,
+            "total_matrix_flops": 27040577224704,
+            "unique_parameters": 67108864
+          },
+          "removed_native_components": [
+            {
+              "description": "Temporary QKV + permanent KV-only + output projection/SwiGLU.",
+              "maximum": 9895604649984,
+              "minimum": 9895604649984,
+              "name": "rt_dense_forward"
+            },
+            {
+              "description": "",
+              "maximum": 2748779069440,
+              "minimum": 2748779069440,
+              "name": "rt_batched_projection_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 2199023255552,
+              "minimum": 2199023255552,
+              "name": "rt_local_writer_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 14293651161088,
+              "minimum": 14293651161088,
+              "name": "rt_local_finish_forward_and_input_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 7146825580544,
+              "minimum": 7146825580544,
+              "name": "rt_finish_reconstruction"
+            },
+            {
+              "description": "",
+              "maximum": 5497558138880,
+              "minimum": 5497558138880,
+              "name": "rt_batched_projection_vjps"
+            },
+            {
+              "description": "Final attended tensor is detached: WO has weight VJP only here.",
+              "maximum": 13743895347200,
+              "minimum": 13743895347200,
+              "name": "rt_batched_finish_vjp"
+            },
+            {
+              "description": "",
+              "maximum": 137170518016,
+              "minimum": 137170518016,
+              "name": "rt_attention_dyadic_forward"
+            },
+            {
+              "description": "Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_completed_reconstruction"
+            },
+            {
+              "description": "dV, dP and dK over each strict-causal dyadic pair exactly once.",
+              "maximum": 205755777024,
+              "minimum": 205755777024,
+              "name": "rt_attention_reverse_history"
+            },
+            {
+              "description": "Full-square dP and dQ; temporary diagonal work is pointwise and excluded.",
+              "maximum": 274877906944,
+              "minimum": 274877906944,
+              "name": "rt_attention_final_query_vjp"
+            },
+            {
+              "description": "Additional QK in reverse historical tiles and final query VJP; no cached prefix.",
+              "maximum": 206024212480,
+              "minimum": 206024212480,
+              "name": "rt_attention_probability_recompute"
+            }
+          ]
+        },
+        "rt_implementation": "author",
+        "schema": "olmo-training-resource-estimate-v1"
+      },
+      "loss_work": {
+        "ce_targets": 32704,
+        "kl_triples": 16384,
+        "latent_pairs": 32704,
+        "predictor_positions": 32704
+      },
+      "name": "capacity-combined-author-b64",
+      "observed_parameters": {
+        "deployable_inference_declared": 1185153024,
+        "executed_declared": 1267879936,
+        "gradient_participating": 1267879936,
+        "optimizer_owned": 1267879936,
+        "registered_unique": 1267879936,
+        "resident_parameter_bytes": 5071519744,
+        "trainable": 1267879936
+      },
+      "scope": "Audited matrix arithmetic estimate, not measured hardware FLOPs; unique parameter ownership counted separately from repeated FBT calls.",
+      "status": "passed"
+    }
+  ],
+  "runs": [
+    {
+      "backend": "author",
+      "case": "rt",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 2,
+            "autograd_cache_hit": 10,
+            "autograd_cache_miss": 11,
+            "autograd_cache_saved": 11,
+            "ok": 23,
+            "total": 23
+          },
+          "aten_mm_info": {
+            "aten.bmm_16*s33_128_s17_s17": 1,
+            "aten.bmm_16*s35_s34_s34_128": 1,
+            "aten.bmm_16_128_8_8": 1,
+            "aten.bmm_16_1_1_128": 1,
+            "aten.bmm_16_2_128_2": 1,
+            "aten.bmm_16_2_2_128": 1,
+            "aten.bmm_16_4_128_4": 1,
+            "aten.bmm_16_4_4_128": 1,
+            "aten.bmm_16_8_8_128": 1,
+            "aten.mm_16384_2048_8": 1,
+            "aten.mm_16384_2048_s11*s27": 1,
+            "aten.mm_2048_2048_8": 2,
+            "aten.mm_2048_2048_s11*s27": 1,
+            "aten.mm_2048_8192_8": 1,
+            "aten.mm_2048_8192_s11*s27": 1,
+            "aten.mm_4096_2048_2048": 1,
+            "aten.mm_4096_2048_8": 1,
+            "aten.mm_4096_4096_2048": 1,
+            "aten.mm_8_16384_2048": 1,
+            "aten.mm_8_2048_16384": 1,
+            "aten.mm_8_2048_2048": 4,
+            "aten.mm_8_2048_4096": 1,
+            "aten.mm_8_2048_8192": 1,
+            "aten.mm_8_4096_2048": 2,
+            "aten.mm_8_8192_2048": 1,
+            "aten.mm_s11*s27_16384_2048": 1,
+            "aten.mm_s11*s27_2048_16384": 1,
+            "aten.mm_s11*s27_2048_2048": 1,
+            "aten.mm_s11*s27_2048_8192": 1,
+            "aten.mm_s11*s27_8192_2048": 1
+          },
+          "frames": {
+            "ok": 17,
+            "total": 17
+          },
+          "graph_break": {},
+          "inductor": {
+            "async_compile_cache_hit": 104,
+            "async_compile_cache_miss": 204,
+            "benchmarking.InductorBenchmarker.benchmark": 46,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 46,
+            "extern_calls": 60,
+            "fxgraph_cache_hit": 12,
+            "fxgraph_cache_miss": 15,
+            "pattern_matcher_count": 138,
+            "pattern_matcher_nodes": 165,
+            "removed_pointless_view_pair": 4,
+            "triton_bundler_load_static_autotuner": 40,
+            "triton_bundler_save_kernel": 728,
+            "triton_bundler_save_static_autotuner": 15
+          },
+          "stats": {
+            "calls_captured": 387,
+            "unique_graphs": 23
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": true
+      },
+      "compiler_on_exit": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 2,
+            "autograd_cache_hit": 10,
+            "autograd_cache_miss": 11,
+            "autograd_cache_saved": 11,
+            "ok": 23,
+            "total": 23
+          },
+          "aten_mm_info": {
+            "aten.bmm_16*s33_128_s17_s17": 1,
+            "aten.bmm_16*s35_s34_s34_128": 1,
+            "aten.bmm_16_128_8_8": 1,
+            "aten.bmm_16_1_1_128": 1,
+            "aten.bmm_16_2_128_2": 1,
+            "aten.bmm_16_2_2_128": 1,
+            "aten.bmm_16_4_128_4": 1,
+            "aten.bmm_16_4_4_128": 1,
+            "aten.bmm_16_8_8_128": 1,
+            "aten.mm_16384_2048_8": 1,
+            "aten.mm_16384_2048_s11*s27": 1,
+            "aten.mm_2048_2048_8": 2,
+            "aten.mm_2048_2048_s11*s27": 1,
+            "aten.mm_2048_8192_8": 1,
+            "aten.mm_2048_8192_s11*s27": 1,
+            "aten.mm_4096_2048_2048": 1,
+            "aten.mm_4096_2048_8": 1,
+            "aten.mm_4096_4096_2048": 1,
+            "aten.mm_8_16384_2048": 1,
+            "aten.mm_8_2048_16384": 1,
+            "aten.mm_8_2048_2048": 4,
+            "aten.mm_8_2048_4096": 1,
+            "aten.mm_8_2048_8192": 1,
+            "aten.mm_8_4096_2048": 2,
+            "aten.mm_8_8192_2048": 1,
+            "aten.mm_s11*s27_16384_2048": 1,
+            "aten.mm_s11*s27_2048_16384": 1,
+            "aten.mm_s11*s27_2048_2048": 1,
+            "aten.mm_s11*s27_2048_8192": 1,
+            "aten.mm_s11*s27_8192_2048": 1
+          },
+          "frames": {
+            "ok": 17,
+            "total": 17
+          },
+          "graph_break": {},
+          "inductor": {
+            "async_compile_cache_hit": 104,
+            "async_compile_cache_miss": 204,
+            "benchmarking.InductorBenchmarker.benchmark": 46,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 46,
+            "extern_calls": 60,
+            "fxgraph_cache_hit": 12,
+            "fxgraph_cache_miss": 15,
+            "pattern_matcher_count": 138,
+            "pattern_matcher_nodes": 165,
+            "removed_pointless_view_pair": 4,
+            "triton_bundler_load_static_autotuner": 40,
+            "triton_bundler_save_kernel": 728,
+            "triton_bundler_save_static_autotuner": 15
+          },
+          "stats": {
+            "calls_captured": 387,
+            "unique_graphs": 23
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": false
+      },
+      "current_source_differences": {},
+      "error": {
+        "message": "Retained integration screen failures: author_vs_native_bf16_mixed",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/cdrm-w-latent/scripts/olmo_rt_author_integration.py\", line 382, in main\n    raise AssertionError(\"Retained integration screen failures: \" + \", \".join(failed))\nAssertionError: Retained integration screen failures: author_vs_native_bf16_mixed\n",
+        "type": "AssertionError"
+      },
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": false,
+          "checks": [
+            {
+              "all_bitwise_equal": false,
+              "budgets": {
+                "global_gradient_relative_l2": 0.015625,
+                "loss_relative_l2": 1e-05,
+                "output_max_relative": 0.0625,
+                "output_relative_l2": 0.015625,
+                "tensor_gradient_max_relative": 0.0625,
+                "tensor_gradient_relative_l2": 0.03125
+              },
+              "counts_equal": true,
+              "finite": true,
+              "gate": true,
+              "global_gradient_relative_l2": 0.31245753303047924,
+              "gradients": {
+                "all_bitwise_equal": false,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": 0.9314496635731311,
+                  "name": "backbone.backbone.transformer.wte.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.wte.weight",
+                  "relative_l2": 0.767565117488121
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": false,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": 0.001494390345756087,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.001494390345756087
+                }
+              },
+              "name": "author_vs_native_bf16_mixed",
+              "outputs": {
+                "all_bitwise_equal": false,
+                "tensor_count": 1,
+                "worst_max_relative": {
+                  "max_relative": 0.06255111794569874,
+                  "name": "pass0"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0",
+                  "relative_l2": 0.008859867285613748
+                }
+              },
+              "ownership_matches": true,
+              "parameter_identity_preserved": true,
+              "passed": false,
+              "scope": "Same checkpoint/fusion/predictor weights, losses and examples; pre-clipping raw gradients. Native both/recompute versus author_legacy/materialized."
+            }
+          ],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 1
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "batch_size": 1,
+              "flash_backward_observed": true,
+              "flash_forward_observed": true,
+              "gate": true,
+              "length": 8,
+              "name": "ordinary_flash_dispatch",
+              "passed": true,
+              "scope": "Separate CPU operator observer around real BF16 mixed native stack backward; author selected layers0/15, unchanged ordinary Flash layers/bootstrap. Never timed."
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "metrics_exact": true,
+              "model_optimizer_scheduler_counters_exact": true,
+              "name": "complete_adamw_update_parity",
+              "passed": true,
+              "physical_optimizer_updates": 6,
+              "updates_per_arm": 3,
+              "weights_changed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "name": "verify-rt-author-b8",
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-rt-author-integration/verify-rt-author-b8/report.json",
+      "report_sha256": "2ff57b463e7c2378c08a80757af2314cc9b2465a22645b7ae3b893b24bf43352",
+      "runtime_commit": "2c38d649022a398f809670eec762910d99e0f2d7",
+      "source_pairs_checked": 47,
+      "stage": "verify",
+      "status": "failed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/qnkc3ove"
+    },
+    {
+      "backend": "author",
+      "case": "combined",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 2,
+            "autograd_cache_hit": 21,
+            "ok": 23,
+            "total": 23
+          },
+          "frames": {
+            "ok": 17,
+            "total": 17
+          },
+          "inductor": {
+            "async_compile_cache_hit": 164,
+            "async_compile_cache_miss": 264,
+            "extern_calls": 60,
+            "fxgraph_cache_hit": 27,
+            "pattern_matcher_count": 33,
+            "pattern_matcher_nodes": 46,
+            "triton_bundler_load_static_autotuner": 100
+          },
+          "stats": {
+            "calls_captured": 387,
+            "unique_graphs": 23
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": true
+      },
+      "compiler_on_exit": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 2,
+            "autograd_cache_hit": 21,
+            "ok": 23,
+            "total": 23
+          },
+          "frames": {
+            "ok": 17,
+            "total": 17
+          },
+          "inductor": {
+            "async_compile_cache_hit": 164,
+            "async_compile_cache_miss": 264,
+            "extern_calls": 60,
+            "fxgraph_cache_hit": 27,
+            "pattern_matcher_count": 33,
+            "pattern_matcher_nodes": 46,
+            "triton_bundler_load_static_autotuner": 100
+          },
+          "stats": {
+            "calls_captured": 387,
+            "unique_graphs": 23
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": false
+      },
+      "current_source_differences": {},
+      "error": {
+        "message": "Retained integration screen failures: author_vs_native_bf16_mixed",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/cdrm-w-latent/scripts/olmo_rt_author_integration.py\", line 382, in main\n    raise AssertionError(\"Retained integration screen failures: \" + \", \".join(failed))\nAssertionError: Retained integration screen failures: author_vs_native_bf16_mixed\n",
+        "type": "AssertionError"
+      },
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": false,
+          "checks": [
+            {
+              "all_bitwise_equal": false,
+              "budgets": {
+                "global_gradient_relative_l2": 0.015625,
+                "loss_relative_l2": 1e-05,
+                "output_max_relative": 0.0625,
+                "output_relative_l2": 0.015625,
+                "tensor_gradient_max_relative": 0.0625,
+                "tensor_gradient_relative_l2": 0.03125
+              },
+              "counts_equal": true,
+              "finite": true,
+              "gate": true,
+              "global_gradient_relative_l2": 0.16260620331115727,
+              "gradients": {
+                "all_bitwise_equal": false,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": 0.45218767198679144,
+                  "name": "backbone.backbone.transformer.blocks.14.ff_out.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.1.att_proj.weight",
+                  "relative_l2": 0.23250680089313322
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": false,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": 0.003095498230993113,
+                  "name": "pass1/kl"
+                },
+                "worst_relative_l2": {
+                  "name": "pass1/kl",
+                  "relative_l2": 0.003095498230993113
+                }
+              },
+              "name": "author_vs_native_bf16_mixed",
+              "outputs": {
+                "all_bitwise_equal": false,
+                "tensor_count": 2,
+                "worst_max_relative": {
+                  "max_relative": 0.06670913657490796,
+                  "name": "pass1"
+                },
+                "worst_relative_l2": {
+                  "name": "pass1",
+                  "relative_l2": 0.03166053590327421
+                }
+              },
+              "ownership_matches": true,
+              "parameter_identity_preserved": true,
+              "passed": false,
+              "scope": "Same checkpoint/fusion/predictor weights, losses and examples; pre-clipping raw gradients. Native both/recompute versus author_legacy/materialized."
+            }
+          ],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 1
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "batch_size": 1,
+              "flash_backward_observed": true,
+              "flash_forward_observed": true,
+              "gate": true,
+              "length": 8,
+              "name": "ordinary_flash_dispatch",
+              "passed": true,
+              "scope": "Separate CPU operator observer around real BF16 mixed native stack backward; author selected layers0/15, unchanged ordinary Flash layers/bootstrap. Never timed."
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "metrics_exact": true,
+              "model_optimizer_scheduler_counters_exact": true,
+              "name": "complete_adamw_update_parity",
+              "passed": true,
+              "physical_optimizer_updates": 6,
+              "updates_per_arm": 3,
+              "weights_changed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "candidate_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 5,
+          "total": 5
+        }
+      },
+      "name": "verify-combined-author-b8",
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-rt-author-integration/verify-combined-author-b8/report.json",
+      "report_sha256": "1784997af1e6ef58d83dc804cc1f98affdc3c6dda2c7b52996876f30bf12b436",
+      "runtime_commit": "2c38d649022a398f809670eec762910d99e0f2d7",
+      "source_pairs_checked": 47,
+      "stage": "verify",
+      "status": "failed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ylqrdez0"
+    },
+    {
+      "backend": "native",
+      "case": "rt",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {},
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": false
+      },
+      "compiler_on_exit": null,
+      "current_source_differences": {},
+      "error": null,
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "finite_participating_gradients": true,
+              "gate": true,
+              "name": "finite_complete_updates",
+              "passed": true,
+              "trainable_weight_changed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "name": "capacity-rt-native-b64",
+      "physical_optimizer_updates": 8,
+      "report_path": ".runtime/olmo-rt-author-integration/capacity-rt-native-b64/report.json",
+      "report_sha256": "c172334ba2ea084ecfbe9f9f7848f6844c4cb4eda5d96b35e146b97ab639d80f",
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "source_pairs_checked": 47,
+      "stage": "capacity",
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/f3dc43i2"
+    },
+    {
+      "backend": "author",
+      "case": "rt",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 1,
+            "autograd_cache_miss": 13,
+            "autograd_cache_saved": 13,
+            "ok": 14,
+            "total": 14
+          },
+          "aten_mm_info": {
+            "aten.bmm_1024_128_128_128": 2,
+            "aten.bmm_1024_128_512_512": 1,
+            "aten.bmm_1024_16_128_16": 1,
+            "aten.bmm_1024_16_16_128": 1,
+            "aten.bmm_1024_1_1_128": 1,
+            "aten.bmm_1024_256_128_256": 1,
+            "aten.bmm_1024_256_256_128": 1,
+            "aten.bmm_1024_2_128_2": 1,
+            "aten.bmm_1024_2_2_128": 1,
+            "aten.bmm_1024_32_128_32": 1,
+            "aten.bmm_1024_32_32_128": 1,
+            "aten.bmm_1024_4_128_4": 1,
+            "aten.bmm_1024_4_4_128": 1,
+            "aten.bmm_1024_512_512_128": 1,
+            "aten.bmm_1024_64_128_64": 1,
+            "aten.bmm_1024_64_64_128": 1,
+            "aten.bmm_1024_8_128_8": 1,
+            "aten.bmm_1024_8_8_128": 1,
+            "aten.mm_16384_2048_32768": 1,
+            "aten.mm_2048_2048_32768": 2,
+            "aten.mm_2048_8192_32768": 1,
+            "aten.mm_32768_16384_2048": 1,
+            "aten.mm_32768_2048_16384": 1,
+            "aten.mm_32768_2048_2048": 4,
+            "aten.mm_32768_2048_4096": 1,
+            "aten.mm_32768_2048_8192": 1,
+            "aten.mm_32768_4096_2048": 2,
+            "aten.mm_32768_8192_2048": 1,
+            "aten.mm_4096_2048_32768": 1
+          },
+          "frames": {
+            "ok": 11,
+            "total": 11
+          },
+          "graph_break": {},
+          "inductor": {
+            "async_compile_cache_hit": 48,
+            "async_compile_cache_miss": 106,
+            "benchmarking.InductorBenchmarker.benchmark": 92,
+            "benchmarking.InductorBenchmarker.benchmark_gpu": 92,
+            "extern_calls": 35,
+            "fxgraph_cache_miss": 16,
+            "pattern_matcher_count": 128,
+            "pattern_matcher_nodes": 141,
+            "removed_pointless_view_pair": 2,
+            "triton_bundler_save_kernel": 952,
+            "triton_bundler_save_static_autotuner": 16
+          },
+          "stats": {
+            "calls_captured": 250,
+            "unique_graphs": 14
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": true
+      },
+      "compiler_on_exit": null,
+      "current_source_differences": {},
+      "error": null,
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 65,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 3,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "finite_participating_gradients": true,
+              "gate": true,
+              "name": "finite_complete_updates",
+              "passed": true,
+              "trainable_weight_changed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "name": "capacity-rt-author-b64",
+      "physical_optimizer_updates": 8,
+      "report_path": ".runtime/olmo-rt-author-integration/capacity-rt-author-b64/report.json",
+      "report_sha256": "4f5461a5a8e6ad145f199b0500b76aeba745a56ca5084c9d4d2093b77241fa2b",
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "source_pairs_checked": 47,
+      "stage": "capacity",
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/nur65ua9"
+    },
+    {
+      "backend": "native",
+      "case": "combined",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {},
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": false
+      },
+      "compiler_on_exit": null,
+      "current_source_differences": {},
+      "error": null,
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "finite_participating_gradients": true,
+              "gate": true,
+              "name": "finite_complete_updates",
+              "passed": true,
+              "trainable_weight_changed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "name": "capacity-combined-native-b64",
+      "physical_optimizer_updates": 8,
+      "report_path": ".runtime/olmo-rt-author-integration/capacity-combined-native-b64/report.json",
+      "report_sha256": "6f1e2b10f432eaeec9230f8c656f4caf67890d7bad7b330d21f81298e870f7bd",
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "source_pairs_checked": 47,
+      "stage": "capacity",
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/5s8ygrzr"
+    },
+    {
+      "backend": "author",
+      "case": "combined",
+      "compiler_final": {
+        "accumulated_recompile_limit": 256,
+        "counters": {
+          "aot_autograd": {
+            "autograd_cache_bypass": 1,
+            "autograd_cache_hit": 13,
+            "ok": 14,
+            "total": 14
+          },
+          "frames": {
+            "ok": 11,
+            "total": 11
+          },
+          "inductor": {
+            "async_compile_cache_hit": 106,
+            "async_compile_cache_miss": 164,
+            "extern_calls": 35,
+            "fxgraph_cache_hit": 16,
+            "pattern_matcher_count": 16,
+            "pattern_matcher_nodes": 22,
+            "triton_bundler_load_static_autotuner": 58
+          },
+          "stats": {
+            "calls_captured": 250,
+            "unique_graphs": 14
+          }
+        },
+        "fail_on_recompile_limit_hit": true,
+        "recompile_limit": 64,
+        "required": true
+      },
+      "compiler_on_exit": null,
+      "current_source_differences": {},
+      "error": null,
+      "gate_groups": {
+        "compatibility": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "diagnostic": {
+          "all_observed_passed": null,
+          "checks": [],
+          "complete_and_passed": false,
+          "missing": [],
+          "passed": 0,
+          "total": 0
+        },
+        "operational": {
+          "all_observed_passed": true,
+          "checks": [
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_initial_graph",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_tokens_overwrite",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "all_bitwise_equal": true,
+              "gate": true,
+              "gradients": {
+                "all_bitwise_equal": true,
+                "tensor_count": 71,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+                },
+                "worst_relative_l2": {
+                  "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+                  "relative_l2": 0.0
+                }
+              },
+              "losses": {
+                "all_bitwise_equal": true,
+                "tensor_count": 6,
+                "worst_max_relative": {
+                  "max_relative": null,
+                  "name": "pass0/ce"
+                },
+                "worst_relative_l2": {
+                  "name": "pass0/ce",
+                  "relative_l2": 0.0
+                }
+              },
+              "name": "capacity_changed_weights",
+              "ownership_matches": true,
+              "passed": true
+            },
+            {
+              "finite_participating_gradients": true,
+              "gate": true,
+              "name": "finite_complete_updates",
+              "passed": true,
+              "trainable_weight_changed": true
+            }
+          ],
+          "complete_and_passed": true,
+          "missing": [],
+          "passed": 4,
+          "total": 4
+        }
+      },
+      "name": "capacity-combined-author-b64",
+      "physical_optimizer_updates": 8,
+      "report_path": ".runtime/olmo-rt-author-integration/capacity-combined-author-b64/report.json",
+      "report_sha256": "5b344c587f8d55b261341b46d61e461d89f96a819ad16326cf315580359874a2",
+      "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+      "source_pairs_checked": 47,
+      "stage": "capacity",
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/yerxju46"
+    }
+  ],
+  "runtime_commit": "2c38d649022a398f809670eec762910d99e0f2d7",
+  "schema": "olmo-rt-author-integration-summary-v1",
+  "source_pairs_checked": 282,
+  "status": "completed",
+  "statuses": {
+    "failed": 2,
+    "passed": 4
+  }
+}

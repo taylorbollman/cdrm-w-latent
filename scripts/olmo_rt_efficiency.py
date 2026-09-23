@@ -176,7 +176,7 @@ def track_optimizer_steps(optimizer, report):
     return optimizer.register_step_post_hook(completed)
 
 
-def complete_update_parity(plan, tokenizer, case, *, report, persist):
+def complete_update_parity(plan, tokenizer, case, *, report, persist, batch_factory=changed_batch):
     """Three eager and three graph updates, retaining per-update progress."""
     model = plan.model
     initial = {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
@@ -200,7 +200,7 @@ def complete_update_parity(plan, tokenizer, case, *, report, persist):
             counters = TrainingCounters()
             records = []
             for step in range(3):
-                record = plan.optimizer_step(optimizer, changed_batch(tokenizer, case, step + 5),
+                record = plan.optimizer_step(optimizer, batch_factory(tokenizer, case, step + 5),
                     replay=replay, scheduler=scheduler, counters=counters)
                 records.append(record)
                 report["update_parity_progress"].append({"replay": replay, "record": record})
