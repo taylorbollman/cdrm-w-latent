@@ -20,6 +20,8 @@ No model/kernel, native checkpoint, Q/K, RoPE or loss-math change. RT uses
 
 F4 durable execution record:
 
+- Review: [PR20](https://github.com/taylorbollman/cdrm-w-latent/pull/20).
+  Final reports `7be359c`; verified retention `a9222ab`.
 - Branch `feat/olmo1b-f4-resource-cards`, base `deecfe6`. Main runtime/protocol
   `397885b`; diagnostic `c8f2311` then harness-only correction `949731b`;
   reporting/retention `e4dda74` plus final presentation. Frozen main sources
