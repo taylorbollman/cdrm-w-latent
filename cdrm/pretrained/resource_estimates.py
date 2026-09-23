@@ -70,6 +70,7 @@ class TrainingResourceEstimate:
     parameter_counts: dict[str, int]
     assumptions: tuple[str, ...]
     backward_memory: str = "materialized"
+    kv_only_writes: bool = False
 
     @property
     def matrix_flops_minimum(self) -> int:
@@ -149,7 +150,8 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
                                 loss_work: LossWork | None = None,
                                 ordinary_checkpointing: bool = False,
                                 accumulation_steps: int = 1,
-                                backward_memory: str = "materialized") -> TrainingResourceEstimate:
+                                backward_memory: str = "materialized",
+                                kv_only_writes: bool = False) -> TrainingResourceEstimate:
     """Estimate dense training matrix arithmetic, with explicit recomputation.
 
     Scope: all backbone/active branch weights trainable, attached cross-pass
@@ -160,12 +162,16 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
     on hardware FLOPs: implementation padding and instruction details are omitted.
     ``backward_memory`` selects RT probability storage/recomputation accounting;
     it does not change parameter counts or ordinary-layer execution.
+    ``kv_only_writes`` omits the unused permanent-memory Q projection, including
+    its backward reconstruction and VJPs, without changing packed parameters.
     """
     for name, value in (("batch_size", batch_size), ("sequence_length", sequence_length),
                         ("accumulation_steps", accumulation_steps)):
         _integer(name, value, minimum=1)
     if type(ordinary_checkpointing) is not bool:
         raise ValueError("ordinary_checkpointing must be boolean")
+    if type(kv_only_writes) is not bool:
+        raise ValueError("kv_only_writes must be boolean")
     if backward_memory not in ("materialized", "recompute"):
         raise ValueError("backward_memory must be materialized or recompute")
     if not isinstance(mode, FBTMode):
@@ -220,14 +226,18 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
         add("ordinary_attention_checkpoint_recompute", ordinary_attention*causal_pairs,
             ordinary_attention*square_pairs, "Replayed attention forward; separate from kernel-internal backward reconstruction.")
 
-    # Current RT calls full fused QKV even where the Q result is discarded.
-    add("rt_dense_forward", rt_calls*(14*n*d*d + 6*n*d*m),
-        description="Temporary QKV + permanent full QKV + output projection/SwiGLU.")
-    add("rt_batched_projection_reconstruction", rt_calls*12*n*d*d)
-    add("rt_local_writer_forward_and_input_vjp", rt_calls*12*n*d*d)
+    # Temporary projections always produce QKV. Permanent writers optionally
+    # slice K/V rows from the same packed weight. The old full-QKV path also
+    # multiplies zero Q cotangents in source/weight VJPs, so count those savings.
+    writer_projection = 4 if kv_only_writes else 6
+    add("rt_dense_forward", rt_calls*((8 + writer_projection)*n*d*d + 6*n*d*m),
+        description=("Temporary QKV + permanent KV-only + output projection/SwiGLU."
+            if kv_only_writes else "Temporary QKV + permanent full QKV + output projection/SwiGLU."))
+    add("rt_batched_projection_reconstruction", rt_calls*(6 + writer_projection)*n*d*d)
+    add("rt_local_writer_forward_and_input_vjp", rt_calls*2*writer_projection*n*d*d)
     add("rt_local_finish_forward_and_input_vjp", rt_calls*(4*n*d*d + 12*n*d*m))
     add("rt_finish_reconstruction", rt_calls*(2*n*d*d + 6*n*d*m))
-    add("rt_batched_projection_vjps", rt_calls*24*n*d*d)
+    add("rt_batched_projection_vjps", rt_calls*2*(6 + writer_projection)*n*d*d)
     add("rt_batched_finish_vjp", rt_calls*(2*n*d*d + 12*n*d*m),
         description="Final attended tensor is detached: WO has weight VJP only here.")
     history = t*(t-1)//2
@@ -260,9 +270,10 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
         {k: v*passes*accumulation_steps for k, v in counts.items()},
         ordinary_calls, rt_calls, parameters,
         ("Multiply-add counts as two FLOPs; estimates count matrix arithmetic, not elapsed time.",
-         "Current native full-QKV dyadic RT/custom VJP; no cached prefix or padding.",
+         ("Native temporary-QKV/permanent-KV dyadic RT/custom VJP; no cached prefix or padding."
+          if kv_only_writes else "Current native full-QKV dyadic RT/custom VJP; no cached prefix or padding."),
          "All active weights trainable; attached pass gradients and positive pass coefficients.",
          "Loss masks change selected readout/predictor work, not dense backbone execution.",
          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
          "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."),
-        backward_memory=backward_memory)
+        backward_memory=backward_memory, kv_only_writes=kv_only_writes)

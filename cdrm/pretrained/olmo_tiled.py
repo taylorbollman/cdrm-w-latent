@@ -21,6 +21,7 @@ from torch.nn import functional as F
 from torch.utils.checkpoint import checkpoint
 
 from .olmo import OLMoBlock, OLMoConfig, _apply_rope
+from .olmo_rope import RopeTables, apply_rope_tables, build_rope_tables
 from .olmo_recurrent import OLMoRTForCausalLM
 from .recurrent import RTExecutionContext, RTMode
 
@@ -36,6 +37,7 @@ class _Invocation:
     tile_backend: str = "eager"
     backward_tile_backend: str = "eager"
     backward_memory: str = "materialized"
+    kv_only_writes: bool = False
 
 
 def _replay(spec: _Invocation, device: torch.device):
@@ -46,6 +48,22 @@ def _project(x: Tensor, weight: Tensor, config: OLMoConfig):
     normalized = F.layer_norm(x, (config.model_dim,), eps=config.layer_norm_eps)
     parts = F.linear(normalized, weight).split(config.model_dim, dim=-1)
     return tuple(part.view(x.shape[0], x.shape[1], config.num_heads, config.head_dim).transpose(1, 2) for part in parts)
+
+
+def _project_kv(x: Tensor, weight: Tensor, config: OLMoConfig):
+    """Read the existing packed parameter's K/V rows; never copy parameters."""
+    normalized = F.layer_norm(x, (config.model_dim,), eps=config.layer_norm_eps)
+    parts = F.linear(normalized, weight[config.model_dim:]).split(config.model_dim, dim=-1)
+    return tuple(part.view(x.shape[0], x.shape[1], config.num_heads, config.head_dim).transpose(1, 2) for part in parts)
+
+
+def _project_memory(x, weight, config, kv_only):
+    return _project_kv(x, weight, config) if kv_only else _project(x, weight, config)[1:]
+
+
+def _rotate(x, positions, config, tables):
+    return (_apply_rope(x, positions, config.rope_freq_constant) if tables is None
+            else apply_rope_tables(x, tables))
 
 
 def _finish(x, attended, out_weight, up_gate_weight, ff_out_weight, config, projection_dtype):
@@ -138,8 +156,10 @@ def _historical_backward_tile(probabilities, grad_attention, values, query, dot,
 class _TiledRecurrence(torch.autograd.Function):
     @staticmethod
     def forward(ctx, x, wq, wo, wup, wdown, past_key, past_value,
-                positions, key_positions, valid, spec):
+                positions, key_positions, valid, spec, query_cos, query_sin, key_cos, key_sin):
         config = spec.config
+        query_rope = None if query_cos is None else RopeTables(query_cos, query_sin)
+        key_rope = None if key_cos is None else RopeTables(key_cos, key_sin)
         batch, length, _ = x.shape
         prefix = past_key.shape[-2]
         query, temporary_key, temporary_value = _project(x, wq, config)
@@ -151,8 +171,8 @@ class _TiledRecurrence(torch.autograd.Function):
         forward_weights = tuple(w.to(dtype) for w in (wq, wo, wup, wdown)) if (
             spec.cast_weights_once and spec.autocast_enabled
         ) else (wq, wo, wup, wdown)
-        query = _apply_rope(query, positions, config.rope_freq_constant)
-        temporary_key = _apply_rope(temporary_key, positions, config.rope_freq_constant)
+        query = _rotate(query, positions, config, query_rope)
+        temporary_key = _rotate(temporary_key, positions, config, query_rope)
         with torch.autocast(x.device.type, enabled=False):
             maximum = (query.float() * temporary_key.float()).sum(-1) / math.sqrt(config.head_dim)
             self_valid = valid[:, None, prefix:]
@@ -160,7 +180,8 @@ class _TiledRecurrence(torch.autograd.Function):
             denominator = self_valid.expand(batch, config.num_heads, length).float().clone()
             numerator = temporary_value.float() * self_valid.unsqueeze(-1)
         if prefix:
-            prefix_key = _apply_rope(past_key, key_positions[:, :prefix], config.rope_freq_constant)
+            prefix_key = _rotate(past_key, key_positions[:, :prefix], config,
+                                 None if key_rope is None else key_rope.slice(0, prefix))
             numerator, maximum, denominator = _add_tile(
                 query, prefix_key, past_value, valid[:, :prefix],
                 numerator, maximum, denominator, spec, dtype,
@@ -176,10 +197,11 @@ class _TiledRecurrence(torch.autograd.Function):
             completed = _finish(current, attention, *forward_weights[1:], config, dtype)
             outputs.append(completed)
             source = (1.0 - spec.alpha) * current + spec.alpha * completed
-            _, key, value = _project(source, forward_weights[0], config)
+            key, value = _project_memory(source, forward_weights[0], config, spec.kv_only_writes)
             keys[:, :, index:index + 1] = key
             values[:, :, index:index + 1] = value
-            rotated_keys[:, :, index:index + 1] = _apply_rope(key, positions[:, index:index + 1], config.rope_freq_constant)
+            rotated_keys[:, :, index:index + 1] = _rotate(key, positions[:, index:index + 1], config,
+                None if query_rope is None else query_rope.slice(index, index + 1))
             boundary = index + 1
             if boundary == length:
                 continue
@@ -195,7 +217,7 @@ class _TiledRecurrence(torch.autograd.Function):
             numerator[:, :, target], maximum[:, :, target], denominator[:, :, target] = n, m, d
         completed = torch.cat(outputs, dim=1)
         ctx.save_for_backward(x, completed, wq, wo, wup, wdown, past_key, past_value,
-                              positions, key_positions, valid)
+                              positions, key_positions, valid, query_cos, query_sin, key_cos, key_sin)
         ctx.spec, ctx.projection_dtype = spec, dtype
         ctx.set_materialize_grads(False)
         return completed, keys, values
@@ -203,7 +225,10 @@ class _TiledRecurrence(torch.autograd.Function):
     @staticmethod
     @once_differentiable
     def backward(ctx, grad_output, grad_new_key, grad_new_value):
-        x, completed, wq, wo, wup, wdown, past_key, past_value, positions, key_positions, valid = ctx.saved_tensors
+        (x, completed, wq, wo, wup, wdown, past_key, past_value, positions, key_positions, valid,
+         query_cos, query_sin, key_cos, key_sin) = ctx.saved_tensors
+        query_rope = None if query_cos is None else RopeTables(query_cos, query_sin)
+        key_rope = None if key_cos is None else RopeTables(key_cos, key_sin)
         spec, dtype = ctx.spec, ctx.projection_dtype
         config, alpha = spec.config, spec.alpha
         length, prefix = x.shape[1], past_key.shape[-2]
@@ -221,12 +246,13 @@ class _TiledRecurrence(torch.autograd.Function):
         pkg, pvg = past_key.detach().requires_grad_(True), past_value.detach().requires_grad_(True)
         with torch.enable_grad(), _replay(spec, x.device):
             q, kt, vt = _project(xg, weights[0], config)
-            q = _apply_rope(q, positions, config.rope_freq_constant)
-            kt = _apply_rope(kt, positions, config.rope_freq_constant)
+            q = _rotate(q, positions, config, query_rope)
+            kt = _rotate(kt, positions, config, query_rope)
             memory_source = (1.0 - alpha) * xg + alpha * completed.detach()
-            _, kr, vr = _project(memory_source, weights[0], config)
-            rotated_current = _apply_rope(kr, positions, config.rope_freq_constant)
-            rotated_prefix = _apply_rope(pkg, key_positions[:, :prefix], config.rope_freq_constant)
+            kr, vr = _project_memory(memory_source, weights[0], config, spec.kv_only_writes)
+            rotated_current = _rotate(kr, positions, config, query_rope)
+            rotated_prefix = _rotate(pkg, key_positions[:, :prefix], config,
+                                     None if key_rope is None else key_rope.slice(0, prefix))
             all_keys = torch.cat((rotated_prefix, rotated_current), dim=-2)
             all_values = torch.cat((pvg, vr), dim=-2)
             with torch.no_grad():
@@ -257,8 +283,9 @@ class _TiledRecurrence(torch.autograd.Function):
             # and parameter VJPs below are batched over the complete sequence.
             for index in range(length - 1, -1, -1):
                 source = memory_source[:, index:index + 1].detach().requires_grad_(True)
-                _, local_key, local_value = _project(source, frozen[0], config)
-                local_rotated = _apply_rope(local_key, positions[:, index:index + 1], config.rope_freq_constant)
+                local_key, local_value = _project_memory(source, frozen[0], config, spec.kv_only_writes)
+                local_rotated = _rotate(local_key, positions[:, index:index + 1], config,
+                    None if query_rope is None else query_rope.slice(index, index + 1))
                 du = torch.autograd.grad(
                     (local_rotated, local_key, local_value), source,
                     grad_outputs=(dk[:, :, index:index + 1], grad_new_key[:, :, index:index + 1],
@@ -320,7 +347,7 @@ class _TiledRecurrence(torch.autograd.Function):
             )
         # The autograd engine owns accumulation, including shared multi-call and
         # distributed consumers. Frozen inputs receive no fabricated .grad.
-        return tuple(g if needed else None for g, needed in zip(gradients, ctx.needs_input_grad[:7])) + (None,) * 4
+        return tuple(g if needed else None for g, needed in zip(gradients, ctx.needs_input_grad[:7])) + (None,) * 8
 
 
 def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
@@ -328,11 +355,15 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
                           query_positions: Tensor, key_positions: Tensor, key_valid: Tensor,
                           attention_precision: str = "mixed", cast_weights_once: bool = False,
                           tile_backend: str = "eager", backward_tile_backend: str = "eager",
-                          backward_memory: str = "materialized"):
+                          backward_memory: str = "materialized", reuse_rope: bool = False,
+                          kv_only_writes: bool = False, query_rope: RopeTables | None = None,
+                          key_rope: RopeTables | None = None):
     if attention_precision not in ("mixed", "fp32"):
         raise ValueError("attention_precision must be 'mixed' or 'fp32'")
     if type(cast_weights_once) is not bool:
         raise TypeError("cast_weights_once must be boolean")
+    if type(reuse_rope) is not bool or type(kv_only_writes) is not bool:
+        raise TypeError("reuse_rope and kv_only_writes must be boolean")
     if tile_backend not in ("eager", "triton"):
         raise ValueError("tile_backend must be eager or triton")
     if tile_backend == "triton" and x.device.type != "cuda":
@@ -352,12 +383,22 @@ def tiled_recurrent_layer(layer: OLMoBlock, x: Tensor, *, alpha: float,
         pk, pv = x.new_empty(shape), x.new_empty(shape)
     else:
         pk, pv = past
+    if not reuse_rope and (query_rope is not None or key_rope is not None):
+        raise ValueError("Prepared RoPE tables require reuse_rope")
+    if (query_rope is None) != (key_rope is None):
+        raise ValueError("Provide both query and key RoPE tables")
+    if reuse_rope and query_rope is None:
+        query_rope = build_rope_tables(query_positions, layer.config.head_dim, layer.config.rope_freq_constant)
+        key_rope = query_rope if key_positions is query_positions else build_rope_tables(
+            key_positions, layer.config.head_dim, layer.config.rope_freq_constant)
     spec = _Invocation(layer.config, float(alpha), attention_precision,
                        torch.is_autocast_enabled(x.device.type), torch.get_autocast_dtype(x.device.type),
-                       cast_weights_once, tile_backend, backward_tile_backend, backward_memory)
+                       cast_weights_once, tile_backend, backward_tile_backend, backward_memory, kv_only_writes)
     z, k, v = _TiledRecurrence.apply(
         x, layer.att_proj.weight, layer.attn_out.weight, layer.ff_proj.weight, layer.ff_out.weight,
         pk, pv, query_positions.clone(), key_positions.clone(), key_valid.clone(), spec,
+        None if query_rope is None else query_rope.cos, None if query_rope is None else query_rope.sin,
+        None if key_rope is None else key_rope.cos, None if key_rope is None else key_rope.sin,
     )
     memory = (k, v) if past is None else (torch.cat((pk, k), dim=-2), torch.cat((pv, v), dim=-2))
     return z, memory
@@ -377,6 +418,8 @@ class OLMoTiledCache:
     tile_backend: str = "eager"
     backward_tile_backend: str = "eager"
     backward_memory: str = "materialized"
+    reuse_rope: bool = False
+    kv_only_writes: bool = False
 
     @property
     def sequence_length(self):
@@ -391,11 +434,12 @@ class OLMoTiledOutput:
 
 
 def _ordinary_block_hidden(x, query_positions, key_positions, mask, *, layer,
-                           is_causal, attention_backend):
+                           is_causal, attention_backend, query_rope=None, key_rope=None):
     """Cache-free ordinary block, with only its hidden output retained."""
     hidden, _ = layer(x, past=None, query_positions=query_positions,
                       key_positions=key_positions, mask=mask,
-                      is_causal=is_causal, attention_backend=attention_backend)
+                      is_causal=is_causal, attention_backend=attention_backend,
+                      query_rope=query_rope, key_rope=key_rope)
     return hidden
 
 
@@ -412,6 +456,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
                  ordinary_activation_checkpointing=False, cast_weights_once=False,
                  tile_backend="eager", backward_tile_backend="eager", backward_memory="materialized",
+                 reuse_rope=False, kv_only_writes=False,
                  device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
@@ -419,6 +464,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             raise TypeError("ordinary_activation_checkpointing must be boolean")
         if type(cast_weights_once) is not bool:
             raise TypeError("cast_weights_once must be boolean")
+        if type(reuse_rope) is not bool or type(kv_only_writes) is not bool:
+            raise TypeError("reuse_rope and kv_only_writes must be boolean")
         if tile_backend not in ("eager", "triton"):
             raise ValueError("tile_backend must be eager or triton")
         if backward_tile_backend not in ("eager", "triton"):
@@ -432,6 +479,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         self.tile_backend = tile_backend
         self.backward_tile_backend = backward_tile_backend
         self.backward_memory = backward_memory
+        self.reuse_rope = reuse_rope
+        self.kv_only_writes = kv_only_writes
 
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
@@ -462,7 +511,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             if (past_key_values.cast_weights_once != self.cast_weights_once
                     or past_key_values.tile_backend != self.tile_backend
                     or past_key_values.backward_tile_backend != self.backward_tile_backend
-                    or past_key_values.backward_memory != self.backward_memory):
+                    or past_key_values.backward_memory != self.backward_memory
+                    or past_key_values.reuse_rope != self.reuse_rope
+                    or past_key_values.kv_only_writes != self.kv_only_writes):
                 raise ValueError("Cached RT kernel execution differs")
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
@@ -473,18 +524,28 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
                               versions, generation, context, self.attention_precision,
                               self.cast_weights_once, self.tile_backend,
-                              self.backward_tile_backend, self.backward_memory) if use_cache else None
+                              self.backward_tile_backend, self.backward_memory,
+                              self.reuse_rope, self.kv_only_writes) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
                           attention_mask, is_causal, past_key_values=None,
-                          use_cache=False, checkpoint_ordinary=False):
+                          use_cache=False, checkpoint_ordinary=False,
+                          query_rope=None, key_rope=None):
         """Native layer loop after caller validation; static entries are cache-free.
 
         The public forward retains all input/cache guards and cache construction.
         Prepared static callers validate their owned fixed layout before capture
         and between replays. This helper changes no layer or checkpoint math.
         """
+        if not self.reuse_rope and (query_rope is not None or key_rope is not None):
+            raise ValueError("Prepared RoPE tables require reuse_rope")
+        if (query_rope is None) != (key_rope is None):
+            raise ValueError("Provide both query and key RoPE tables")
+        if self.reuse_rope and query_rope is None:
+            query_rope = build_rope_tables(positions, self.config.head_dim, self.config.rope_freq_constant)
+            key_rope = query_rope if key_positions is positions else build_rope_tables(
+                key_positions, self.config.head_dim, self.config.rope_freq_constant)
         present = []
         for index, layer in enumerate(self.layers):
             past = None if past_key_values is None else past_key_values.key_values[index]
@@ -495,18 +556,22 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     attention_precision=self.attention_precision,
                     cast_weights_once=self.cast_weights_once, tile_backend=self.tile_backend,
                     backward_tile_backend=self.backward_tile_backend, backward_memory=self.backward_memory,
+                    reuse_rope=self.reuse_rope, kv_only_writes=self.kv_only_writes,
+                    query_rope=query_rope, key_rope=key_rope,
                 )
             elif checkpoint_ordinary:
                 # Bind this invocation's layer/backend/causality now: a closure
                 # over the loop's `layer` would replay the wrong shared block.
                 ordinary = partial(_ordinary_block_hidden, layer=layer,
-                                   is_causal=is_causal, attention_backend=self.attention_backend)
+                                   is_causal=is_causal, attention_backend=self.attention_backend,
+                                   query_rope=query_rope, key_rope=key_rope)
                 x = checkpoint(ordinary, x, positions, key_positions, attention_mask,
                                use_reentrant=False)
                 pair = None
             else:
                 x, pair = layer(x, past=past, query_positions=positions, key_positions=key_positions,
-                                mask=attention_mask, is_causal=is_causal, attention_backend=self.attention_backend)
+                                mask=attention_mask, is_causal=is_causal, attention_backend=self.attention_backend,
+                                query_rope=query_rope, key_rope=key_rope)
             if use_cache:
                 present.append(pair)
         hidden = self.norm(x)

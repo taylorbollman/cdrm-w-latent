@@ -1,8 +1,9 @@
 # Native RT efficiency and author-derived backend comparison
 
-Proposed 2026-09-23 after PR22. This is a planning document, not authorization
-to start implementation or GPU runs. It proposes a bounded performance milestone
-before the broader graph recovery/accumulation and online-readiness work in V4.
+Approved 2026-09-23 after PR22. Stage A implementation and bounded GPU checks
+are now authorized and underway. Stop at its first review point before the
+author-derived comparison in Stages B/C. This performance milestone precedes
+the broader graph recovery/accumulation and online-readiness work in V4.
 
 ## Objective and fixed model
 
