@@ -85,8 +85,11 @@ differ; do not infer isolated module memory from small peak differences.
   errors, W&B URLs, timing samples and compressed operator traces are retained.
 - Read [results](results.md), [resource ledger](resource-ledger.json),
   [roundoff assessment](roundoff-assessment.md), [operator audit](operator-audit.md)
-  and [final inputs](final-inputs.json). The storage receipt is authoritative
-  for create-only GCS retention. Disposable few-update weights are omitted;
+  and [final inputs](final-inputs.json). The [storage receipt](storage-receipt.json)
+  verifies create-only GCS retention under
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f4-features/20260923T160539Z/`:
+  1,206 archive members, 9,119,232 compressed bytes, with checked hashes and
+  native-checkpoint identity. Disposable few-update weights are omitted;
   the pinned native checkpoint is retained by reference.
 
 ## Parameters and evidence

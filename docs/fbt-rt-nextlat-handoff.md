@@ -66,9 +66,15 @@ F4 durable execution record:
   active, optimizer and deployable counts are explicit. RT adds no weights;
   NextLat82,726,912 is training-only; fusion8,388,608 is shared/deployable.
 - All sources/protocols/raw reports, W&B runs, failed attempts and compressed
-  traces are selected for verified GCS retention under `olmo1b-f4-features/`;
+  traces are verified in GCS under `olmo1b-f4-features/20260923T160539Z/`;
   the final [receipt](reports/olmo1b-f4/storage-receipt.json) is authoritative.
   Pinned native weights are reused, disposable few-update weights omitted.
+  Evidence: 9,119,232 bytes, SHA256
+  `9addc555df2b0f64ee0eacb6df828c7d68657acd402eb79f6128baf255aa51dc`.
+  Manifest: 793,161 bytes, SHA256
+  `3e523e11b47b95187964265427d40da2b87aa9a79f9e5ad8784f14a8f816b539`.
+  The archive contains 1,206 members and 1,002 checked run/source pairs;
+  remote native-checkpoint identity was verified, without reuploading weights.
   Final in-container GPU check:0MiB used, no compute processes.
 
 **Next review milestone:** graph recovery/save-resume and accumulation,
