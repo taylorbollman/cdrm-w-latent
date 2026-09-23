@@ -1,0 +1,226 @@
+{
+  "schema": "olmo-f4-queue-v1",
+  "base": "deecfe6",
+  "frozen_runtime": "397885b62077e7b8a8b574e819f108a1dbc72e29",
+  "protocol": "docs/reports/olmo1b-f4/protocol.md",
+  "jobs": [
+    {
+      "case": "ordinary",
+      "stage": "correctness",
+      "batch": 1,
+      "length": 32,
+      "operator_trace": true,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-ordinary-correctness-b1-t32"
+    },
+    {
+      "case": "nextlat",
+      "stage": "correctness",
+      "batch": 1,
+      "length": 32,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-nextlat-correctness-b1-t32"
+    },
+    {
+      "case": "fbt",
+      "stage": "correctness",
+      "batch": 1,
+      "length": 32,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-correctness-b1-t32"
+    },
+    {
+      "case": "fbt-nextlat",
+      "stage": "correctness",
+      "batch": 1,
+      "length": 32,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-nextlat-correctness-b1-t32"
+    },
+    {
+      "case": "rt-nextlat",
+      "stage": "correctness",
+      "batch": 8,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-nextlat-correctness-b8-t512"
+    },
+    {
+      "case": "rt-fbt",
+      "stage": "correctness",
+      "batch": 8,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-fbt-correctness-b8-t512"
+    },
+    {
+      "case": "combined",
+      "stage": "correctness",
+      "batch": 1,
+      "length": 32,
+      "operator_trace": true,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-combined-correctness-b1-t32"
+    },
+    {
+      "case": "ordinary",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-ordinary-capacity-b64-t512"
+    },
+    {
+      "case": "rt",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-capacity-b64-t512"
+    },
+    {
+      "case": "nextlat",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-nextlat-capacity-b64-t512"
+    },
+    {
+      "case": "rt-nextlat",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-nextlat-capacity-b64-t512"
+    },
+    {
+      "case": "fbt",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-capacity-b64-t512"
+    },
+    {
+      "case": "rt-fbt",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-fbt-capacity-b64-t512"
+    },
+    {
+      "case": "fbt-nextlat",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-nextlat-capacity-b64-t512"
+    },
+    {
+      "case": "combined",
+      "stage": "capacity",
+      "batch": 64,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": false,
+      "output_dir": ".runtime/olmo1b-step60000/f4-combined-capacity-b64-t512"
+    },
+    {
+      "case": "ordinary",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-ordinary-capacity-b96-t512"
+    },
+    {
+      "case": "rt",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-capacity-b96-t512"
+    },
+    {
+      "case": "nextlat",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-nextlat-capacity-b96-t512"
+    },
+    {
+      "case": "rt-nextlat",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-nextlat-capacity-b96-t512"
+    },
+    {
+      "case": "fbt",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-capacity-b96-t512"
+    },
+    {
+      "case": "rt-fbt",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-rt-fbt-capacity-b96-t512"
+    },
+    {
+      "case": "fbt-nextlat",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-fbt-nextlat-capacity-b96-t512"
+    },
+    {
+      "case": "combined",
+      "stage": "capacity",
+      "batch": 96,
+      "length": 512,
+      "operator_trace": false,
+      "conditional_b64_headroom": true,
+      "output_dir": ".runtime/olmo1b-step60000/f4-combined-capacity-b96-t512"
+    }
+  ],
+  "conditional_policy": "B96 only if passed B64 peak_reserved_gib<65; >72GiB labeled tight; OOM retained, no numerical failures bypassed",
+  "reused_evidence": [
+    "docs/reports/olmo1b-f3e/summary.json",
+    "docs/reports/olmo1b-f3e/storage-receipt.json"
+  ],
+  "continuation_decision": "docs/reports/olmo1b-f4/continuation-decision.md",
+  "roundoff_runtime": "949731b",
+  "roundoff_dirs": [
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-01",
+    ".runtime/olmo1b-step60000/f4-rt-fbt-roundoff-02"
+  ]
+}

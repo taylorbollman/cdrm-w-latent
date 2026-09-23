@@ -1,0 +1,19 @@
+F4 scoped CPU validation: 235 tests passed.
+All CPU tests used CDRM_DOCKER_GPUS=none through scripts/docker_shell.sh.
+
+76 passed: python -m pytest -q tests/test_resource_estimates.py tests/test_olmo_multilayer_execution.py tests/test_olmo_f3e_validate.py
+Full log: core-test-results.txt
+
+31 passed: python -m pytest -q tests/test_olmo_f4_resources.py
+Full log: resource-test-results.txt
+
+128 passed: python -m pytest -q tests/test_olmo_f4_report.py tests/test_olmo_f4_retain.py
+Full log: reporting-test-results.txt
+This comprises 77 reporter and 51 retention tests. Final plot-only presentation
+change also passed the existing plot test and generated/visually checked actual
+B64/B96 figures. It changed no runtime, numerical checks or resource arithmetic.
+
+Separate CPU diagnostic comparison smoke passed identity and changed-coordinate
+checks. GPU results are independently validated in results.md and summary.json;
+this count does not describe a whole-repository test suite or GPU precision
+clearance. Original RT+FBT screen and failed first diagnostic probe are retained.

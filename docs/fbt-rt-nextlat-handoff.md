@@ -11,6 +11,83 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F4 training resource cards are complete, with a retained numerical qualification
+(2026-09-23).** Read the [assessment](reports/olmo1b-f4/assessment.md),
+[results](reports/olmo1b-f4/results.md), [roundoff diagnosis](reports/olmo1b-f4/roundoff-assessment.md),
+[operator audit](reports/olmo1b-f4/operator-audit.md) and [usage](olmo1b-f4-usage.md).
+No model/kernel, native checkpoint, Q/K, RoPE or loss-math change. RT uses
+`(0,15)` as an execution reference; main architecture placement remains open.
+
+F4 durable execution record:
+
+- Review: [PR20](https://github.com/taylorbollman/cdrm-w-latent/pull/20).
+  Final reports `7be359c`; verified retention `a9222ab`.
+- Branch `feat/olmo1b-f4-resource-cards`, base `deecfe6`. Main runtime/protocol
+  `397885b`; diagnostic `c8f2311` then harness-only correction `949731b`;
+  reporting/retention `e4dda74` plus final presentation. Frozen main sources
+  did not change during runs. Explicit selection in
+  `docs/reports/olmo1b-f4/final-inputs.json`; original plan and continuation
+  decision are retained. Queues77851/12166 and diagnostic86130 are finished.
+- 23 main GPU reports:22 pass, one numerical failure;46/47 named gates pass.
+  Six successful new correctness runs,16 finite B64/B96 capacity cards;
+  historical F3e RT/all-three T512 evidence is revalidated but not recounted.
+  Successful main reports contain132 physical updates (66 eager+66 graph).
+  Separate diagnosis contains six more (3+3). 235 scoped CPU tests pass.
+- Common B64/T512 input tokens/s: ordinary31,113; RT19,437;
+  NextLat24,026; RT+NextLat16,444; FBT15,798; RT+FBT12,136;
+  FBT+NextLat12,177; all-three9,892. Allocated peaks26.74–39.09GiB;
+  setup reserved37.17–60.46GiB. BF16 mixed, ordinary Flash/checkpointing,
+  CUDA graphs and Triton RT/recompute. Three-update directional medians.
+- All B96 attempts succeed. RT21,618tokens/s (+11.2%) and RT+NextLat17,833
+  (+8.5%) have useful gains with reserved peaks62.45/64.97GiB. No-RT modes
+  gain little or nothing. RT+FBT/all-three reserve78.39/78.22GiB for only
+  +6.2%/+4.2%; FBT+NextLat reserves73.89GiB with no speed gain. B64 remains
+  the conservative common default; do not call these near-capacity B96 cases
+  comfortable. No maximum search, OOM or next training job.
+- **Unresolved numerical qualification:** RT+FBT without NextLat at B8/T512
+  exceeds the unchanged6.25% coordinate screen in one layer11 MLP tensor
+  (6.3492%); globalL2 1.0206%, worst tensorL2 1.3805% pass. Forward/dispatch
+  exact. The failed gate stays in all tables; resource coverage is not full
+  numerical clearance. No thresholds were changed.
+- Fixed-state BF16 repeats and candidate graph/full-Adam comparisons are
+  bitwise. Eager historical backward removes the coordinate crossing.
+  Full FP32 materialized/recompute globalL2 3.04e-6 supports reconstruction
+  semantics; FP32 uses eager/math kernels, not BF16 Triton.
+  Both BF16 control and candidate differ from fullFP32 by about18% gradientL2
+  at this initialization (cosine .983–.984; CE difference ~.125%). Preserve
+  this broader sensitivity; it does not establish a learning problem or its
+  absence. No basis here to automatically add Q/K normalization.
+- Roundoff01 failed before backward because the probe prepared its static
+  layout outside the fixed backend context; corrected only that harness line.
+  It has zero optimizer updates and exact historical snapshots. Roundoff02
+  is a completed diagnostic, not a cleared precision gate. Both are separately
+  retained from the main23 reports.
+- Operator traces reconcile dense arithmetic exactly and show actual ordinary
+  Flash plus RT Triton. Matrix FLOPs, not hardware utilization: ordinary
+  B64/T512281.79–304.87TFLOPs/update; combined657.84–701.12. Registered,
+  active, optimizer and deployable counts are explicit. RT adds no weights;
+  NextLat82,726,912 is training-only; fusion8,388,608 is shared/deployable.
+- All sources/protocols/raw reports, W&B runs, failed attempts and compressed
+  traces are verified in GCS under `olmo1b-f4-features/20260923T160539Z/`;
+  the final [receipt](reports/olmo1b-f4/storage-receipt.json) is authoritative.
+  Pinned native weights are reused, disposable few-update weights omitted.
+  Evidence: 9,119,232 bytes, SHA256
+  `9addc555df2b0f64ee0eacb6df828c7d68657acd402eb79f6128baf255aa51dc`.
+  Manifest: 793,161 bytes, SHA256
+  `3e523e11b47b95187964265427d40da2b87aa9a79f9e5ad8784f14a8f816b539`.
+  The archive contains 1,206 members and 1,002 checked run/source pairs;
+  remote native-checkpoint identity was verified, without reuploading weights.
+  Final in-container GPU check:0MiB used, no compute processes.
+
+**Next review milestone:** graph recovery/save-resume and accumulation,
+padding, finite-prefill/exact-online resource cards; keep the numerical
+qualification visible. Before substantive learning, consider a bounded
+transition-state/clipped-update comparison for the broader BF16 sensitivity.
+Do not automatically launch a long quality run or add Q/K normalization.
+True multi-GPU remains blocked on a second GPU; one H100 is exposed. The
+existing AccumulateGrad stream warning stays visible despite exact single-GPU
+parity. No inference-throughput, all-eight long-context or multi-GPU clearance.
+
 **F3e multiple-selected-layer integration is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3e/assessment.md), [results](reports/olmo1b-f3e/results.md),
 [protocol](reports/olmo1b-f3e/protocol.md) and [usage](olmo1b-f3e-usage.md).
