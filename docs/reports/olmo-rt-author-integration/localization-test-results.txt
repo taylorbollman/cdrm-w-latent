@@ -1,0 +1,23 @@
+Bounded localizer CPU evidence
+=============================
+
+Recorded from the completed tool execution; no rerun for log collection.
+GPU passthrough was explicitly disabled. Tests ran in the isolated worktree
+with that directory as the first and only explicit PYTHONPATH entry.
+
+Exact command:
+CDRM_DOCKER_GPUS=none bash /home/taylorbollman/cdrm-w-latent/scripts/docker_shell.sh bash -lc 'cd /workspace/cdrm-w-latent/.runtime/olmo-author-integration-worktree && PYTHONPATH=$PWD python -m pytest -q tests/test_olmo_rt_author_localize.py'
+
+Observed result:
+20 passed, 14 warnings in 3.13s
+Exit code: 0
+
+Warnings were existing torch.jit deprecation warnings from imported reference
+code. No warning represented a failed test or a CUDA execution fallback.
+
+Scope: independent native-scan FP32 output/raw-VJP checks with irregular RoPE
+positions and a frozen projection; input/cotangent and real parameter .grad
+ownership; finite CPU mixed-arm smoke checks; Gaussian norm/RNG isolation;
+diagnostic-screen semantics; temporary helper restoration after exceptions.
+The separate-self diagnostic's compiled GPU behavior and the actual pretrained
+input/cotangent results remain for the bounded GPU run.
