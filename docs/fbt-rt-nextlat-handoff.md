@@ -66,6 +66,11 @@ F3e durable execution record:
   source/protocol snapshots and checked raw JSON. Small GCS evidence lives under
   `olmo1b-f3e-multi-rt/`; see the [receipt](reports/olmo1b-f3e/storage-receipt.json).
   Reuse pinned native weights; disposable few-update states are not retained.
+- GCS verification completed under `olmo1b-f3e-multi-rt/20260923T145449Z/`:
+  evidence3,404,632bytes SHA256 `212185ceb933fd18b2658f61b33e5759a749125f3c175d9f645b109b2840128a`;
+  manifest344,034bytes SHA256 `2cd11bbec19cdab1fa7791f3d36bb1b83f8ef193ad8c555a951a146bcbf69e6e`.
+  All624 run/source pairs (39 unique files) and16 protocols match current/run-local
+  bytes. Final in-container nvidia-smi reports0MiB used and no compute processes.
 
 **Next review milestone:** complete F4 feature-combination runtime cards with a
 representative multi-layer selection, then graph recovery/accumulation, padding

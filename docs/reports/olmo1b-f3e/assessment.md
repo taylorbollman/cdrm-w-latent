@@ -154,7 +154,7 @@ the results table. The local selection is
 `.runtime/olmo1b-step60000/f3e-final-inputs.json`. Queue66490 and headroom follow-up
 81397 completed successfully. The original native checkpoint is reused, and
 no disposable few-update weights replace it. Small evidence retention uses
-`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3e-multi-rt/`, with a
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-f3e-multi-rt/20260923T145449Z/`, with a
 verified [receipt](storage-receipt.json).
 
 Independent reviews checked sequential-reference tests, pass/parameter/FLOP
