@@ -44,14 +44,31 @@ Reports`429857a`; [PR23](https://github.com/taylorbollman/cdrm-w-latent/pull/23)
 All977 evidence members and the native checkpoint reference are verified at
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-rt-efficiency/20260923T185855Z/`.
 
-Next, without further approval: author-derived RoPE implementation and matched
-comparison. Read [source audit](reports/olmo-rt-author-comparison/author-port-audit.md).
-Author source pin a21b42d; clean local fork824767f. Preserve per-token writer
-weight VJPs and useful compiled helpers; author gradient/precision policies differ
-from native. Prefer explicit packed outer weights with private invocation-local
-Q/KV leaves and returned packed gradients, preserving external ownership. Record
-Dynamo cache limits and MLP chunking, and validate changed-weight graph replay.
-No alternate backend or Stage B GPU run has been implemented yet at this handoff.
+Stage B/C isolated comparison is complete at runtime6eea309. Initialf483646
+had a retained zero-update checkpoint-key mapping failure; all25 subsequent GPU
+reports pass, totaling192 physical updates and1196 frozen source pairs. There
+are122 runtime/accounting and20 evidence-helper CPU tests. Author FP32 tiled
+raw-gradient L2 versus native scan is5.70e-7; BF16 cross-backend B8/T512 is0.004133.
+All own-backend graph/full-Adam checks are exact. See
+[results](reports/olmo-rt-author-comparison/results.md), its summary and audit.
+
+AtB32 author is6.8–7.3% slower for1/2/6blocks. AtB128 author is7.5/8.5/8.6% faster;
+one-block reverse repeats confirm the crossover. One-block author/native setup
+peak allocated12.24/22.79GiB, reserved28.67/44.75GiB. These are isolated Gaussian
+block/MSE rates, not LM throughput. B128 is a comfortable shared tested point,
+not maximum capacity. Native defaults remain unchanged. PR24 contains this stage.
+
+The repeated large-batch speed/memory advantage justifies the authorized
+conditional integration follow-up. It is developed in
+`.runtime/olmo-author-integration-worktree`, branch
+`feat/olmo-author-integration-followup`, based on6eea309. CPU tests236 pass;
+prospective protocol `docs/reports/olmo-rt-author-integration/protocol.md`.
+After retaining/merging PR24, bring the opt-in integration runtime to a fresh
+primary branch and freeze it before GPU work. Check actual16layer RT0/15 and
+K2+NextLat, fullCE2048/KL128, B8 numerical/graph/Adam checks and B64 timing.
+Ordinary layers retain Flash; author RT does not use Flash. No quality run,
+normalization change or default switch. Preserve existing F4 qualifications.
+
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md),

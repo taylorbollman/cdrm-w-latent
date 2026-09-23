@@ -43,8 +43,16 @@ to author-derived RoPE Stages B/C after finishing/retaining Stage A. Read
 `docs/olmo-rt-efficiency-and-author-comparison-plan.md` and
 `docs/reports/olmo-rt-author-comparison/author-port-audit.md`. Preserve author
 writer-VJP scheduling, compilation/caching and recorded precision differences.
-No alternate implementation or comparison run exists yet; no learning run is
-authorized here. Existing F4 numerical qualifications remain open.
+Stage B/C isolated comparison is complete: runtime6eea309,122 runtime/accounting
+and20 retention CPU tests,25 passing GPU reports plus one retained zero-update
+loader failure. Exact own graph/Adam checks; BF16 cross-backend gradientL2.004133.
+B128 author is7.5–8.6% faster across1/2/6blocks and uses substantially less setup
+memory; B32 native is faster. These are block/MSE rates, not LM rates. Read its
+results. The conditional actual16layer RT0/15 + K2/NextLat integration is next,
+developed in `.runtime/olmo-author-integration-worktree`;236 CPU tests pass.
+Retain and merge PR24 before moving that runtime to primary and freezing for GPU.
+Read its prospective protocol. Native remains default; no quality training.
+Existing F4 numerical qualifications remain open.
 
 Prior user-directed investigation: CE integration and the refreshed original
 16-layer ordinary baseline are complete. Read
