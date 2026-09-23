@@ -33,6 +33,7 @@ PROJECT_FILES = (
     "docs/fbt-rt-nextlat-handoff.md", "docs/fbt-rt-nextlat-research-plan-v4.md",
     "docs/olmo-rt-efficiency-and-author-comparison-plan.md",
     "docs/olmo-resource-accounting.md",
+    "docs/reports/olmo-rt-author-comparison/author-port-audit.md",
     "docs/olmo-1b-250b-checkpoint-selection.json", RECEIPT_RELATIVE, "AGENTS.md",
 )
 ESSENTIAL_SOURCES = {

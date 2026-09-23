@@ -1,9 +1,11 @@
 # Native RT efficiency and author-derived backend comparison
 
 Approved 2026-09-23 after PR22. Stage A implementation and bounded GPU checks
-are now authorized and underway. Stop at its first review point before the
-author-derived comparison in Stages B/C. This performance milestone precedes
-the broader graph recovery/accumulation and online-readiness work in V4.
+are complete; see [Stage A results](reports/olmo-rt-efficiency/results.md).
+In a subsequent message the user authorized proceeding directly
+to the author-derived comparison in Stages B/C once Stage A is finished; the
+original review stop is lifted. Finish and retain Stage A first. This performance
+milestone precedes graph recovery/accumulation and online readiness in V4.
 
 ## Objective and fixed model
 

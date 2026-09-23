@@ -18,18 +18,37 @@ First review point: separately measure immutable RoPE-table reuse and K/V-only
 permanent writes, preserving native parameters, math and graph contracts. Then
 propose a restricted author-derived native-RoPE reference/tiled implementation
 and matched large-batch block/stack comparison. This would precede the older
-graph recovery/accumulation queue. **Stage A is authorized and underway on
-`feat/olmo-rt-native-efficiency`; stop at its first review point before B/C.**
+graph recovery/accumulation queue. **Stage A is complete on
+`feat/olmo-rt-native-efficiency`. The user subsequently authorized proceeding
+directly to Stages B/C after Stage A is finished and retained, lifting the
+original review stop. Do not wait for another approval to start the comparison.**
 Prospective protocol: `docs/reports/olmo-rt-efficiency/protocol.md`. Existing numerical
 qualifications remain open; performance parity with the authors is unestablished.
 
-Stage A progress: runtime/protocol frozen at `3fd27e0`; 406 scoped CPU tests and
-all five native B8/T512 correctness reports pass (25 gates, 30 physical updates).
-RoPE reuse is bitwise exact; K/V-only RT/combined gradient global L2 is
-0.00302582/0.00654273, with exact same-candidate graph/full-Adam parity.
-The B64/full-CE capacity queue is active under `.runtime/olmo-rt-efficiency/`;
-read completed `report.json` files and logs before resuming. Do not restart
-completed runs or reuse output directories. W&B group `olmo-rt-efficiency`.
+Stage A evidence: [results](reports/olmo-rt-efficiency/results.md),
+[summary](reports/olmo-rt-efficiency/summary.json),
+[profile audit](reports/olmo-rt-efficiency/profile-audit.md),
+[usage](reports/olmo-rt-efficiency/usage.md). Runtime/protocol `3fd27e0`, helpers
+`072155e`; 406 runtime/accounting +14 retention CPU tests pass. All21 GPU reports
+pass41 gates with158 actual updates;882 source pairs match the freeze. RoPE reuse
+is bitwise exact; K/V-only RT/combined global gradient L2 is0.00302582/0.00654273,
+with exact same-candidate graph/full-Adam parity. Native B64/T512 full-CE,
+two runs per arm in reverse order: ordinary36.66k→36.77k, RT21.49k→22.43k
+(+4.36%), combined10.95k→11.20k (+2.26%). Peak setup allocated/reserved for
+both: RT32.08/47.36GiB; combined38.92/60.31GiB. No added parameters or defaults.
+Use explicit `reuse_rope=True, kv_only_writes=True` for the improved native arm,
+CE2048/KL128, cast reuse/Triton/recompute as before. Existing qualifications stay.
+GPU queue ended idle; no learning run. Raw evidence is under
+`.runtime/olmo-rt-efficiency/`, W&B group`olmo-rt-efficiency`; see its storage receipt.
+
+Next, without further approval: author-derived RoPE implementation and matched
+comparison. Read [source audit](reports/olmo-rt-author-comparison/author-port-audit.md).
+Author source pin a21b42d; clean local fork824767f. Preserve per-token writer
+weight VJPs and useful compiled helpers; author gradient/precision policies differ
+from native. Prefer explicit packed outer weights with private invocation-local
+Q/KV leaves and returned packed gradients, preserving external ownership. Record
+Dynamo cache limits and MLP chunking, and validate changed-weight graph replay.
+No alternate backend or Stage B GPU run has been implemented yet at this handoff.
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md),
