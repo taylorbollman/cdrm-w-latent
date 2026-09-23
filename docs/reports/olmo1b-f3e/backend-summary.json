@@ -1,0 +1,546 @@
+[
+  {
+    "run": "f3e-recompute-combined-spread2-b1-t32-01",
+    "length": 32,
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        }
+      },
+      "totals": {
+        "backward_blocks": 2,
+        "forward_blocks": 2,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 62,
+        "forward_tiles": 62,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 62
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 496,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-adjacent2-b8-t512-01",
+    "length": 512,
+    "selected_rt_layers": [
+      0,
+      1
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "1": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        }
+      },
+      "totals": {
+        "backward_blocks": 2,
+        "forward_blocks": 2,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 1022,
+        "forward_tiles": 1022,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 1022
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 130816,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-spread2-b8-t512-01",
+    "length": 512,
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        }
+      },
+      "totals": {
+        "backward_blocks": 2,
+        "forward_blocks": 2,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 1022,
+        "forward_tiles": 1022,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 1022
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 130816,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-rt-spread2-b8-t512-01",
+    "length": 512,
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        }
+      },
+      "totals": {
+        "backward_blocks": 2,
+        "forward_blocks": 2,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 1022,
+        "forward_tiles": 1022,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 1022
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 130816,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-spread4-b4-t512-01",
+    "length": 512,
+    "selected_rt_layers": [
+      0,
+      5,
+      10,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "10": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        },
+        "5": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 511,
+          "forward_tiles": 511,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 511
+        }
+      },
+      "totals": {
+        "backward_blocks": 4,
+        "forward_blocks": 4,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 2044,
+        "forward_tiles": 2044,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 2044
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 130816,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-k3-spread2-b1-t32-01",
+    "length": 32,
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 2,
+          "forward_blocks": 2,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 62,
+          "forward_tiles": 62,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 62
+        },
+        "15": {
+          "backward_blocks": 2,
+          "forward_blocks": 2,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 62,
+          "forward_tiles": 62,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 62
+        }
+      },
+      "totals": {
+        "backward_blocks": 4,
+        "forward_blocks": 4,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 124,
+        "forward_tiles": 124,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 124
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 496,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-spread2-b1-t2048-01",
+    "length": 2048,
+    "selected_rt_layers": [
+      0,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 3,
+          "forward_fused_tiles": 2044,
+          "forward_tiles": 2047,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 2047
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 3,
+          "forward_fused_tiles": 2044,
+          "forward_tiles": 2047,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 2047
+        }
+      },
+      "totals": {
+        "backward_blocks": 2,
+        "forward_blocks": 2,
+        "forward_eager_tiles": 6,
+        "forward_fused_tiles": 4088,
+        "forward_tiles": 4094,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 4094
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 2096128,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 1572864,
+    "forward_eager_history_pair_fraction": 0.7503663898387885,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  },
+  {
+    "run": "f3e-recompute-combined-all16-b1-t32-01",
+    "length": 32,
+    "selected_rt_layers": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15
+    ],
+    "observed_candidate_dispatch": {
+      "by_layer": {
+        "0": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "1": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "10": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "11": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "12": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "13": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "14": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "15": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "2": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "3": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "4": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "5": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "6": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "7": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "8": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        },
+        "9": {
+          "backward_blocks": 1,
+          "forward_blocks": 1,
+          "forward_eager_tiles": 0,
+          "forward_fused_tiles": 31,
+          "forward_tiles": 31,
+          "materialized_fused_tiles": 0,
+          "materialized_tiles": 0,
+          "recompute_tiles": 31
+        }
+      },
+      "totals": {
+        "backward_blocks": 16,
+        "forward_blocks": 16,
+        "forward_eager_tiles": 0,
+        "forward_fused_tiles": 496,
+        "forward_tiles": 496,
+        "materialized_fused_tiles": 0,
+        "materialized_tiles": 0,
+        "recompute_tiles": 496
+      }
+    },
+    "analytic_strict_causal_pairs_per_layer_per_pass": 496,
+    "analytic_forward_eager_pairs_per_layer_per_pass": 0,
+    "forward_eager_history_pair_fraction": 0.0,
+    "scope": "Pair area of observed dyadic forward history rectangles; not wall-time or full-model arithmetic fraction."
+  }
+]

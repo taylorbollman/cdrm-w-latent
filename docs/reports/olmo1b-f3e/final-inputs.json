@@ -1,0 +1,25 @@
+{
+  "runtime_dirs": [
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b1-t32-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-adjacent2-b8-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b8-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b8-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread4-b4-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-k3-spread2-b1-t32-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b1-t2048-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-single-b64-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-adjacent2-b64-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b64-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread4-b64-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b64-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-rt-spread2-b128-t512-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-spread2-b8-t2048-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-all16-b1-t32-01",
+    ".runtime/olmo1b-step60000/f3e-recompute-combined-all16-b8-t512-01"
+  ],
+  "historical_diagnostics": [],
+  "frozen_runtime": "543d243",
+  "protocol": "docs/reports/olmo1b-f3e/protocol.md",
+  "reporting_commit": "de3e6b9",
+  "conditional_followup": "RT-only spread2 B64/T512 for setup headroom after B128 reserved peak76.797GiB; both successful measurements retained."
+}

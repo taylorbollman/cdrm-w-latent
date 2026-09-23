@@ -106,12 +106,26 @@ at 31.29 GiB. Isolated reconstruction memory is approximately linear throughT204
 full-model memory is not. Read F3d assessment/results/usage and handoff. One
 failed capture attempt (fixed scalar indexing) and an earlier probe are retained
 separately from the final10-run selection. Native Q/K math remains unchanged.
-No GPU or quality run is queued. Next is broader optimized RT layer/context
-integration and F4 runtime cards. Only RT layer 0 is selected in actual F3d
-full-model checks. Forward rectangles above 256 still use eager fallback;
-recompute backward is fused through 2048. Native T2048 complete updates, more/all
-RT layers, padded graphs, graph recovery/accumulation and genuine multi-GPU remain
-untested. Direct Triton CPU observer attribution undercounts kernels; use device
+F3e multi-layer/context integration is now complete. Read its assessment/results/
+protocol/usage and current handoff. Runtime543d243, helpersde3e6b9, base9af736e;
+16 GPU reports pass48 gates,96 physical updates,474 scoped CPU tests pass. User
+expects more than one RT layer, not necessarily all16. Adjacent(0,1), spread(0,15)
+and four(0,5,10,15) pass bounded native gradient/graph/full-Adam checks; K3 andT2048
+also pass. Maximum global gradient L2 versus materialized .007477; same-candidate
+graphs/full-Adam exact. Combined B64/T512 single/two/four RT:10.93k/9.89k/8.31k
+inputtokens/s at39.09GiB allocated,60–61GiB reserved peak. RT-only spread2 B64
+19.45k/s at32.25GiB/47.96GiB; B12822.72k/s but reserved peak76.80GiB, so use B64
+for conservative development. Combined spread2 B8/T2048 4.71k/s at31.29GiB.
+All16 is separate stress: B1/T32 full equivalence and B8/T512 finite capacity
+939tokens/s; no larger-context all16 gradient or optimized throughput claim.
+RT adds no parameters; combined training/deployable counts1,267,879,936/
+1,185,153,024. All source/protocol snapshots and W&B/GCS evidence are retained.
+No GPU or quality run is queued. Next: complete F4 feature runtime cards and
+remaining graph/online readiness. Forward rectangles above256 remain eager;
+atT2048 six such two-layer calls cover75.04% of historical attention pair area,
+not full-step arithmetic/time. Recompute backward is fused through2048. Padded
+graphs, graph recovery/accumulation and genuine multi-GPU remain untested.
+Direct Triton CPU observer attribution undercounts kernels; use device
 traces/full-step timings. Two-GPU checks need a second GPU; one H100 is exposed.
 Read the handoff
 for current authorization and evidence. Do not infer long-run
