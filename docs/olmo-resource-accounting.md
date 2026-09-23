@@ -1,9 +1,10 @@
 # Native OLMo resource accounting
 
 The estimator in [`resource_estimates.py`](../cdrm/pretrained/resource_estimates.py)
-counts the materialized-backward implementation's matrix arithmetic. The F3d
-opt-in recompute path needs the explicit correction below; its new option is not
-yet an argument of the estimator. The estimator deliberately does not
+counts native training matrix arithmetic for either RT backward implementation.
+Pass `backward_memory="recompute"` for F3d's bounded workspace implementation;
+the default remains `"materialized"`. The selected option is included in the
+serialized resource card. The estimator deliberately does not
 translate parameter count into `6NT`, or treat estimated FLOPs as measured device
 utilization. CUDA graphs reduce scheduling overhead without removing the matrix
 work counted here.
@@ -118,9 +119,11 @@ F3d's opt-in `backward_memory="recompute"` removes those complete backward
 attention arrays, retaining row statistics and bounded query/key workspace.
 It adds QK reconstruction in the reverse historical tiles (`2BDE`) and in the
 final query-gradient stage (`2BDT²`). For the same no-prefix matrix accounting,
-add **`2BD(E+T²)` per selected RT invocation** to the existing estimate. At
+the estimator adds **`2BD(E+T²)` per selected RT invocation** as the explicit
+`rt_attention_probability_recompute` component. No manual correction is needed. At
 B64/T512/D2048 this is about0.103 TFLOPs/update for one invocation; multiply
-by the actual number of RT layers/feedback calls. Dense, loss and parameter
+by the actual number of RT layers/feedback calls and accumulation microbatches.
+Dense, loss and parameter
 counts are unchanged. Softmax/pointwise work and kernel tile padding remain
 excluded, so this small matrix-work addition does not predict wall time.
 The complete model is not claimed to use linear memory: ordinary/padded masks,
@@ -132,6 +135,8 @@ With FBT enabled, K includes one ordinary bootstrap. For `R` selected RT layers,
 there are `(K-1)R` RT block calls and `KL-(K-1)R` ordinary calls. With FBT disabled,
 there is one stack with `R` RT calls. K1 FBT is ordinary regardless of the RT
 selection. Beta zero omits fusion computation but does not omit extra stacks.
+Alpha zero still executes the selected RT code and therefore retains its RT
+arithmetic accounting; the ordinary mathematical limit is not a runtime bypass.
 
 Each feedback pass projects both previous hidden state and next-token embedding
 on the `B(T-1)` suffix positions. Fully trainable forward/backward costs
@@ -183,13 +188,15 @@ estimate = estimate_training_resources(
     loss_work=LossWork(ce_targets=16384, latent_pairs=32704,
                        kl_triples=16384, predictor_positions=32704),
     ordinary_checkpointing=True,
+    backward_memory="recompute",
 )
 record = estimate.to_dict()
 ```
 
-The resulting **matrix-arithmetic estimate** is 644.5–689.3 TFLOPs per update.
-All eight architectural combinations, using those same shape/mask assumptions
-and ordinary checkpointing, are:
+The resulting **matrix-arithmetic estimate** is 644.6–689.4 TFLOPs per update;
+the materialized reference is 644.5–689.3. All eight architectural combinations,
+using those same shape/mask assumptions, ordinary checkpointing and the
+default materialized backward, are:
 
 | Configuration | Estimated matrix TFLOPs/update |
 | --- | ---: |
@@ -207,6 +214,16 @@ also explain why arithmetic alone cannot identify the RT bottleneck: replacing
 one of sixteen layers adds modest total matrix work while changing dependency
 structure, kernel sizes and launch count substantially.
 
+For a prepared `StaticFBTTraining` execution, obtain `LossWork` from
+`plan.counts` and `plan.loss_layout.needed_source_indices.numel()`. The latter is
+the predictor-source union, not the sum of latent and KL counts. Use the actual
+model's `backward_memory`, selected RT layers, FBT mode and checkpointing setting.
+An architecture formula should be accompanied by `parameter_inventory` for the
+live model and optimizer. Declare the executed and inference name sets from the
+configuration; gradient presence alone does not identify those sets. Inactive
+registered wrappers can otherwise make resident parameters look like active
+architecture parameters.
+
 ## Coverage and verification
 
 Excluded arithmetic includes normalization, RoPE, nonlinearities, softmax,
@@ -216,10 +233,14 @@ memory traffic and launch latency are not FLOPs. Frozen-parameter ownership and
 zero pass weights require a new work audit. The estimator must be updated if
 the RT implementation changes projection shapes or backward reconstruction.
 
-The 20 focused CPU tests compare parameter formulas with real tiny modules,
+The 36 focused CPU tests compare parameter formulas with real tiny modules,
 deduplicate tied aliases, check exposure/pass accounting and reject invalid
 counts. Dispatch traces count actual eager `mm`/`bmm` operations for tiny RT
-forward/backward at lengths 3, 5 and 8: dense and attention totals agree exactly.
+forward/backward at lengths 3, 5, 8, 33 and 65 with each backward implementation:
+dense and attention totals agree exactly. Lengths above the 32-position workspace
+chunk exercise the bounded query/key reconstruction paths while counting their
+complete matrix reductions. Separate tests check K1, multiple selected layers,
+K2/K3, alpha zero and accumulation scaling; recomputation changes no parameters.
 Separate traces verify the canonical CE/KL checkpoint and detached-readout
 counts and bracket ordinary checkpoint early stopping. This validates the
 accounting against executed code without another GPU numerical campaign; it

@@ -1,8 +1,8 @@
 """Auditable matrix-arithmetic estimates for native OLMo training.
 
 This is an accounting tool, not a hardware-performance model. It describes the
-current eager dyadic RT/custom VJP and canonical checkpointed vocabulary losses,
-not an idealized KV-only or future fused RT implementation. See
+current dyadic RT/custom VJP and canonical checkpointed vocabulary losses,
+including either materialized or recomputed backward probabilities. See
 ``docs/olmo-resource-accounting.md`` for derivations and excluded work.
 """
 from __future__ import annotations
@@ -69,6 +69,7 @@ class TrainingResourceEstimate:
     rt_block_calls_per_microbatch: int
     parameter_counts: dict[str, int]
     assumptions: tuple[str, ...]
+    backward_memory: str = "materialized"
 
     @property
     def matrix_flops_minimum(self) -> int:
@@ -147,7 +148,8 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
                                 nextlat: NextLatConfig | None = None,
                                 loss_work: LossWork | None = None,
                                 ordinary_checkpointing: bool = False,
-                                accumulation_steps: int = 1) -> TrainingResourceEstimate:
+                                accumulation_steps: int = 1,
+                                backward_memory: str = "materialized") -> TrainingResourceEstimate:
     """Estimate dense training matrix arithmetic, with explicit recomputation.
 
     Scope: all backbone/active branch weights trainable, attached cross-pass
@@ -156,12 +158,16 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
     Ordinary attention bounds span ideal causal work through full-square work,
     including optional Flash score reconstruction. They are not rigorous bounds
     on hardware FLOPs: implementation padding and instruction details are omitted.
+    ``backward_memory`` selects RT probability storage/recomputation accounting;
+    it does not change parameter counts or ordinary-layer execution.
     """
     for name, value in (("batch_size", batch_size), ("sequence_length", sequence_length),
                         ("accumulation_steps", accumulation_steps)):
         _integer(name, value, minimum=1)
     if type(ordinary_checkpointing) is not bool:
         raise ValueError("ordinary_checkpointing must be boolean")
+    if backward_memory not in ("materialized", "recompute"):
+        raise ValueError("backward_memory must be materialized or recompute")
     if not isinstance(mode, FBTMode):
         raise TypeError("mode must be FBTMode")
     if any(i >= config.num_layers for i in mode.rt_mode.selected_layers):
@@ -227,11 +233,14 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
     history = t*(t-1)//2
     add("rt_attention_dyadic_forward", rt_calls*4*b*d*history)
     add("rt_attention_completed_reconstruction", rt_calls*4*b*d*t*t,
-        description="Current custom backward materializes full-square QK and PV.")
+        description="Complete QK and PV arithmetic; recompute mode bounds workspace using query chunks.")
     add("rt_attention_reverse_history", rt_calls*6*b*d*history,
         description="dV, dP and dK over each strict-causal dyadic pair exactly once.")
     add("rt_attention_final_query_vjp", rt_calls*4*b*d*t*t,
         description="Full-square dP and dQ; temporary diagonal work is pointwise and excluded.")
+    if backward_memory == "recompute":
+        add("rt_attention_probability_recompute", rt_calls*2*b*d*(history+t*t),
+            description="Additional QK in reverse historical tiles and final query VJP; no cached prefix.")
     add("fusion_dense_forward_backward", fusion_calls*12*b*max(t-1, 0)*d*d,
         description="Two D-by-D projections on every suffix position; attached input and weight VJPs.")
     readout_forward = 2*d*config.vocab_size
@@ -255,4 +264,5 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
          "All active weights trainable; attached pass gradients and positive pass coefficients.",
          "Loss masks change selected readout/predictor work, not dense backbone execution.",
          "Excluded: norms, RoPE, activations, softmax/CE/KL elementwise arithmetic, gather/scatter, casts, optimizer/clipping, communication, launch overhead and hardware padding.",
-         "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."))
+         "Ordinary attention and checkpoint early-stop ranges are accounting assumptions, not rigorous hardware bounds; CUDA graphs do not remove arithmetic."),
+        backward_memory=backward_memory)

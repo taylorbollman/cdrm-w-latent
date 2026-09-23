@@ -82,21 +82,52 @@ def test_inventory_deduplicates_aliases_and_distinguishes_frozen_unused_weights(
         parameter_inventory(model, optimizer=other)
 
 
-@pytest.mark.parametrize("length", [3, 5, 8])
-def test_rt_estimate_matches_executed_dense_and_attention_matmuls(length):
+@pytest.mark.parametrize("length", [3, 5, 8, 33, 65])
+@pytest.mark.parametrize("backward_memory", ["materialized", "recompute"])
+def test_rt_estimate_matches_executed_dense_and_attention_matmuls(length, backward_memory):
     torch.set_num_threads(1)
-    c = replace(OLMoConfig.tiny(), num_layers=1)
-    model = OLMoTiledRTForCausalLM(c, attention_backend="math", attention_precision="fp32")
+    c = replace(OLMoConfig.tiny(), num_layers=1, max_context_length=128)
+    model = OLMoTiledRTForCausalLM(c, attention_backend="math", attention_precision="fp32",
+        backward_memory=backward_memory)
     x = torch.randn(2, length, c.model_dim, requires_grad=True)
     with MatrixCounter() as observed:
         model(inputs_embeds=x, mode=RTMode((0,)), return_logits=False).last_hidden_state.square().sum().backward()
     got = estimate_training_resources(c, batch_size=2, sequence_length=length,
-        mode=FBTMode(enabled=False, rt_mode=RTMode((0,))))
+        mode=FBTMode(enabled=False, rt_mode=RTMode((0,))), backward_memory=backward_memory)
     # Everything in the RT block is included except explicitly excluded
     # pointwise arithmetic. Loss readouts are not part of this direct-block test.
     dense = sum(c.minimum for c in got.components if c.name.startswith("rt_") and not c.name.startswith("rt_attention_"))
     assert observed.dense == dense
     assert observed.attention == values(got, "rt_attention_")[0]
+
+
+def test_default_backward_accounting_stays_materialized():
+    default = estimate()
+    assert default.to_dict() == estimate(backward_memory="materialized").to_dict()
+    assert default.to_dict()["backward_memory"] == "materialized"
+    assert not any(c.name == "rt_attention_probability_recompute" for c in default.components)
+
+
+@pytest.mark.parametrize("enabled,passes,alpha", [(False, 1, 1.0), (True, 1, 1.0),
+    (True, 2, 1.0), (True, 3, 1.0), (True, 3, 0.0)])
+def test_recompute_work_counts_every_selected_rt_invocation_and_accumulation(enabled, passes, alpha):
+    c = replace(OLMoConfig.tiny(), num_layers=4)
+    mode = FBTMode(enabled=enabled, num_passes=passes, rt_mode=RTMode((0, 2, 3), alpha=alpha))
+    arguments = dict(batch_size=2, sequence_length=5, mode=mode,
+                     nextlat=NextLatConfig(c.model_dim), accumulation_steps=3)
+    reference = estimate_training_resources(c, **arguments)
+    candidate = estimate_training_resources(c, backward_memory="recompute", **arguments)
+    calls = 3 * (passes-1 if enabled else 1)
+    additional = 2*2*c.model_dim*(5*4//2 + 5*5)*calls*3
+    assert candidate.rt_block_calls_per_microbatch == calls
+    assert values(candidate, "rt_attention_probability_recompute") == (additional, additional)
+    assert candidate.matrix_flops_minimum - reference.matrix_flops_minimum == additional
+    assert candidate.matrix_flops_maximum - reference.matrix_flops_maximum == additional
+    assert candidate.parameter_counts == reference.parameter_counts
+    assert candidate.input_tokens_per_update == reference.input_tokens_per_update
+    assert candidate.pass_token_work_per_update == reference.pass_token_work_per_update
+    assert candidate.objective_positions_across_passes == reference.objective_positions_across_passes
+    assert candidate.to_dict()["backward_memory"] == "recompute"
 
 
 @pytest.mark.parametrize("checkpointing", [False, True])
@@ -187,7 +218,8 @@ def test_k1_fbt_is_ordinary_and_beta_zero_omits_fusion_work():
 
 
 @pytest.mark.parametrize("kwargs", [{"batch_size": 0}, {"sequence_length": True},
-    {"accumulation_steps": -1}, {"sequence_length": 33}, {"ordinary_checkpointing": 1}])
+    {"accumulation_steps": -1}, {"sequence_length": 33}, {"ordinary_checkpointing": 1},
+    {"backward_memory": "unknown"}, {"backward_memory": None}, {"backward_memory": True}])
 def test_bad_shape_and_execution_arguments_reject(kwargs):
     arguments = dict(batch_size=2, sequence_length=5,
         mode=FBTMode(enabled=False, rt_mode=RTMode(())))

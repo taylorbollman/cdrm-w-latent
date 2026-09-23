@@ -106,8 +106,11 @@ at 31.29 GiB. Isolated reconstruction memory is approximately linear throughT204
 full-model memory is not. Read F3d assessment/results/usage and handoff. One
 failed capture attempt (fixed scalar indexing) and an earlier probe are retained
 separately from the final10-run selection. Native Q/K math remains unchanged.
-No GPU or quality run is queued. Next is broader optimized RT layer/context
-integration and F4 runtime cards. Only RT layer 0 is selected in actual F3d
+F3e is now authorized/in progress on feat/olmo1b-f3e-multilayer-rt (base9af736e).
+Read its prospective protocol. User expects more than one RT layer, not necessarily
+all16: prioritize adjacent(0,1), spread(0,15), four(0,5,10,15); all16 is a separate
+stress case. Validate multi-layer gradients/graphs/full updates, K3 andT2048,
+then bounded larger-batch resource cards. No quality run is queued. Only RT layer 0 is selected in actual F3d
 full-model checks. Forward rectangles above 256 still use eager fallback;
 recompute backward is fused through 2048. Native T2048 complete updates, more/all
 RT layers, padded graphs, graph recovery/accumulation and genuine multi-GPU remain

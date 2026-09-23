@@ -29,14 +29,17 @@ supports historical rectangles through 2048. Installed FA4/CuTE passed its separ
 F3b smoke, not native RT integration. Native checkpoint/RoPE/loss/QK math and
 parameter counts stay fixed. All F3d full-model checks select only layer 0 for RT.
 
-**Next:** bounded multi-layer/all-layer RT and longer-context integration/resource
-coverage using the new path, then complete F4 runtime cards. The analytic ledger
-covers all eight combinations; its current estimator remains materialized and
-now documents the recompute correction. Native T2048 complete updates, padded
+**In progress: F3e**, bounded multi-layer RT and longer-context integration/resource
+coverage using the new path, then complete F4 runtime cards. The user expects more
+than one RT layer but has not chosen all-layer RT. Prioritize `(0,1)`, `(0,15)` and
+`(0,5,10,15)`; all16 is a separate stress case. See the
+[frozen prospective protocol](reports/olmo1b-f3e/protocol.md). The analytic ledger
+covers all eight combinations; its estimator now accepts explicit recompute work
+while preserving the materialized default. Native T2048 complete updates, padded
 graphs, graph recovery/accumulation and actual two-GPU execution remain open.
 Local writer/finish VJPs and discarded permanent-Q computation are separate
-performance opportunities. Preserve native Q/K math. No GPU or quality run is
-queued; deferred quality comparisons need a later decision. Read the
+performance opportunities. Preserve native Q/K math. Bounded F3e GPU validation
+is authorized; no quality run is queued. Quality comparisons need a later decision. Read the
 [handoff](fbt-rt-nextlat-handoff.md) first after compaction.
 
 ## 1. Scope and working principles
@@ -514,8 +517,9 @@ remain deferred.
   and F3d bounded backward attention workspace,
   each with before/after profiles and bounded native checks.
   F4 analytic parameter/FLOP cards are complete; runtime coverage remains partial.
-- Next: review F3d, then broaden optimized RT layer/context integration and
-  finish feature/resource cards. Keep native Q/K math and materialized reference.
+- In progress: F3e broadens optimized RT layer/context integration, prioritizing
+  two/four selected layers and treating all16 separately. Then finish F4 feature/
+  resource cards. Keep native Q/K math and materialized reference.
 - F5 starts when a second GPU is available, independent of quality results
   or completion of the fused-kernel work. Then perform F6 readiness review.
 - Kernel engineering is the largest uncertain effort. Initial checks and profiles

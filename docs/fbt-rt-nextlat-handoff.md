@@ -11,6 +11,18 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**F3e is authorized and in progress (2026-09-23).** The user clarifies that the
+main experiment will use more than one RT layer, but need not use all layers.
+The [prospective protocol](reports/olmo1b-f3e/protocol.md) therefore prioritizes
+adjacent layers `(0,1)`, separated layers `(0,15)` and four layers `(0,5,10,15)`.
+All16 is a separate stress case, not an assumed experiment default. Branch
+`feat/olmo1b-f3e-multilayer-rt` starts at PR18 merge `9af736e`. Reuse F3d recompute,
+native Q/K math, ordinary Flash/checkpointing and canonical CUDA graphs. Check
+independent CPU references, actual-checkpoint gradients/full Adam updates,
+K3 shared feedback, native T2048 and bounded larger-batch resource cards. No
+quality run is authorized by this functionality milestone. Exact queue/results
+will be added below as execution progresses; do not resume historical F3d jobs.
+
 **F3d bounded backward workspace is complete (2026-09-23).** Read the
 [assessment](reports/olmo1b-f3d/assessment.md), [results](reports/olmo1b-f3d/results.md),
 [protocol](reports/olmo1b-f3d/protocol.md) and [usage](olmo1b-f3d-usage.md).
