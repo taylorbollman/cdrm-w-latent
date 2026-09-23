@@ -219,3 +219,24 @@ small evidence in `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/`, and update t
 handoff. Reference the existing native checkpoint; few-update profiling weights
 are disposable unless needed to reproduce a failure. Notify the user before any
 expected multi-hour run; no long learning job is part of the proposed milestone.
+
+## Completion record — 2026-09-23
+
+Stage A (PR23) and the isolated author comparison (PR24) are complete and
+retained. Native RoPE reuse and K/V-only writes improve the earlier full-model
+RT rate by4.36%, without changing parameter ownership or defaults. At B128,
+the author-derived isolated1/2/6-block path is7.5–8.6% faster and uses less
+setup memory; native is faster at B32. These are native-geometry block fixtures,
+not the paper's published language-model throughput.
+
+Conditional integration (PR25) preserves exact own-backend graph and Adam
+behavior with ordinary Flash, FBT and NextLat. Native and author are effectively
+tied in bounded B64 full-model timing. Full-model cross-backend BF16 gradients
+miss the numerical screen. Bounded fixed-input/cotangent diagnostics instead
+find close local gradients and exact own full/local backward reproduction; the
+large difference arrives through the incoming full-model gradient trajectory.
+No replacement, new normalization or arithmetic fix is selected. See
+[isolated results](reports/olmo-rt-author-comparison/results.md) and
+[integration results](reports/olmo-rt-author-integration/results.md) for exact
+measurements, qualifiers, source snapshots and storage receipts. This closes
+the comparison milestone while leaving full-stack precision sensitivity open.

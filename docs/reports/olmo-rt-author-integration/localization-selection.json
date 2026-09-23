@@ -1,0 +1,17 @@
+[
+  {
+    "name": "localize-block0",
+    "runtime_commit": "29a2c4b1a1ad67a1969cec7ae3053ea0e03db8a5",
+    "report_sha256": "61c481436968e5285aef776561d79d4ce29e763ff774d7b1ae5fd2f6a31c4ef6"
+  },
+  {
+    "name": "localize-block0-r2",
+    "runtime_commit": "524fa89fe431053b34a17326ee8c7fa76368ff1c",
+    "report_sha256": "fffe5bf0d3979879aa7617b990b8c02da4a4f177e32d648448f2ebc19caffa97"
+  },
+  {
+    "name": "localize-block0-r3",
+    "runtime_commit": "987bc460593b5d0e24d412f3054ff1f876407b9f",
+    "report_sha256": "5af7d1e248365cca040b7b40b13a38541ac3170656289004e178ce9cef622453"
+  }
+]

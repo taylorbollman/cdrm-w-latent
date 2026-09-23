@@ -372,3 +372,62 @@ def test_queue_artifact_matching_symlink_is_rejected(tmp_path):
     (tmp_path / "integration-stage1.json").symlink_to(target)
     with pytest.raises(ValueError, match="symlink"):
         list(retain.queue_artifacts(tmp_path))
+
+
+def add_localization(evidence, *, status="completed"):
+    root = evidence.root
+    script = "scripts/olmo_rt_author_localize.py"
+    protocol_name = report.DOCS + "/localization-protocol.md"
+    write(root, script, "frozen diagnostic")
+    write(root, protocol_name, "fixed-input prospective protocol")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "diagnostic")
+    revision = git(root, "rev-parse", "HEAD")
+    name = "localize-block0"
+    directory = root / report.RUNTIME / name
+    sources = {}
+    for source in sorted(report.ESSENTIAL_SOURCES | {script}):
+        snapshot = write(directory, "source-snapshot/" + source, git(root, "show", revision + ":" + source))
+        sources[source] = report.digest(snapshot)
+    protocol = write(directory, "protocol.md", git(root, "show", revision + ":" + protocol_name))
+    path = write(directory, "report.json", {"schema": "olmo-rt-author-localization-v1", "status": status,
+        "runtime_commit": revision, "physical_optimizer_updates": 0, "checkpoint": evidence.checkpoint,
+        "source_hashes": sources, "protocol_sha256": report.digest(protocol)})
+    write(root, report.RUNTIME + "/" + name + ".log", "diagnostic log")
+    selection = [{"name": name, "runtime_commit": revision, "report_sha256": report.digest(path)}]
+    write(root, report.DOCS + "/localization-selection.json", selection)
+    return directory, path, selection
+
+
+@pytest.mark.parametrize("status", ["completed", "failed"])
+def test_explicit_localization_preserves_status_and_source_overlay(evidence, status):
+    add_localization(evidence, status=status)
+    members = []
+    rows = retain.collect_localizations(evidence.root, evidence.checkpoint, {},
+                                        lambda path, name: members.append((path, name)))
+    assert rows[0]["status"] == status
+    assert rows[0]["physical_optimizer_updates"] == 0
+    assert rows[0]["source_pairs_checked"] == len(report.ESSENTIAL_SOURCES) + 1
+    assert any(name.endswith("/protocol.md") for _, name in members)
+    assert all(path.is_file() for path, _ in members)
+
+
+@pytest.mark.parametrize("tamper", ["report", "snapshot", "protocol", "updates", "path"])
+def test_localization_rejects_tampered_bytes_and_scope(evidence, tamper):
+    directory, path, selection = add_localization(evidence)
+    if tamper == "snapshot":
+        (directory / "source-snapshot/scripts/olmo_rt_author_localize.py").write_text("changed")
+    elif tamper == "protocol":
+        (directory / "protocol.md").write_text("changed")
+    elif tamper == "path":
+        selection[0]["name"] = "../localize-block0"
+        write(evidence.root, report.DOCS + "/localization-selection.json", selection)
+    else:
+        raw = json.loads(path.read_text())
+        raw["physical_optimizer_updates"] = 1
+        path.write_text(json.dumps(raw))
+        if tamper == "updates":
+            selection[0]["report_sha256"] = report.digest(path)
+            write(evidence.root, report.DOCS + "/localization-selection.json", selection)
+    with pytest.raises((ValueError, AssertionError)):
+        retain.collect_localizations(evidence.root, evidence.checkpoint, {}, lambda path, name: None)

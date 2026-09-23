@@ -48,11 +48,20 @@ and20 retention CPU tests,25 passing GPU reports plus one retained zero-update
 loader failure. Exact own graph/Adam checks; BF16 cross-backend gradientL2.004133.
 B128 author is7.5–8.6% faster across1/2/6blocks and uses substantially less setup
 memory; B32 native is faster. These are block/MSE rates, not LM rates. Read its
-results. The conditional actual16layer RT0/15 + K2/NextLat integration is next,
-developed in `.runtime/olmo-author-integration-worktree`;236 CPU tests pass.
-Retain and merge PR24 before moving that runtime to primary and freezing for GPU.
-Read its prospective protocol. Native remains default; no quality training.
-Existing F4 numerical qualifications remain open.
+results. The conditional full-model integration is complete (PR25): core2c38d649,
+capacity524fa89 with identical integration source. CPU236 integration,47 evidence
+and25 localization tests pass. Both full-model numerical screens FAIL
+(raw-gradient L2 .312458 RT / .162606 combined), despite exact own Flash/graph/
+Adam checks. Four B64 timing runs pass; rates are essentially tied at22.43k RT
+and11.19–11.20k combined tokens/s. Author RT setup allocated memory is lower;
+combined reserved memory is not lower. Native remains default.
+Fixed-real-input/shared-cotangent block0 gradients agree at.003327 mixed and
+4.65e-7 FP32. Final diagnostic987bc46 finds incoming gradients differ by.786611;
+each own local VJP exactly reproduces its full-model block0 raw gradients. No
+local backward arithmetic fix is supported by the tested separate-self probe.
+Read the handoff/results for limitations, retained failures, source pins and
+next functional milestone. Finalize PR25/evidence retention, then pause; GPU is
+idle and no quality training is queued. Prior F4 qualifications remain open.
 
 Prior user-directed investigation: CE integration and the refreshed original
 16-layer ordinary baseline are complete. Read

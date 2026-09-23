@@ -339,9 +339,15 @@ def plot_capacity(summary, directory):
         axis.set_ylabel("Input tokens/s (thousands)")
         axis.set_title("RT layers 0/15" if case == "rt" else "K2 FBT + RT + NextLat")
         axis.legend(); axis.grid(axis="y", alpha=.2); axis.set_axisbelow(True); axis.margins(y=.2)
-    fig.suptitle("OLMo-1B full-CE complete updates · native vs author RT")
-    fig.text(.5, .01, "Five-update short benchmarks, not learning runs. Median of run medians; whiskers span repeats. K2 counts inputs once.", ha="center", fontsize=9)
-    fig.tight_layout(rect=(0, .06, 1, .95))
+    fig.suptitle("OLMo-1B full CE · exploratory native/author RT timing")
+    numerical_failures = any(group["total"] and not group["complete_and_passed"]
+        for row in summary["runs"] for group in [row["gate_groups"]["compatibility"]])
+    qualification = ("Full-model numerical compatibility FAILED; these timings do not clear a backend replacement."
+                     if numerical_failures else "Timing alone does not establish numerical suitability or model quality.")
+    fig.text(.5, .01, "Five timed updates per run; run medians, whiskers only for repeats. K2 counts inputs once.\n"
+             + qualification,
+             ha="center", fontsize=9)
+    fig.tight_layout(rect=(0, .11, 1, .95))
     files = ["throughput.png", "throughput.pdf"]
     for name in files:
         fig.savefig(directory / name, dpi=180, bbox_inches="tight")

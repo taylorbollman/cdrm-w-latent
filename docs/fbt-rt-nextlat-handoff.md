@@ -58,16 +58,58 @@ peak allocated12.24/22.79GiB, reserved28.67/44.75GiB. These are isolated Gaussia
 block/MSE rates, not LM throughput. B128 is a comfortable shared tested point,
 not maximum capacity. Native defaults remain unchanged. PR24 contains this stage.
 
-The repeated large-batch speed/memory advantage justifies the authorized
-conditional integration follow-up. It is developed in
-`.runtime/olmo-author-integration-worktree`, branch
-`feat/olmo-author-integration-followup`, based on6eea309. CPU tests236 pass;
-prospective protocol `docs/reports/olmo-rt-author-integration/protocol.md`.
-After retaining/merging PR24, bring the opt-in integration runtime to a fresh
-primary branch and freeze it before GPU work. Check actual16layer RT0/15 and
-K2+NextLat, fullCE2048/KL128, B8 numerical/graph/Adam checks and B64 timing.
-Ordinary layers retain Flash; author RT does not use Flash. No quality run,
-normalization change or default switch. Preserve existing F4 qualifications.
+The conditional full-model integration is complete on
+`feat/olmo-rt-author-integration`, PR25. Runtime2c38d649; capacity runs use
+524fa89 with identical integration sources. Read
+[results](reports/olmo-rt-author-integration/results.md), its summary, protocol,
+usage and localization notes. The opt-in author route preserves native default,
+checkpoint keys and ownership; padding, caches and fractional recurrence are
+unsupported. CPU suites include236 integration/regression,47 evidence-helper
+and25 localization tests, with overlapping harness reruns recorded separately.
+
+**Numerical qualification:** actual16-layer RT0/15 B8/T512 full-CE BF16
+cross-backend gradient L2 is0.312458 for RT-only and0.162606 for K2+NextLat.
+Both fail unchanged screens. Each passes all five own operational checks,
+including Flash dispatch, exact eager/graph gradients and complete Adam parity.
+Four B64 capacity runs also pass operational checks. There are44 actual optimizer
+updates and282 frozen source/report pairs across these six reports. Numerical
+failure is not relabeled by operational or timing success.
+
+**Performance:** at B64/T512, native/author rates are22430.8/22425.7 input tokens/s
+for RT-only and11195.8/11186.5 for combined. Treat both pairs as tied in this
+bounded five-update measurement; no small speed advantage is claimed, so reverse
+repeats were not added. Author/native setup allocated peaks are26.78/32.08GiB
+for RT and36.53/38.92GiB combined. Combined reserved peaks are66.39/65.64GiB,
+so there is no demonstrated combined reservation/capacity advantage. This does
+not invalidate the isolated B128 advantage; geometry and workload differ.
+
+**Localization:** `localize-block0-r2` at524fa89 uses fixed actual native input
+and incoming cotangent. Native/author full-FP32 local gradients agree at4.65e-7;
+BF16 cross-backend error is0.003327. Both mixed paths differ by about0.5% from
+local FP32. Separating the reconstructed self diagonal does not improve aggregate
+agreement; compiled legacy token0 reconstruction is already exact. No production
+arithmetic change follows from that probe.
+
+`localize-block0-r3` at987bc46 captures both full-model incoming gradients. They
+differ by0.786611 relative L2; each local backend exactly reproduces its own
+full-model block0 raw parameter gradients when given its own cotangent. The
+fresh capture's block0 difference is0.443495 (the original verification was
+0.437355); shared-cotangent error stays0.003327. This supports a changed incoming
+trajectory as the main source of that block's large discrepancy, not a gross
+local VJP defect. It does not identify the downstream sensitive layer or choose
+which full-model mixed trajectory is closer to FP32. No broad precision fix is
+established. All three diagnostic attempts are retained; the first failed before
+forward on a fixed Flash-context setup guard. A separate parse-time cherry-pick
+launch error has its log retained. Diagnostics performed zero optimizer updates.
+
+Recommendation: keep optimized native as the supported path and keep author
+as an explicitly experimental option. No full-model speed benefit justifies a
+replacement, and native supports the broader recurrence/cache contract. Before
+adopting author mixed precision, separately assess full-stack FP32/precision
+sensitivity. The older functional roadmap (graph recovery/accumulation, padded
+online execution, real multi-GPU) remains the next broader work; no quality run,
+Q/K-normalization change or further GPU job is queued. Existing F4 qualifications
+remain open. Finalize verified GCS retention and PR25, then pause for review.
 
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read

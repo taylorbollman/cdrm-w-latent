@@ -23,6 +23,8 @@ MAX_BYTES = 64 * 1024**2
 ARTIFACT = ".runtime/olmo1b-step60000/artifacts/artifact-manifest.json"
 RECEIPT = "docs/reports/olmo1b-o1/storage-receipt.json"
 DOC_FILES = ("protocol.md", "summary.json", "test-results.txt", "retention-test-results.txt",
+    "combined-test-results.txt", "final-harness-test-results.txt",
+    "localization-protocol.md", "localization-test-results.txt", "localization-selection.json",
     "results.md", "assessment.md", "usage.md", "numerical-assessment.md", "execution-notes.md",
     "throughput.png", "throughput.pdf")
 PROJECT_FILES = (
@@ -31,6 +33,7 @@ PROJECT_FILES = (
     "scripts/openelm_retain.py", "scripts/olmo_tiled_retain.py", "scripts/docker_shell.sh",
     "docker/requirements-docker.txt", "tests/test_olmo_rt_author_integration_evidence.py",
     "tests/test_olmo_author_integration.py", "tests/test_olmo_rt_author_integration.py",
+    "tests/test_olmo_rt_author_localize.py",
     "docs/reports/olmo-rt-author-comparison/author-port-audit.md",
     "docs/fbt-rt-nextlat-handoff.md", "docs/fbt-rt-nextlat-research-plan-v4.md",
     "docs/olmo-rt-efficiency-and-author-comparison-plan.md", "docs/olmo-resource-accounting.md",
@@ -47,6 +50,63 @@ def queue_artifacts(runtime):
         require(not path.is_symlink(), "Queue artifact cannot be a symlink: " + path.name)
         if path.is_file():
             yield path
+
+
+def collect_localizations(root, checkpoint, receipt, add):
+    """Optional, explicitly selected zero-update diagnostic overlays."""
+    selection = root / report.DOCS / "localization-selection.json"
+    if not selection.exists():
+        return []
+    report.regular(selection, root)
+    selected = json.loads(selection.read_text())
+    require(isinstance(selected, list) and selected, "Require explicit localization selection")
+    checked, seen = [], set()
+    for item in selected:
+        name = item.get("name")
+        require(isinstance(name, str) and re.fullmatch(r"localize-[A-Za-z0-9_-]+", name),
+                "Unsafe localization name")
+        require(name not in seen, "Duplicate localization selection")
+        seen.add(name)
+        revision = report.resolve_commit(root, item.get("runtime_commit"))
+        directory = root / report.RUNTIME / name
+        path = directory / "report.json"
+        report.regular(path, root)
+        raw = json.loads(path.read_text())
+        require(file_digest(path)["sha256"] == item.get("report_sha256"), "Localization report changed")
+        require(raw.get("schema") == "olmo-rt-author-localization-v1"
+                and raw.get("status") in {"passed", "failed", "oom", "completed"}
+                and raw.get("runtime_commit") == revision
+                and raw.get("physical_optimizer_updates") == 0, "Invalid localization report")
+        if "checkpoint" in raw:
+            require(checkpoint_reference(receipt, raw["checkpoint"]) == checkpoint,
+                    "Localization uses another checkpoint")
+        else:
+            require(raw["status"] in {"failed", "oom"}, "Completed localization lacks checkpoint")
+        hashes = raw.get("source_hashes", {})
+        require(isinstance(hashes, dict)
+                and "scripts/olmo_rt_author_localize.py" in hashes
+                and report.ESSENTIAL_SOURCES <= set(hashes), "Incomplete localization source overlay")
+        prefix = "localization/" + name + "/"
+        add(path, prefix + "report.json")
+        for source, expected in hashes.items():
+            safe_relative(source)
+            report.safe_source(source)
+            snapshot = directory / "source-snapshot" / source
+            report.regular(snapshot, root)
+            require(file_digest(snapshot)["sha256"] == expected
+                    == report.frozen_digest(str(root), revision, source), "Localization source differs: " + source)
+            add(snapshot, prefix + "source-snapshot/" + source)
+        protocol = directory / "protocol.md"
+        report.regular(protocol, root)
+        require(file_digest(protocol)["sha256"] == raw.get("protocol_sha256")
+                == report.frozen_digest(str(root), revision, report.DOCS + "/localization-protocol.md"),
+                "Localization protocol differs")
+        add(protocol, prefix + "protocol.md")
+        add(root / report.RUNTIME / (name + ".log"), "logs/" + name + ".log")
+        checked.append({"name": name, "runtime_commit": revision, "status": raw["status"],
+                        "report_sha256": item["report_sha256"], "source_pairs_checked": len(hashes),
+                        "physical_optimizer_updates": 0})
+    return checked
 
 
 def collect_evidence(root=ROOT):
@@ -88,6 +148,7 @@ def collect_evidence(root=ROOT):
             add(path.parent / "source-snapshot" / source, prefix + "source-snapshot/" + source)
         rows.append(row)
         raws.append(raw)
+    localizations = collect_localizations(root, checkpoint, receipt, add)
     updates = sum(row["physical_optimizer_updates"] for row in rows)
     pairs = sum(row["source_pairs_checked"] for row in rows)
     require(updates == summary.get("physical_optimizer_updates"), "Summary physical update count differs")
@@ -119,6 +180,7 @@ def collect_evidence(root=ROOT):
         "current_source_differences": {row["name"]: row["current_source_differences"] for row in rows},
         "run_revisions": {row["name"]: row["runtime_commit"] for row in rows},
         "queue_artifacts": queued,
+        "localizations": localizations,
     }
 
 
