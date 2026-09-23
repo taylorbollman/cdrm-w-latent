@@ -23,7 +23,20 @@ persistence were briefly stopped, idle modules reloaded, services restarted.
 Container now verifies H10080GB /driver580.178.04. Fabric manager reports no
 NVSwitch device; single-GPU CUDA availability is to be checked by the probes.
 No model data or previous run changed. CPU tests pass initial reference checks.
-Update this active record with final reports before closing the milestone.
+Active execution: core/protocol commitb85337c; graph-safe diagonal-clear fix
+40305d8. Probe01 passed69gates; native RT B8/T512 attempt01 passed the initial
+gradient screen but hit a CPU-scalar copy during graph capture. Its report and
+source are retained. Attempt02 passes allfive native gates, including exact
+three-versus-three AdamW parity (W&B aycfe3gv). The initial gradient globalL2 is
+.00089227. Queue session35102 runs `.runtime/olmo1b-step60000/f3d-next-queue.py`
+(log alongside): final probe02, combined B8/T512 correctness, fresh reference/
+candidate RT B128 and combined B64 capacity, combined B2/T1024 correctness and
+reference/candidate B16/T1024 capacity. It stops on any failure. Probe02 passed;
+combined initial gradientL2 .00237615 passes and graph checks are exact so far.
+All GPU commands are launched inside Docker. Source files/protocol stay frozen
+while the queue runs. Final report/retention helpers are separate from that
+runtime inventory. Update this active record with final reports before closing
+the milestone.
 
 **F3c historical backward fusion is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3c/assessment.md),
