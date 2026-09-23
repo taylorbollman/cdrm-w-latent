@@ -2,6 +2,8 @@
 
 2026-09-23. Completed: six GPU reports, 18/18 gates, 36 physical optimizer updates, and 152 scoped CPU tests. Frozen runtime/protocol `0d39a22` on base PR21 merge `4528b37`. No failed GPU attempt or runtime edit during this queue.
 
+Review: [PR22](https://github.com/taylorbollman/cdrm-w-latent/pull/22).
+
 **The original pretrained model improves from 31.11k to 39.19k input tokens/s (26.0%) by increasing CE position chunks 128→2048.** This validates the bottleneck found in the prior six-layer test. The full-next-token-supervision measurement is 36.63k/s.
 
 ## What changed

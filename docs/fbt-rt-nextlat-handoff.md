@@ -19,6 +19,8 @@ Runtime/protocol `0d39a22`, base PR21 merge `4528b37`. Six GPU reports pass all
 18 gates, with 36 physical updates and 152 scoped CPU tests (30 new). All 246
 run/source pairs match the frozen revision and snapshots. The selected raw
 reports/W&B links are in [summary](reports/olmo-ce-integration/summary.json).
+Reports/retainer commit `49c8c54`; review:
+[PR22](https://github.com/taylorbollman/cdrm-w-latent/pull/22).
 
 - New opt-in `NextLatConfig.ce_chunk_size=2048` groups CE selected positions
   independently from `vocab_chunk_size=128` for KL. All vocabulary rows remain.
