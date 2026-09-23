@@ -11,38 +11,71 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
-**F3d is active (2026-09-23), explicitly authorized.** Branch
-`feat/olmo1b-f3d-rt-memory`, base70e86e2. Implement opt-in
-`backward_memory="recompute"`, retain materialized F3c default/reference;
-[prospective protocol](reports/olmo1b-f3d/protocol.md). Root owns core/native
-validation; agents own recompute kernel, bounded probes and independent checks.
-No quality training. GPU diagnostics will use new `f3d-*` output directories.
-Driver/library mismatch blocked initial container launch: running580.173.02
-versus installed580.178.04. Only the telemetry collector held devices; it and
-persistence were briefly stopped, idle modules reloaded, services restarted.
-Container now verifies H10080GB /driver580.178.04. Fabric manager reports no
-NVSwitch device; single-GPU CUDA availability is to be checked by the probes.
-No model data or previous run changed. CPU tests pass initial reference checks.
-Active execution: core/protocol commitb85337c; graph-safe diagonal-clear fix
-40305d8. Probe01 passed69gates; native RT B8/T512 attempt01 passed the initial
-gradient screen but hit a CPU-scalar copy during graph capture. Its report and
-source are retained. Attempt02 passes allfive native gates, including exact
-three-versus-three AdamW parity (W&B aycfe3gv). The initial gradient globalL2 is
-.00089227. Queue session35102 runs `.runtime/olmo1b-step60000/f3d-next-queue.py`
-(log alongside): final probe02, combined B8/T512 correctness, fresh reference/
-candidate RT B128 and combined B64 capacity, combined B2/T1024 correctness and
-reference/candidate B16/T1024 capacity. It stops on any failure. Probe02 passed;
-combined initial gradientL2 .00237615 passes and graph checks are exact so far.
-All GPU commands are launched inside Docker. Source files/protocol stay frozen
-while the queue runs. Final report/retention helpers are separate from that
-runtime inventory. Update this active record with final reports before closing
-the milestone.
+**F3d bounded backward workspace is complete (2026-09-23).** Read the
+[assessment](reports/olmo1b-f3d/assessment.md), [results](reports/olmo1b-f3d/results.md),
+[protocol](reports/olmo1b-f3d/protocol.md) and [usage](olmo1b-f3d-usage.md).
+The user explicitly authorized this milestone. No GPU or quality run is queued.
+
+F3d durable execution record:
+
+- Branch `feat/olmo1b-f3d-rt-memory`, base 70e86e2, initial runtime b85337c,
+  final runtime 40305d8; reporting/retention 62ab5de. Ten final GPU reports pass
+  90/90 gates; 54 actual updates comprise 27 eager+27 graph. 428 scoped CPU tests
+  pass . The two historical diagnostics are retained separately from final counts.
+- Opt-in `backward_memory="recompute"` retains row normalizers and reconstructs
+  probabilities in bounded attention/gradient tiles. BF16 full-product rounding,
+  temporary self, query/prefix gradients and normal autograd ownership remain.
+  Cache/static signatures freeze the option. Materialized F3c stays default.
+  Forward, parameters, checkpoint, RoPE, normalization and losses do not change.
+- Final probe02: 69 gates, including 48 frozen cases,4 long history rectangles,
+  14 raw-cotangent blocks and 3 reconstruction memory sizes. All block forward/
+  cache outputs are exact;13/14 block gradients are exact, worst global L2
+  7.92e-7. Worst block versus FP32 is .003489. 392 recompute calls verified.
+  Preserve 22 stricter diagnostic flags; primary budgets all pass . W&B puvm7gux.
+- Native RT B8/T512, combined K2+NextLat B8/T512 and combined B2/T1024 initial
+  gradient global L2 versus F3c is .00089227/.00237615/.00224863. Losses are exact.
+  Same-candidate changed-input/weight/overwrite graph and three-versus-three
+  full Adam/model/moment/scheduler/counter comparisons are exact in all three.
+  W&B aycfe3gv/j67nv8l3/7hw7ai6t. Actual backward calls511/511/1023.
+- Fresh paired full-update capacity: RT B128/T512 allocated42.10→38.60 GiB,
+  tokens/s 26,454→26,257; combined B64/T51240.84→39.09 GiB,
+  10,970→10,927; combined B16/T1024 33.16→31.29 GiB,8,637→8,579.
+  Memory savings1.75–3.50 GiB cost0.39–0.74% measured throughput. Three-update
+  medians are directional. Reserved peak/current are separately reported.
+- Isolated B2/H4/head dimension 64 reconstruction peaks at T512/1024/2048 fall from
+  29.29/116.08/462.16 MiB to 3.15/6.23/12.40 MiB. The linear claim covers RT backward
+  attention scratch, not full-model memory or long-context forward fallback.
+  Forward rectangles above 256 remain eager; recompute backward supports2048.
+- Native/checkpoint shape remains16 layers, selecting only RT layer 0 here.
+  Native Q/K math stays. All-layer/multi-layer optimized runtime, native T2048
+  complete updates, padded graphs, graph recovery/accumulation and multi-GPU
+  remain open. Local writer/finish VJPs/permanent discarded-Q remain separate.
+- Driver/library mismatch was repaired by reloading idle NVIDIA modules after
+  confirming no GPU jobs:580.173.02→580.178.04. Telemetry/persistence restored;
+  fabric manager reports no NVSwitch on this single H100. All GPU execution
+  used the container. Fresh controls avoid relying on old-driver timing.
+- Probe01 passed before native RT attempt01 exposed graph-unsafe scalar indexing.
+  Runtime40305d8 uses an equivalent diagonal-view zero. Final probe02 has identical
+  numerical results/fixture hashes. Failed attempt01 did zero optimizer updates;
+  retain its source/error/W&B record. Existing AccumulateGrad stream warning
+  remains visible, with measured parity passing; revisit ownership for DDP.
+- Queue session35102 completed0; `.runtime/olmo1b-step60000/f3d-next-queue.log`.
+  Explicit final selection is `f3d-final-inputs.json`; raw runs and sibling logs
+  persist. [Receipt](reports/olmo1b-f3d/storage-receipt.json) records small GCS
+  evidence under `olmo1b-f3d-rt-memory/`, including both historical attempts.
+  Original native weights are referenced, no disposable trained weights retained.
+
+**Next review milestone:** bounded more-RT-layer/longer-context integration using
+recompute, then broader F4 runtime cards. Keep the materialized reference and
+native Q/K math. A second GPU is needed for actual F5. No quality run is implied.
+The [resource ledger](olmo-resource-accounting.md) retains the materialized
+estimator and documents the additional recompute matrix work explicitly.
 
 **F3c historical backward fusion is complete and assessed (2026-09-22).**
 Read the [assessment](reports/olmo1b-f3c/assessment.md),
 [results](reports/olmo1b-f3c/results.md), [protocol](reports/olmo1b-f3c/protocol.md)
 and [usage](olmo1b-f3c-usage.md). The user authorized this after F3b. No GPU or
-quality run is queued. Quadratic-intermediate removal remains the next milestone.
+quality run is queued. Its quadratic-intermediate follow-up is now complete as F3d above.
 
 F3c durable execution record:
 
@@ -89,7 +122,7 @@ F3c durable execution record:
   [receipt](reports/olmo1b-f3c/storage-receipt.json) pins objects/hashes/generations.
   Existing native weights are referenced; no disposable trained weights archived.
 
-**Next: remove quadratic probability/error intermediates in checked stages.**
+**Historical F3c follow-up, completed as F3d above: quadratic-intermediate removal.**
 Retain row normalizers and recompute probabilities inside attention/gradient
 tiles, preserving BF16 whole-product rounding, temporary-self separation, final
 dQ and attached-prefix gradients. Keep the current VJP as reference. One FP32
