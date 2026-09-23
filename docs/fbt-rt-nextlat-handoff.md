@@ -51,7 +51,15 @@ weight VJPs and useful compiled helpers; author gradient/precision policies diff
 from native. Prefer explicit packed outer weights with private invocation-local
 Q/KV leaves and returned packed gradients, preserving external ownership. Record
 Dynamo cache limits and MLP chunking, and validate changed-weight graph replay.
-No alternate backend or Stage B GPU run has been implemented yet at this handoff.
+Stage B is active on `feat/olmo-rt-author-comparison`, after merged PR23 (`5d3e396`).
+The prospective protocol and external-event preflight are committed at `b6ec098`:
+`docs/reports/olmo-rt-author-comparison/protocol.md`. The new isolated
+`cdrm/pretrained/olmo_author.py` port passes 57 CPU tests, including independent
+FP32 gradients, ownership, operation accounting and tiny BF16 smoke checks.
+Compiled native-width GPU correctness and matched timing are next; CPU tests do
+not establish GPU compatibility. CUDA external-event preflight passed with exact
+changed-input/weight graph gradients; evidence is in
+`.runtime/olmo-rt-author-comparison/event-preflight.json`. No learning run.
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md),

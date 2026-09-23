@@ -47,6 +47,13 @@ outputs, arbitrary-cotangent input and every packed parameter gradient; short
 dyadic boundaries, offset/irregular positions, chunk counts1/4, two layers,
 shared/frozen calls, parameter/checkpoint ownership, invalid metadata. Independently
 count executed mm/bmm work before publishing any new author FLOP formula.
+The isolated block ledger is `cdrm/pretrained/rt_block_resources.py`; CPU dispatch
+counts check its forward/backward partitions. Each native-width block owns
+67,108,864 parameters. The author schedule's dense training work is
+50ND²+36NDM versus native K/V-only58ND²+36NDM (N=BT). Attention and native
+probability recomputation are accounted separately, including the author's
+pointwise singleton reverse tiles. These are logical matrix counts, not hardware
+FLOP measurements, and exclude objectives, optimizer and pointwise operations.
 
 Native-width B1/T32 FP32 comparisons must pass before throughput: relative L2
 <=1e-4 or absolute L2<=2e-6, max error<=2e-6+1e-4*reference peak; global parameter

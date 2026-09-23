@@ -43,8 +43,10 @@ to author-derived RoPE Stages B/C after finishing/retaining Stage A. Read
 `docs/olmo-rt-efficiency-and-author-comparison-plan.md` and
 `docs/reports/olmo-rt-author-comparison/author-port-audit.md`. Preserve author
 writer-VJP scheduling, compilation/caching and recorded precision differences.
-No alternate implementation or comparison run exists yet; no learning run is
-authorized here. Existing F4 numerical qualifications remain open.
+Stage B is active on `feat/olmo-rt-author-comparison`; its isolated author port
+passes 57 CPU tests. Read its prospective `protocol.md` before GPU work. Native-width
+compiled CUDA correctness and matched timing remain unestablished; no learning
+run is authorized here. Existing F4 numerical qualifications remain open.
 
 Prior user-directed investigation: CE integration and the refreshed original
 16-layer ordinary baseline are complete. Read

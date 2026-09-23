@@ -1,9 +1,9 @@
 # Author-derived native RoPE port: source audit
 
-Read-only audit, 2026-09-23. The user authorized proceeding to the author-derived
-comparison after Stage A; this document records source findings and a proposed
-adapter contract. It does not claim that the alternate backend has been built,
-numerically validated or timed.
+Source audit, 2026-09-23, with the initial CPU port checks recorded below. The
+user authorized proceeding to the author-derived comparison after Stage A.
+This document records source findings and the adapter contract; it does not
+establish GPU numerical, compilation/capture or performance qualification.
 
 ## Source identity
 
@@ -208,3 +208,44 @@ replay and a few changed-input/changed-weight Adam updates. The quadratic
 workspace and per-token writer gradients must be included in measured memory
 and timing. Only advance to shared FBT or broad wrapper replacement after a
 repeatable block/stack performance reason and its own integration validation.
+
+## Initial implementation and CPU review
+
+The adapter in [`olmo_author.py`](../../../cdrm/pretrained/olmo_author.py)
+implements both functional entrypoints, the author's helper-compilation
+boundaries, private leaf gradient accumulation, native table rotations and
+explicit packed-gradient returns. The author-style FP32-state policy remains
+a separately named diagnostic. Original sequential references are unchanged.
+
+Preserve the author's tensor lifetimes as well as its operations: release
+temporary K/V after forward state initialization; release the full attention
+matrix/permanent-key working storage after final dQ; release temporary
+Q/K/V/adjoints after their VJP; and release the per-token adjoint list after
+concatenation, before final batched MLP reconstruction. Retaining those unused
+tensors until function exit would inflate measured peak memory. At B512/T512/H16,
+one BF16 square attention matrix alone occupies 4 GiB.
+
+The 57 focused CPU-container checks in
+[`test_olmo_author.py`](../../../tests/test_olmo_author.py) pass at this initial
+review. They compare author scan/tiled against the unchanged native FP32 scan
+at lengths 1/2/3/5/8/17 and MLP chunk counts 1/4; cover arbitrary raw cotangents,
+offset/nonconsecutive positions, two recurrent layers, shared calls, frozen
+inputs/weights, zero cotangents, causality and checkpoint/gradient ownership;
+and reject unsupported metadata. Two tiny CPU BF16 checks exercise finite
+private-leaf replay with autocast caching on/off and backward outside the
+forward autocast context. Those checks do not validate CUDA BF16 numerics.
+
+Independent dispatch counts of executed eager `mm`/`bmm` at lengths 3/5/8 and
+MLP chunks 1/4 confirm, per full-trainable RT invocation with `N=BT`:
+
+- Dense matrix arithmetic: **`50ND² + 36NDM`**, versus the native KV-only
+  implementation's `58ND² + 36NDM`. The author avoids the native implementation's
+  additional separate batched writer VJP/reconstruction, while performing its
+  parameter VJPs sequentially; fewer FLOPs need not mean better throughput.
+- Attention matrix arithmetic: **`10BD·E + 6BD·T² − 6BD·floor(T/2)`**, with
+  `E=T(T−1)/2`. The subtraction matters: singleton reverse tiles use pointwise
+  multiply/reduce instead of three matmuls, so that work is outside a strictly
+  matrix-only ledger. Forward singleton tiles still use matmuls.
+
+These accounting checks validate the CPU operation ledger, not compiled
+hardware instructions, fused-kernel FLOPs or observed GPU efficiency.
