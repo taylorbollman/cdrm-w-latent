@@ -55,7 +55,9 @@ def attention_from_completed(query, temporary_key, temporary_value, permanent_ke
         diagonal_p = probabilities[:, :, local_indices, prefix_length + indices]
         # Advanced indexing returns a copy, so zeroing P does not erase self P.
         diagonal_probability[:, :, rows] = diagonal_p
-        probabilities[:, :, local_indices, prefix_length + indices] = 0
+        # A diagonal view avoids advanced-index scalar assignment, which may
+        # stage a CPU scalar and is not legal inside CUDA graph capture.
+        probabilities.diagonal(offset=prefix_length + start, dim1=-2, dim2=-1).zero_()
         attended = _mm(probabilities, permanent_value, spec, dtype)
         attended += diagonal_p.unsqueeze(-1) * temporary_value[:, :, rows].float()
         attention[:, :, rows] = attended
