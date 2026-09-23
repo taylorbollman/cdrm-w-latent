@@ -15,6 +15,7 @@ from torch import Tensor
 
 from .nextlat import NextLatBatch, _validate_batch
 from .olmo_fbt import FBTMode, FBTOutput, OLMoFBT
+from .olmo_rope import build_rope_tables
 from .olmo_tiled import OLMoTiledRTForCausalLM
 from .recurrent import RTMode
 
@@ -79,8 +80,13 @@ class PreparedFBTLayout:
         else:
             indices = torch.arange(self._shape[1], device=self._device)
             self.attention_mask = (indices[None] <= indices[:, None])[None, None] & self.valid_mask[:, None, None, :]
-        self._owned = (self.valid_mask, self.position_ids, self.feedback_eligible, self.attention_mask)
-        self._owned_versions = tuple(None if value is None else (id(value), value._version) for value in self._owned)
+        self.rope_tables = (build_rope_tables(self.position_ids, self.base.config.head_dim,
+            self.base.config.rope_freq_constant) if self.base.reuse_rope else None)
+        self._rope_owner = id(self.rope_tables)
+        self._owned = self._owned_tensors()
+        self._owned_versions = self._owned_signature()
+        # Preserve the old table allocations if someone replaces ``.data``.
+        self._owned_storage_references = tuple(value.detach() for value in self._owned if value is not None)
         self._structure = self._structure_signature()
         # Hold old storages without copying bytes, so a child dtype roundtrip
         # cannot release/reuse a pointer and masquerade as unchanged ownership.
@@ -107,7 +113,17 @@ class PreparedFBTLayout:
             self.core.fusion.norm_eps, self.base.attention_backend, self.base.attention_precision,
             self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
             self.base.tile_backend, self.base.backward_tile_backend, self.base.backward_memory,
+            self.base.reuse_rope, self.base.kv_only_writes,
             tuple((name, id(module), type(module), module.training) for name, module in self.core.named_modules()))
+
+    def _owned_tensors(self):
+        tables = (None, None) if self.rope_tables is None else (self.rope_tables.cos, self.rope_tables.sin)
+        return (self.valid_mask, self.position_ids, self.feedback_eligible, self.attention_mask, *tables)
+
+    def _owned_signature(self):
+        return tuple(None if value is None else (id(value), value.data_ptr(), value._version,
+            tuple(value.shape), tuple(value.stride()), value.device, value.dtype, value.requires_grad)
+            for value in self._owned_tensors())
 
     def _parameter_signature(self):
         return tuple((name, id(value), value.data_ptr(), tuple(value.shape), tuple(value.stride()),
@@ -126,7 +142,10 @@ class PreparedFBTLayout:
             "explicit_positions": self._explicit_positions, "valid_mask_sha256": _digest(self._valid_cpu),
             "position_ids_sha256": _digest(self._positions_cpu), "feedback_eligible_sha256": _digest(self._eligible_cpu),
             "document_contract": "one independent document per row; no cache or packed documents",
-            "loss_masks_owned_here": False}
+            "loss_masks_owned_here": False, "reuse_rope": self.base.reuse_rope,
+            "rope_tables_owned_here": self.rope_tables is not None,
+            "rope_table_bytes": 0 if self.rope_tables is None else sum(
+                tensor.numel() * tensor.element_size() for tensor in (self.rope_tables.cos, self.rope_tables.sin))}
 
     def validate_batch(self, batch: NextLatBatch, position_ids: Tensor | None = None):
         """Run on fresh batches before copying tokens/replay, never inside capture."""
@@ -148,9 +167,9 @@ class PreparedFBTLayout:
         if not isinstance(mode, FBTMode):
             raise TypeError("Static mode must be an FBTMode")
         self.core._validate_rt_mode(mode.rt_mode)
-        current_owned = (self.valid_mask, self.position_ids, self.feedback_eligible, self.attention_mask)
         if ((self.all_tokens_valid, self.is_causal) != self._static_flags
-                or tuple(None if value is None else (id(value), value._version) for value in current_owned) != self._owned_versions):
+                or id(self.rope_tables) != self._rope_owner
+                or self._owned_signature() != self._owned_versions):
             raise ValueError("Prepared layout tensors changed")
         if self._structure_signature() != self._structure or self._parameter_signature() != self._parameter_signatures:
             raise ValueError("Prepared model ownership/configuration/execution flags changed")
@@ -161,6 +180,7 @@ class PreparedFBTLayout:
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
             "cast_weights_once": self.base.cast_weights_once, "tile_backend": self.base.tile_backend,
             "backward_tile_backend": self.base.backward_tile_backend, "backward_memory": self.base.backward_memory,
+            "reuse_rope": self.base.reuse_rope, "kv_only_writes": self.base.kv_only_writes,
             "training": self.core.training, "attention_backend": self.base.attention_backend,
             "attention_precision": self.base.attention_precision, "grad_enabled": torch.is_grad_enabled(),
             "inference_mode": torch.is_inference_mode_enabled(),
@@ -181,6 +201,7 @@ class PreparedFBTLayout:
         return self.base._forward_prepared(embeddings, mode=mode,
             positions=self.position_ids, key_positions=self.position_ids, key_valid=self.valid_mask,
             attention_mask=self.attention_mask, is_causal=self.is_causal,
+            query_rope=self.rope_tables, key_rope=self.rope_tables,
             checkpoint_ordinary=self.base.ordinary_activation_checkpointing and self.base.training and torch.is_grad_enabled())[0]
 
     def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode()) -> PreparedFBTOutput:

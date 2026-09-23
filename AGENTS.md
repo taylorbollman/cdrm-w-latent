@@ -31,7 +31,22 @@ W&B tracking.
 
 # Pretrained model handoff
 
-Latest user-directed investigation: CE integration and the refreshed original
+Latest authorized queue: native RT efficiency Stage A is complete. Read
+`docs/reports/olmo-rt-efficiency/results.md` and the current handoff. Runtime3fd27e0;
+420 scoped CPU tests and21 GPU reports/41 gates/158 actual updates pass. Repeated
+B64/T512 full-CE RT21.49k→22.43k (+4.36%), combined10.95k→11.20k (+2.26%).
+RoPE reuse is exact; KV-only gradient changes pass existing budgets; graph/full
+Adam parity is exact. Both switches default off; use explicit reuse_rope=True,
+kv_only_writes=True as the improved native comparison arm. Parameters unchanged.
+The user explicitly lifted the review stop and authorized proceeding directly
+to author-derived RoPE Stages B/C after finishing/retaining Stage A. Read
+`docs/olmo-rt-efficiency-and-author-comparison-plan.md` and
+`docs/reports/olmo-rt-author-comparison/author-port-audit.md`. Preserve author
+writer-VJP scheduling, compilation/caching and recorded precision differences.
+No alternate implementation or comparison run exists yet; no learning run is
+authorized here. Existing F4 numerical qualifications remain open.
+
+Prior user-directed investigation: CE integration and the refreshed original
 16-layer ordinary baseline are complete. Read
 `docs/reports/olmo-ce-integration/results.md` and the current handoff. Optional
 `NextLatConfig.ce_chunk_size=2048` separates CE grouping from KL128; None preserves

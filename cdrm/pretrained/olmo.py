@@ -19,6 +19,8 @@ from torch import Tensor, nn
 from torch.nn import functional as F
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
+from .olmo_rope import RopeTables, apply_rope_tables
+
 
 OLMO_REVISION = "b3741bc21f1dd504838b7dbd9878ee077ded63bd"
 
@@ -159,13 +161,16 @@ class OLMoBlock(nn.Module):
     def forward(self, x: Tensor, *, past: tuple[Tensor, Tensor] | None,
                 query_positions: Tensor, key_positions: Tensor,
                 mask: Tensor | None, is_causal: bool, attention_backend: str,
+                query_rope: RopeTables | None = None, key_rope: RopeTables | None = None,
                 ) -> tuple[Tensor, tuple[Tensor, Tensor]]:
         query, key, value = self.project_qkv(self.attn_norm(x))
         if past is not None:
             key, value = torch.cat((past[0], key), dim=-2), torch.cat((past[1], value), dim=-2)
         present = (key, value)
-        query = _apply_rope(query, query_positions, self.config.rope_freq_constant)
-        key = _apply_rope(key, key_positions, self.config.rope_freq_constant)
+        query = (_apply_rope(query, query_positions, self.config.rope_freq_constant)
+                 if query_rope is None else apply_rope_tables(query, query_rope))
+        key = (_apply_rope(key, key_positions, self.config.rope_freq_constant)
+               if key_rope is None else apply_rope_tables(key, key_rope))
         context = sdpa_kernel(SDPBackend.MATH) if attention_backend == "math" else nullcontext()
         with context:
             attended = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, dropout_p=0.0, is_causal=is_causal)

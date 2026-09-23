@@ -84,16 +84,18 @@ def test_inventory_deduplicates_aliases_and_distinguishes_frozen_unused_weights(
 
 @pytest.mark.parametrize("length", [3, 5, 8, 33, 65])
 @pytest.mark.parametrize("backward_memory", ["materialized", "recompute"])
-def test_rt_estimate_matches_executed_dense_and_attention_matmuls(length, backward_memory):
+@pytest.mark.parametrize("kv_only_writes", [False, True])
+def test_rt_estimate_matches_executed_dense_and_attention_matmuls(length, backward_memory, kv_only_writes):
     torch.set_num_threads(1)
     c = replace(OLMoConfig.tiny(), num_layers=1, max_context_length=128)
     model = OLMoTiledRTForCausalLM(c, attention_backend="math", attention_precision="fp32",
-        backward_memory=backward_memory)
+        backward_memory=backward_memory, kv_only_writes=kv_only_writes)
     x = torch.randn(2, length, c.model_dim, requires_grad=True)
     with MatrixCounter() as observed:
         model(inputs_embeds=x, mode=RTMode((0,)), return_logits=False).last_hidden_state.square().sum().backward()
     got = estimate_training_resources(c, batch_size=2, sequence_length=length,
-        mode=FBTMode(enabled=False, rt_mode=RTMode((0,))), backward_memory=backward_memory)
+        mode=FBTMode(enabled=False, rt_mode=RTMode((0,))), backward_memory=backward_memory,
+        kv_only_writes=kv_only_writes)
     # Everything in the RT block is included except explicitly excluded
     # pointwise arithmetic. Loss readouts are not part of this direct-block test.
     dense = sum(c.minimum for c in got.components if c.name.startswith("rt_") and not c.name.startswith("rt_attention_"))
@@ -106,6 +108,36 @@ def test_default_backward_accounting_stays_materialized():
     assert default.to_dict() == estimate(backward_memory="materialized").to_dict()
     assert default.to_dict()["backward_memory"] == "materialized"
     assert not any(c.name == "rt_attention_probability_recompute" for c in default.components)
+
+
+def test_default_writer_accounting_stays_full_qkv():
+    default = estimate()
+    assert default.to_dict() == estimate(kv_only_writes=False).to_dict()
+    assert default.to_dict()["kv_only_writes"] is False
+
+
+@pytest.mark.parametrize("enabled,passes", [(False, 1), (True, 1), (True, 2), (True, 3)])
+@pytest.mark.parametrize("backward_memory", ["materialized", "recompute"])
+def test_kv_only_savings_include_local_and_batched_vjps_for_every_invocation(enabled, passes, backward_memory):
+    c = replace(OLMoConfig.tiny(), num_layers=4)
+    mode = FBTMode(enabled=enabled, num_passes=passes, rt_mode=RTMode((0, 2, 3), alpha=0.37))
+    arguments = dict(batch_size=2, sequence_length=5, mode=mode,
+        nextlat=NextLatConfig(c.model_dim), accumulation_steps=3, backward_memory=backward_memory)
+    reference = estimate_training_resources(c, **arguments)
+    candidate = estimate_training_resources(c, kv_only_writes=True, **arguments)
+    calls = 3 * (passes-1 if enabled else 1)
+    # Each omitted forward Q projection saves 2*N*D². Forward, batched
+    # reconstruction, local forward+input VJP, and batched input+weight VJPs
+    # therefore save 2+2+4+4 = 12*N*D² per RT call, including accumulation.
+    expected_savings = 12*2*5*c.model_dim**2*calls*3
+    assert reference.matrix_flops_minimum - candidate.matrix_flops_minimum == expected_savings
+    assert reference.matrix_flops_maximum - candidate.matrix_flops_maximum == expected_savings
+    assert candidate.parameter_counts == reference.parameter_counts
+    assert candidate.input_tokens_per_update == reference.input_tokens_per_update
+    assert candidate.pass_token_work_per_update == reference.pass_token_work_per_update
+    assert candidate.objective_positions_across_passes == reference.objective_positions_across_passes
+    assert values(candidate, "rt_attention_") == values(reference, "rt_attention_")
+    assert candidate.to_dict()["kv_only_writes"] is True
 
 
 @pytest.mark.parametrize("enabled,passes,alpha", [(False, 1, 1.0), (True, 1, 1.0),
@@ -219,7 +251,8 @@ def test_k1_fbt_is_ordinary_and_beta_zero_omits_fusion_work():
 
 @pytest.mark.parametrize("kwargs", [{"batch_size": 0}, {"sequence_length": True},
     {"accumulation_steps": -1}, {"sequence_length": 33}, {"ordinary_checkpointing": 1},
-    {"backward_memory": "unknown"}, {"backward_memory": None}, {"backward_memory": True}])
+    {"backward_memory": "unknown"}, {"backward_memory": None}, {"backward_memory": True},
+    {"kv_only_writes": 1}, {"kv_only_writes": None}, {"kv_only_writes": "true"}])
 def test_bad_shape_and_execution_arguments_reject(kwargs):
     arguments = dict(batch_size=2, sequence_length=5,
         mode=FBTMode(enabled=False, rt_mode=RTMode(())))

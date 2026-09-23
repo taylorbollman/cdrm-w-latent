@@ -7,6 +7,17 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
+**Latest approved ordering (2026-09-23):** the user approved the
+[native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
+It places RoPE-table reuse and K/V-only permanent writes before a matched
+author-derived native-RoPE backend comparison, with an initial review after the
+native improvements. Stage A is complete: [results](reports/olmo-rt-efficiency/results.md).
+RoPE reuse and K/V-only writes pass420 CPU tests and41 GPU gates, and improve
+matched native RT/combined throughput by4.36%/2.26% with unchanged parameters.
+The user subsequently lifted the review stop and authorized proceeding directly
+to Stages B/C after finishing Stage A. Graph recovery/accumulation and online
+readiness remain subsequent work.
+
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md) and
 [usage](reports/olmo-ce-integration/usage.md). Optional independent CE2048/KL128
@@ -18,7 +29,7 @@ ordinary/NextLat/combined chunk-comparison gradients pass; same-candidate graph
 and three-update Adam comparisons are exact. Dao CE was source/import-audited,
 not adopted or GPU-tested. No default, Q/K, RoPE or RT math change.
 
-Next: resume graph recovery/save-resume, accumulation, padding and online
+After the RT backend comparison: resume graph recovery/save-resume, accumulation, padding and online
 readiness. Use recorded CE2048/KL128 in new bounded development and matched CE
 settings in future throughput comparisons. Existing RT+FBT precision caveats
 remain open; require a second GPU for distributed checks. No long quality run
