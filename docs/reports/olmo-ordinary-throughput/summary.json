@@ -1,0 +1,991 @@
+{
+  "cpu_tests_passed": 9,
+  "physical_optimizer_updates": 42,
+  "runs": [
+    {
+      "ce_chunks": 128,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 64,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 16,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 128,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 16,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h16-b64-half-c128",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 64,
+        "precision": "bf16_mixed",
+        "profile": true,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "half",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 16384,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          0.548446533203125,
+          0.5487445068359375,
+          0.549011962890625
+        ],
+        "median_cuda_seconds": 0.5487445068359375,
+        "median_wall_seconds": 0.5487944550113752,
+        "wall_seconds": [
+          0.5484989680116996,
+          0.5487944550113752,
+          0.549067409010604
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 59709.05810139936,
+      "full_update": {
+        "cuda_seconds": [
+          0.5712262573242187,
+          0.57031982421875,
+          0.5710430908203125
+        ],
+        "median_cuda_seconds": 0.5710430908203125,
+        "median_wall_seconds": 0.5710675899754278,
+        "wall_seconds": [
+          0.571278015995631,
+          0.5703457570052706,
+          0.5710675899754278
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 32768,
+      "input_tokens_per_second": 57380.24810935245,
+      "name": "l6-h16-b64-half-c128",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h16-b64-half-c128/report.json",
+      "report_sha256": "9361d144df61d2d2cbce6e7cdca1f32ead178b89af35fca8e9a26f62f3bccc2b",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.695393085479736,
+        "peak_allocated_gib": 14.23787546157837,
+        "peak_reserved_gib": 21.779296875,
+        "reserved_gib": 15.02734375
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.695393085479736,
+        "peak_allocated_gib": 8.464924812316895,
+        "peak_reserved_gib": 15.796875,
+        "reserved_gib": 15.796875
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h16-b64-half-c128",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "9t8dw046",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/9t8dw046",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 8,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 64,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 16,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 2048,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 16,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h16-b64-half-c2048",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 64,
+        "precision": "bf16_mixed",
+        "profile": true,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "half",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 16384,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          0.33136077880859377,
+          0.3320931396484375,
+          0.3318272399902344
+        ],
+        "median_cuda_seconds": 0.3318272399902344,
+        "median_wall_seconds": 0.33187079802155495,
+        "wall_seconds": [
+          0.33140392499626614,
+          0.33212742299656384,
+          0.33187079802155495
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 98737.22001256562,
+      "full_update": {
+        "cuda_seconds": [
+          0.3537087707519531,
+          0.3530262451171875,
+          0.35240850830078124
+        ],
+        "median_cuda_seconds": 0.3530262451171875,
+        "median_wall_seconds": 0.35305421601515263,
+        "wall_seconds": [
+          0.3537516990036238,
+          0.35305421601515263,
+          0.35243035602616146
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 32768,
+      "input_tokens_per_second": 92812.94065779868,
+      "name": "l6-h16-b64-half-c2048",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h16-b64-half-c2048/report.json",
+      "report_sha256": "47a81b7d7ae668f8022e7351d00aa910d191ff1ddebda27194b62769883ec5a6",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.694416522979736,
+        "peak_allocated_gib": 14.23689889907837,
+        "peak_reserved_gib": 21.77734375,
+        "reserved_gib": 15.525390625
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.694416522979736,
+        "peak_allocated_gib": 8.462971687316895,
+        "peak_reserved_gib": 15.91015625,
+        "reserved_gib": 15.91015625
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h16-b64-half-c2048",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "5ed164zu",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/5ed164zu",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 1024,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 512,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 32,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 128,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 32,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h32-b512-half-c128",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 512,
+        "precision": "bf16_mixed",
+        "profile": false,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "half",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 131072,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          5.92606396484375,
+          5.931646484375,
+          5.92835546875
+        ],
+        "median_cuda_seconds": 5.92835546875,
+        "median_wall_seconds": 5.928474440006539,
+        "wall_seconds": [
+          5.926167925994378,
+          5.931763183994917,
+          5.928474440006539
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 44217.78362254537,
+      "full_update": {
+        "cuda_seconds": [
+          5.9772451171875,
+          5.9778056640625,
+          5.9768056640625
+        ],
+        "median_cuda_seconds": 5.9772451171875,
+        "median_wall_seconds": 5.977335925010266,
+        "wall_seconds": [
+          5.977335925010266,
+          5.977864180022152,
+          5.976865385018755
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 262144,
+      "input_tokens_per_second": 43856.32718133535,
+      "name": "l6-h32-b512-half-c128",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h32-b512-half-c128/report.json",
+      "report_sha256": "1cb841abd89d70d892b1e5894f1f6c2f3a18cbb9e7bef0ed6539c787cc3575d8",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.701679229736328,
+        "peak_allocated_gib": 56.46437644958496,
+        "peak_reserved_gib": 72.783203125,
+        "reserved_gib": 64.783203125
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.701679229736328,
+        "peak_allocated_gib": 8.469257831573486,
+        "peak_reserved_gib": 64.783203125,
+        "reserved_gib": 64.783203125
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h32-b512-half-c128",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "0e8wttqg",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/0e8wttqg",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 64,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 512,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 32,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 2048,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 32,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h32-b512-half-c2048",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 512,
+        "precision": "bf16_mixed",
+        "profile": false,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "half",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 131072,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          2.782876220703125,
+          2.780423095703125,
+          2.774870361328125
+        ],
+        "median_cuda_seconds": 2.780423095703125,
+        "median_wall_seconds": 2.7805168149934616,
+        "wall_seconds": [
+          2.782954135007458,
+          2.7805168149934616,
+          2.774963665026007
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 94278.87599399986,
+      "full_update": {
+        "cuda_seconds": [
+          2.822560302734375,
+          2.815809814453125,
+          2.809692138671875
+        ],
+        "median_cuda_seconds": 2.815809814453125,
+        "median_wall_seconds": 2.8158496459946036,
+        "wall_seconds": [
+          2.82262496399926,
+          2.8158496459946036,
+          2.8097287970012985
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 262144,
+      "input_tokens_per_second": 93095.87973664925,
+      "name": "l6-h32-b512-half-c2048",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h32-b512-half-c2048/report.json",
+      "report_sha256": "415d3625a092b4a54cfac5400b4ecbbfaea9d58ad0d42100006d056156963062",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.701679229736328,
+        "peak_allocated_gib": 56.46437644958496,
+        "peak_reserved_gib": 72.783203125,
+        "reserved_gib": 60.783203125
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.701679229736328,
+        "peak_allocated_gib": 8.469257831573486,
+        "peak_reserved_gib": 60.783203125,
+        "reserved_gib": 60.783203125
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h32-b512-half-c2048",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "gkial8t3",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/gkial8t3",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 128,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 512,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 32,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 2048,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 32,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h32-b512-full-c2048",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 512,
+        "precision": "bf16_mixed",
+        "profile": false,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "full",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 261632,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          3.52101708984375,
+          3.52875537109375,
+          3.519900146484375
+        ],
+        "median_cuda_seconds": 3.52101708984375,
+        "median_wall_seconds": 3.521108610992087,
+        "wall_seconds": [
+          3.521108610992087,
+          3.5288607380061876,
+          3.5199936169956345
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 74449.27974719298,
+      "full_update": {
+        "cuda_seconds": [
+          3.5656904296875,
+          3.560465576171875,
+          3.5710859375
+        ],
+        "median_cuda_seconds": 3.5656904296875,
+        "median_wall_seconds": 3.5657633160008118,
+        "wall_seconds": [
+          3.5657633160008118,
+          3.560511369985761,
+          3.571129527001176
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 262144,
+      "input_tokens_per_second": 73516.93782469221,
+      "name": "l6-h32-b512-full-c2048",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h32-b512-full-c2048/report.json",
+      "report_sha256": "0cfbe57ee20b70959c2b5a0f60ce78386e740e304a43996e13a4523905087a08",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.7026519775390625,
+        "peak_allocated_gib": 56.465349197387695,
+        "peak_reserved_gib": 76.779296875,
+        "reserved_gib": 60.779296875
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.7026519775390625,
+        "peak_allocated_gib": 8.47023057937622,
+        "peak_reserved_gib": 60.779296875,
+        "reserved_gib": 60.779296875
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h32-b512-full-c2048",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "7m7wh3pw",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/7m7wh3pw",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 8,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 32,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "on",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 32,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 2048,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 32,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h32-b32-full-c2048-checkpoint",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 32,
+        "precision": "bf16_mixed",
+        "profile": false,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "full",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 16352,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          0.19890751647949217,
+          0.19890521240234374,
+          0.1988409881591797
+        ],
+        "median_cuda_seconds": 0.19890521240234374,
+        "median_wall_seconds": 0.19893397099804133,
+        "wall_seconds": [
+          0.19894522000686266,
+          0.19893397099804133,
+          0.1988777999940794
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 82358.98533469335,
+      "full_update": {
+        "cuda_seconds": [
+          0.21896823120117187,
+          0.21826237487792968,
+          0.2184281005859375
+        ],
+        "median_cuda_seconds": 0.2184281005859375,
+        "median_wall_seconds": 0.2184475009853486,
+        "wall_seconds": [
+          0.21901096700457856,
+          0.21828202399774455,
+          0.2184475009853486
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 16384,
+      "input_tokens_per_second": 75002.00243123352,
+      "name": "l6-h32-b32-full-c2048-checkpoint",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h32-b32-full-c2048-checkpoint/report.json",
+      "report_sha256": "81c011a0548190807c8f10ff8c75bdd631380da980e5eef8f26ceceb0bc87269",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.695911884307861,
+        "peak_allocated_gib": 11.192739009857178,
+        "peak_reserved_gib": 16.400390625,
+        "reserved_gib": 12.73046875
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.695911884307861,
+        "peak_allocated_gib": 8.46544361114502,
+        "peak_reserved_gib": 13.5,
+        "reserved_gib": 13.5
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h32-b32-full-c2048-checkpoint",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "xcb784vb",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/xcb784vb",
+        "status": "synced",
+        "system_stats": false
+      }
+    },
+    {
+      "ce_chunks": 8,
+      "configuration": {
+        "accumulation_steps": 1,
+        "attention": "deterministic pytorch Flash",
+        "autocast_weight_cache": false,
+        "batch_size": 32,
+        "capture_warmup_backwards": 10,
+        "checkpointing": "off",
+        "execution": "graph",
+        "fbt": false,
+        "heads": 32,
+        "initialization": "random native Mitchell",
+        "layers": 6,
+        "length": 512,
+        "loss_chunk": 2048,
+        "loss_chunk_axis": "selected positions, each projected over the full vocabulary",
+        "mlp": 8192,
+        "model": {
+          "eos_token_id": 50279,
+          "layer_norm_eps": 1e-05,
+          "max_context_length": 2048,
+          "mlp_intermediate_size": 8192,
+          "model_dim": 2048,
+          "num_heads": 32,
+          "num_layers": 6,
+          "pad_token_id": 1,
+          "rope_freq_constant": 10000.0,
+          "tokenizer_vocab_size": 50280,
+          "vocab_size": 50304
+        },
+        "nextlat": false,
+        "output_dir": ".runtime/olmo-ordinary-throughput/l6-h32-b32-full-c2048-no-checkpoint",
+        "parameter_optimizer_dtype": "float32",
+        "physical_batch": 32,
+        "precision": "bf16_mixed",
+        "profile": false,
+        "rt": false,
+        "seed": 20260923,
+        "supervision": "full",
+        "tf32": false,
+        "timed_updates": 3,
+        "warmup_updates": 3,
+        "world_size": 1
+      },
+      "counts": {
+        "ce": 16352,
+        "kl": 0,
+        "latent": 0
+      },
+      "forward_loss_backward": {
+        "cuda_seconds": [
+          0.16526101684570313,
+          0.1650498504638672,
+          0.16494918823242188
+        ],
+        "median_cuda_seconds": 0.1650498504638672,
+        "median_wall_seconds": 0.16508489998523146,
+        "wall_seconds": [
+          0.16530449301353656,
+          0.16508489998523146,
+          0.16497550898930058
+        ]
+      },
+      "forward_loss_backward_tokens_per_second": 99245.90317749059,
+      "full_update": {
+        "cuda_seconds": [
+          0.18515667724609375,
+          0.18435769653320314,
+          0.18429580688476563
+        ],
+        "median_cuda_seconds": 0.18435769653320314,
+        "median_wall_seconds": 0.18437698201159947,
+        "wall_seconds": [
+          0.18520183299551718,
+          0.18437698201159947,
+          0.18431381598929875
+        ]
+      },
+      "gradient_health": {
+        "missing": [],
+        "nonfinite": []
+      },
+      "health": {
+        "nonfinite_optimizer_tensors": [],
+        "nonfinite_parameters": [],
+        "passed": true
+      },
+      "input_tokens": 16384,
+      "input_tokens_per_second": 88861.41763058718,
+      "name": "l6-h32-b32-full-c2048-no-checkpoint",
+      "ordinary_dispatch": [
+        "aten::_scaled_dot_product_flash_attention",
+        "aten::scaled_dot_product_attention"
+      ],
+      "parameters": {
+        "active": 505675776,
+        "frozen_fusion": 8388608,
+        "resident": 514064384
+      },
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-ordinary-throughput/l6-h32-b32-full-c2048-no-checkpoint/report.json",
+      "report_sha256": "e7e63a7c09825927ad4b291d4ff4ef9f9eaf9511810ce988120b9d7763fe6347",
+      "same_weight_ce_chunk_check": {
+        "losses": {
+          "128": 10.84616756439209,
+          "2048": 10.84616756439209
+        },
+        "passed": true,
+        "relative_difference": 0.0,
+        "scope": "2048 native-width random hidden positions; same full readout; forward only"
+      },
+      "setup_memory": {
+        "allocated_gib": 7.695911884307861,
+        "peak_allocated_gib": 21.166866302490234,
+        "peak_reserved_gib": 36.0,
+        "reserved_gib": 22.029296875
+      },
+      "status": "passed",
+      "steady_memory": {
+        "allocated_gib": 7.695911884307861,
+        "peak_allocated_gib": 8.46544361114502,
+        "peak_reserved_gib": 22.798828125,
+        "reserved_gib": 22.798828125
+      },
+      "trainable_weight_changed": true,
+      "wandb": {
+        "enabled": true,
+        "entity": "taylorbollman",
+        "group": "olmo-ordinary-throughput",
+        "mode": "online",
+        "name": "l6-h32-b32-full-c2048-no-checkpoint",
+        "project": "pretrained-fbt-rt-nextlat",
+        "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat",
+        "run_id": "8cw7ojkm",
+        "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8cw7ojkm",
+        "status": "synced",
+        "system_stats": false
+      }
+    }
+  ],
+  "runtime_commit": "71fbccd",
+  "schema": "olmo-ordinary-throughput-summary-v1",
+  "scope": "Seven bounded random-initialized ordinary six-layer measurements; no RT/FBT/NextLat, no convergence, no paper reproduction or optimal-speed claim.",
+  "source_pairs_checked": 287,
+  "status": "completed"
+}

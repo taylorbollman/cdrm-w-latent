@@ -1,0 +1,16 @@
+Completed CPU verification (retained from the original run; not rerun).
+Host working directory: /home/taylorbollman/cdrm-w-latent
+Execution: project Docker container with GPU passthrough disabled; CPU-only tests, no CUDA execution.
+
+Command:
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_throughput.py'
+
+Captured output:
+.........                                                                [100%]
+9 passed in 2.32s
+
+Exit code: 0
+
+Scope: random-fixture CE supervision counts and document boundaries, deterministic
+local RNG, requested model geometry, and independent FP32 dense-versus-chunked
+full-vocabulary CE loss and gradients for position chunks 128 and 2048.

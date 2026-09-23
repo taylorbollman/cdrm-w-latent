@@ -11,6 +11,29 @@ efficiency, explicit parameter/throughput/FLOP accounting, a Q/K-normalization
 decision, native tiled-RT/Flash integration and genuine multi-GPU checks.
 Quality wins and substantial baseline/variant training come after that review.
 
+**Ordinary throughput diagnostic complete (2026-09-23).** The user questioned
+F4's31.1k ordinary throughput against the paper's153k and requested six layers
+with physicalB512. Read [results](reports/olmo-ordinary-throughput/results.md),
+[paper comparison](reports/olmo-ordinary-throughput/paper-comparison.md) and
+[profile audit](reports/olmo-ordinary-throughput/profile-audit.md). Runtime71fbccd;
+seven runs pass,42 physical updates,9 scoped CPU tests. Native random six-layer
+SwiGLU8192-per-branch model has505,675,776 active parameters. No RT/FBT/NextLat,
+kernel, model math, production default, or existing numerical gate changed.
+At B64/H16/T512/halfCE, changing CE position chunk128→2048 raises57.38k→92.81k
+inputtokens/s; at B512/H32,43.86k→93.10k. Copy/add/fill savings dominate the
+profile improvement; ordinary Flash time stays unchanged. FullCE B512/H32
+chunk2048 reaches73.52k, setupreserved76.78GiB (tight). FullCE B32/H32 gives
+75.00k with ordinary checkpointing and88.86k without; forward/loss/backward
+alone is82.36k/99.25k. The paper uses GELU, smaller vocabulary, ALiBi, compilation,
+no ordinary checkpointing, and global512 from physical32 microbatches; its
+ordinary recipe does not establish physical512. We have not reproduced153k.
+All raw reports/sources/traces are retained; see the storage receipt in the
+report directory. GPU idle; no further experiment queued. This user-requested
+ordinary investigation precedes the existing graph-readiness queue. Proposed
+next: bounded larger-CE-chunk integration check and a refreshed original16-layer
+ordinary baseline before interpreting RT relative throughput or prioritizing FA.
+Do not silently change all feature defaults or clear the F4 precision qualification.
+
 **F4 training resource cards are complete, with a retained numerical qualification
 (2026-09-23).** Read the [assessment](reports/olmo1b-f4/assessment.md),
 [results](reports/olmo1b-f4/results.md), [roundoff diagnosis](reports/olmo1b-f4/roundoff-assessment.md),
