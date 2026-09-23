@@ -1,0 +1,35 @@
+{
+  "members": 327,
+  "objects": [
+    {
+      "generation": "1790184214406598",
+      "md5_base64": "GgOIXfl9BD8FtoJEAvzZnw==",
+      "sha256": "e23637d8768550b571a7a0ca4f766e3e4ff847c841ff6908b995a2e2b90f3f45",
+      "size_bytes": 1556831,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-throughput/20260923T172332Z/evidence.tar.gz",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    },
+    {
+      "generation": "1790184214682229",
+      "md5_base64": "/iCTnj1mMT39Jf8Vuwdx3g==",
+      "sha256": "2ae2a581ad860e6ad0b498773bae04d5e0803eb232eb0d5758cee0ce3bea76be",
+      "size_bytes": 118010,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-throughput/20260923T172332Z/retention-manifest.json",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    }
+  ],
+  "physical_optimizer_updates": 42,
+  "receipt_object": {
+    "generation": "1790184214931095",
+    "md5_base64": "auxFlrc7SCWDiB5SpW1LzA==",
+    "sha256": "42fb9eba7f36f047b33be503253f40a20db5099c3d04e8a84a694b65404f5c34",
+    "size_bytes": 1053,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-throughput/20260923T172332Z/storage-receipt.json",
+    "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+  },
+  "runs": 7,
+  "schema": "olmo-ordinary-throughput-retention-v1",
+  "source_pairs_checked": 287,
+  "status": "verified",
+  "weights_uploaded": false
+}

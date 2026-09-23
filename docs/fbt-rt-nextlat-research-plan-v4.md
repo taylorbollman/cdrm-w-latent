@@ -7,6 +7,18 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
+**User-requested ordinary throughput investigation complete (2026-09-23).**
+Read its [results](reports/olmo-ordinary-throughput/results.md). Seven bounded
+six-layer runs identify avoidable CE chunk overhead:128→2048 positions improves
+B64 halfCE57.4k→92.8k inputtokens/s and physicalB51243.9k→93.1k. FullCE B512
+reaches73.5k; B32 without ordinary checkpointing88.9k. The paper's ordinary
+recipe uses micro32/global512, GELU, smaller vocabulary, compilation and no
+ordinary checkpointing. The quoted153k is not reproduced, and F4's31k is not
+an optimized ordinary baseline. No production defaults or math changed. Before
+resuming graph readiness/RT performance interpretation, propose a bounded
+larger-CE-chunk integration check and refreshed16-layer ordinary measurements.
+No further GPU work is queued; retain existing numerical qualifications.
+
 **F4 training resource matrix is complete with a retained numerical qualification.**
 Read the [F4 assessment](reports/olmo1b-f4/assessment.md),
 [results](reports/olmo1b-f4/results.md) and

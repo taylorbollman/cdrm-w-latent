@@ -31,6 +31,14 @@ W&B tracking.
 
 # Pretrained model handoff
 
+Latest user-directed investigation: ordinary six-layer throughput is complete.
+Read `docs/reports/olmo-ordinary-throughput/results.md` and current handoff before
+resuming the older graph-readiness queue. Seven bounded runs expose CE chunk128
+overhead; chunk2048 gives61.75% more B64 throughput without changing the objective.
+No production defaults changed, and the paper's153k throughput is not reproduced.
+Next proposed work is loss-chunk integration and refreshed ordinary baseline;
+no further run is queued and RT+FBT precision qualifications remain open.
+
 For pretrained OLMo / RT / FBT / NextLat work, first read
 `docs/fbt-rt-nextlat-handoff.md`, then
 `docs/fbt-rt-nextlat-research-plan-v4.md`. Original OLMo-1B at step 60,000
