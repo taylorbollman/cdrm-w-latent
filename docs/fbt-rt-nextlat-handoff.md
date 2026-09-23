@@ -23,6 +23,14 @@ graph recovery/accumulation queue. **Stage A is authorized and underway on
 Prospective protocol: `docs/reports/olmo-rt-efficiency/protocol.md`. Existing numerical
 qualifications remain open; performance parity with the authors is unestablished.
 
+Stage A progress: runtime/protocol frozen at `3fd27e0`; 406 scoped CPU tests and
+all five native B8/T512 correctness reports pass (25 gates, 30 physical updates).
+RoPE reuse is bitwise exact; K/V-only RT/combined gradient global L2 is
+0.00302582/0.00654273, with exact same-candidate graph/full-Adam parity.
+The B64/full-CE capacity queue is active under `.runtime/olmo-rt-efficiency/`;
+read completed `report.json` files and logs before resuming. Do not restart
+completed runs or reuse output directories. W&B group `olmo-rt-efficiency`.
+
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md),
 [usage](reports/olmo-ce-integration/usage.md), and

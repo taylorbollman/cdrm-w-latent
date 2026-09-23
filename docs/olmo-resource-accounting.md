@@ -9,6 +9,11 @@ translate parameter count into `6NT`, or treat estimated FLOPs as measured devic
 utilization. CUDA graphs reduce scheduling overhead without removing the matrix
 work counted here.
 
+Pass `kv_only_writes=True` when the RT execution omits the unused Q component
+of permanent writes. Its default is `False`, preserving historical matrix
+counts; the selected option is included in the resource card. RoPE-table reuse
+changes pointwise work and storage, which this matrix-only ledger excludes.
+
 The scope is full-backbone training, attached FBT passes, positive pass-loss
 coefficients, one unpadded document per row, and no cached prefix. Ordinary
 activation checkpointing is optional; RT uses its current custom backward and
@@ -76,20 +81,37 @@ Recorded backend traces remain necessary.
 
 ## Current RT work
 
-The current RT computes full fused QKV for permanent writes, even though it
-discards the Q result. Counting an ideal KV-only projection would understate
-actual work. The following terms apply to one selected layer invocation:
+The default RT computes full fused QKV for permanent writes, even though it
+discards the Q result. The opt-in `kv_only_writes=True` execution reads the K/V
+row view of that same packed weight. Temporary input-derived projections still
+produce QKV. The following terms apply to one selected layer invocation:
 
-| Dense component | Matrix FLOPs |
-| --- | ---: |
-| Forward: temporary QKV, permanent QKV, finish | `14ND² + 6NDM` |
-| Batched temporary/permanent projection reconstruction | `12ND²` |
-| Sequential writer forward and input VJP | `12ND²` |
-| Sequential finish forward and input VJP | `4ND² + 12NDM` |
-| Batched finish reconstruction | `2ND² + 6NDM` |
-| Batched projection input and parameter VJPs | `24ND²` |
-| Batched finish VJP | `2ND² + 12NDM` |
-| Total | **`70ND² + 36NDM`** |
+| Dense component | Default full QKV writer | Opt-in KV-only writer |
+| --- | ---: | ---: |
+| Forward: temporary QKV, permanent write, finish | `14ND² + 6NDM` | `12ND² + 6NDM` |
+| Batched temporary/permanent projection reconstruction | `12ND²` | `10ND²` |
+| Sequential writer forward and input VJP | `12ND²` | `8ND²` |
+| Sequential finish forward and input VJP | `4ND² + 12NDM` | `4ND² + 12NDM` |
+| Batched finish reconstruction | `2ND² + 6NDM` | `2ND² + 6NDM` |
+| Batched projection input and parameter VJPs | `24ND²` | `20ND²` |
+| Batched finish VJP | `2ND² + 12NDM` | `2ND² + 12NDM` |
+| Total | **`70ND² + 36NDM`** | **`58ND² + 36NDM`** |
+
+KV-only writes save **`12ND²` matrix FLOPs per RT invocation**, comprising
+`2ND²` in forward, `2ND²` in batched reconstruction, `4ND²` in the local writer
+forward/input VJP, and `4ND²` in final batched input/weight VJPs. The old full-QKV
+projection backward multiplies the zero Q cotangent through the full projection;
+the smaller projection removes that matrix work too. Slice backward still
+returns the packed parameter's full gradient, with zero Q-row contribution
+from the memory branch. The temporary branch supplies its usual Q gradient.
+
+At B64/T512/D2048 the saving is approximately **1.649 TFLOPs per RT block
+invocation**. Multiply by actual RT layer/feedback calls and accumulation
+microbatches. This does not change parameter counts, attention matrix work,
+cache dimensions, MLP work, loss work or supervised-token counts. It is one
+third of the permanent projection's matrix work, not one third of RT or model
+runtime. Kernel selection, padding, memory traffic and dependency structure
+still determine the measured speedup.
 
 The local VJPs freeze weights. The final batched finish treats attended values
 as detached, so its output projection has a weight VJP but no attended-input VJP.
@@ -128,6 +150,18 @@ counts are unchanged. Softmax/pointwise work and kernel tile padding remain
 excluded, so this small matrix-work addition does not predict wall time.
 The complete model is not claimed to use linear memory: ordinary/padded masks,
 long-context eager forward fallback and other model allocations are separate.
+
+The independent `reuse_rope=True` execution precomputes native FP32 cosine/sine
+tables for the actual positions. Dynamic forwarding reuses them within a stack;
+prepared forwarding owns them across layers, FBT passes and backward
+recomputation. This removes repeated frequency/phase/trigonometric work without
+removing the rotations themselves. These operations are pointwise and outside
+the matrix ledger, so the matrix estimate is identical for `control` and `rope`.
+One prepared table pair occupies `8BTHd` bytes, where `Hd` is head dimension:
+32 MiB at B64/T512/Hd128. It is shared rather than replicated per layer/pass.
+It adds no model parameters or persistent checkpoint buffers. Include its
+allocation in measured setup/steady memory; do not infer a net memory benefit
+from this isolated table size.
 
 ## Passes, fusion, predictor and vocabulary losses
 
@@ -218,6 +252,8 @@ For a prepared `StaticFBTTraining` execution, obtain `LossWork` from
 `plan.counts` and `plan.loss_layout.needed_source_indices.numel()`. The latter is
 the predictor-source union, not the sum of latent and KL counts. Use the actual
 model's `backward_memory`, selected RT layers, FBT mode and checkpointing setting.
+Also pass the actual `kv_only_writes` setting; omitting it deliberately retains
+the historical full-QKV estimate. The example and table above use that default.
 An architecture formula should be accompanied by `parameter_inventory` for the
 live model and optimizer. Declare the executed and inference name sets from the
 configuration; gradient presence alone does not identify those sets. Inactive
@@ -233,14 +269,17 @@ memory traffic and launch latency are not FLOPs. Frozen-parameter ownership and
 zero pass weights require a new work audit. The estimator must be updated if
 the RT implementation changes projection shapes or backward reconstruction.
 
-The 36 focused CPU tests compare parameter formulas with real tiny modules,
+The focused CPU tests compare parameter formulas with real tiny modules,
 deduplicate tied aliases, check exposure/pass accounting and reject invalid
 counts. Dispatch traces count actual eager `mm`/`bmm` operations for tiny RT
-forward/backward at lengths 3, 5, 8, 33 and 65 with each backward implementation:
+forward/backward at lengths 3, 5, 8, 33 and 65 with both permanent-writer options
+and each backward implementation:
 dense and attention totals agree exactly. Lengths above the 32-position workspace
 chunk exercise the bounded query/key reconstruction paths while counting their
 complete matrix reductions. Separate tests check K1, multiple selected layers,
 K2/K3, alpha zero and accumulation scaling; recomputation changes no parameters.
+KV-only accounting also checks the `12ND²` saving across selected layers,
+feedback passes and accumulation while preserving parameter/objective counts.
 Separate traces verify the canonical CE/KL checkpoint and detached-readout
 counts and bracket ordinary checkpoint early stopping. This validates the
 accounting against executed code without another GPU numerical campaign; it

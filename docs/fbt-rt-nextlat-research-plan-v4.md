@@ -7,12 +7,13 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
-**Latest proposed ordering (2026-09-23):** the user requested the
+**Latest approved ordering (2026-09-23):** the user approved the
 [native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
 It places RoPE-table reuse and K/V-only permanent writes before a matched
 author-derived native-RoPE backend comparison, with an initial review after the
-native improvements. This is a plan, not a started run or implementation;
-graph recovery/accumulation and online readiness remain subsequent work.
+native improvements. Stage A implementation and bounded checks are underway;
+stop at its first review before the author-derived comparison. Graph
+recovery/accumulation and online readiness remain subsequent work.
 
 **CE integration and original 16-layer baseline complete (2026-09-23).** Read
 [results](reports/olmo-ce-integration/results.md) and
