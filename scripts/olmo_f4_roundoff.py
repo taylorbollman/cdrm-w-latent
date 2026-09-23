@@ -89,8 +89,8 @@ def main(argv=None):
             if 'batch_identity' in report and report['batch_identity']!=identity:
                 raise AssertionError('Diagnostic arms changed the fixed batch')
             report['batch_identity']=identity
-            plan=StaticFBTTraining(model,batch,mode=case.mode(),config=LMTrainingConfig(precision=precision))
             with backend_context('flash' if precision=='bf16_mixed' else 'math'):
+                plan=StaticFBTTraining(model,batch,mode=case.mode(),config=LMTrainingConfig(precision=precision))
                 print({'start':label},flush=True)
                 result=plan.backward(replay=False);values[label]=snapshot(plan,result);del result
                 report['arms'][label]={'losses':{k:float(v) for k,v in values[label]['losses'].items()},
