@@ -136,7 +136,11 @@ class BlockStack(nn.Module):
 def build_stack(state, config, *, device):
     model = BlockStack(config, device="meta")
     expected = set(model.state_dict())
-    subset = {name: state[name] for name in expected}
+    # The full native model registers transformer.blocks; ``layers`` there is
+    # only a convenience property. Our isolated stack owns its ModuleList at
+    # layers, so map checkpoint names explicitly before dropping the readout.
+    subset = {name: state["transformer.blocks." + name.removeprefix("layers.")]
+              for name in expected}
     # CPU fixtures must not mutate a caller-owned checkpoint through assign=True.
     if torch.device(device).type == "cpu":
         subset = {name: value.clone() for name, value in subset.items()}

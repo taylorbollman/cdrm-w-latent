@@ -4,7 +4,7 @@ from dataclasses import replace
 import pytest
 import torch
 
-from cdrm.pretrained.olmo import OLMoConfig
+from cdrm.pretrained.olmo import OLMoConfig, OLMoForCausalLM
 from scripts import olmo_rt_author_compare as harness
 
 
@@ -68,19 +68,22 @@ def execution(backend="native"):
 
 
 def test_checkpoint_subset_preserves_packed_native_weights_without_embedding_or_readout():
-    original = tiny_stack(6)
-    state = {**original.state_dict(), "token_embeddings.weight": torch.zeros(67, 32),
-             "unrelated.extra": torch.tensor(1)}
+    original = OLMoForCausalLM(replace(OLMoConfig.tiny(), num_layers=6))
+    state = original.state_dict()
+    assert "transformer.blocks.0.att_proj.weight" in state
+    assert "transformer.wte.weight" in state
     candidate = harness.build_stack(state, replace(original.config, num_layers=2), device="cpu")
-    expected_names = {name for name in original.state_dict() if name.startswith(("layers.0.", "layers.1."))}
+    expected_names = {"layers." + name.removeprefix("transformer.blocks.") for name in state
+                      if name.startswith(("transformer.blocks.0.", "transformer.blocks.1."))}
     assert set(candidate.state_dict()) == expected_names
     assert len(list(candidate.parameters())) == 8
     for name, parameter in candidate.named_parameters():
-        assert torch.equal(parameter, state[name])
-        assert parameter.data_ptr() != state[name].data_ptr()
+        native_name = "transformer.blocks." + name.removeprefix("layers.")
+        assert torch.equal(parameter, state[native_name])
+        assert parameter.data_ptr() != state[native_name].data_ptr()
     with torch.no_grad():
         candidate.layers[0].att_proj.weight.add_(1)
-    assert not torch.equal(candidate.layers[0].att_proj.weight, state["layers.0.att_proj.weight"])
+    assert not torch.equal(candidate.layers[0].att_proj.weight, state["transformer.blocks.0.att_proj.weight"])
 
 
 @pytest.mark.parametrize("backend", ["native", "author", "author_scan"])
