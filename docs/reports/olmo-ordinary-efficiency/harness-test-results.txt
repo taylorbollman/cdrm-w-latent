@@ -25,3 +25,27 @@ Diagnostic-continuation update:
   finite, structurally sound same-state numeric misses can defer termination;
   ownership, supervision, incomplete comparisons and operational failures
   cannot continue; final status remains failed after a compatibility miss.
+
+Compiled SwiGLU precision emulation update (after original GPU miss retained):
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_execution.py tests/test_olmo_ordinary_checkpointing.py tests/test_olmo_ordinary_efficiency.py -q
+  Result: 96 passed in 3.94s.
+  Added helper-local torch.compile options={'emulate_precision_casts': True};
+  global Inductor config remains unchanged. Tests verify option propagation,
+  actual installed Inductor wrapper acceptance, CPU Dynamo/AOTAutograd forward
+  and backward wiring, laziness, and the existing ordinary/checkpoint harness.
+  No GPU numerical clearance is inferred from these CPU tests.
+
+Installed-source inspection supporting this change:
+  torch 2.13.0a0+8145d630e8.nv26.06, CPU-only project container.
+  torch._inductor.config.py:2833-2842 documents precision emulation; defaultFalse.
+  torch.fx.experimental.proxy_tensor.py:1056-1085 marks BF16/FP16 operator
+  boundaries outside decompositions when precision emulation is enabled.
+  torch._inductor.lowering.py:718-749 inserts low-precision down/upcasts.
+  torch._inductor.codegen.triton.py:5568-5573 disables floating-point instruction
+  fusion (enable_fp_fusion=False) under this option; it does not disable
+  pointwise kernel fusion.
+  Actual torch.compile(_swiglu, fullgraph=True, dynamic=False,
+  options={'emulate_precision_casts': True}) wrapper creation succeeded, while
+  global config.emulate_precision_casts remained False. Wrapper creation is lazy.
+  This targets native BF16 intermediate rounding; transcendental/division
+  details can still differ, so the unchanged GPU numerical checks remain needed.

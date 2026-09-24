@@ -122,9 +122,12 @@ def test_compile_is_lazy_fullgraph_and_preserves_value_gate_order_and_gradients(
     calls = []
 
     def compile_on_cpu(function, **options):
-        calls.append(options)
+        calls.append(dict(options))
         # Compile through actual Dynamo/AOTAutograd on CPU, without relying on
         # CUDA or claiming CPU fusion measures the production Inductor kernel.
+        # aot_eager has no Inductor precision policy; its propagation to the
+        # actual Inductor wrapper is checked separately below.
+        assert options.pop("options") == {"emulate_precision_casts": True}
         return real_compile(function, backend="aot_eager", **options)
 
     monkeypatch.setattr(torch, "compile", compile_on_cpu)
@@ -142,7 +145,20 @@ def test_compile_is_lazy_fullgraph_and_preserves_value_gate_order_and_gradients(
     got_grad = torch.autograd.grad(got, got_input, probe)[0]
     torch.testing.assert_close(got_grad, want_grad, rtol=0, atol=0)
     ordinary.ordinary_swiglu(projected + 1, backend="compiled")
-    assert calls == [{"fullgraph": True, "dynamic": False}]
+    assert calls == [{"fullgraph": True, "dynamic": False,
+                      "options": {"emulate_precision_casts": True}}]
+    ordinary._compiled_swiglu.cache_clear()
+
+
+def test_precision_emulation_option_is_accepted_locally_by_real_inductor_wrapper():
+    from torch._inductor import config
+    ordinary._compiled_swiglu.cache_clear()
+    original = config.emulate_precision_casts
+    # Creating the real wrapper validates supported options without executing
+    # CUDA or substituting a CPU numerical result for the required GPU check.
+    helper = ordinary._compiled_swiglu()
+    assert callable(helper)
+    assert config.emulate_precision_casts == original
     ordinary._compiled_swiglu.cache_clear()
 
 

@@ -73,7 +73,10 @@ def _swiglu(projected: Tensor) -> Tensor:
 def _compiled_swiglu():
     # fullgraph rejects graph breaks instead of quietly accepting partial
     # compilation. Warm both forward/backward before CUDA-graph capture.
-    return torch.compile(_swiglu, fullgraph=True, dynamic=False)
+    # Retain eager's BF16 SiLU output rounding before multiplication while
+    # still fusing the pointwise kernels. This option is local to this helper.
+    return torch.compile(_swiglu, fullgraph=True, dynamic=False,
+                         options={"emulate_precision_casts": True})
 
 
 def ordinary_swiglu(projected: Tensor, *, backend: str) -> Tensor:
