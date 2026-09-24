@@ -45,6 +45,15 @@ def test_long_context_correctness_and_stacked_candidate_are_explicit():
     assert harness.exact_comparison(args.reference_arm, args.arm)
 
 
+@pytest.mark.parametrize("arm", ["compiled-checkpoint-alternating", "compiled-checkpoint-none"])
+def test_compiled_checkpoint_combination_keeps_sdpa_and_has_exact_compiled_reference(arm):
+    args = harness.parse_args(command(arm=arm) + ["--reference-arm", "compiled"])
+    assert harness.ARMS[args.arm][0] == "sdpa"
+    assert harness.ARMS[args.arm][2] == "compiled"
+    assert harness.exact_comparison(args.reference_arm, args.arm)
+    assert not harness.exact_comparison("control", args.arm)
+
+
 @pytest.mark.parametrize("arm,options", list(harness.ARMS.items()))
 def test_arm_switches_are_execution_only_with_fixed_ce(arm, options):
     base = SimpleNamespace(config=SimpleNamespace(num_layers=16), reuse_rope=False)

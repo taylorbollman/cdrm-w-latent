@@ -51,6 +51,8 @@ ARMS = {
     "checkpoint-none": ("sdpa", "none", "eager"),
     "checkpoint-alternating": ("sdpa", "alternating", "eager"),
     "compiled": ("sdpa", "all", "compiled"),
+    "compiled-checkpoint-alternating": ("sdpa", "alternating", "compiled"),
+    "compiled-checkpoint-none": ("sdpa", "none", "compiled"),
     "fa4-compiled": ("fa4", "all", "compiled"),
     "fa4-compiled-checkpoint-alternating": ("fa4", "alternating", "compiled"),
     "fa4-compiled-checkpoint-none": ("fa4", "none", "compiled"),
