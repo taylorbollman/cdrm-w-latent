@@ -4,15 +4,38 @@ Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Active milestone,2026-09-24:** the user approved pursuing the ordinary-model
-optimization plan. Branch`feat/olmo-ordinary-efficiency`; read
-[prospective protocol](reports/olmo-ordinary-efficiency/protocol.md).
-Implement opt-in ordinary FA4, ordinary SwiGLU compilation and selective
-checkpointing; validate actual-checkpoint gradients/graphs/Adam and measure
-native16-layer T512/T2048 full-step performance with profiles. No quality run,
-RT-backend replacement or normalization change. Prior qualifications remain.
-The historical investigation's implementation stop below is lifted by this
-explicit authorization.
+**Ordinary-model optimization complete,2026-09-24:** branch
+`feat/olmo-ordinary-efficiency`, final runtime`18351ef`. Read
+[results](reports/olmo-ordinary-efficiency/results.md),
+[usage](reports/olmo-ordinary-efficiency/usage.md),
+[summary](reports/olmo-ordinary-efficiency/summary.json) and
+[next opportunities](reports/olmo-ordinary-efficiency/next-opportunities.md).
+Opt-in FA4, rounded compiled ordinary SwiGLU and selective checkpointing preserve
+native weights/ownership and existing defaults. Repeated actual16-layer full-CE
+T512 timings: B64 all-checkpoint control36.75k→compiled39.16k tokens/s (+6.55%),
+setup reserved46.17GiB; B32 control34.43k→compiled/alternating40.37k (+17.25%),
+reserved54.75GiB. B64 is the conservative option; changing physical batch for
+learning requires attention to effective batch/accumulation, not just throughput.
+FA4 alone gives directional +0.65% T512/B64 and +3.55% T2048/B16, with small
+unchanged-budget loss-screen failures. All its output/gradient budgets and own
+graph/Adam checks pass; loss misses remain failed. The initial unrounded compiled
+failure was fixed using local`emulate_precision_casts=True`: outputs/loss now
+bitwise, gradientL2 .003133, all screens pass. Compiled+alternating also passes.
+Alternating B64 and no-checkpoint B32 OOM during graph capture after3 updates
+each; do not infer steady capacity or mathematical failure from those attempts.
+
+Final selection23reports:17passed,4numericfailed,2OOM;152physicalupdates,
+106/110recordedgates,1242frozen source pairs. CPU:274initial distinct runtime
+tests;100final focused runtime/harness tests overlap that suite;56final evidence
+tests. Earlier runtimes`ed26653`,`5445f25`,`9fc20cf` and failed attempts are retained
+separately. Full provenance/W&B/verified GCS receipt accompany the report.
+GPU ended idle. No quality training, further optimization, RT-backend replacement
+or normalization change is queued. Prior RT qualifications remain open. Review
+the ordinary result and RT-backend decision before choosing further fusion or
+resuming graph recovery/accumulation, padding/online and multi-GPU work. A bounded
+native FP32 RoPE fusion is the next promising ordinary optimization, not an
+automatically authorized implementation queue. New ordinary options need their
+own combination checks before applying them to RT/FBT experiments.
 
 **Latest bounded investigation, 2026-09-24:** while considering the RT-backend
 decision, the user requested other ordinary-model performance opportunities,

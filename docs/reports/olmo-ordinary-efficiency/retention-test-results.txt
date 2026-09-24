@@ -1,0 +1,30 @@
+Ordinary efficiency evidence helpers: CPU tests, 2026-09-24
+
+Executed from /home/taylorbollman/cdrm-w-latent:
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_efficiency_retain.py tests/test_olmo_ordinary_efficiency_report.py'
+
+52 passed in 4.89s
+
+Includes 17 retention tests and 35 report tests. No real cloud operation, GPU
+execution, checkpoint loading or training occurred. GCS tests use an in-memory
+fake to check create-only upload arguments, server size/MD5/SHA metadata,
+generation-pinned downloads and rejection of corrupted downloaded bytes.
+
+Retention checks cover explicit mixed-revision source snapshots; failed early
+attempts and completed operational diagnostics with retained numerical failure;
+all raw report, dependency, source, profile and derived-summary consistency;
+unselected weights/secrets/files exclusion; unsafe symlinks; and bounded size.
+The root agent must run actual retention against completed selected evidence
+and verify GCS storage before claiming persistence.
+
+Final helper regression after cohort and fused-kernel classification fixes:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest tests/test_olmo_ordinary_efficiency_report.py tests/test_olmo_ordinary_efficiency_retain.py -q'
+  Result: 56 passed in 5.05s (39 report, 17 retention). GPU queue had finished.
+
+Real selection dry-run: 23 reports, 1605 members, 152 physical updates passed.
+An initial summary generated in host Python3.10 failed the container Python3.12
+exact profile-total comparison (~4e-13 ms summation difference). Regenerating
+the summary in the required project container resolved this; no raw report,
+numerical budget or GPU result changed. Use one container interpreter for
+summary generation and retention. Failure/difference logs remain in .runtime.

@@ -7,12 +7,19 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
-**Latest approved ordering,2026-09-24:** ordinary-model efficiency now precedes
-the older functional queue. The user approved opt-in FA4, selective ordinary
-checkpointing and bounded pointwise compilation, with actual-checkpoint
-numerical/graph/update checks and T512/T2048 profiles/full-step timings. Read
-[prospective protocol](reports/olmo-ordinary-efficiency/protocol.md) and current
-handoff. Keep all production defaults and existing RT qualifications unchanged.
+**Latest milestone complete,2026-09-24:** ordinary-model efficiency precedes
+the older functional queue. Read [results](reports/olmo-ordinary-efficiency/results.md)
+and the current handoff. Opt-in rounded SwiGLU gives repeated B64/T512
+36.75k→39.16k inputtokens/s (+6.55%) at46.17GiB reserved; compiled+alternating
+checkpointing atB32 gives34.43k→40.37k (+17.25%) at54.75GiB. Both pass the
+unchanged actual-checkpoint numerical screen and exact own graph/Adam checks.
+FA4's small loss-only misses remain qualified, despite healthy outputs/gradients
+and exact own operational checks; its directional full-step gain is0.65% atT512
+and3.55% atT2048. Two graph-capture OOMs bound reduced-checkpoint capacity.
+No defaults, Q/K normalization, RT backend or quality-training state changed.
+GPU is idle. Review these results and the RT-backend decision before additional
+ordinary fusion or the older functional queue. Native FP32 RoPE fusion is a
+promising measured follow-up; it has not been implemented or automatically queued.
 
 **Latest approved ordering (2026-09-23):** the user approved the
 [native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
