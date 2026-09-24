@@ -106,12 +106,17 @@ def optimizer_ownership(model: nn.Module, optimizer) -> list[list[str]]:
 
 
 def build_adamw(model: nn.Module, *, lr: float, betas=(0.9, 0.95), eps: float = 1e-8,
-                weight_decay: float = 0.1, foreach: bool = False) -> torch.optim.AdamW:
+                weight_decay: float = 0.1, foreach: bool = False,
+                fused: bool | None = None) -> torch.optim.AdamW:
     """Matrix weights decay; vector/scalar parameters do not. Tying stays native."""
     if not math.isfinite(lr) or lr < 0 or not math.isfinite(weight_decay) or weight_decay < 0:
         raise ValueError("AdamW learning rate/weight decay must be finite and nonnegative")
     if not math.isfinite(eps) or eps <= 0:
         raise ValueError("AdamW epsilon must be positive finite")
+    if fused is not None and type(fused) is not bool:
+        raise TypeError("AdamW fused must be boolean or None")
+    if fused and foreach:
+        raise ValueError("AdamW fused=True and foreach=True cannot be combined")
     grouped = {True: [], False: []}
     for name, parameter in model.named_parameters():
         if parameter.requires_grad:
@@ -122,7 +127,7 @@ def build_adamw(model: nn.Module, *, lr: float, betas=(0.9, 0.95), eps: float = 
     if not groups:
         raise ValueError("AdamW requires a trainable parameter")
     optimizer = torch.optim.AdamW(groups, lr=lr, betas=betas, eps=eps,
-                                  weight_decay=weight_decay, foreach=foreach)
+                                  weight_decay=weight_decay, foreach=foreach, fused=fused)
     optimizer_ownership(model, optimizer)
     return optimizer
 

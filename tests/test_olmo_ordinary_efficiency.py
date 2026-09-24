@@ -79,7 +79,8 @@ def test_full_ce_factory_preserves_tokens_and_non_ce_selection(monkeypatch):
     assert layout.counts == {"ce": 62, "latent": 0, "kl": 0}
 
 
-def test_every_update_in_both_parity_arms_uses_full_ce(monkeypatch):
+@pytest.mark.parametrize("injected_factory", [False, True])
+def test_every_update_in_both_parity_arms_uses_full_ce(monkeypatch, injected_factory):
     class Model(torch.nn.Module):
         def __init__(self):
             super().__init__()
@@ -108,10 +109,23 @@ def test_every_update_in_both_parity_arms_uses_full_ce(monkeypatch):
 
     plan = SimpleNamespace(model=model, optimizer_step=step)
     report = {"physical_optimizer_updates": 0}
+    factory_calls = []
+
+    def factory(requested_model):
+        assert requested_model is model
+        factory_calls.append(True)
+        return optimizer, scheduler
+
+    if injected_factory:
+        def disallowed_legacy_builder(_):
+            raise AssertionError("The injected factory must replace the legacy builder")
+        monkeypatch.setattr(parity, "build_optimizer", disallowed_legacy_builder)
     result = harness.complete_update_parity(plan, None, None, report=report,
-                                           persist=lambda: None, batch_factory=harness.batch_for)
+        persist=lambda: None, batch_factory=harness.batch_for,
+        optimizer_factory=factory if injected_factory else None)
     assert result["passed"] and report["physical_optimizer_updates"] == 6
     assert calls == [False] * 3 + [True] * 3
+    assert factory_calls == ([True] if injected_factory else [])
 
 
 def test_checkpoint_only_change_requires_exact_comparison():

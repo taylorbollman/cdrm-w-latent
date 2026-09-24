@@ -1,0 +1,60 @@
+Ordinary OLMo fused optimizer: scoped CPU validation
+Date: 2026-09-24
+Runtime revision: b70b3ec
+
+The tests ran on the working-tree sources subsequently committed in b70b3ec;
+the relevant runtime and test files are unchanged from that executed version.
+This is CPU orchestration and guard coverage, not GPU numerical clearance.
+
+Exact command, run from /home/taylorbollman/cdrm-w-latent:
+
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_lm_training.py tests/test_olmo_ordinary_optimizer_probe.py tests/test_olmo_ordinary_efficiency.py'
+
+Result:
+81 passed in 3.04s
+
+Environment:
+Explicit GPU-disabled project container.
+PyTorch 2.13.0a0+8145d63, NVIDIA container release 26.06.
+No GPU command, profiling, or training was run for this test set.
+
+Review findings:
+- build_adamw(..., fused=None) preserves the historical optimizer default.
+  Explicit fused=True retains FP32 trainable parameters, native decay groups,
+  and exactly one optimizer owner for tied parameters. Conflicting foreach=True
+  and fused=True choices are rejected.
+- complete_update_parity accepts an optimizer_factory, uses it instead of the
+  legacy builder, and records the actual optimizer flags. The full-CE batch
+  factory remains active for every update in both parity arms.
+- The fixed-gradient probe restores identical raw gradients before every one
+  of three scalar and three fused AdamW updates. It compares moments, final
+  parameters and cumulative update deltas independently.
+- Clipping, LR/scheduler values, counters, ownership and optimizer group
+  hyperparameters must match exactly; only the fused selector may differ.
+  CPU/CUDA placement of the Adam step scalar is intentionally not an equality
+  requirement, but its value is.
+- A successful optimizer step increments the physical-update counter even if
+  a later scheduler call fails. State restoration happens in finally, copying
+  back the original weights and raw gradients without replacing their buffers.
+- Tests cover restored values and addresses, tied ownership, partial failure,
+  nonfinite state rejection, update errors hidden by near-identical whole
+  weights, and tiny unexpected optimizer-hyperparameter changes.
+- Global scalar reductions use math.fsum to avoid Python-version-dependent sum
+  rounding in retained comparison evidence.
+
+Prospective fixed-gradient budget rationale:
+The moment and final-weight relative-L2 and maximum/reference-peak limits of
+1e-6 are about eight FP32 machine epsilons. They allow a small amount of changed
+rounding from fused arithmetic while remaining a tight implementation check
+over three updates with the same fixed raw gradients. These are engineering
+screens, not limits reported by the RT authors or guarantees of training quality.
+
+Final-weight agreement alone can hide a bad optimizer update because pretrained
+weights are much larger than one small update. A separate cumulative-update
+relative-L2 limit of 1e-3 therefore restricts the discrepancy to 0.1% of the
+reference update's L2 magnitude. That comparison uses FP64 subtraction of the
+actual final and initial FP32 values. Maximum update-relative errors are only
+descriptive: an almost-zero coordinate update can be dominated by one FP32
+weight-spacing increment and is not a useful standalone maximum-ratio gate.
+The moment/final-weight maximum gates remain enforced. All budgets were fixed
+before the actual-model GPU comparison; CPU success does not waive GPU misses.

@@ -1,0 +1,29 @@
+Ordinary Dao RoPE adapter CPU evidence, 2026-09-24
+
+All commands executed from /home/taylorbollman/cdrm-w-latent in the project
+container with CDRM_DOCKER_GPUS=none explicitly. No GPU command was run.
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_rope.py tests/test_olmo_ordinary_execution.py tests/test_olmo_rope_reuse.py tests/test_olmo_static.py tests/test_olmo_rt_execution_options.py'
+
+187 passed in 5.13s
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_reference.py tests/test_olmo_tiled.py tests/test_olmo_author.py tests/test_olmo_rt_backward_options.py'
+
+114 passed, 33 warnings in 4.53s
+
+301 distinct tests passed, including 27 new focused ordinary RoPE cases.
+Warnings are existing upstream TorchScript/autocast deprecations and fixture
+embedding alignment notices. Production runtime files were unchanged between
+these commands; subsequent module/class docstring edits only describe scope.
+
+New coverage: exact canonical phase compaction for batch-specific/nonconsecutive
+positions; preserved FP32 input/table/backward cast boundaries; out-of-place
+storage; real parameter gradients through mocked Dao execution; no packing
+inside prepared calls/checkpoint replay; masked and ordinary/RT mixed-layer
+scope; static tensor/backend invalidation; cache guards; untouched model keys,
+tied readout ownership, native reference and native/author RT backends.
+
+The Dao GPU kernel and CUDA-device guard are replaced only in explicitly mocked
+adapter tests. Separate tests verify the real CPU guard and error propagation.
+These results do not validate installed kernel ABI, FP32 FMA rounding, Triton
+performance or CUDA graphs; the root GPU harness owns those checks.

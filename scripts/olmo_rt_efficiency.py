@@ -176,11 +176,16 @@ def track_optimizer_steps(optimizer, report):
     return optimizer.register_step_post_hook(completed)
 
 
-def complete_update_parity(plan, tokenizer, case, *, report, persist, batch_factory=changed_batch):
+def complete_update_parity(plan, tokenizer, case, *, report, persist, batch_factory=changed_batch,
+                           optimizer_factory=None):
     """Three eager and three graph updates, retaining per-update progress."""
     model = plan.model
     initial = {name: value.detach().cpu().clone() for name, value in model.state_dict().items()}
-    optimizer, scheduler = build_optimizer(model)
+    factory = build_optimizer if optimizer_factory is None else optimizer_factory
+    optimizer, scheduler = factory(model)
+    optimizer_flags = [{key: group.get(key) for key in
+        ("fused", "foreach", "capturable", "differentiable", "amsgrad")}
+        for group in optimizer.param_groups]
     initial_scheduler = copy.deepcopy(scheduler.state_dict())
     initial_optimizer = copy.deepcopy(optimizer.state_dict())
     hook = track_optimizer_steps(optimizer, report)
@@ -215,6 +220,7 @@ def complete_update_parity(plan, tokenizer, case, *, report, persist, batch_fact
     metrics_exact = outcomes[0]["metrics"] == outcomes[1]["metrics"]
     boundary_exact = outcomes[0]["boundary"] == outcomes[1]["boundary"]
     return {"name": "complete_adamw_update_parity", "updates_per_arm": 3,
+        "optimizer_flags": optimizer_flags,
         "physical_optimizer_updates": 6, "metrics_exact": metrics_exact,
         "model_optimizer_scheduler_counters_exact": boundary_exact, "weights_changed": changed,
         "arms": outcomes, "passed": metrics_exact and boundary_exact and changed

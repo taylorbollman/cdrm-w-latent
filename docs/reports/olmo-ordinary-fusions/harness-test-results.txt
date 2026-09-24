@@ -1,0 +1,27 @@
+2026-09-24, runtime b70b3ec.
+
+Command from project root:
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_fusions.py'
+
+Result: 13 passed in 2.40s.
+
+Checks cover bounded fixed-gradient probe scope, per-arm optimizer implementation
+selection and tied ownership, fixed reference execution and CE settings,
+optimizer-only bitwise comparisons, full CE on profile as well as timed inputs,
+nondeferrable optimizer failures and runtime source inventory.
+
+Initial fixture used NextLatConfig(model_dim=4), rejected because predictor
+rounding yields zero hidden width: 4 fixture-construction failures,9 passes.
+Changed fixture metadata to the supported model_dim=32, then all13 passed.
+No GPU work or runtime change resulted from that fixture correction.
+
+Independent review found no harness blocker: selected optimizer is injected
+into eager/graph update parity, actual flags recorded, state restored in place,
+capacity hook counts the ninth profiled update, and its input digest is retained.
+
+Deduplicated runtime/optimizer/harness scope: 410 tests. A CPU-container
+--collect-only -q over the union of runtime-test-results.txt's eleven files,
+test_olmo_lm_training.py, test_olmo_ordinary_optimizer_probe.py and
+test_olmo_ordinary_fusions.py returned410 in3.63s. This avoids adding overlapping
+361/81/13 totals; all tests in that union passed in the recorded component runs.
+Reporting/retention helpers have a separate evidence-test-results.txt.

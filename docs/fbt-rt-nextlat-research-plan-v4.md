@@ -7,7 +7,19 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
-**Latest milestone complete,2026-09-24:** ordinary-model efficiency precedes
+**Latest milestone complete,2026-09-24:** native-FP32 Dao RoPE and fused AdamW
+are implemented as independent opt-ins; read
+[ordinary fusions results](reports/olmo-ordinary-fusions/results.md) and handoff.
+Repeated B64/T512 full-CE39.18k→43.61k (+11.30%); one B16/T2048 pair36.99k→41.03k
+(+10.92%). T512 numerical screen passes; T2048 retains a tiny absolute CE-only
+relative-loss miss. All own graph/full-Adam checks pass; fixed-gradient optimizer
+comparison passes.12reports,96updates,410distinct scoped CPU plus75evidence tests.
+Defaults and prior RT qualifications remain. GPU idle, no additional queue.
+Section8 now explicitly records DDP→ZeRO1/2 and bounded contiguous RT leaf
+compilation as future candidates. Other RT/FBT/NextLat combinations and online
+execution need their own checks before these ordinary options are called ready.
+
+**Previous milestone complete,2026-09-24:** ordinary-model efficiency precedes
 the older functional queue. Read [results](reports/olmo-ordinary-efficiency/results.md)
 and the current handoff. Opt-in rounded SwiGLU gives repeated B64/T512
 36.75k→39.16k inputtokens/s (+6.55%) at46.17GiB reserved; compiled+alternating
@@ -17,9 +29,10 @@ FA4's small loss-only misses remain qualified, despite healthy outputs/gradients
 and exact own operational checks; its directional full-step gain is0.65% atT512
 and3.55% atT2048. Two graph-capture OOMs bound reduced-checkpoint capacity.
 No defaults, Q/K normalization, RT backend or quality-training state changed.
-GPU is idle. Review these results and the RT-backend decision before additional
-ordinary fusion or the older functional queue. Native FP32 RoPE fusion is a
-promising measured follow-up; it has not been implemented or automatically queued.
+This is the prior PR26 snapshot. The subsequently authorized ordinary-fusion
+follow-up is recorded above; its results supersede the recommendation to wait
+before implementing native-FP32 RoPE fusion. The RT-backend decision and older
+functional queue remain separate.
 
 **Latest approved ordering (2026-09-23):** the user approved the
 [native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
@@ -563,6 +576,24 @@ Test:
 
 Then measure equal-global-batch speedup and maximum-comfortable aggregate
 throughput separately, with GPU model/topology/interconnect and per-rank memory.
+User refinement,2026-09-24: explicitly compare DeepSpeed ZeRO stage1 (optimizer
+state sharding) and stage2 (optimizer and gradient sharding) after the DDP
+correctness baseline. Keep parameters replicated initially. Measure both
+equal-global-batch scaling and the larger physical microbatch made possible by
+memory savings; RT throughput can benefit from the latter, but sharding itself
+does not remove its sequential dependency. Start without CPU/NVMe offload.
+[DeepSpeed ZeRO documentation](https://www.deepspeed.ai/tutorials/zero/).
+
+Treat integration as an execution change: preserve global per-objective loss
+normalization, tied parameter ownership, FP32 master/moment policy, clipping
+after reduction, and same-world-size recovery. Verify the custom RT backward
+and shared FBT parameters work with gradient hooks. The current captured plan
+owns persistent gradient buffers, so do not assume its storage contract survives
+ZeRO gradient partitioning. Establish eager distributed updates first, then
+validate capture/replay and collective ordering with the installed versions.
+Compare resident and setup-peak memory as well as communication/full-step time.
+Do not replace the optimizer, graph boundary and sharding policy simultaneously.
+
 If memory limits useful batches, consider optimizer-state sharding first.
 FSDP/parameter sharding is a separate compatibility task: custom replay accesses
 layer weights, FBT reuses them, and tied readout/cache ownership must survive
@@ -571,6 +602,33 @@ materialization. Do not promise that DDP alone reduces per-GPU model-state memor
 **Done when:** real two-GPU updates, recovery and resource measurements pass in
 the declared scope. Changed-world-size recovery and broader cluster scaling
 remain separate unless needed.
+
+### Sequential RT fusion follow-up
+
+User refinement,2026-09-24: profile the recurrent leaf path, including writer and
+finish projections, normalization, SwiGLU and residual operations, at realistic
+large physical batches. Ordinary compiled SwiGLU savings do not establish the
+size of an RT improvement. Compare a compiled contiguous leaf/writer/finish
+region against activation-only fusion; preserve the tested precision boundaries
+and weight-cast reuse. Keep historical attention in its validated tile backend
+and retain the dependency between successive recurrent positions. Compilation
+can reduce launches/intermediate traffic but cannot parallelize away that
+dependency. CUDA graphs already reduce host launch cost, so measure the added
+device-time benefit rather than assuming speedup. Bound compile time/code size;
+do not unroll an entire long recurrence merely to fuse its pointwise operations.
+Require shared-cotangent gradients, own graph/full-update checks and a full-model
+throughput measurement before adopting a candidate. This is a future bounded
+RT optimization milestone, not a change to the current ordinary-only queue.
+
+Concrete native candidate: `olmo_tiled._finish`, then a pure one-token
+finish/interpolation/writer/RoPE helper. Keep cache mutation and `_add_tile`
+outside. Later examine the two reverse-loop local input VJPs without regressing
+the already batched parameter VJP to per-token weight-gradient computation.
+The author port already compiles several batched helpers; its sequential
+finish/writer calls remain eager, so this may benefit either backend. Preserve
+FP32 norm/residuals, native packed `[value,gate]`, temporary-self behavior,
+alpha and K/V-only semantics. A SwiGLU library substitution must respect both
+packing and the established BF16 rounding boundaries.
 
 ## 9. F6 — Readiness review, then choose learning experiments
 

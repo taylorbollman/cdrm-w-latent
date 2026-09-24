@@ -19,8 +19,8 @@ from torch import Tensor, nn
 from torch.nn import functional as F
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
-from .olmo_rope import RopeTables, apply_rope_tables
-from .olmo_ordinary import flash_attention, ordinary_swiglu, validate_ordinary_options
+from .olmo_rope import DaoRopeTables, RopeTables, apply_rope_tables
+from .olmo_ordinary import apply_dao_rope, flash_attention, ordinary_swiglu, validate_ordinary_options
 
 
 OLMO_REVISION = "b3741bc21f1dd504838b7dbd9878ee077ded63bd"
@@ -164,19 +164,30 @@ class OLMoBlock(nn.Module):
                 mask: Tensor | None, is_causal: bool, attention_backend: str,
                 query_rope: RopeTables | None = None, key_rope: RopeTables | None = None,
                 ordinary_attention_backend: str = "sdpa", ordinary_pointwise_backend: str = "eager",
+                ordinary_rope_backend: str = "native",
+                ordinary_query_rope: DaoRopeTables | None = None, ordinary_key_rope: DaoRopeTables | None = None,
                 ) -> tuple[Tensor, tuple[Tensor, Tensor]]:
         validate_ordinary_options(ordinary_attention_backend, ordinary_pointwise_backend,
-                                  sdpa_backend=attention_backend)
+                                  sdpa_backend=attention_backend, rope_backend=ordinary_rope_backend)
         if ordinary_attention_backend == "fa4" and (past is not None or mask is not None or not is_causal):
             raise ValueError("Ordinary FA4 supports only dense causal full sequences without masks or prefix caches")
+        if ordinary_rope_backend == "dao" and (
+                past is not None or ordinary_query_rope is None or ordinary_key_rope is None):
+            raise ValueError("Ordinary Dao RoPE requires prepared compact tables and no prefix cache")
+        if ordinary_rope_backend == "native" and (ordinary_query_rope is not None or ordinary_key_rope is not None):
+            raise ValueError("Compact Dao tables require ordinary_rope_backend='dao'")
         query, key, value = self.project_qkv(self.attn_norm(x))
         if past is not None:
             key, value = torch.cat((past[0], key), dim=-2), torch.cat((past[1], value), dim=-2)
         present = (key, value)
-        query = (_apply_rope(query, query_positions, self.config.rope_freq_constant)
-                 if query_rope is None else apply_rope_tables(query, query_rope))
-        key = (_apply_rope(key, key_positions, self.config.rope_freq_constant)
-               if key_rope is None else apply_rope_tables(key, key_rope))
+        if ordinary_rope_backend == "dao":
+            query = apply_dao_rope(query, ordinary_query_rope)
+            key = apply_dao_rope(key, ordinary_key_rope)
+        else:
+            query = (_apply_rope(query, query_positions, self.config.rope_freq_constant)
+                     if query_rope is None else apply_rope_tables(query, query_rope))
+            key = (_apply_rope(key, key_positions, self.config.rope_freq_constant)
+                   if key_rope is None else apply_rope_tables(key, key_rope))
         if ordinary_attention_backend == "fa4":
             attended = flash_attention(query, key, value)
         else:

@@ -1,0 +1,151 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "current_source_differences": {
+    "capacity-control-b16-t2048-01": {},
+    "capacity-control-b64-t512-01": {},
+    "capacity-control-b64-t512-02": {},
+    "capacity-dao-rope-b64-t512-01": {},
+    "capacity-dao-rope-fused-adam-b16-t2048-01": {},
+    "capacity-dao-rope-fused-adam-b64-t512-01": {},
+    "capacity-dao-rope-fused-adam-b64-t512-02": {},
+    "capacity-fused-adam-b64-t512-01": {},
+    "correctness-combined-b8-t512-01": {},
+    "correctness-dao-b2-t2048-01": {},
+    "correctness-dao-b8-t512-01": {},
+    "correctness-fused-adam-b8-t512-01": {}
+  },
+  "dependency_files_checked": {
+    "capacity-control-b16-t2048-01": 0,
+    "capacity-control-b64-t512-01": 0,
+    "capacity-control-b64-t512-02": 0,
+    "capacity-dao-rope-b64-t512-01": 2,
+    "capacity-dao-rope-fused-adam-b16-t2048-01": 2,
+    "capacity-dao-rope-fused-adam-b64-t512-01": 2,
+    "capacity-dao-rope-fused-adam-b64-t512-02": 2,
+    "capacity-fused-adam-b64-t512-01": 0,
+    "correctness-combined-b8-t512-01": 2,
+    "correctness-dao-b2-t2048-01": 2,
+    "correctness-dao-b8-t512-01": 2,
+    "correctness-fused-adam-b8-t512-01": 0
+  },
+  "members": 771,
+  "objects": [
+    {
+      "generation": "1790267014284602",
+      "md5_base64": "2XaxRT4ZldxujwPNE3AIwg==",
+      "sha256": "a0c8e55fb3a49e62836f59c1eb47d6cbaecebf3825011c89a27092d00fb6c34f",
+      "size_bytes": 3786451,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-fusions/20260924T162332Z/evidence.tar.gz",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    },
+    {
+      "generation": "1790267014603814",
+      "md5_base64": "cpcpAc4v6MquCFw2ZMAPVw==",
+      "sha256": "ea653ba72f46bf68e88b6e6958e88faf03289044a50a34c713f94ca22234ab26",
+      "size_bytes": 343378,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-fusions/20260924T162332Z/retention-manifest.json",
+      "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+    }
+  ],
+  "physical_optimizer_updates": 96,
+  "profile_bytes": 907204,
+  "profile_count": 4,
+  "profiles": {
+    "capacity-control-b64-t512-01/full_step_profile": {
+      "trace_bytes": 334123,
+      "trace_file": "full-step-trace.json.gz",
+      "trace_sha256": "4bfe189701505d63d6c6635ebc55fb00320f90d090b0e36bb2d4e82a220f385d"
+    },
+    "capacity-control-b64-t512-01/profile": {
+      "trace_bytes": 163755,
+      "trace_file": "operator-trace.json.gz",
+      "trace_sha256": "7a4e2c16d27270661d10b33334902cf934422d43ff2bbaeddc8945b23c328fdf"
+    },
+    "capacity-dao-rope-fused-adam-b64-t512-01/full_step_profile": {
+      "trace_bytes": 265102,
+      "trace_file": "full-step-trace.json.gz",
+      "trace_sha256": "efb167015a558e22c7a3a3d0ffbb76abfdb6a1a93da608a596ff82a31c193fd5"
+    },
+    "capacity-dao-rope-fused-adam-b64-t512-01/profile": {
+      "trace_bytes": 144224,
+      "trace_file": "operator-trace.json.gz",
+      "trace_sha256": "99bb22ee3a1c5e6626dfff2740bf9b06764b6aca33367a13fea1efe58dff3158"
+    }
+  },
+  "queue_artifacts": {
+    "ordinary-queue-capacity-primary.json": {
+      "md5_base64": "OUu4n9PcZkx1c9rgoJ0hDA==",
+      "sha256": "715425c0b75ee7816a4d6dc7a3d6f125a97d95ba6dcb67493d54c91962bdfc89",
+      "size_bytes": 1485
+    },
+    "ordinary-queue-capacity-primary.log": {
+      "md5_base64": "cOGZLEWmhZHo6mm+ssAKGw==",
+      "sha256": "7a6fa777a435adaa49637fca402335d13b8651b7a62bdf6929e0d48551cfb7e2",
+      "size_bytes": 1983
+    },
+    "ordinary-queue-capacity-repeat-long.json": {
+      "md5_base64": "FDky1oXqie80ZOm0rTpqEQ==",
+      "sha256": "133e6dc18512a660c8e024226a5ba492248eda0512230f28ce9ca46874a09801",
+      "size_bytes": 1225
+    },
+    "ordinary-queue-capacity-repeat-long.log": {
+      "md5_base64": "M8jqyQhY80V8Pqq+ryp/+A==",
+      "sha256": "a7062e650f0a302fe7e813ceb9a5f8e85f7dac03c8ea6b124382bec62b2919d6",
+      "size_bytes": 2003
+    },
+    "ordinary-queue-correctness.json": {
+      "md5_base64": "ENoN26Jn2PEG7yvK5y/2fw==",
+      "sha256": "bc92aa2b0897e6c49edc2305b42559b7bfc1551116ae8d323159ad2bdc9a2209",
+      "size_bytes": 1002
+    },
+    "ordinary-queue-correctness.log": {
+      "md5_base64": "47xuK90kOKPYEb7CLKY2zw==",
+      "sha256": "847aac66b7345ae55b490dcd01ee5579b95f500a2fc48cdb54cf5838e8563bd8",
+      "size_bytes": 1895
+    },
+    "run_ordinary_queue.py": {
+      "md5_base64": "RYc1NCYiNzJYWUJzt9OhQw==",
+      "sha256": "e13acf82e59ede863dd04288803f9ebbda9bd281483e5403438c86ba55e63d5c",
+      "size_bytes": 1271
+    }
+  },
+  "receipt_object": {
+    "generation": "1790267014823461",
+    "md5_base64": "vILFAURXiFb7JUb6oZamaQ==",
+    "sha256": "442a761f89e3197ac1c800ef6502a13b50db5f782b34053549efe1d686936b76",
+    "size_bytes": 6205,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-ordinary-fusions/20260924T162332Z/storage-receipt.json",
+    "verification": "server size/MD5, SHA metadata and downloaded SHA256"
+  },
+  "run_revisions": {
+    "capacity-control-b16-t2048-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-control-b64-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-control-b64-t512-02": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-dao-rope-b64-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-dao-rope-fused-adam-b16-t2048-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-dao-rope-fused-adam-b64-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-dao-rope-fused-adam-b64-t512-02": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "capacity-fused-adam-b64-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "correctness-combined-b8-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "correctness-dao-b2-t2048-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "correctness-dao-b8-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708",
+    "correctness-fused-adam-b8-t512-01": "b70b3ec54cd808534f25e863c61c5cb987c19708"
+  },
+  "runs": 12,
+  "schema": "olmo-ordinary-fusions-retention-v1",
+  "source_pairs_checked": 672,
+  "status": "verified",
+  "statuses": {
+    "failed": 1,
+    "passed": 11
+  },
+  "weights_uploaded": false
+}
