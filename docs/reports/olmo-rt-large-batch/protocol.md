@@ -71,9 +71,23 @@ setup phases, not a difference of snapshots. Steady timing peaks are separate.
 Keep OOM stage and partial physical-update counts even if capture fails.
 
 The optional release_transient_cache flag performs GC/unused allocator-cache
-release only after warmup stream synchronization and before capture. Defaults
+release after gradient initialization and synchronization, before side-stream
+warmup, and again after warmup synchronization before capture. Defaults
 preserve behavior; live gradient/graph/model storage must remain valid. Compare
 at a common shape before crediting capacity improvements to this setup change.
+
+After the retained B192 validation-only OOM, optional validation-order
+before-capture stores eager CPU references for preparation batch2 and changed
+batch1 before graph capture, restores batch2, then performs exact initial and
+changed-token replay checks. Timing/preparation update batches and counts stay
+unchanged. After timings and any profiles, snapshot final replay on CPU, release
+the graph and graph outputs, then run the final exact eager comparison. Check
+parameter and persistent gradient storage throughout. This removes coexistence
+of fresh eager workspace and the private graph pool, without dropping any exact
+gradient/loss gate. Default live-graph ordering reproduces the earlier reports.
+Record validation-order separately in comparison cohorts; compare a common B128
+shape before escalating. Keep all earlier OOM reports and source revisions.
+
 If larger physical batches fail, compare FA4 with optimized SDPA at the same
 shape and at the next failed boundary, after FA4 integration checks. Retain
 failures and do not presume FA4 saves memory already avoided by Flash SDPA.

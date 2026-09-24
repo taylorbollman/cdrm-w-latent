@@ -19,6 +19,10 @@ def preparation(monkeypatch):
 
     stream = Stream()
 
+    def create_stream():
+        events.append("stream_create")
+        return stream
+
     @contextmanager
     def stream_context(value):
         events.append("stream_enter")
@@ -45,7 +49,7 @@ def preparation(monkeypatch):
         assert not state["capturing"]
         events.append("empty_cache")
 
-    monkeypatch.setattr(static_training.torch.cuda, "Stream", lambda: stream)
+    monkeypatch.setattr(static_training.torch.cuda, "Stream", create_stream)
     monkeypatch.setattr(static_training.torch.cuda, "current_stream", lambda: stream)
     monkeypatch.setattr(static_training.torch.cuda, "stream", stream_context)
     monkeypatch.setattr(static_training.torch.cuda, "graph", graph_context)
@@ -95,6 +99,8 @@ def test_default_capture_keeps_cleanup_and_observation_disabled(preparation):
     assert plan.warmup_backward_calls == 3 and plan.capture_backward_calls == 1
     assert plan.graph_result == {"completed_backward": 3}
     assert events.count("backward") == 3
+    assert events.count("synchronize") == 2
+    assert events.index("stream_exit") < events.index("synchronize")
 
 
 def test_phase_boundaries_surround_sync_cleanup_and_capture_without_tensor_changes(preparation):
@@ -103,16 +109,28 @@ def test_phase_boundaries_surround_sync_cleanup_and_capture_without_tensor_chang
     plan.capture(warmup=2, release_transient_cache=True, phase_observer=observe)
     assert [event for event in events if isinstance(event, tuple)] == [
         (phase, event)
-        for phase in ("gradient_initialization", "warmup", "transient_cleanup", "capture")
+        for phase in ("gradient_initialization", "pre_warmup_transient_cleanup",
+                      "warmup", "transient_cleanup", "capture")
         for event in ("begin", "end")]
-    assert events.index("stream_exit") < events.index("synchronize") < events.index("gc")
-    assert events.index("gc") < events.index("empty_cache") < events.index(("capture", "begin"))
+    assert events[:10] == [
+        ("gradient_initialization", "begin"), "initialize",
+        ("gradient_initialization", "end"),
+        ("pre_warmup_transient_cleanup", "begin"), "synchronize", "gc", "empty_cache",
+        ("pre_warmup_transient_cleanup", "end"), ("warmup", "begin"), "stream_create"]
+    post_warmup = events.index("stream_exit")
+    assert events[post_warmup:post_warmup + 9] == [
+        "stream_exit", "wait_stream", "synchronize", ("warmup", "end"),
+        ("transient_cleanup", "begin"), "gc", "empty_cache",
+        ("transient_cleanup", "end"), ("capture", "begin")]
     assert events.index("graph_exit") < events.index(("capture", "end"))
+    assert events.count("gc") == events.count("empty_cache") == 2
+    assert events.count("synchronize") == 3
     assert plan.gradient_addresses is addresses
     assert plan.warmup_backward_calls == 3 and plan.capture_backward_calls == 1
+    assert plan.graph_result == {"completed_backward": 3}
 
 
-def test_warmup_failure_reports_completed_work_without_cleanup_or_graph(preparation):
+def test_warmup_failure_reports_completed_work_without_post_cleanup_or_graph(preparation):
     plan, observe, events, state = preparation
     state["fail_backward"] = 2
     with pytest.raises(RuntimeError, match="deliberate preparation"):
@@ -120,14 +138,20 @@ def test_warmup_failure_reports_completed_work_without_cleanup_or_graph(preparat
     assert plan.warmup_backward_calls == 2  # Initialization plus first warmup.
     assert plan.capture_backward_calls == 0 and plan.graph is None
     assert events[-1] == ("warmup", "error")
-    assert "stream_exit" in events and "graph_enter" not in events and "gc" not in events
+    assert "stream_exit" in events and "graph_enter" not in events
+    assert ("pre_warmup_transient_cleanup", "end") in events
+    assert ("transient_cleanup", "begin") not in events
+    assert events.count("gc") == events.count("empty_cache") == 1
 
 
-def test_capture_failure_observation_occurs_after_graph_context_exit(preparation):
+@pytest.mark.parametrize("release_transient_cache", [False, True])
+def test_capture_failure_observation_occurs_after_graph_context_exit(
+        preparation, release_transient_cache):
     plan, observe, events, state = preparation
     state["fail_backward"] = 3
     with pytest.raises(RuntimeError, match="deliberate preparation"):
-        plan.capture(warmup=2, phase_observer=observe)
+        plan.capture(warmup=2, release_transient_cache=release_transient_cache,
+                     phase_observer=observe)
     assert events[-2:] == ["graph_exit", ("capture", "error")]
     assert plan.graph is None and plan.graph_result is None and plan.capture_backward_calls == 0
     assert plan.warmup_backward_calls == 3
@@ -158,14 +182,51 @@ def test_invalid_observation_options_reject_before_any_cuda_work(kwargs, prepara
     assert not events
 
 
-def test_cleanup_failure_stops_before_graph_and_preserves_error(preparation, monkeypatch):
+def test_initialization_failure_stops_before_cleanup_or_stream(preparation):
     plan, observe, events, _ = preparation
 
-    def failed_cleanup():
-        raise RuntimeError("cleanup unavailable")
+    def failed_initialization():
+        raise RuntimeError("initialization unavailable")
 
-    monkeypatch.setattr(static_training.torch.cuda, "empty_cache", failed_cleanup)
+    plan.initialize_gradients = failed_initialization
+    with pytest.raises(RuntimeError, match="initialization unavailable"):
+        plan.capture(release_transient_cache=True, phase_observer=observe)
+    assert events == [("gradient_initialization", "begin"),
+                      ("gradient_initialization", "error")]
+    assert plan.graph is None and plan.warmup_backward_calls == 0
+
+
+@pytest.mark.parametrize("phase,operation", [
+    ("pre_warmup_transient_cleanup", "synchronize"),
+    ("pre_warmup_transient_cleanup", "gc"),
+    ("pre_warmup_transient_cleanup", "empty_cache"),
+    ("transient_cleanup", "gc"),
+    ("transient_cleanup", "empty_cache"),
+])
+def test_cleanup_failure_stops_before_next_phase_and_preserves_error(
+        preparation, monkeypatch, phase, operation):
+    plan, observe, events, _ = preparation
+    addresses = plan.gradient_addresses
+    owner = static_training.gc if operation == "gc" else static_training.torch.cuda
+    name = "collect" if operation == "gc" else operation
+    original = getattr(owner, name)
+
+    def failed_cleanup():
+        phases = [event for event in events if isinstance(event, tuple)]
+        if phases[-1] == (phase, "begin"):
+            raise RuntimeError("cleanup unavailable")
+        return original()
+
+    monkeypatch.setattr(owner, name, failed_cleanup)
     with pytest.raises(RuntimeError, match="cleanup unavailable"):
         plan.capture(warmup=1, release_transient_cache=True, phase_observer=observe)
-    assert events[-1] == ("transient_cleanup", "error")
-    assert plan.graph is None and "graph_enter" not in events
+    assert events[-1] == (phase, "error")
+    assert plan.graph is None and plan.graph_result is None and plan.capture_backward_calls == 0
+    assert "graph_enter" not in events and ("capture", "begin") not in events
+    assert plan.gradient_addresses is addresses
+    if phase == "pre_warmup_transient_cleanup":
+        assert "stream_create" not in events and ("warmup", "begin") not in events
+        assert plan.warmup_backward_calls == 1
+    else:
+        assert ("pre_warmup_transient_cleanup", "end") in events
+        assert ("warmup", "end") in events and plan.warmup_backward_calls == 2

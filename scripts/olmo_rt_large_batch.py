@@ -33,6 +33,8 @@ from scripts.olmo_f3_graph_training import (
     backend_context, OnlineTracker,
 )
 from scripts.olmo_f3d_validate import new_plan
+from scripts.olmo_large_batch_validation import (snapshot_eager_cpu, replay_compare_cpu,
+    snapshot_replay_cpu, release_graph_then_compare_eager_cpu)
 from scripts.olmo_f4_resources import selected_case, memory_snapshot
 from scripts.olmo_rt_efficiency import (
     SOURCES as RT_SOURCES, BUDGETS, metric, comparison_passes, output_snapshot,
@@ -45,6 +47,7 @@ PROTOCOL = ROOT / "docs/reports/olmo-rt-large-batch/protocol.md"
 SOURCES = tuple(sorted(set(RT_SOURCES) | {
     "scripts/olmo_ordinary_efficiency.py", "scripts/olmo_ordinary_fusions.py",
     "scripts/olmo_rt_large_batch.py",
+    "scripts/olmo_large_batch_validation.py",
     "scripts/olmo_ordinary_optimizer_probe.py", "scripts/docker_shell.sh",
     "scripts/experiment_tracking.py", "scripts/olmo_lm_common.py",
 } | {str(path.relative_to(ROOT)) for path in (ROOT / "cdrm/pretrained").glob("*.py")}))
@@ -79,12 +82,15 @@ def parse_args(argv=None):
     parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument("--length", type=int, choices=(32, 512), default=512)
     parser.add_argument("--release-transient-cache", action="store_true")
+    parser.add_argument("--validation-order", choices=("live-graph", "before-capture"), default="live-graph")
     parser.add_argument("--profile", action="store_true")
     parser.add_argument("--continue-after-compatibility-miss", action="store_true")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--artifacts", type=Path, default=ROOT / ".runtime/olmo1b-step60000/artifacts")
     args = parser.parse_args(argv)
     if args.stage == "correctness":
+        if args.validation_order != "live-graph":
+            parser.error("Validation reordering applies only to capacity")
         if args.batch_size not in (1, 2, 8) or args.profile:
             parser.error("Correctness uses B1/2/8 and no profiler; primary B8/T512")
     else:
@@ -506,16 +512,34 @@ def main(argv=None):
                     report["preparation_records"] = preparation
                     save()
                 phases.observe("preparation_updates", "end")
+                if args.validation_order == "before-capture":
+                    save("validation_references")
+                    with phases.phase("validation_references"):
+                        initial_refs = snapshot_eager_cpu(plan, batch_for(tokenizer, case, 2))
+                        changed_refs = snapshot_eager_cpu(plan, batch_for(tokenizer, case, 1))
+                        plan.load_batch(batch_for(tokenizer, case, 2))
+                    report["validation_reference_batches"] = {
+                        "initial": tree_digests(vars(batch_for(tokenizer, case, 2))),
+                        "changed": tree_digests(vars(batch_for(tokenizer, case, 1)))}
                 save("capture")
                 began = time.perf_counter()
                 plan.capture(warmup=10, release_transient_cache=args.release_transient_cache,
                     phase_observer=phases.capture_observer)
                 report["capture_seconds"] = time.perf_counter() - began
+                save("validation_initial")
                 with phases.phase("validation_initial"):
-                    exact_graph(plan, "capacity_initial_graph")
+                    if args.validation_order == "before-capture":
+                        publish(replay_compare_cpu(plan, initial_refs, "capacity_initial_graph"))
+                    else:
+                        exact_graph(plan, "capacity_initial_graph")
                 plan.load_batch(batch_for(tokenizer, case, 1))
+                save("validation_changed_tokens")
                 with phases.phase("validation_changed_tokens"):
-                    exact_graph(plan, "capacity_changed_tokens_overwrite", replays=2)
+                    if args.validation_order == "before-capture":
+                        publish(replay_compare_cpu(plan, changed_refs, "capacity_changed_tokens_overwrite", replays=2))
+                        del initial_refs, changed_refs
+                    else:
+                        exact_graph(plan, "capacity_changed_tokens_overwrite", replays=2)
                 report["setup_memory"] = phases.setup_summary()
                 torch.cuda.reset_peak_memory_stats()
                 records = []
@@ -537,9 +561,10 @@ def main(argv=None):
                 with phases.phase("backward_timing"):
                     report["forward_loss_backward"] = timed(lambda: plan.backward(replay=True), 3)
                 report["forward_loss_backward_tokens_per_second"] = plan.input_tokens / report["forward_loss_backward"]["median_wall_seconds"]
-                save("capacity_changed_weights_validation")
-                with phases.phase("validation_changed_weights"):
-                    exact_graph(plan, "capacity_changed_weights")
+                if args.validation_order == "live-graph":
+                    save("capacity_changed_weights_validation")
+                    with phases.phase("validation_changed_weights"):
+                        exact_graph(plan, "capacity_changed_weights")
                 with phases.phase("health"):
                     report["health"] = state_health(model, optimizer)
                 report["resources"] = resource_card(plan, case, optimizer)
@@ -564,6 +589,12 @@ def main(argv=None):
                     phases.observe("profile", "end")
                     if not report["post_profile_health"]["passed"]:
                         raise AssertionError("Nonfinite state after profiled canonical update")
+                if args.validation_order == "before-capture":
+                    save("capacity_terminal_validation")
+                    with phases.phase("validation_changed_weights"):
+                        final_refs = snapshot_replay_cpu(plan)
+                        publish(release_graph_then_compare_eager_cpu(plan, final_refs, "capacity_changed_weights"))
+                        del final_refs
             report["prepared_layout"] = plan.forward_layout.metadata
             report["nextlat_config"] = model.config.to_dict()
             report["counts"] = dict(plan.counts)

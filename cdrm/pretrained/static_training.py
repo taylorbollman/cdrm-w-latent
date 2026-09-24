@@ -172,7 +172,8 @@ class StaticFBTTraining:
         """Prepare/capture without changing the canonical tensor computation.
 
         Optional ``phase_observer(phase, event)`` receives begin/end/error for
-        gradient_initialization, warmup, capture, and optional transient_cleanup.
+        gradient_initialization, warmup, capture, and optional
+        pre_warmup_transient_cleanup/transient_cleanup.
         It can persist synchronized allocator/device snapshots and reset peak
         counters, but must be read-only with respect to model/layout/gradient
         tensors. Callbacks never run inside the graph context; failed capture
@@ -180,10 +181,12 @@ class StaticFBTTraining:
         by default and this method itself never resets allocator peak counters.
 
         ``release_transient_cache`` explicitly collects unreachable Python
-        objects and releases unused allocator cache after synchronized warmup,
-        before graph creation. It cannot release live model/optimizer/gradient
-        tensors or graph-owned storage, and is not a model memory optimization.
-        The default retains the historical allocator preparation behavior.
+        objects and releases unused allocator cache after synchronized gradient
+        initialization, before warmup stream creation, and again after
+        synchronized warmup, before graph creation. It cannot release live
+        model/optimizer/gradient tensors or graph-owned storage, and is not a
+        model memory optimization. The default retains the historical allocator
+        preparation behavior.
         """
         if self.batch.input_ids.device.type != "cuda":
             raise ValueError("CUDA graph capture requires CUDA; no CPU fallback")
@@ -197,6 +200,11 @@ class StaticFBTTraining:
             raise ValueError("This training plan already owns a captured graph")
         with _preparation_phase(phase_observer, "gradient_initialization"):
             self.initialize_gradients()
+        if release_transient_cache:
+            with _preparation_phase(phase_observer, "pre_warmup_transient_cleanup"):
+                torch.cuda.synchronize()
+                gc.collect()
+                torch.cuda.empty_cache()
         with _preparation_phase(phase_observer, "warmup"):
             stream = torch.cuda.Stream()
             stream.wait_stream(torch.cuda.current_stream())
