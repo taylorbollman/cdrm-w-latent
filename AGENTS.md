@@ -31,7 +31,27 @@ W&B tracking.
 
 # Pretrained model handoff
 
-Latest ordinary efficiency milestone is complete (2026-09-24), final runtime
+Latest ordinary fusion milestone is complete (2026-09-24), runtime b70b3ec.
+Read `docs/reports/olmo-ordinary-fusions/results.md`, numerical/profile audits,
+usage and current handoff. Opt-in Dao native-FP32 RoPE plus fused AdamW improves
+repeated B64/T512 full-CE39.18k→43.61k (+11.30%), reserved45.68GiB; one matched
+B16/T2048 pair36.99k→41.03k (+10.92%). T512 numerical screen passes; T2048 retains
+a CE-only relative-loss failure (absolute7.39e-6 nats/target), while output/gradient
+and all own graph/full-update checks pass. Fixed-gradient scalar/fused Adam
+update difference4.57e-5 relative passes.12reports:11pass/1numericfail,64/65gates,
+all61operational,96physical updates,672source pairs. CPU410distinct scoped plus
+75evidence tests. Full-step profiler CUDA inventories include overlapping GPU
+annotations; derived report excludes these and recovers CPU phases from trace.
+Defaults/native RT/QK unchanged; no quality run. See storage receipt for retained
+sources/logs/traces/plots/checkpoint reference. GPU idle, no further queue.
+V4 now explicitly considers DDP then ZeRO1/2, and bounded contiguous RT finish/
+writer compilation; neither is implemented/validated by this milestone. One GPU
+available. RT/FBT combination, online/cache and distributed scopes need their own
+checks; all prior RT qualifications remain open. Runtime flags belong in future
+checkpoint configurations, not model state tensors; fused Adam affects resume
+optimizer identity. Current Dao option rejects ordinary prefix/exported caches.
+
+Previous ordinary efficiency milestone is complete (2026-09-24), final runtime
 18351ef. Read `docs/reports/olmo-ordinary-efficiency/results.md`, its usage,
 summary and current handoff. Rounded compiled ordinary SwiGLU passes the unchanged
 numerical screen (bitwise outputs/loss, gradient L2 .003133) and exact own

@@ -1,0 +1,59 @@
+Ordinary fused RoPE runtime review and CPU tests
+2026-09-24
+
+Reviewed and tested runtime: b70b3ec (runtime sources are identical to the dirty
+files tested before this commit). No review-stage runtime edits were required.
+All commands ran from /home/taylorbollman/cdrm-w-latent. GPU passthrough was
+explicitly disabled; no GPU or actual Dao CUDA-kernel validation was performed
+by this reviewer.
+
+Successful command:
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_rope.py tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rope_reuse.py tests/test_olmo_static.py tests/test_olmo_ordinary_execution.py tests/test_olmo_ordinary_checkpointing.py tests/test_olmo_author_integration.py tests/test_olmo_recurrent.py tests/test_olmo_tiled.py tests/test_olmo_reference.py tests/test_olmo_model.py'
+
+Result:
+361 passed, 33 warnings in 8.47s
+Exit code: 0
+Container: NVIDIA PyTorch 26.06, PyTorch 2.13.0a0+8145d63, Python 3.12.
+Warnings were existing JIT/deprecation notices and tiny-fixture vocabulary
+alignment warnings. The container's no-driver warning was expected because
+this was an explicitly CPU-only command.
+
+Retained failed collection attempt, before the successful command:
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc 'test "$PWD" = /workspace/cdrm-w-latent && python -m pytest -q tests/test_olmo_ordinary_rope.py tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rope.py tests/test_olmo_static.py'
+Exit code: 4
+ERROR: file or directory not found: tests/test_olmo_rope.py
+no tests ran in 0.00s
+Correction: the existing suite is tests/test_olmo_rope_reuse.py. This was a
+test-command collection error, not a failing test or runtime/GPU attempt.
+
+Runtime review evidence:
+- Dao rotation is opt-in and out of place. Q/K enter the installed kernel in
+  FP32 with the original native FP32 cosine/sine values, then return to the
+  original projection dtype. No precision or fallback claim is inferred from
+  CPU mocks; installed kernel FMA and backward behavior need GPU evidence.
+- Batch-specific, nonconsecutive positions are packed from native tables with
+  per-row offsets. Table packing occurs before prepared execution/capture.
+- Prepared layouts pin backend choice and compact tensor identity, storage,
+  metadata and version. Compact buffers are not model parameters or buffers.
+- Native defaults and native cache behavior remain intact. Unsupported ordinary
+  Dao prefix/export-cache calls fail explicitly.
+- Selected native RT blocks retain their own RoPE path. Ordinary FBT bootstrap
+  blocks use the selected ordinary backend; no RT backward math was modified.
+- Covered native ordinary/checkpoint/static/reference/recurrent/tiled and
+  author integration regressions in the passing group above.
+
+Independent harness review (read-only):
+- scripts/olmo_ordinary_fusions.py explicitly injects optimizer_for(model, arm)
+  into complete_update_parity; selected fused/foreach flags are recorded.
+- Eager/graph comparison restores parameter values in place and preserves
+  captured gradient buffers. The fixed-gradient diagnostic likewise restores
+  original values and verifies parameter/gradient storage addresses.
+- Capacity keeps the physical-step hook installed for the full-step profile:
+  three preparation plus five timed plus one profiled update totals nine.
+  The additional profile batch has its own digest; backward-only profiles do
+  not add optimizer updates.
+- Both arms use compiled rounded SwiGLU, all ordinary layers checkpointed and
+  full CE. Optimizer-only initial model comparison requires bitwise equality;
+  RoPE comparisons use the unchanged numerical budgets.
+- No blocker found before freezing b70b3ec. Reporting/retention helpers were
+  still under separate development and are not cleared by this runtime review.

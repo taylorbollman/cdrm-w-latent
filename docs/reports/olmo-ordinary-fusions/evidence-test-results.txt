@@ -1,0 +1,59 @@
+2026-09-24: CPU evidence helper validation, no GPU execution.
+
+Command (run from /home/taylorbollman/cdrm-w-latent):
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_fusions_report.py tests/test_olmo_ordinary_fusions_retain.py'
+
+Initial completed helper suite: 72 passed in 7.07s.
+After adding independent scalar/fused hyperparameter-equivalence checks:
+74 passed in 7.17s.
+After correcting derived GPU annotation accounting:
+75 passed in 7.21s.
+These suites overlap; final distinct evidence-test count is 75, not their sum.
+
+Review notes:
+- Exact report/source/protocol/frozen-Git hashes and installed Dao source bytes.
+- Successful reports require complete checks; completed numerical failures retain
+  failed status while their separately completed operational checks are validated.
+- Full-step profiler performs update nine, with separate input hashes, counters,
+  post-profile finite state, and independently verified compressed trace.
+- Fixed-gradient optimizer comparison adds six physical updates to the six own
+  eager/graph updates, for twelve total. Restored state, scalar/fused order,
+  optimizer flags, hyperparameters, step values and semantic state are required.
+- Comparison cohorts require identical checkpoint, fixtures, precision, protocol,
+  dependency package identities and all recorded runtime sources. Only declared
+  RoPE and fused-Adam arm choices differ. No cross-revision harness waiver.
+- Profile reductions use math.fsum to avoid Python-version-dependent float-sum
+  drift during retention revalidation. Device sums are not optimizer wall time.
+- A real full-step trace revealed GPU user-annotation intervals included in the
+  raw device-event inventory. Derived kernel totals exclude exact ordinary_step/
+  markers and names proven gpu_user_annotation in the verified trace, including
+  Optimizer.step#AdamW.step. Raw totals/counts and excluded events remain explicit.
+  CPU phase durations are recovered from CPU user_annotation complete events;
+  the raw dictionary can have colliding CPU/CUDA keys and remains preserved.
+  The regression fixture covers overlapping annotations, correct shares, recovered
+  CPU times and unchanged raw evidence. Inclusive CPU scopes are nonadditive.
+- Plot smoke test renders PDF and PNG from a verified comparable cohort.
+- Retention tests reject changed sources, traces, dependencies, summary fields,
+  checkpoint references and logs; exclude unselected weights/secrets; verify
+  create-only GCS generations and downloaded SHA256 with local cloud doubles.
+
+Independent actual-report validation (read-only load_run, runtime b70b3ec):
+correctness-dao-b8-t512-01: passed; numerical true; operational true;
+56 frozen source pairs, 2 imported Dao source snapshots, 6 physical updates.
+correctness-dao-b2-t2048-01: failed; numerical false; operational true;
+56 frozen source pairs, 2 imported Dao source snapshots, 6 physical updates.
+No summary or original runtime evidence was modified by these checks.
+
+Independent full-step trace validation (runtime b70b3ec):
+capacity-control-b64-t512-01:
+  raw CUDA-event sum 1702.687856 ms; excluding five GPU annotation intervals
+  gives 829.600276 ms; CPU optimizer scope 5.677950 ms.
+capacity-dao-rope-fused-adam-b64-t512-01:
+  raw CUDA-event sum 1498.304000 ms; excluding five GPU annotation intervals
+  gives 738.375572 ms; CPU optimizer scope 0.546848 ms.
+  Named fused-Adam kernels: 11.250434 ms / 9 calls.
+  Named Dao rotary kernels: 25.847029 ms / 96 calls.
+Native scalar Adam/RoPE lack equivalently unique named kernels; absence from
+those name categories is not zero execution cost. Untimed profile sums are not
+complete-step wall time. Operator-only control sum 790.729979 ms is unchanged.
+No runtime source, timed samples, original report or trace was changed.

@@ -7,14 +7,19 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
-**Active follow-up,2026-09-24:** the user requested further ordinary improvements
-using suitable Dao/Transformer Engine operations and fused optimizer mode. Read
-[ordinary fusions protocol](reports/olmo-ordinary-fusions/protocol.md). Audit
-compatibility, then prioritize native-FP32 Dao RoPE and fused AdamW as independent
-opt-ins, followed by bounded actual-checkpoint graph/gradient/update checks and
-matched timing. Preserve PR26 reference/defaults and prior RT qualifications.
+**Latest milestone complete,2026-09-24:** native-FP32 Dao RoPE and fused AdamW
+are implemented as independent opt-ins; read
+[ordinary fusions results](reports/olmo-ordinary-fusions/results.md) and handoff.
+Repeated B64/T512 full-CE39.18k→43.61k (+11.30%); one B16/T2048 pair36.99k→41.03k
+(+10.92%). T512 numerical screen passes; T2048 retains a tiny absolute CE-only
+relative-loss miss. All own graph/full-Adam checks pass; fixed-gradient optimizer
+comparison passes.12reports,96updates,410distinct scoped CPU plus75evidence tests.
+Defaults and prior RT qualifications remain. GPU idle, no additional queue.
+Section8 now explicitly records DDP→ZeRO1/2 and bounded contiguous RT leaf
+compilation as future candidates. Other RT/FBT/NextLat combinations and online
+execution need their own checks before these ordinary options are called ready.
 
-**Latest milestone complete,2026-09-24:** ordinary-model efficiency precedes
+**Previous milestone complete,2026-09-24:** ordinary-model efficiency precedes
 the older functional queue. Read [results](reports/olmo-ordinary-efficiency/results.md)
 and the current handoff. Opt-in rounded SwiGLU gives repeated B64/T512
 36.75k→39.16k inputtokens/s (+6.55%) at46.17GiB reserved; compiled+alternating
@@ -24,9 +29,10 @@ FA4's small loss-only misses remain qualified, despite healthy outputs/gradients
 and exact own operational checks; its directional full-step gain is0.65% atT512
 and3.55% atT2048. Two graph-capture OOMs bound reduced-checkpoint capacity.
 No defaults, Q/K normalization, RT backend or quality-training state changed.
-GPU is idle. Review these results and the RT-backend decision before additional
-ordinary fusion or the older functional queue. Native FP32 RoPE fusion is a
-promising measured follow-up; it has not been implemented or automatically queued.
+This is the prior PR26 snapshot. The subsequently authorized ordinary-fusion
+follow-up is recorded above; its results supersede the recommendation to wait
+before implementing native-FP32 RoPE fusion. The RT-backend decision and older
+functional queue remain separate.
 
 **Latest approved ordering (2026-09-23):** the user approved the
 [native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).
@@ -613,6 +619,16 @@ do not unroll an entire long recurrence merely to fuse its pointwise operations.
 Require shared-cotangent gradients, own graph/full-update checks and a full-model
 throughput measurement before adopting a candidate. This is a future bounded
 RT optimization milestone, not a change to the current ordinary-only queue.
+
+Concrete native candidate: `olmo_tiled._finish`, then a pure one-token
+finish/interpolation/writer/RoPE helper. Keep cache mutation and `_add_tile`
+outside. Later examine the two reverse-loop local input VJPs without regressing
+the already batched parameter VJP to per-token weight-gradient computation.
+The author port already compiles several batched helpers; its sequential
+finish/writer calls remain eager, so this may benefit either backend. Preserve
+FP32 norm/residuals, native packed `[value,gate]`, temporary-self behavior,
+alpha and K/V-only semantics. A SwiGLU library substitution must respect both
+packing and the established BF16 rounding boundaries.
 
 ## 9. F6 — Readiness review, then choose learning experiments
 

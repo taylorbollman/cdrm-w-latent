@@ -4,23 +4,34 @@ Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**User refinement,2026-09-24:** keep the ordinary fused-RoPE/Adam investigation
-running. Add DeepSpeed ZeRO1/2 as explicit memory/scaling candidates after the
+**User refinement,2026-09-24:** finish the ordinary fused-RoPE/Adam investigation
+below. Add DeepSpeed ZeRO1/2 as explicit memory/scaling candidates after the
 genuine two-GPU DDP baseline. Profile/fuse the contiguous sequential RT leaf
 path where helpful, rather than assuming isolated SwiGLU fusion is sufficient.
 V4 section8 records the distributed loss/gradient-storage/capture requirements
 and bounded future RT compilation scope. Only one H100 is currently exposed;
 no multi-GPU readiness or sharding result is claimed.
 
-**Active follow-up,2026-09-24:** user authorized another bounded ordinary-model
-optimization pass, considering Dao/Transformer Engine fused operations and fused
-optimizer mode. Branch`feat/olmo-ordinary-fusions`; read
-[protocol](reports/olmo-ordinary-fusions/protocol.md). First candidates are Dao
-out-of-place RoPE preserving native FP32 tables/arithmetic and opt-in PyTorch
-fused AdamW. Current optimizer is single-tensor (`foreach=False,fused=None`).
-Retain PR26 rounded SwiGLU/SDPA/all-checkpoint reference, existing defaults and RT
-qualifications. No quality run or broad TE/model migration. Root owns serial GPU
-validation; independent source/CPU audits precede frozen actual-checkpoint runs.
+**Latest milestone complete,2026-09-24:** ordinary fused RoPE/Adam investigation,
+runtime`b70b3ec`. Read [results](reports/olmo-ordinary-fusions/results.md),
+[numerical assessment](reports/olmo-ordinary-fusions/numerical-assessment.md),
+[profile audit](reports/olmo-ordinary-fusions/profile-audit.md),
+[usage](reports/olmo-ordinary-fusions/usage.md) and its storage receipt.
+Dao native-FP32 RoPE plus fused AdamW improves repeated B64/T512 full-CE
+39.18k→43.61k (+11.30%), setup reserved45.68GiB; one B16/T2048 pair improves
+36.99k→41.03k (+10.92%). T512 numerical screen passes. T2048 retains a strict
+CE-only relative-loss failure (absolute7.39e-6 nats/target), with healthy output/
+gradient budgets and exact own graph/full-Adam checks. Fixed-gradient optimizer
+update difference4.57e-5 relative passes.12reports:11pass/1numericfail,64/65gates,
+all61operational,96updates,672source pairs.410distinct scoped CPU tests and75
+evidence tests pass. Profiles exclude overlapping GPU annotation intervals in
+derived totals, with raw traces preserved. Parameters/matrix FLOPs are unchanged.
+Defaults remain native RoPE/scalar Adam; use explicit flags for measured options.
+TE broad module replacements are deferred for precision/ownership/packing issues.
+GPU is idle; no additional GPU or quality run is queued. Prior RT qualifications
+remain open. Dao ordinary cache/online calls are initially unsupported; future
+RT/FBT/NextLat combinations need bounded integration checks. Preserve runtime
+flags in checkpoint configuration; fused Adam changes optimizer resume identity.
 
 **Ordinary-model optimization complete,2026-09-24:** branch
 `feat/olmo-ordinary-efficiency`, final runtime`18351ef`. Read
