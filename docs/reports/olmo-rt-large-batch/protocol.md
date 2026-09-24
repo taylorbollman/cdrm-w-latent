@@ -22,6 +22,11 @@ One physical per-device batch per optimizer update; no accumulation/multi-GPU.
 
 Control: ordinary native RoPE,eager SwiGLU,PyTorch Flash SDPA,scalar Adam.
 Optimized: ordinary Dao native-FP32 RoPE,rounded compiled SwiGLU,fused AdamW.
+Bounded localization arms: compiled-native retains native ordinary RoPE while
+using rounded compiled SwiGLU/fused Adam; fa4-native changes its ordinary
+attention alone to FA4. These isolate any Dao loss discrepancy in the RT stack
+without widening budgets. If compiled-native clears the gates and optimized
+does not, use compiled-native as the conservative primary capacity candidate.
 Conditional FA4: optimized arm with ordinary attention alone replaced by FA4;
 native RT remains Triton. Same LR1e-5,betas(.9,.95),epsilon1e-8,matrix decay0.1,
 two-update warmup,max-norm1 clipping. These are execution probes, not learned

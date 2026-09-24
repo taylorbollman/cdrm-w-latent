@@ -52,6 +52,8 @@ ARMS = {
     "control": {"rope": "native", "pointwise": "eager", "attention": "sdpa", "fused_adam": None},
     "optimized": {"rope": "dao", "pointwise": "compiled", "attention": "sdpa", "fused_adam": True},
     "fa4": {"rope": "dao", "pointwise": "compiled", "attention": "fa4", "fused_adam": True},
+    "compiled-native": {"rope": "native", "pointwise": "compiled", "attention": "sdpa", "fused_adam": True},
+    "fa4-native": {"rope": "native", "pointwise": "compiled", "attention": "fa4", "fused_adam": True},
 }
 
 
