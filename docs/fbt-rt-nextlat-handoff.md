@@ -1,8 +1,21 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-23. **Read this first after compaction or interruption.**
+Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Latest bounded investigation, 2026-09-24:** while considering the RT-backend
+decision, the user requested other ordinary-model performance opportunities,
+including FA4. Read [ordinary optimization investigation](reports/olmo-ordinary-optimization-investigation/results.md).
+Installed FA4 b20 successfully runs deterministic causal BF16 forward/backward
+and exact own eager/graph checks. Isolated native-layout attention-region
+speedups versus current PyTorch Flash are1.13x B64/T512 and1.47x B16/T2048;
+these are not full-model training gains. Two successful descriptive probes,
+two setup/API failures and sources are retained, with W&B. No production
+backend/default, checkpoint or RT math was changed; no learning run launched.
+Recommended subsequent work is a refreshed16-layer ordinary profile, opt-in
+FA4 integration and bounded checkpoint/pointwise-fusion comparisons. This
+recommendation is not an automatically authorized implementation queue.
 
 **Priority reset, 2026-09-22: functionality and execution before quality.**
 The user now wants confidence that RT, FBT and NextLat work separately and

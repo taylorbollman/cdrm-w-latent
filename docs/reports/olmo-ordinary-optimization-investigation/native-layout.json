@@ -1,0 +1,504 @@
+{
+  "scope": "isolated causal attention forward/backward; no RoPE/projections/loss/optimizer",
+  "status": "completed_isolated_probe",
+  "runtime": {
+    "torch": "2.13.0a0+8145d630e8.nv26.06",
+    "cuda": "13.3",
+    "gpu": "NVIDIA H100 80GB HBM3",
+    "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04"
+  },
+  "shapes": [
+    {
+      "batch": 1,
+      "length": 64,
+      "input_strides": [
+        [
+          131072,
+          128,
+          2048,
+          1
+        ],
+        [
+          131072,
+          128,
+          2048,
+          1
+        ],
+        [
+          393216,
+          128,
+          6144,
+          1
+        ]
+      ],
+      "fa4_vs_sdpa": {
+        "output": {
+          "relative_l2": 0.0,
+          "max_over_reference_peak": 0.0,
+          "finite": true,
+          "exact": true
+        },
+        "dq": {
+          "relative_l2": 2.1268844648147933e-05,
+          "max_over_reference_peak": 0.0003048780490644276,
+          "finite": true,
+          "exact": false
+        },
+        "dk": {
+          "relative_l2": 3.545282379491255e-05,
+          "max_over_reference_peak": 0.0006249999860301614,
+          "finite": true,
+          "exact": false
+        },
+        "dv": {
+          "relative_l2": 0.0,
+          "max_over_reference_peak": 0.0,
+          "finite": true,
+          "exact": true
+        }
+      },
+      "sdpa_vs_fp32_math": {
+        "output": {
+          "relative_l2": 0.0018425665330141783,
+          "max_over_reference_peak": 0.0026932780165225267,
+          "finite": true,
+          "exact": false
+        },
+        "dq": {
+          "relative_l2": 0.0026962589472532272,
+          "max_over_reference_peak": 0.004155660513788462,
+          "finite": true,
+          "exact": false
+        },
+        "dk": {
+          "relative_l2": 0.002679122844710946,
+          "max_over_reference_peak": 0.004148917272686958,
+          "finite": true,
+          "exact": false
+        },
+        "dv": {
+          "relative_l2": 0.002258961321786046,
+          "max_over_reference_peak": 0.002202092669904232,
+          "finite": true,
+          "exact": false
+        }
+      },
+      "fa4_vs_fp32_math": {
+        "output": {
+          "relative_l2": 0.0018425665330141783,
+          "max_over_reference_peak": 0.0026932780165225267,
+          "finite": true,
+          "exact": false
+        },
+        "dq": {
+          "relative_l2": 0.0026962521951645613,
+          "max_over_reference_peak": 0.004155660513788462,
+          "finite": true,
+          "exact": false
+        },
+        "dk": {
+          "relative_l2": 0.0026791130658239126,
+          "max_over_reference_peak": 0.004148917272686958,
+          "finite": true,
+          "exact": false
+        },
+        "dv": {
+          "relative_l2": 0.002258961321786046,
+          "max_over_reference_peak": 0.002202092669904232,
+          "finite": true,
+          "exact": false
+        }
+      },
+      "timings_ms": {
+        "sdpa": [
+          0.053969597816467284,
+          0.053844797611236575,
+          0.0539247989654541,
+          0.05386719703674316,
+          0.05389440059661865,
+          0.053814399242401126,
+          0.053814399242401126,
+          0.05381280183792114,
+          0.053806400299072264,
+          0.05385439991950989
+        ],
+        "fa4": [
+          0.034215998649597165,
+          0.03417760133743286,
+          0.03421919941902161,
+          0.034236800670623777,
+          0.034230399131774905,
+          0.034251201152801516,
+          0.034204798936843875,
+          0.034225600957870486,
+          0.03421280086040497,
+          0.03419840037822723
+        ]
+      },
+      "own_graph_parity": {
+        "sdpa": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ],
+        "fa4": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ]
+      },
+      "median_ms": {
+        "sdpa": 0.053849598765373236,
+        "fa4": 0.03421759903430939
+      },
+      "fa4_speedup": 1.5737398381277186
+    },
+    {
+      "batch": 64,
+      "length": 512,
+      "input_strides": [
+        [
+          1048576,
+          128,
+          2048,
+          1
+        ],
+        [
+          1048576,
+          128,
+          2048,
+          1
+        ],
+        [
+          3145728,
+          128,
+          6144,
+          1
+        ]
+      ],
+      "fa4_vs_sdpa": {
+        "output": {
+          "relative_l2": 0.0008999134297482669,
+          "max_over_reference_peak": 0.0008620689623057842,
+          "finite": true,
+          "exact": false
+        },
+        "dq": {
+          "relative_l2": 0.0009076125570572913,
+          "max_over_reference_peak": 0.0014880952658131719,
+          "finite": true,
+          "exact": false
+        },
+        "dk": {
+          "relative_l2": 0.0011522285640239716,
+          "max_over_reference_peak": 0.002747252816334367,
+          "finite": true,
+          "exact": false
+        },
+        "dv": {
+          "relative_l2": 9.282096289098263e-05,
+          "max_over_reference_peak": 0.002358490601181984,
+          "finite": true,
+          "exact": false
+        }
+      },
+      "timings_ms": {
+        "sdpa": [
+          2.4311279296875,
+          2.4286239624023436,
+          2.4366128921508787,
+          2.4399391174316407,
+          2.433425521850586,
+          2.430723190307617,
+          2.4357967376708984,
+          2.4389263153076173,
+          2.441094398498535,
+          2.44036808013916
+        ],
+        "fa4": [
+          2.1497711181640624,
+          2.153665542602539,
+          2.1541648864746095,
+          2.15402889251709,
+          2.155191993713379,
+          2.1532495498657225,
+          2.151363182067871,
+          2.152440071105957,
+          2.155068778991699,
+          2.1544448852539064
+        ]
+      },
+      "own_graph_parity": {
+        "sdpa": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ],
+        "fa4": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ]
+      },
+      "median_ms": {
+        "sdpa": 2.4362048149108886,
+        "fa4": 2.1538472175598145
+      },
+      "fa4_speedup": 1.1310945340268699
+    },
+    {
+      "batch": 16,
+      "length": 2048,
+      "input_strides": [
+        [
+          4194304,
+          128,
+          2048,
+          1
+        ],
+        [
+          4194304,
+          128,
+          2048,
+          1
+        ],
+        [
+          12582912,
+          128,
+          6144,
+          1
+        ]
+      ],
+      "fa4_vs_sdpa": {
+        "output": {
+          "relative_l2": 0.000996159389615059,
+          "max_over_reference_peak": 0.0008802816737443209,
+          "finite": true,
+          "exact": false
+        },
+        "dq": {
+          "relative_l2": 0.0009584299405105412,
+          "max_over_reference_peak": 0.001497006043791771,
+          "finite": true,
+          "exact": false
+        },
+        "dk": {
+          "relative_l2": 0.0011740823974832892,
+          "max_over_reference_peak": 0.0036231884732842445,
+          "finite": true,
+          "exact": false
+        },
+        "dv": {
+          "relative_l2": 0.00016752905503381044,
+          "max_over_reference_peak": 0.002439024392515421,
+          "finite": true,
+          "exact": false
+        }
+      },
+      "timings_ms": {
+        "sdpa": [
+          4.8809326171875,
+          4.8602336883544925,
+          4.855121612548828,
+          4.874454498291016,
+          4.8606689453125,
+          4.88581428527832,
+          4.8654640197753904,
+          4.874894332885742,
+          4.877175903320312,
+          4.8649040222167965
+        ],
+        "fa4": [
+          3.2870079040527345,
+          3.293199920654297,
+          3.2898094177246096,
+          3.307275390625,
+          3.3679039001464846,
+          3.3190975189208984,
+          3.3315456390380858,
+          3.3083217620849608,
+          3.2979759216308593,
+          3.2984992980957033
+        ]
+      },
+      "own_graph_parity": {
+        "sdpa": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ],
+        "fa4": [
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          },
+          {
+            "relative_l2": 0.0,
+            "max_over_reference_peak": 0.0,
+            "finite": true,
+            "exact": true
+          }
+        ]
+      },
+      "median_ms": {
+        "sdpa": 4.8699592590332035,
+        "fa4": 3.302887344360352
+      },
+      "fa4_speedup": 1.4744551512931894
+    }
+  ],
+  "optimizer_updates": 0,
+  "layout": "native packed QKV views and actual native RoPE application; clones preserve strides",
+  "versions": {
+    "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+    "flash-attn-4": "4.0.0b20",
+    "nvidia-cutlass-dsl": "4.6.0.dev0"
+  },
+  "source_sha256": "8f088c21ba0f91b94da3dd065fcbbce45755206d0b370d596661c7eed35ac65c",
+  "fa4_interface_sha256": "5706f8dd21d744836d0a16b442fa3ae9b6d0867008f1763d2a285cd6df72b9ca",
+  "settings": {
+    "deterministic": true,
+    "causal": true,
+    "dtype": "bfloat16",
+    "heads": 16,
+    "head_dim": 128,
+    "dropout": 0,
+    "seed": 20260924,
+    "warmup_backwards": 10,
+    "timing_rounds": 2,
+    "samples_per_round": 5,
+    "graph_replays_per_sample": 20
+  },
+  "wandb": {
+    "enabled": true,
+    "mode": "online",
+    "project": "pretrained-fbt-rt-nextlat",
+    "entity": "taylorbollman",
+    "group": "ordinary-fa-investigation",
+    "name": "ordinary-sdpa-vs-fa4-h100-native-layout",
+    "system_stats": false,
+    "status": "synced",
+    "run_id": "g0b6gfy7",
+    "run_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/g0b6gfy7",
+    "project_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat"
+  }
+}
