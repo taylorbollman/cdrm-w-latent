@@ -1,11 +1,18 @@
 # OLMo / RT / FBT / NextLat: functionality and execution plan
 
-Updated 2026-09-23. **Current authoritative forward plan.**
+Updated 2026-09-24. **Current authoritative forward plan.**
 
 This supersedes the next-experiment queue in [v3](fbt-rt-nextlat-research-plan-v3.md).
 The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
+
+**Latest approved ordering,2026-09-24:** ordinary-model efficiency now precedes
+the older functional queue. The user approved opt-in FA4, selective ordinary
+checkpointing and bounded pointwise compilation, with actual-checkpoint
+numerical/graph/update checks and T512/T2048 profiles/full-step timings. Read
+[prospective protocol](reports/olmo-ordinary-efficiency/protocol.md) and current
+handoff. Keep all production defaults and existing RT qualifications unchanged.
 
 **Latest approved ordering (2026-09-23):** the user approved the
 [native RT efficiency and author-comparison plan](olmo-rt-efficiency-and-author-comparison-plan.md).

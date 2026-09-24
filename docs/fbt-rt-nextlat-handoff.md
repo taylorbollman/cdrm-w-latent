@@ -4,6 +4,16 @@ Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Active milestone,2026-09-24:** the user approved pursuing the ordinary-model
+optimization plan. Branch`feat/olmo-ordinary-efficiency`; read
+[prospective protocol](reports/olmo-ordinary-efficiency/protocol.md).
+Implement opt-in ordinary FA4, ordinary SwiGLU compilation and selective
+checkpointing; validate actual-checkpoint gradients/graphs/Adam and measure
+native16-layer T512/T2048 full-step performance with profiles. No quality run,
+RT-backend replacement or normalization change. Prior qualifications remain.
+The historical investigation's implementation stop below is lifted by this
+explicit authorization.
+
 **Latest bounded investigation, 2026-09-24:** while considering the RT-backend
 decision, the user requested other ordinary-model performance opportunities,
 including FA4. Read [ordinary optimization investigation](reports/olmo-ordinary-optimization-investigation/results.md).
