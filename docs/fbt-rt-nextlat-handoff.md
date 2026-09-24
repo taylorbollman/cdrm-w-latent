@@ -4,6 +4,24 @@ Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**User refinement,2026-09-24:** keep the ordinary fused-RoPE/Adam investigation
+running. Add DeepSpeed ZeRO1/2 as explicit memory/scaling candidates after the
+genuine two-GPU DDP baseline. Profile/fuse the contiguous sequential RT leaf
+path where helpful, rather than assuming isolated SwiGLU fusion is sufficient.
+V4 section8 records the distributed loss/gradient-storage/capture requirements
+and bounded future RT compilation scope. Only one H100 is currently exposed;
+no multi-GPU readiness or sharding result is claimed.
+
+**Active follow-up,2026-09-24:** user authorized another bounded ordinary-model
+optimization pass, considering Dao/Transformer Engine fused operations and fused
+optimizer mode. Branch`feat/olmo-ordinary-fusions`; read
+[protocol](reports/olmo-ordinary-fusions/protocol.md). First candidates are Dao
+out-of-place RoPE preserving native FP32 tables/arithmetic and opt-in PyTorch
+fused AdamW. Current optimizer is single-tensor (`foreach=False,fused=None`).
+Retain PR26 rounded SwiGLU/SDPA/all-checkpoint reference, existing defaults and RT
+qualifications. No quality run or broad TE/model migration. Root owns serial GPU
+validation; independent source/CPU audits precede frozen actual-checkpoint runs.
+
 **Ordinary-model optimization complete,2026-09-24:** branch
 `feat/olmo-ordinary-efficiency`, final runtime`18351ef`. Read
 [results](reports/olmo-ordinary-efficiency/results.md),

@@ -15,7 +15,7 @@ from torch import Tensor
 
 from .nextlat import NextLatBatch, _validate_batch
 from .olmo_fbt import FBTMode, FBTOutput, OLMoFBT
-from .olmo_rope import build_rope_tables
+from .olmo_rope import build_dao_rope_tables, build_rope_tables
 from .olmo_tiled import OLMoTiledRTForCausalLM
 from .recurrent import RTMode
 
@@ -83,6 +83,9 @@ class PreparedFBTLayout:
         self.rope_tables = (build_rope_tables(self.position_ids, self.base.config.head_dim,
             self.base.config.rope_freq_constant) if self.base.reuse_rope else None)
         self._rope_owner = id(self.rope_tables)
+        self.ordinary_rope_tables = (build_dao_rope_tables(self.rope_tables)
+            if self.base.ordinary_rope_backend == "dao" else None)
+        self._ordinary_rope_owner = id(self.ordinary_rope_tables)
         self._owned = self._owned_tensors()
         self._owned_versions = self._owned_signature()
         # Preserve the old table allocations if someone replaces ``.data``.
@@ -114,6 +117,7 @@ class PreparedFBTLayout:
             self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
             self.base.ordinary_attention_backend, self.base.ordinary_pointwise_backend,
             self.base.ordinary_checkpoint_layers,
+            self.base.ordinary_rope_backend,
             self.base.tile_backend, self.base.backward_tile_backend, self.base.backward_memory,
             self.base.reuse_rope, self.base.kv_only_writes,
             self.base.rt_implementation, self.base.author_precision, self.base.author_compiled_helpers,
@@ -122,7 +126,9 @@ class PreparedFBTLayout:
 
     def _owned_tensors(self):
         tables = (None, None) if self.rope_tables is None else (self.rope_tables.cos, self.rope_tables.sin)
-        return (self.valid_mask, self.position_ids, self.feedback_eligible, self.attention_mask, *tables)
+        compact = ((None, None, None) if self.ordinary_rope_tables is None else
+            (self.ordinary_rope_tables.cos, self.ordinary_rope_tables.sin, self.ordinary_rope_tables.offsets))
+        return (self.valid_mask, self.position_ids, self.feedback_eligible, self.attention_mask, *tables, *compact)
 
     def _owned_signature(self):
         return tuple(None if value is None else (id(value), value.data_ptr(), value._version,
@@ -150,6 +156,11 @@ class PreparedFBTLayout:
             "ordinary_attention_backend": self.base.ordinary_attention_backend,
             "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
             "ordinary_checkpoint_layers": self.base.ordinary_checkpoint_layers,
+            "ordinary_rope_backend": self.base.ordinary_rope_backend,
+            "ordinary_rope_tables_owned_here": self.ordinary_rope_tables is not None,
+            "ordinary_rope_table_bytes": 0 if self.ordinary_rope_tables is None else sum(
+                value.numel() * value.element_size() for value in (self.ordinary_rope_tables.cos,
+                    self.ordinary_rope_tables.sin, self.ordinary_rope_tables.offsets)),
             "rt_implementation": self.base.rt_implementation, "author_precision": self.base.author_precision,
             "author_compiled_helpers": self.base.author_compiled_helpers,
             "author_bwd_mlp_chunks": self.base.author_bwd_mlp_chunks,
@@ -180,6 +191,7 @@ class PreparedFBTLayout:
         self.core._validate_rt_mode(mode.rt_mode)
         if ((self.all_tokens_valid, self.is_causal) != self._static_flags
                 or id(self.rope_tables) != self._rope_owner
+                or id(self.ordinary_rope_tables) != self._ordinary_rope_owner
                 or self._owned_signature() != self._owned_versions):
             raise ValueError("Prepared layout tensors changed")
         if self._structure_signature() != self._structure or self._parameter_signature() != self._parameter_signatures:
@@ -199,6 +211,7 @@ class PreparedFBTLayout:
             "ordinary_attention_backend": self.base.ordinary_attention_backend,
             "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
             "ordinary_checkpoint_layers": self.base.ordinary_checkpoint_layers,
+            "ordinary_rope_backend": self.base.ordinary_rope_backend,
             "cast_weights_once": self.base.cast_weights_once, "tile_backend": self.base.tile_backend,
             "backward_tile_backend": self.base.backward_tile_backend, "backward_memory": self.base.backward_memory,
             "reuse_rope": self.base.reuse_rope, "kv_only_writes": self.base.kv_only_writes,
@@ -228,6 +241,7 @@ class PreparedFBTLayout:
             attention_mask=self.attention_mask, is_causal=self.is_causal,
             all_tokens_valid=self.all_tokens_valid,
             query_rope=self.rope_tables, key_rope=self.rope_tables,
+            ordinary_rope_tables=self.ordinary_rope_tables,
             checkpoint_ordinary=self.base._checkpoint_ordinary_enabled())[0]
 
     def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode()) -> PreparedFBTOutput:

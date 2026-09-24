@@ -21,7 +21,7 @@ from torch.nn import functional as F
 from torch.utils.checkpoint import checkpoint
 
 from .olmo import OLMoBlock, OLMoConfig, _apply_rope
-from .olmo_rope import RopeTables, apply_rope_tables, build_rope_tables
+from .olmo_rope import RopeTables, apply_rope_tables, build_dao_rope_tables, build_rope_tables
 from .olmo_ordinary import validate_checkpoint_layers, validate_ordinary_options
 from .olmo_recurrent import OLMoRTForCausalLM
 from .recurrent import RTExecutionContext, RTMode
@@ -429,6 +429,7 @@ class OLMoTiledCache:
     ordinary_attention_backend: str = "sdpa"
     ordinary_pointwise_backend: str = "eager"
     ordinary_checkpoint_layers: tuple[int, ...] | None = None
+    ordinary_rope_backend: str = "native"
 
     @property
     def sequence_length(self):
@@ -444,14 +445,17 @@ class OLMoTiledOutput:
 
 def _ordinary_block_hidden(x, query_positions, key_positions, mask, *, layer,
                            is_causal, attention_backend, query_rope=None, key_rope=None,
-                           ordinary_attention_backend="sdpa", ordinary_pointwise_backend="eager"):
+                           ordinary_attention_backend="sdpa", ordinary_pointwise_backend="eager",
+                           ordinary_rope_backend="native", ordinary_rope_tables=None):
     """Cache-free ordinary block, with only its hidden output retained."""
     hidden, _ = layer(x, past=None, query_positions=query_positions,
                       key_positions=key_positions, mask=mask,
                       is_causal=is_causal, attention_backend=attention_backend,
                       query_rope=query_rope, key_rope=key_rope,
                       ordinary_attention_backend=ordinary_attention_backend,
-                      ordinary_pointwise_backend=ordinary_pointwise_backend)
+                      ordinary_pointwise_backend=ordinary_pointwise_backend,
+                      ordinary_rope_backend=ordinary_rope_backend,
+                      ordinary_query_rope=ordinary_rope_tables, ordinary_key_rope=ordinary_rope_tables)
     return hidden
 
 
@@ -470,8 +474,10 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     recurrence and unpadded, cache-free calls. The separate author precision,
     compilation, MLP-chunk and autocast-cache options describe that backend;
     native tile/backward/attention-precision options do not change its math.
-    Ordinary blocks, including FBT's bootstrap, use separate opt-in attention
-    and pointwise backends. ``ordinary_checkpoint_layers=None`` preserves the
+    Ordinary blocks, including FBT's bootstrap, use separate opt-in attention,
+    pointwise and RoPE backends. Dao RoPE preserves native FP32 phase tables
+    and casts, requires reuse_rope and initially rejects ordinary cache calls.
+    ``ordinary_checkpoint_layers=None`` preserves the
     historical all/none boolean policy; a tuple selects ordinary block indices
     when that boolean is enabled. Selected RT blocks never use that checkpoint.
     """
@@ -484,19 +490,22 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                  author_autocast_cache=True,
                  ordinary_attention_backend="sdpa", ordinary_pointwise_backend="eager",
                  ordinary_checkpoint_layers=None,
+                 ordinary_rope_backend="native",
                  device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
         if type(ordinary_activation_checkpointing) is not bool:
             raise TypeError("ordinary_activation_checkpointing must be boolean")
         validate_ordinary_options(ordinary_attention_backend, ordinary_pointwise_backend,
-                                  sdpa_backend=attention_backend)
+                                  sdpa_backend=attention_backend, rope_backend=ordinary_rope_backend)
         validate_checkpoint_layers(ordinary_checkpoint_layers, num_layers=config.num_layers,
                                    enabled=ordinary_activation_checkpointing)
         if type(cast_weights_once) is not bool:
             raise TypeError("cast_weights_once must be boolean")
         if type(reuse_rope) is not bool or type(kv_only_writes) is not bool:
             raise TypeError("reuse_rope and kv_only_writes must be boolean")
+        if ordinary_rope_backend == "dao" and not reuse_rope:
+            raise ValueError("Ordinary Dao RoPE requires explicit reuse_rope=True")
         if tile_backend not in ("eager", "triton"):
             raise ValueError("tile_backend must be eager or triton")
         if backward_tile_backend not in ("eager", "triton"):
@@ -519,6 +528,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         self.ordinary_attention_backend = ordinary_attention_backend
         self.ordinary_pointwise_backend = ordinary_pointwise_backend
         self.ordinary_checkpoint_layers = ordinary_checkpoint_layers
+        self.ordinary_rope_backend = ordinary_rope_backend
         self.cast_weights_once = cast_weights_once
         self.tile_backend = tile_backend
         self.backward_tile_backend = backward_tile_backend
@@ -534,10 +544,14 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     def _validate_ordinary_scope(self, mode, *, attention_mask, is_causal,
                                  past_key_values=None, use_cache=False):
         validate_ordinary_options(self.ordinary_attention_backend, self.ordinary_pointwise_backend,
-                                  sdpa_backend=self.attention_backend)
+                                  sdpa_backend=self.attention_backend, rope_backend=self.ordinary_rope_backend)
         validate_checkpoint_layers(self.ordinary_checkpoint_layers, num_layers=self.config.num_layers,
                                    enabled=self.ordinary_activation_checkpointing)
         has_ordinary = len(mode.selected_layers) < self.config.num_layers
+        if self.ordinary_rope_backend == "dao" and not self.reuse_rope:
+            raise ValueError("Ordinary Dao RoPE requires explicit reuse_rope=True")
+        if has_ordinary and self.ordinary_rope_backend == "dao" and (past_key_values is not None or use_cache):
+            raise ValueError("Ordinary Dao RoPE does not support prefix or exported caches")
         if has_ordinary and self.ordinary_attention_backend == "fa4" and (
                 attention_mask is not None or not is_causal or past_key_values is not None or use_cache):
             raise ValueError("Ordinary FA4 supports only dense causal full sequences without masks or prefix/exported caches")
@@ -622,14 +636,24 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                 raise ValueError("Cached RT kernel execution differs")
             if (past_key_values.ordinary_attention_backend != self.ordinary_attention_backend
                     or past_key_values.ordinary_pointwise_backend != self.ordinary_pointwise_backend
-                    or past_key_values.ordinary_checkpoint_layers != self.ordinary_checkpoint_layers):
+                    or past_key_values.ordinary_checkpoint_layers != self.ordinary_checkpoint_layers
+                    or past_key_values.ordinary_rope_backend != self.ordinary_rope_backend):
                 raise ValueError("Cached ordinary execution differs")
+        self._validate_ordinary_scope(mode, attention_mask=mask, is_causal=causal,
+                                      past_key_values=past_key_values, use_cache=use_cache)
+        ordinary_rope_tables, native_rope = None, None
+        if self.ordinary_rope_backend == "dao" and len(mode.selected_layers) < self.config.num_layers:
+            # Public setup is outside a prepared capture body. Table packing
+            # and value validation happen once, never once per layer/token.
+            native_rope = build_rope_tables(positions, self.config.head_dim, self.config.rope_freq_constant)
+            ordinary_rope_tables = build_dao_rope_tables(native_rope)
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
             key_valid=valid, attention_mask=mask, is_causal=causal,
             past_key_values=past_key_values, use_cache=use_cache,
             checkpoint_ordinary=checkpoint_ordinary,
             all_tokens_valid=all_tokens_valid,
+            query_rope=native_rope, key_rope=native_rope, ordinary_rope_tables=ordinary_rope_tables,
         )
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
                               versions, generation, context, self.attention_precision,
@@ -639,13 +663,13 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                               self.author_precision, self.author_compiled_helpers,
                               self.author_bwd_mlp_chunks, self.author_autocast_cache,
                               self.ordinary_attention_backend, self.ordinary_pointwise_backend,
-                              self.ordinary_checkpoint_layers) if use_cache else None
+                              self.ordinary_checkpoint_layers, self.ordinary_rope_backend) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
                           attention_mask, is_causal, past_key_values=None,
                           use_cache=False, checkpoint_ordinary=False,
-                          query_rope=None, key_rope=None, all_tokens_valid=None):
+                          query_rope=None, key_rope=None, all_tokens_valid=None, ordinary_rope_tables=None):
         """Native layer loop after caller validation; static entries are cache-free.
 
         The public forward retains all input/cache guards and cache construction.
@@ -656,6 +680,11 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                                     past_key_values=past_key_values, use_cache=use_cache)
         self._validate_ordinary_scope(mode, attention_mask=attention_mask, is_causal=is_causal,
                                       past_key_values=past_key_values, use_cache=use_cache)
+        if self.ordinary_rope_backend == "native" and ordinary_rope_tables is not None:
+            raise ValueError("Compact Dao tables require ordinary_rope_backend='dao'")
+        if (self.ordinary_rope_backend == "dao" and len(mode.selected_layers) < self.config.num_layers
+                and ordinary_rope_tables is None):
+            raise ValueError("Prepare compact Dao RoPE tables before executing the layer stack")
         if not self.reuse_rope and (query_rope is not None or key_rope is not None):
             raise ValueError("Prepared RoPE tables require reuse_rope")
         if (query_rope is None) != (key_rope is None):
@@ -696,7 +725,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                                    is_causal=is_causal, attention_backend=self.attention_backend,
                                    query_rope=query_rope, key_rope=key_rope,
                                    ordinary_attention_backend=self.ordinary_attention_backend,
-                                   ordinary_pointwise_backend=self.ordinary_pointwise_backend)
+                                   ordinary_pointwise_backend=self.ordinary_pointwise_backend,
+                                   ordinary_rope_backend=self.ordinary_rope_backend,
+                                   ordinary_rope_tables=ordinary_rope_tables)
                 x = checkpoint(ordinary, x, positions, key_positions, attention_mask,
                                use_reentrant=False)
                 pair = None
@@ -705,7 +736,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                                 mask=attention_mask, is_causal=is_causal, attention_backend=self.attention_backend,
                                 query_rope=query_rope, key_rope=key_rope,
                                 ordinary_attention_backend=self.ordinary_attention_backend,
-                                ordinary_pointwise_backend=self.ordinary_pointwise_backend)
+                                ordinary_pointwise_backend=self.ordinary_pointwise_backend,
+                                ordinary_rope_backend=self.ordinary_rope_backend,
+                                ordinary_query_rope=ordinary_rope_tables, ordinary_key_rope=ordinary_rope_tables)
             if use_cache:
                 present.append(pair)
         hidden = self.norm(x)

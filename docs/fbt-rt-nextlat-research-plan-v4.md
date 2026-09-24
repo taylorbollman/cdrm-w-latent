@@ -7,6 +7,13 @@ The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
 
+**Active follow-up,2026-09-24:** the user requested further ordinary improvements
+using suitable Dao/Transformer Engine operations and fused optimizer mode. Read
+[ordinary fusions protocol](reports/olmo-ordinary-fusions/protocol.md). Audit
+compatibility, then prioritize native-FP32 Dao RoPE and fused AdamW as independent
+opt-ins, followed by bounded actual-checkpoint graph/gradient/update checks and
+matched timing. Preserve PR26 reference/defaults and prior RT qualifications.
+
 **Latest milestone complete,2026-09-24:** ordinary-model efficiency precedes
 the older functional queue. Read [results](reports/olmo-ordinary-efficiency/results.md)
 and the current handoff. Opt-in rounded SwiGLU gives repeated B64/T512
@@ -563,6 +570,24 @@ Test:
 
 Then measure equal-global-batch speedup and maximum-comfortable aggregate
 throughput separately, with GPU model/topology/interconnect and per-rank memory.
+User refinement,2026-09-24: explicitly compare DeepSpeed ZeRO stage1 (optimizer
+state sharding) and stage2 (optimizer and gradient sharding) after the DDP
+correctness baseline. Keep parameters replicated initially. Measure both
+equal-global-batch scaling and the larger physical microbatch made possible by
+memory savings; RT throughput can benefit from the latter, but sharding itself
+does not remove its sequential dependency. Start without CPU/NVMe offload.
+[DeepSpeed ZeRO documentation](https://www.deepspeed.ai/tutorials/zero/).
+
+Treat integration as an execution change: preserve global per-objective loss
+normalization, tied parameter ownership, FP32 master/moment policy, clipping
+after reduction, and same-world-size recovery. Verify the custom RT backward
+and shared FBT parameters work with gradient hooks. The current captured plan
+owns persistent gradient buffers, so do not assume its storage contract survives
+ZeRO gradient partitioning. Establish eager distributed updates first, then
+validate capture/replay and collective ordering with the installed versions.
+Compare resident and setup-peak memory as well as communication/full-step time.
+Do not replace the optimizer, graph boundary and sharding policy simultaneously.
+
 If memory limits useful batches, consider optimizer-state sharding first.
 FSDP/parameter sharding is a separate compatibility task: custom replay accesses
 layer weights, FBT reuses them, and tied readout/cache ownership must survive
@@ -571,6 +596,23 @@ materialization. Do not promise that DDP alone reduces per-GPU model-state memor
 **Done when:** real two-GPU updates, recovery and resource measurements pass in
 the declared scope. Changed-world-size recovery and broader cluster scaling
 remain separate unless needed.
+
+### Sequential RT fusion follow-up
+
+User refinement,2026-09-24: profile the recurrent leaf path, including writer and
+finish projections, normalization, SwiGLU and residual operations, at realistic
+large physical batches. Ordinary compiled SwiGLU savings do not establish the
+size of an RT improvement. Compare a compiled contiguous leaf/writer/finish
+region against activation-only fusion; preserve the tested precision boundaries
+and weight-cast reuse. Keep historical attention in its validated tile backend
+and retain the dependency between successive recurrent positions. Compilation
+can reduce launches/intermediate traffic but cannot parallelize away that
+dependency. CUDA graphs already reduce host launch cost, so measure the added
+device-time benefit rather than assuming speedup. Bound compile time/code size;
+do not unroll an entire long recurrence merely to fuse its pointwise operations.
+Require shared-cotangent gradients, own graph/full-update checks and a full-model
+throughput measurement before adopting a candidate. This is a future bounded
+RT optimization milestone, not a change to the current ordinary-only queue.
 
 ## 9. F6 — Readiness review, then choose learning experiments
 

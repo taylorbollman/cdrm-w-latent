@@ -102,6 +102,42 @@ def test_adamw_owns_tied_embedding_once_and_accounts_initialized_state():
     assert len(parameter_layout(module)) == len(tuple(module.parameters()))
 
 
+@pytest.mark.parametrize("fused", [None, False, True])
+def test_adamw_fused_choice_preserves_tied_ownership_groups_and_fp32_parameters(fused):
+    module = model()
+    optimizer = build_adamw(module, lr=1e-5, fused=fused)
+    assert optimizer.defaults["fused"] is fused
+    assert optimizer.defaults["foreach"] is False
+    assert not optimizer.defaults["capturable"]
+    assert len(optimizer_ownership(module, optimizer)) == len(optimizer.param_groups)
+    matrix = module.backbone.token_embeddings.weight
+    assert sum(p is matrix for group in optimizer.param_groups for p in group["params"]) == 1
+    for group in optimizer.param_groups:
+        for parameter in group["params"]:
+            assert parameter.dtype == torch.float32
+            assert group["weight_decay"] == (0.1 if parameter.ndim >= 2 else 0.)
+    # Construction is CPU-only; GPU fused update semantics are a separate probe.
+    assert not optimizer.state
+
+
+def test_adamw_default_preserves_legacy_nonfused_descriptor():
+    assert build_adamw(model(), lr=1e-5).defaults["fused"] is None
+
+
+@pytest.mark.parametrize("fused", [1, "yes", object()])
+def test_adamw_rejects_nonboolean_fusion_without_mutating_model(fused):
+    module = model()
+    before = {name: value.clone() for name, value in module.state_dict().items()}
+    with pytest.raises(TypeError, match="fused"):
+        build_adamw(module, lr=1e-5, fused=fused)
+    equal_tree(module.state_dict(), before)
+
+
+def test_adamw_rejects_conflicting_foreach_and_fused_choices():
+    with pytest.raises(ValueError, match="cannot be combined"):
+        build_adamw(model(), lr=1e-5, foreach=True, fused=True)
+
+
 def test_optimizer_rejects_foreign_missing_and_duplicate_ownership():
     module = model()
     optimizer = build_adamw(module, lr=1e-3)
