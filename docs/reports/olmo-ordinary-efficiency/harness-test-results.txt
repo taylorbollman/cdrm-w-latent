@@ -1,0 +1,27 @@
+Ordinary efficiency harness CPU validation, 2026-09-24 UTC
+
+Environment: required project Docker launcher, explicit CDRM_DOCKER_GPUS=none.
+No GPU fallback or GPU execution was used for these tests.
+
+Initial implementation validation:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rt_efficiency.py -q
+  Result: 50 passed in 2.51s (26 new harness tests, 24 inherited RT harness tests).
+  Prior authoring-only fixture run: 24 passed, 2 failed because the tiny test
+  fixtures violated NextLat predictor-width and OLMo tokenizer-vocabulary
+  constructor constraints. Test fixtures were corrected; runtime budgets and
+  production model logic were unchanged.
+
+Compiler configuration smoke:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -c 'from scripts.olmo_ordinary_efficiency import compiler_configuration; print(compiler_configuration())'
+  Result: exit 0, configuration reports suppress_errors=False,
+  cache_size_limit=64, accumulated_cache_size_limit=256,
+  recompile_limit=64, fail_on_recompile_limit_hit=True, fullgraph=True,
+  dynamic=False, scope ordinary SwiGLU only.
+
+Diagnostic-continuation update:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rt_efficiency.py -q
+  Result: 64 passed in 2.42s (40 ordinary harness tests, 24 inherited tests).
+  Added safeguards: continuation defaults off and is correctness-only; only
+  finite, structurally sound same-state numeric misses can defer termination;
+  ownership, supervision, incomplete comparisons and operational failures
+  cannot continue; final status remains failed after a compatibility miss.

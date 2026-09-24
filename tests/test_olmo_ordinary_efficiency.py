@@ -31,6 +31,7 @@ def test_capacity_is_bounded_by_physical_batch_and_context(batch, length):
     command("capacity", batch=8), command("capacity", batch=64, length=2048),
     command("capacity", batch=16, length=32),
     command("capacity", batch=64) + ["--reference-arm", "fa4"],
+    command("capacity", batch=64) + ["--continue-after-compatibility-miss"],
 ])
 def test_cli_rejects_unplanned_work(arguments):
     with pytest.raises(SystemExit):
@@ -152,3 +153,45 @@ def test_source_set_includes_imported_helper_and_runtime_math():
                  "cdrm/pretrained/olmo_ordinary.py", "cdrm/pretrained/olmo_static.py",
                  "cdrm/pretrained/olmo_rope.py", "scripts/docker_shell.sh"):
         assert name in harness.SOURCES
+
+
+def compatibility_miss():
+    return {"name": "same_state_candidate_vs_reference", "passed": False,
+        "ownership_matches": True, "finite": True, "counts_equal": True,
+        "losses": {"ce": {"relative_l2": 0.0000271257}},
+        "gradients": {"weight": {}}, "outputs": {"pass0": {}}}
+
+
+def test_numeric_compatibility_continuation_is_opt_in_and_preserves_failure():
+    check = compatibility_miss()
+    original = deepcopy(check)
+    assert not harness.can_continue_after_failure(check, enabled=False)
+    assert harness.can_continue_after_failure(check, enabled=True)
+    assert check == original and check["passed"] is False
+    assert not harness.parse_args(command()).continue_after_compatibility_miss
+    assert harness.parse_args(command() + ["--continue-after-compatibility-miss"]).continue_after_compatibility_miss
+
+
+@pytest.mark.parametrize("field", ["ownership_matches", "finite", "counts_equal", "losses", "outputs", "gradients"])
+def test_structural_or_incomplete_checks_cannot_continue(field):
+    check = compatibility_miss()
+    check[field] = False
+    assert not harness.can_continue_after_failure(check, enabled=True)
+
+
+@pytest.mark.parametrize("name", ["ordinary_dispatch_no_fallback", "candidate_initial_graph",
+    "candidate_changed_tokens_overwrite", "complete_adamw_update_parity", "candidate_changed_weights"])
+def test_operational_failure_is_never_deferrable(name):
+    check = compatibility_miss()
+    check["name"] = name
+    assert not harness.can_continue_after_failure(check, enabled=True)
+
+
+def test_healthy_operational_checks_do_not_promote_numeric_failure_to_pass():
+    checks = [compatibility_miss(), {"name": "candidate_changed_weights", "passed": True}]
+    summary = harness.final_check_summary(checks)
+    assert summary == {"status": "failed", "numerical_compatibility_passed": False,
+                       "operational_checks_passed": True}
+    checks[0]["passed"] = True
+    assert harness.final_check_summary(checks)["status"] == "passed"
+    assert harness.final_check_summary([])["status"] == "failed"

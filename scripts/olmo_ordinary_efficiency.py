@@ -65,6 +65,8 @@ def parse_args(argv=None):
     parser.add_argument("--batch-size", type=int, required=True)
     parser.add_argument("--length", type=int, choices=(32, 512, 2048), default=512)
     parser.add_argument("--profile", action="store_true")
+    parser.add_argument("--continue-after-compatibility-miss", action="store_true",
+        help="Correctness only: retain failed numeric compatibility and finish operational checks; still exits unsuccessfully")
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--artifacts", type=Path, default=ROOT / ".runtime/olmo1b-step60000/artifacts")
     args = parser.parse_args(argv)
@@ -72,12 +74,35 @@ def parse_args(argv=None):
         if args.batch_size not in (1, 2, 8) or args.profile:
             parser.error("Correctness uses B1/2/8 and no profiler; primary B8/T512")
     else:
+        if args.continue_after_compatibility_miss:
+            parser.error("Compatibility-miss continuation applies only to correctness")
         allowed = {512: (16, 32, 64), 2048: (8, 16)}
         if args.batch_size not in allowed.get(args.length, ()):
             parser.error("Capacity uses T512/B16,32,64 or T2048/B8,16")
         if args.reference_arm != "control":
             parser.error("--reference-arm applies only to correctness")
     return args
+
+
+def can_continue_after_failure(check, *, enabled):
+    """Only a finite same-state numeric miss can defer failure until the end.
+
+    This never changes a check's result or budgets. Ownership, supervision,
+    dispatch, graph and optimizer failures remain immediately fatal.
+    """
+    return bool(enabled and check.get("passed") is False
+        and check.get("name") == "same_state_candidate_vs_reference"
+        and all(check.get(key) is True for key in ("ownership_matches", "finite", "counts_equal"))
+        and all(check.get(key) for key in ("losses", "outputs", "gradients")))
+
+
+def final_check_summary(checks):
+    """Report numerical qualification separately, never promote a failed run."""
+    numerical = [check for check in checks if check["name"] == "same_state_candidate_vs_reference"]
+    operational = [check for check in checks if check["name"] != "same_state_candidate_vs_reference"]
+    return {"status": "passed" if checks and all(check["passed"] for check in checks) else "failed",
+        "numerical_compatibility_passed": all(check["passed"] for check in numerical) if numerical else None,
+        "operational_checks_passed": bool(operational) and all(check["passed"] for check in operational)}
 
 
 def batch_for(tokenizer, case, update):
@@ -326,6 +351,10 @@ def main(argv=None):
         tracker.log({"correctness/passed": int(check["passed"])}, step=len(report["checks"]))
         print({"check": check["name"], "passed": check["passed"]}, flush=True)
         if not check["passed"]:
+            if can_continue_after_failure(check, enabled=args.continue_after_compatibility_miss):
+                report["compatibility_miss_continued"] = True
+                save()
+                return
             raise AssertionError(check["name"])
 
     def exact_graph(plan, name, replays=1):
@@ -448,9 +477,14 @@ def main(argv=None):
             raise AssertionError("Runtime source changed during the run")
         if report["protocol_sha256"] != sha256_file(PROTOCOL) or not check_dependencies(report["dependencies"]):
             raise AssertionError("Protocol or FA4 dependency changed during the run")
-        report["status"] = "passed"
-        tracker.summary({"result_status": "passed", "physical_optimizer_updates": report["physical_optimizer_updates"]})
+        report.update(final_check_summary(report["checks"]))
+        tracker.summary({"result_status": report["status"],
+            "numerical_compatibility_passed": report["numerical_compatibility_passed"],
+            "operational_checks_passed": report["operational_checks_passed"],
+            "physical_optimizer_updates": report["physical_optimizer_updates"]})
         save("complete")
+        if report["status"] != "passed":
+            raise AssertionError("Numerical compatibility remains failed; completed operational diagnostics do not clear it")
     except BaseException as error:
         report.update(status="oom" if isinstance(error, torch.OutOfMemoryError) else "failed",
             error={"type": type(error).__name__, "message": str(error), "traceback": traceback.format_exc()})
