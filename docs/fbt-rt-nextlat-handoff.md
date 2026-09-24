@@ -1,8 +1,54 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-23. **Read this first after compaction or interruption.**
+Updated 2026-09-24. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Ordinary-model optimization complete,2026-09-24:** branch
+`feat/olmo-ordinary-efficiency`, final runtime`18351ef`. Read
+[results](reports/olmo-ordinary-efficiency/results.md),
+[usage](reports/olmo-ordinary-efficiency/usage.md),
+[summary](reports/olmo-ordinary-efficiency/summary.json) and
+[next opportunities](reports/olmo-ordinary-efficiency/next-opportunities.md).
+Opt-in FA4, rounded compiled ordinary SwiGLU and selective checkpointing preserve
+native weights/ownership and existing defaults. Repeated actual16-layer full-CE
+T512 timings: B64 all-checkpoint control36.75k→compiled39.16k tokens/s (+6.55%),
+setup reserved46.17GiB; B32 control34.43k→compiled/alternating40.37k (+17.25%),
+reserved54.75GiB. B64 is the conservative option; changing physical batch for
+learning requires attention to effective batch/accumulation, not just throughput.
+FA4 alone gives directional +0.65% T512/B64 and +3.55% T2048/B16, with small
+unchanged-budget loss-screen failures. All its output/gradient budgets and own
+graph/Adam checks pass; loss misses remain failed. The initial unrounded compiled
+failure was fixed using local`emulate_precision_casts=True`: outputs/loss now
+bitwise, gradientL2 .003133, all screens pass. Compiled+alternating also passes.
+Alternating B64 and no-checkpoint B32 OOM during graph capture after3 updates
+each; do not infer steady capacity or mathematical failure from those attempts.
+
+Final selection23reports:17passed,4numericfailed,2OOM;152physicalupdates,
+106/110recordedgates,1242frozen source pairs. CPU:274initial distinct runtime
+tests;100final focused runtime/harness tests overlap that suite;56final evidence
+tests. Earlier runtimes`ed26653`,`5445f25`,`9fc20cf` and failed attempts are retained
+separately. Full provenance/W&B/verified GCS receipt accompany the report.
+GPU ended idle. No quality training, further optimization, RT-backend replacement
+or normalization change is queued. Prior RT qualifications remain open. Review
+the ordinary result and RT-backend decision before choosing further fusion or
+resuming graph recovery/accumulation, padding/online and multi-GPU work. A bounded
+native FP32 RoPE fusion is the next promising ordinary optimization, not an
+automatically authorized implementation queue. New ordinary options need their
+own combination checks before applying them to RT/FBT experiments.
+
+**Latest bounded investigation, 2026-09-24:** while considering the RT-backend
+decision, the user requested other ordinary-model performance opportunities,
+including FA4. Read [ordinary optimization investigation](reports/olmo-ordinary-optimization-investigation/results.md).
+Installed FA4 b20 successfully runs deterministic causal BF16 forward/backward
+and exact own eager/graph checks. Isolated native-layout attention-region
+speedups versus current PyTorch Flash are1.13x B64/T512 and1.47x B16/T2048;
+these are not full-model training gains. Two successful descriptive probes,
+two setup/API failures and sources are retained, with W&B. No production
+backend/default, checkpoint or RT math was changed; no learning run launched.
+Recommended subsequent work is a refreshed16-layer ordinary profile, opt-in
+FA4 integration and bounded checkpoint/pointwise-fusion comparisons. This
+recommendation is not an automatically authorized implementation queue.
 
 **Priority reset, 2026-09-22: functionality and execution before quality.**
 The user now wants confidence that RT, FBT and NextLat work separately and

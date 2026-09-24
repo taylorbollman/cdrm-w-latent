@@ -22,6 +22,7 @@ from torch.utils.checkpoint import checkpoint
 
 from .olmo import OLMoBlock, OLMoConfig, _apply_rope
 from .olmo_rope import RopeTables, apply_rope_tables, build_rope_tables
+from .olmo_ordinary import validate_checkpoint_layers, validate_ordinary_options
 from .olmo_recurrent import OLMoRTForCausalLM
 from .recurrent import RTExecutionContext, RTMode
 
@@ -425,6 +426,9 @@ class OLMoTiledCache:
     author_compiled_helpers: bool = True
     author_bwd_mlp_chunks: int = 4
     author_autocast_cache: bool = True
+    ordinary_attention_backend: str = "sdpa"
+    ordinary_pointwise_backend: str = "eager"
+    ordinary_checkpoint_layers: tuple[int, ...] | None = None
 
     @property
     def sequence_length(self):
@@ -439,12 +443,15 @@ class OLMoTiledOutput:
 
 
 def _ordinary_block_hidden(x, query_positions, key_positions, mask, *, layer,
-                           is_causal, attention_backend, query_rope=None, key_rope=None):
+                           is_causal, attention_backend, query_rope=None, key_rope=None,
+                           ordinary_attention_backend="sdpa", ordinary_pointwise_backend="eager"):
     """Cache-free ordinary block, with only its hidden output retained."""
     hidden, _ = layer(x, past=None, query_positions=query_positions,
                       key_positions=key_positions, mask=mask,
                       is_causal=is_causal, attention_backend=attention_backend,
-                      query_rope=query_rope, key_rope=key_rope)
+                      query_rope=query_rope, key_rope=key_rope,
+                      ordinary_attention_backend=ordinary_attention_backend,
+                      ordinary_pointwise_backend=ordinary_pointwise_backend)
     return hidden
 
 
@@ -463,7 +470,10 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
     recurrence and unpadded, cache-free calls. The separate author precision,
     compilation, MLP-chunk and autocast-cache options describe that backend;
     native tile/backward/attention-precision options do not change its math.
-    Ordinary blocks, including FBT's bootstrap, keep their existing backend.
+    Ordinary blocks, including FBT's bootstrap, use separate opt-in attention
+    and pointwise backends. ``ordinary_checkpoint_layers=None`` preserves the
+    historical all/none boolean policy; a tuple selects ordinary block indices
+    when that boolean is enabled. Selected RT blocks never use that checkpoint.
     """
     def __init__(self, config, *, attention_backend="sdpa", attention_precision="mixed",
                  ordinary_activation_checkpointing=False, cast_weights_once=False,
@@ -472,11 +482,17 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                  rt_implementation="native", author_precision="author_legacy",
                  author_compiled_helpers=True, author_bwd_mlp_chunks=4,
                  author_autocast_cache=True,
+                 ordinary_attention_backend="sdpa", ordinary_pointwise_backend="eager",
+                 ordinary_checkpoint_layers=None,
                  device=None, dtype=None):
         if attention_precision not in ("mixed", "fp32"):
             raise ValueError("attention_precision must be 'mixed' or 'fp32'")
         if type(ordinary_activation_checkpointing) is not bool:
             raise TypeError("ordinary_activation_checkpointing must be boolean")
+        validate_ordinary_options(ordinary_attention_backend, ordinary_pointwise_backend,
+                                  sdpa_backend=attention_backend)
+        validate_checkpoint_layers(ordinary_checkpoint_layers, num_layers=config.num_layers,
+                                   enabled=ordinary_activation_checkpointing)
         if type(cast_weights_once) is not bool:
             raise TypeError("cast_weights_once must be boolean")
         if type(reuse_rope) is not bool or type(kv_only_writes) is not bool:
@@ -500,6 +516,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         super().__init__(config, attention_backend=attention_backend, device=device, dtype=dtype)
         self.attention_precision = attention_precision
         self.ordinary_activation_checkpointing = ordinary_activation_checkpointing
+        self.ordinary_attention_backend = ordinary_attention_backend
+        self.ordinary_pointwise_backend = ordinary_pointwise_backend
+        self.ordinary_checkpoint_layers = ordinary_checkpoint_layers
         self.cast_weights_once = cast_weights_once
         self.tile_backend = tile_backend
         self.backward_tile_backend = backward_tile_backend
@@ -511,6 +530,21 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         self.author_compiled_helpers = author_compiled_helpers
         self.author_bwd_mlp_chunks = author_bwd_mlp_chunks
         self.author_autocast_cache = author_autocast_cache
+
+    def _validate_ordinary_scope(self, mode, *, attention_mask, is_causal,
+                                 past_key_values=None, use_cache=False):
+        validate_ordinary_options(self.ordinary_attention_backend, self.ordinary_pointwise_backend,
+                                  sdpa_backend=self.attention_backend)
+        validate_checkpoint_layers(self.ordinary_checkpoint_layers, num_layers=self.config.num_layers,
+                                   enabled=self.ordinary_activation_checkpointing)
+        has_ordinary = len(mode.selected_layers) < self.config.num_layers
+        if has_ordinary and self.ordinary_attention_backend == "fa4" and (
+                attention_mask is not None or not is_causal or past_key_values is not None or use_cache):
+            raise ValueError("Ordinary FA4 supports only dense causal full sequences without masks or prefix/exported caches")
+
+    def _checkpoint_ordinary_enabled(self):
+        return (self.ordinary_activation_checkpointing and self.ordinary_checkpoint_layers != ()
+                and self.training and torch.is_grad_enabled())
 
     def _validate_author_scope(self, mode, *, all_tokens_valid,
                                past_key_values=None, use_cache=False):
@@ -548,7 +582,7 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             raise TypeError("mode must be an RTMode")
         if any(index >= self.config.num_layers for index in mode.selected_layers):
             raise ValueError("selected_layers contains an index outside the model")
-        checkpoint_ordinary = self.ordinary_activation_checkpointing and self.training and torch.is_grad_enabled()
+        checkpoint_ordinary = self._checkpoint_ordinary_enabled()
         if checkpoint_ordinary and (use_cache or past_key_values is not None):
             raise ValueError("Ordinary activation checkpointing requires cache-free grad-enabled training")
         x, valid, positions, key_positions, mask, causal = self._prepare_inputs(
@@ -586,6 +620,10 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     or past_key_values.author_bwd_mlp_chunks != self.author_bwd_mlp_chunks
                     or past_key_values.author_autocast_cache != self.author_autocast_cache):
                 raise ValueError("Cached RT kernel execution differs")
+            if (past_key_values.ordinary_attention_backend != self.ordinary_attention_backend
+                    or past_key_values.ordinary_pointwise_backend != self.ordinary_pointwise_backend
+                    or past_key_values.ordinary_checkpoint_layers != self.ordinary_checkpoint_layers):
+                raise ValueError("Cached ordinary execution differs")
         hidden, present = self._forward_prepared(
             x, mode=mode, positions=positions, key_positions=key_positions,
             key_valid=valid, attention_mask=mask, is_causal=causal,
@@ -599,7 +637,9 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                               self.backward_tile_backend, self.backward_memory,
                               self.reuse_rope, self.kv_only_writes, self.rt_implementation,
                               self.author_precision, self.author_compiled_helpers,
-                              self.author_bwd_mlp_chunks, self.author_autocast_cache) if use_cache else None
+                              self.author_bwd_mlp_chunks, self.author_autocast_cache,
+                              self.ordinary_attention_backend, self.ordinary_pointwise_backend,
+                              self.ordinary_checkpoint_layers) if use_cache else None
         return OLMoTiledOutput(self.project_logits(hidden) if return_logits else None, hidden, cache)
 
     def _forward_prepared(self, x, *, mode, positions, key_positions, key_valid,
@@ -614,6 +654,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         """
         self._validate_author_scope(mode, all_tokens_valid=all_tokens_valid,
                                     past_key_values=past_key_values, use_cache=use_cache)
+        self._validate_ordinary_scope(mode, attention_mask=attention_mask, is_causal=is_causal,
+                                      past_key_values=past_key_values, use_cache=use_cache)
         if not self.reuse_rope and (query_rope is not None or key_rope is not None):
             raise ValueError("Prepared RoPE tables require reuse_rope")
         if (query_rope is None) != (key_rope is None):
@@ -646,19 +688,24 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
                     reuse_rope=self.reuse_rope, kv_only_writes=self.kv_only_writes,
                     query_rope=query_rope, key_rope=key_rope,
                 )
-            elif checkpoint_ordinary:
+            elif checkpoint_ordinary and (self.ordinary_checkpoint_layers is None
+                                           or index in self.ordinary_checkpoint_layers):
                 # Bind this invocation's layer/backend/causality now: a closure
                 # over the loop's `layer` would replay the wrong shared block.
                 ordinary = partial(_ordinary_block_hidden, layer=layer,
                                    is_causal=is_causal, attention_backend=self.attention_backend,
-                                   query_rope=query_rope, key_rope=key_rope)
+                                   query_rope=query_rope, key_rope=key_rope,
+                                   ordinary_attention_backend=self.ordinary_attention_backend,
+                                   ordinary_pointwise_backend=self.ordinary_pointwise_backend)
                 x = checkpoint(ordinary, x, positions, key_positions, attention_mask,
                                use_reentrant=False)
                 pair = None
             else:
                 x, pair = layer(x, past=past, query_positions=positions, key_positions=key_positions,
                                 mask=attention_mask, is_causal=is_causal, attention_backend=self.attention_backend,
-                                query_rope=query_rope, key_rope=key_rope)
+                                query_rope=query_rope, key_rope=key_rope,
+                                ordinary_attention_backend=self.ordinary_attention_backend,
+                                ordinary_pointwise_backend=self.ordinary_pointwise_backend)
             if use_cache:
                 present.append(pair)
         hidden = self.norm(x)

@@ -31,6 +31,23 @@ W&B tracking.
 
 # Pretrained model handoff
 
+Latest ordinary efficiency milestone is complete (2026-09-24), final runtime
+18351ef. Read `docs/reports/olmo-ordinary-efficiency/results.md`, its usage,
+summary and current handoff. Rounded compiled ordinary SwiGLU passes the unchanged
+numerical screen (bitwise outputs/loss, gradient L2 .003133) and exact own
+graph/Adam checks. Repeated B64/T512 full-CE throughput36.75k→39.16k (+6.55%),
+reserved46.17GiB; B32 compiled+alternating checkpoints34.43k→40.37k (+17.25%),
+reserved54.75GiB. Defaults and RT math stay unchanged. FA4 retains tiny loss-only
+screen failures; output/gradient and own operational checks pass. Directional
+FA4 gains are0.65% T512 and3.55% T2048. Alternating B64/no-checkpoint B32 OOM
+during graph capture; failures are retained.23reports:17passed,4numericfailed,
+2OOM;152updates;1242source pairs. CPU274initial runtime,100final focused
+(overlapping) and56evidence tests. Evidence/plots/checkpoint reference retained;
+read storage receipt. GPU idle, no quality or further GPU queue. Review before
+new ordinary RoPE fusion or resuming graph recovery/accumulation/online work;
+prior RT qualifications stay open. New ordinary options require combination
+checks before use in RT/FBT training.
+
 Latest authorized queue: native RT efficiency Stage A is complete. Read
 `docs/reports/olmo-rt-efficiency/results.md` and the current handoff. Runtime3fd27e0;
 420 scoped CPU tests and21 GPU reports/41 gates/158 actual updates pass. Repeated

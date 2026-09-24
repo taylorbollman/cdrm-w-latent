@@ -1,0 +1,58 @@
+Ordinary efficiency harness CPU validation, 2026-09-24 UTC
+
+Environment: required project Docker launcher, explicit CDRM_DOCKER_GPUS=none.
+No GPU fallback or GPU execution was used for these tests.
+
+Initial implementation validation:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rt_efficiency.py -q
+  Result: 50 passed in 2.51s (26 new harness tests, 24 inherited RT harness tests).
+  Prior authoring-only fixture run: 24 passed, 2 failed because the tiny test
+  fixtures violated NextLat predictor-width and OLMo tokenizer-vocabulary
+  constructor constraints. Test fixtures were corrected; runtime budgets and
+  production model logic were unchanged.
+
+Compiler configuration smoke:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -c 'from scripts.olmo_ordinary_efficiency import compiler_configuration; print(compiler_configuration())'
+  Result: exit 0, configuration reports suppress_errors=False,
+  cache_size_limit=64, accumulated_cache_size_limit=256,
+  recompile_limit=64, fail_on_recompile_limit_hit=True, fullgraph=True,
+  dynamic=False, scope ordinary SwiGLU only.
+
+Diagnostic-continuation update:
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_efficiency.py tests/test_olmo_rt_efficiency.py -q
+  Result: 64 passed in 2.42s (40 ordinary harness tests, 24 inherited tests).
+  Added safeguards: continuation defaults off and is correctness-only; only
+  finite, structurally sound same-state numeric misses can defer termination;
+  ownership, supervision, incomplete comparisons and operational failures
+  cannot continue; final status remains failed after a compatibility miss.
+
+Compiled SwiGLU precision emulation update (after original GPU miss retained):
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_execution.py tests/test_olmo_ordinary_checkpointing.py tests/test_olmo_ordinary_efficiency.py -q
+  Result: 96 passed in 3.94s.
+  Added helper-local torch.compile options={'emulate_precision_casts': True};
+  global Inductor config remains unchanged. Tests verify option propagation,
+  actual installed Inductor wrapper acceptance, CPU Dynamo/AOTAutograd forward
+  and backward wiring, laziness, and the existing ordinary/checkpoint harness.
+  No GPU numerical clearance is inferred from these CPU tests.
+
+Installed-source inspection supporting this change:
+  torch 2.13.0a0+8145d630e8.nv26.06, CPU-only project container.
+  torch._inductor.config.py:2833-2842 documents precision emulation; defaultFalse.
+  torch.fx.experimental.proxy_tensor.py:1056-1085 marks BF16/FP16 operator
+  boundaries outside decompositions when precision emulation is enabled.
+  torch._inductor.lowering.py:718-749 inserts low-precision down/upcasts.
+  torch._inductor.codegen.triton.py:5568-5573 disables floating-point instruction
+  fusion (enable_fp_fusion=False) under this option; it does not disable
+  pointwise kernel fusion.
+  Actual torch.compile(_swiglu, fullgraph=True, dynamic=False,
+  options={'emulate_precision_casts': True}) wrapper creation succeeded, while
+  global config.emulate_precision_casts remained False. Wrapper creation is lazy.
+  This targets native BF16 intermediate rounding; transcendental/division
+  details can still differ, so the unchanged GPU numerical checks remain needed.
+
+Compiled-only checkpoint combinations:
+  Added compiled-checkpoint-alternating and compiled-checkpoint-none, retaining
+  SDPA and the rounded compiled SwiGLU helper. Their correctness reference can
+  be compiled to require exact agreement for checkpoint placement alone.
+  CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh python -m pytest tests/test_olmo_ordinary_efficiency.py tests/test_olmo_ordinary_execution.py tests/test_olmo_ordinary_checkpointing.py -q
+  Result: 100 passed in 3.86s. No model runtime or numerical budget change.

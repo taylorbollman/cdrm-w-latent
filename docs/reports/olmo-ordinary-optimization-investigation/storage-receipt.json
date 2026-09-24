@@ -1,0 +1,10 @@
+{
+  "verified_utc": "2026-09-24T14:26:30.879652+00:00",
+  "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/ordinary-fa-investigation/20260924/evidence.tar.gz",
+  "sha256": "d7f2d3f0782b2d8309c06b4425ca94bb1d0cf34d67dd35eab051c7b73142c00d",
+  "bytes": 18536,
+  "download_sha256_verified": true,
+  "evidence_files_verified": 14,
+  "archive_members": 15,
+  "optimizer_updates": 0
+}

@@ -112,6 +112,8 @@ class PreparedFBTLayout:
         return (id(self.core), id(self.core.backbone), self.core.config, self.core.fusion_config,
             self.core.fusion.norm_eps, self.base.attention_backend, self.base.attention_precision,
             self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
+            self.base.ordinary_attention_backend, self.base.ordinary_pointwise_backend,
+            self.base.ordinary_checkpoint_layers,
             self.base.tile_backend, self.base.backward_tile_backend, self.base.backward_memory,
             self.base.reuse_rope, self.base.kv_only_writes,
             self.base.rt_implementation, self.base.author_precision, self.base.author_compiled_helpers,
@@ -145,6 +147,9 @@ class PreparedFBTLayout:
             "position_ids_sha256": _digest(self._positions_cpu), "feedback_eligible_sha256": _digest(self._eligible_cpu),
             "document_contract": "one independent document per row; no cache or packed documents",
             "loss_masks_owned_here": False, "reuse_rope": self.base.reuse_rope,
+            "ordinary_attention_backend": self.base.ordinary_attention_backend,
+            "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
+            "ordinary_checkpoint_layers": self.base.ordinary_checkpoint_layers,
             "rt_implementation": self.base.rt_implementation, "author_precision": self.base.author_precision,
             "author_compiled_helpers": self.base.author_compiled_helpers,
             "author_bwd_mlp_chunks": self.base.author_bwd_mlp_chunks,
@@ -186,7 +191,14 @@ class PreparedFBTLayout:
         # K1 is an ordinary bootstrap, even if future passes select RT blocks.
         active_rt = RTMode(()) if mode.enabled and mode.num_passes == 1 else mode.rt_mode
         self.base._validate_author_scope(active_rt, all_tokens_valid=self.all_tokens_valid)
+        # Every enabled finite FBT mode starts with an ordinary bootstrap,
+        # including K2+ modes whose later passes select every layer for RT.
+        self.base._validate_ordinary_scope(RTMode(()) if mode.enabled else active_rt,
+            attention_mask=self.attention_mask, is_causal=self.is_causal)
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
+            "ordinary_attention_backend": self.base.ordinary_attention_backend,
+            "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
+            "ordinary_checkpoint_layers": self.base.ordinary_checkpoint_layers,
             "cast_weights_once": self.base.cast_weights_once, "tile_backend": self.base.tile_backend,
             "backward_tile_backend": self.base.backward_tile_backend, "backward_memory": self.base.backward_memory,
             "reuse_rope": self.base.reuse_rope, "kv_only_writes": self.base.kv_only_writes,
@@ -216,7 +228,7 @@ class PreparedFBTLayout:
             attention_mask=self.attention_mask, is_causal=self.is_causal,
             all_tokens_valid=self.all_tokens_valid,
             query_rope=self.rope_tables, key_rope=self.rope_tables,
-            checkpoint_ordinary=self.base.ordinary_activation_checkpointing and self.base.training and torch.is_grad_enabled())[0]
+            checkpoint_ordinary=self.base._checkpoint_ordinary_enabled())[0]
 
     def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode()) -> PreparedFBTOutput:
         """Tensor-only finite pass body; external validation is required before replay."""
