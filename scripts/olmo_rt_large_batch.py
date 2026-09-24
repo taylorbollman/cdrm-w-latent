@@ -300,6 +300,8 @@ class MemoryPhases:
             self.rows[name] = {"start": detailed_memory_snapshot(), "reset_peaks": True,
                 "measurement_scope": "Absolute allocator peaks within phase; device usage sampled only at boundaries."}
         else:
+            if event == "end":
+                torch.cuda.synchronize()
             row = self.rows[name]
             row["end"] = detailed_memory_snapshot()
             row.update({key: row["end"][key] for key in ("peak_allocated_gib", "peak_reserved_gib")})
@@ -436,6 +438,7 @@ def main(argv=None):
         publish(check)
 
     phases = MemoryPhases(report, save)
+    plan = None
     hook = None
     try:
         save()
@@ -585,6 +588,9 @@ def main(argv=None):
         if report["status"] != "passed":
             raise AssertionError("Numerical compatibility remains failed; completed operational diagnostics do not clear it")
     except BaseException as error:
+        if plan is not None:
+            report["backward_preparation"] = {"warmup": plan.warmup_backward_calls,
+                "capture": plan.capture_backward_calls, "replay": plan.replay_calls}
         for name, row in phases.rows.items():
             if "end" not in row:
                 try:
