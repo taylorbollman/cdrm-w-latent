@@ -1,0 +1,41 @@
+Ordinary runtime execution switches: CPU regression evidence, 2026-09-24
+
+All commands executed from /home/taylorbollman/cdrm-w-latent using the project
+container launcher with CDRM_DOCKER_GPUS=none explicitly. No GPU or training
+command was run by this runtime subtask.
+
+1. Initial ordinary/static/RoPE/execution-options regressions:
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_execution.py tests/test_olmo_static.py tests/test_olmo_rope_reuse.py tests/test_olmo_rt_execution_options.py'
+
+158 passed in 4.94s
+
+2. Independent native-reference, tiled, author-port and backward-options tests:
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_reference.py tests/test_olmo_tiled.py tests/test_olmo_author.py tests/test_olmo_rt_backward_options.py'
+
+114 passed, 33 warnings in 4.71s
+Warnings were existing upstream reference deprecations and tiny-vocabulary
+alignment notices.
+
+3. Final focused ordinary suite after adding two end-to-end mocked-kernel
+wiring cases (checkpointed and direct):
+
+CDRM_DOCKER_GPUS=none bash scripts/docker_shell.sh bash -lc 'python -m pytest -q tests/test_olmo_ordinary_execution.py'
+
+37 passed in 3.44s
+
+Distinct tests covered: 274. The final 37-test rerun overlaps 35 tests in (1)
+and adds two tests; do not count it as 37 additional independent cases.
+
+Coverage: unchanged ordinary forward/parameter gradients and checkpoint keys;
+selective checkpoint call sites and gradients including FBT bootstrap; explicit
+unsupported scope and math-oracle conflict errors; FA4 interface/view geometry,
+deterministic causal arguments, attached gradients and no-fallback errors;
+lazy fullgraph SwiGLU compilation with actual CPU Dynamo/AOTAutograd; static and
+cache provenance; ordinary options do not enter all-RT tiled execution.
+
+CPU FA4 tests mock the external kernel and bypass only the tested CUDA-device
+guard. They do not validate CuTE GPU numerics. The CPU compilation test uses
+the aot_eager compiler backend to test graph/autograd plumbing; production
+Inductor fused-kernel numerics and CUDA graph behavior require the GPU harness.

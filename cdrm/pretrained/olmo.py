@@ -20,6 +20,7 @@ from torch.nn import functional as F
 from torch.nn.attention import SDPBackend, sdpa_kernel
 
 from .olmo_rope import RopeTables, apply_rope_tables
+from .olmo_ordinary import flash_attention, ordinary_swiglu, validate_ordinary_options
 
 
 OLMO_REVISION = "b3741bc21f1dd504838b7dbd9878ee077ded63bd"
@@ -162,7 +163,12 @@ class OLMoBlock(nn.Module):
                 query_positions: Tensor, key_positions: Tensor,
                 mask: Tensor | None, is_causal: bool, attention_backend: str,
                 query_rope: RopeTables | None = None, key_rope: RopeTables | None = None,
+                ordinary_attention_backend: str = "sdpa", ordinary_pointwise_backend: str = "eager",
                 ) -> tuple[Tensor, tuple[Tensor, Tensor]]:
+        validate_ordinary_options(ordinary_attention_backend, ordinary_pointwise_backend,
+                                  sdpa_backend=attention_backend)
+        if ordinary_attention_backend == "fa4" and (past is not None or mask is not None or not is_causal):
+            raise ValueError("Ordinary FA4 supports only dense causal full sequences without masks or prefix caches")
         query, key, value = self.project_qkv(self.attn_norm(x))
         if past is not None:
             key, value = torch.cat((past[0], key), dim=-2), torch.cat((past[1], value), dim=-2)
@@ -171,13 +177,16 @@ class OLMoBlock(nn.Module):
                  if query_rope is None else apply_rope_tables(query, query_rope))
         key = (_apply_rope(key, key_positions, self.config.rope_freq_constant)
                if key_rope is None else apply_rope_tables(key, key_rope))
-        context = sdpa_kernel(SDPBackend.MATH) if attention_backend == "math" else nullcontext()
-        with context:
-            attended = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, dropout_p=0.0, is_causal=is_causal)
+        if ordinary_attention_backend == "fa4":
+            attended = flash_attention(query, key, value)
+        else:
+            context = sdpa_kernel(SDPBackend.MATH) if attention_backend == "math" else nullcontext()
+            with context:
+                attended = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, dropout_p=0.0, is_causal=is_causal)
         attended = attended.transpose(1, 2).contiguous().view(x.shape[0], x.shape[1], self.config.model_dim)
         residual = x + self.attn_out(attended)
-        up, gate = self.ff_proj(self.ff_norm(residual)).chunk(2, dim=-1)
-        return residual + self.ff_out(F.silu(gate) * up), present
+        projected = self.ff_proj(self.ff_norm(residual))
+        return residual + self.ff_out(ordinary_swiglu(projected, backend=ordinary_pointwise_backend)), present
 
 
 class OLMoForCausalLM(nn.Module):
