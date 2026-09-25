@@ -331,12 +331,16 @@ def test_successful_tracking_finish_preserves_experiment_status(status):
 
 def test_failed_tracking_finish_revokes_passed_status_and_raises_original_tracking_error():
     error = RuntimeError("tracking synchronization failure")
-    report = {"status": "passed"}
+    report = {"status": "passed", "stage": "complete"}
     with pytest.raises(RuntimeError) as caught:
         harness.finish_tracking(FinishingTracker(error), report)
     assert caught.value is error
     assert report["status"] == "failed"
     assert report["tracking_finish_error"] == {"type": "RuntimeError", "message": str(error)}
+    assert report["stage"] == "tracking_finish"
+    assert report["error"]["type"] == "RuntimeError"
+    assert report["error"]["message"] == str(error)
+    assert "RuntimeError: tracking synchronization failure" in report["error"]["traceback"]
 
 
 @pytest.mark.parametrize("status,primary", [
@@ -345,7 +349,8 @@ def test_failed_tracking_finish_revokes_passed_status_and_raises_original_tracki
 ])
 def test_tracking_failure_preserves_active_primary_exception_and_status(status, primary):
     import sys
-    report = {"status": status}
+    primary_metadata = {"type": type(primary).__name__, "message": str(primary), "traceback": "original trace"}
+    report = {"status": status, "stage": "capture_or_validation", "error": dict(primary_metadata)}
     secondary = RuntimeError("secondary tracking failure")
     with pytest.raises(type(primary)) as caught:
         try:
@@ -355,4 +360,6 @@ def test_tracking_failure_preserves_active_primary_exception_and_status(status, 
     assert caught.value is primary
     assert report["status"] == status
     assert report["tracking_finish_error"]["message"] == str(secondary)
+    assert report["stage"] == "capture_or_validation"
+    assert report["error"] == primary_metadata
     assert any("secondary tracking failure" in note for note in primary.__notes__)

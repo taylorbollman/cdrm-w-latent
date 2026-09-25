@@ -345,11 +345,13 @@ def finish_tracking(tracker, report, *, original_error=None):
         tracker.finish(succeeded=report["status"] == "passed")
     except BaseException as error:
         report["tracking_finish_error"] = {"type": type(error).__name__, "message": str(error)}
-        if report["status"] == "passed":
-            report["status"] = "failed"
         if original_error is not None:
             original_error.add_note(f"Tracking finalization also failed: {error}")
             return
+        if report["status"] == "passed":
+            report.update(status="failed", stage="tracking_finish")
+            report.setdefault("error", {"type": type(error).__name__, "message": str(error),
+                "traceback": traceback.format_exc()})
         raise
 
 
