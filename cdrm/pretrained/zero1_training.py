@@ -4,23 +4,61 @@ Parameters and gradients remain replicated. Native PyTorch partitions Adam
 state and broadcasts updated parameter shards; there is no overlap hook,
 parameter rebinding, offload, ZeRO-2, or optimizer CUDA graph here. The installed
 native loader moves scalar Adam steps to CPU even for fused CUDA AdamW and
-duplicates local state in the outer optimizer. Only that loader is replaced:
-the local torch AdamW loader retains its own dtype/device policy.
+duplicates local state in the outer optimizer. The local torch AdamW loader
+retains its own dtype/device policy. Consolidation retains native wire order
+and device staging, but creates its serialized byte tensor from the owned
+buffer rather than converting the bytes one Python integer at a time.
 """
 from __future__ import annotations
 
 import copy
+import io
 from collections.abc import Mapping
 
 import torch
 import torch.distributed as dist
 from torch.distributed.optim import ZeroRedundancyOptimizer
+from torch.distributed.optim.zero_redundancy_optimizer import _recursive_copy_to_device
 
 from .distributed_checkpoint import (save_distributed_checkpoint, load_distributed_checkpoint,
                                      _coordinated)
 from .lm_training import build_adamw, optimizer_ownership, optimizer_state_bytes, _plain
 
 ZERO1_SCHEMA = "olmo-native-zero1-adamw-v1"
+
+
+def _serialized_state_tensor(obj, device):
+    """Keep torch.save's bytes alive through the synchronous device copy.
+
+    On CPU, torch.frombuffer retains the buffer owner even after this function
+    returns; on CUDA, the blocking .to() completes before that owner is released.
+    No Python byte list, per-byte constructor, or alternative checkpoint format.
+    """
+    buffer = io.BytesIO()
+    torch.save(obj, buffer)
+    return torch.frombuffer(buffer.getbuffer(), dtype=torch.uint8).to(device)
+
+
+def _broadcast_state_object(obj, src_rank, group, device):
+    """Native ZeRO-1 length/payload protocol with buffer-backed serialization.
+
+    Adapted from PyTorch's _broadcast_object; only sender tensor construction
+    differs. Receive allocation, map_location and synchronous collectives retain
+    the installed upstream behavior. See the consolidation transport audit.
+    """
+    if dist.get_rank() == src_rank:
+        data = _serialized_state_tensor(obj, device)
+        length = torch.LongTensor([data.numel()]).to(device)
+        dist.broadcast(length, src=src_rank, group=group, async_op=False)
+        dist.broadcast(data, src=src_rank, group=group, async_op=False)
+    else:
+        length = torch.LongTensor([0]).to(device)
+        dist.broadcast(length, src=src_rank, group=group, async_op=False)
+        data = torch.empty([int(length.item())], dtype=torch.uint8, device=device)
+        dist.broadcast(data, src=src_rank, group=group, async_op=False)
+        buffer = io.BytesIO(data.cpu().numpy())
+        obj = torch.load(buffer, map_location=device, weights_only=False)
+    return obj
 
 
 class FP32Zero1AdamW(ZeroRedundancyOptimizer):
@@ -36,6 +74,38 @@ class FP32Zero1AdamW(ZeroRedundancyOptimizer):
         # Native consolidation caches full CPU moments on its target rank.
         # They are not needed for subsequent training after durable publication.
         self._all_state_dicts = []
+
+    def consolidate_state_dict(self, to: int = 0) -> None:
+        """Native consolidation with buffer-backed sender serialization.
+
+        All ranks participate in the same order as upstream. Partitioning,
+        state_dict remapping, local update and parameter broadcast are inherited.
+        The target retains CPU shards; non-target received shards are discarded.
+        CUDA payload/load staging is intentionally unchanged by this optimization.
+        """
+        # Narrowly adapted from installed PyTorch 2.13.0a0+8145d630e8.nv26.06.
+        # Source pin and mapping audit: docs/reports/olmo-two-gpu/
+        # zero1-consolidation-transport.md. No global PyTorch monkeypatch.
+        self._check_overlap_initialized()
+        self._sync_param_groups(self.param_groups, self.optim.param_groups)
+        empty = torch.tensor([0], dtype=torch.uint8, device=self._default_device)
+        self._all_state_dicts = []
+        for rank in range(self.world_size):
+            global_rank = dist.distributed_c10d.get_global_rank(self.process_group, rank)
+            if self.rank == to:
+                if rank == self.rank:
+                    local = self.optim.state_dict()
+                else:
+                    local = _broadcast_state_object(empty, src_rank=global_rank,
+                        group=self.process_group, device=self._default_device)
+                self._all_state_dicts.append(_recursive_copy_to_device(
+                    local, non_blocking=True, device=torch.device("cpu")))
+            elif rank == self.rank:
+                _ = _broadcast_state_object(self.optim.state_dict(), src_rank=self.global_rank,
+                    group=self.process_group, device=self._default_device)
+            elif rank != to:
+                _ = _broadcast_state_object(empty, src_rank=global_rank,
+                    group=self.process_group, device=self._default_device)
 
     def step(self, closure=None, **kwargs):
         self.clear_consolidated_state()

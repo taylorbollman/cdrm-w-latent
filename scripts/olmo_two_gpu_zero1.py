@@ -20,6 +20,7 @@ import random
 import shutil
 import subprocess
 import sys
+import time
 import traceback
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -208,11 +209,20 @@ def run(args, report, tracker):
         gc.collect(); torch.cuda.empty_cache()
     with phases.phase('consolidated_checkpoint_save'):
         trainer.assert_update_boundary()
+        save_started = time.perf_counter()
         receipt = save_zero1_checkpoint(args.checkpoint_dir, model, optimizer, scheduler=scheduler,
             counters=counters, data_cursor={'rank': rank, 'next_update': 2}, configuration=configuration,
             source_fingerprint=source, device=device)
+        report['checkpoint_save_seconds'] = time.perf_counter()-save_started
+        save_times = gather(report['checkpoint_save_seconds'])
+        report['checkpoint_save_seconds_per_rank'] = save_times
+        report['checkpoint_save_timing_scope'] = (
+            'Complete save_zero1_checkpoint wall time: consolidation, synchronization, '
+            'serialization, durable checkpoint/manifest writing and hashing; excludes GCS upload.')
         report['checkpoint'] = receipt
         check('consolidation_cache_released', {'passed': not optimizer._all_state_dicts and not optimizer.state})
+        if rank == 0: tracker.log({'update': counters.optimizer_updates,
+            'checkpoint/save_seconds': max(save_times)})
     with phases.phase('reference_continuation'):
         steps_before = local_adam_steps(model, optimizer)
         expected_metrics = trainer.optimizer_step(optimizer, batches(2), config=config,
