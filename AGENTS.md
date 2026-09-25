@@ -31,15 +31,15 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-25 two-H100 work is authorized and active on feat/olmo-two-gpu.
-Read docs/reports/olmo-two-gpu/progress.md before older status below. Two H10080GB,
-NV18/NCCL2.30.5. Tiny eight-mode eager and actual ordinary/RT pass. Combined
-independent update2 retains parameter/moment failures despite passing gradients;
-anchored full updates pass unchanged budgets. Tiny eager/graph recovery and
-ZeRO1 pass. Actual RT eager recovery and graph complete-update checks pass.
-Actual combined graph correctness is active; combined graph recovery, actual
-ZeRO1 and scaling/capacity follow. Source fe5ff69 pushed. Checkpoints progressively
-verified in GCS; only~19GiB persistent free after verified cleanup. Keep one actual
+2026-09-25 two-H100 work is active on feat/olmo-two-gpu; source6921c53 pushed.
+Read docs/reports/olmo-two-gpu/progress.md before historical single-GPU status.
+Tiny and actual eager/graphs/recovery/ZeRO1 scopes pass, except the retained
+combined independent-BF16-trajectory update qualification; anchored checks pass.
+Actual RT eager recovery, combined graph recovery and ZeRO1 recovery/checkpoint
+transport fix pass. All full checkpoints verified in GCS. MatchedRT globalB128:
+single28.0k vs twoGPUB64/rank47.4k tok/s. Combined matched scaling is active,
+then larger DDP/ZeRO1 batches. Real NV18/NCCL, actual capturedDDP collectives.
+Only~19GiB persistent diskfree after verified duplicate cleanup; keep one actual
 checkpoint at a time. No quality run. Inspect live state before restarting.
 
 2026-09-25 single-GPU preparation is complete. Read current handoff and

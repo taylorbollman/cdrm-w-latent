@@ -79,18 +79,48 @@ initialization. None is hidden by a passing retry; no numerical budget changed.
 
 ## Active queue
 
-`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` passes42checks (W&B `xq1w6i0m`), with six physical updates/rank and logical endpoint5; checkpoint retention is verified. The updated terminal-check harness passes `tiny-capacity-01` (`wgvh2kza`) and `tiny-zero1-graph-01` (`jeubp3ph`), eight updates/rank each. Source `340fe25` includes those checks. The original actual combined ZeRO1 run `combined-zero1-01` now passes13checks/rank (W&B `2t6fk853`), four distributed updates and two reference Adam calls per rank. Its checkpoint is verified in GCS and locally cleaned with its receipt preserved. Native checkpoint consolidation exposed a sender byte-conversion bottleneck (~6minute CPU conversion for the4.724GiB shard, supported by a bounded CPU microbenchmark); the buffer-based transport fix is integrated at `bfa3649`. Root54focused CPU tests and `tiny-zero1-buffer-01` GPU recovery pass. `combined-zero1-buffer-01` is running its own full recovery; source freeze is `18eebc9`.
+Completed additions since the initial ledger above:
 
-The matched single RTB128 run `single-rt-b128-01` passes at28,000.26inputtokens/s,2.34055s/update, with initial/terminal exact graph checks. W&B `eezfn9r8`. `ddp-rt-b64-01` passes at47,384.11inputtokens/s,1.38308s/update, globalB128/localB64 (W&B `ahbhvxmx`):1.6923x versus the matched single-GPU reference. Both rows have verified GCS receipts. Next:
+- Actual combined graph correctness `combined-graph-01` passes four compound
+  checks on both ranks (`qldwb8so`).
+- Actual combined graph reconstruction recovery `combined-graph-recovery-01`
+  passes42checks, six physical updates/rank, logical endpoint5 (`xq1w6i0m`).
+- Actual combined ZeRO1 `combined-zero1-01` passes13checks/rank, four distributed
+  updates plus two reference Adam steps/rank (`2t6fk853`). Native consolidation
+  exposed a slow per-byte sender conversion. Its full checkpoint is retained.
+- Buffer-based transport fix at `bfa3649` preserves the native wire/format and
+  optimizer math. Root54focused CPU tests, tiny NCCL recovery and full-model
+  `combined-zero1-buffer-01` recovery all pass. Full checkpoint save83.4seconds
+  includes consolidation/disk writing/hashing. Both checkpoints are verified in
+  GCS and local large duplicates cleaned only after receipt/hash verification.
+  See `zero1-consolidation-transport.md` for measured versus extrapolated scope.
+- Actual combined ZeRO1 graph `combined-zero1-graph-01` passes initial/terminal
+  exact raw checks plus parameter-replica and local-moment ownership/health
+  checks. This B1 integration row is not a representative throughput result.
+- Matched RT globalB128: single B12828,000.26tokens/s (`eezfn9r8`) versus two
+  GPUs B64/rank47,384.11tokens/s (`ahbhvxmx`), a1.6923x speedup. Both pass
+  initial/terminal raw graph checks. GPU-microseconds/input-token35.714→42.208.
+- Single combined B128 passes at12,361.82tokens/s,5.30148seconds/update.
+  `ddp-combined-b64-01` is running. No combined scaling conclusion yet.
 
-1. Finish retaining actual combined graph reconstruction checkpoint.
-2. Actual combined ZeRO-1 fixed-gradient Adam and recovery; retain checkpoint.
-3. Matched single-GPU B128 versus two-GPU B64/rank scaling for RT and combined.
-4. Comfortable larger local batches (RT128/192, combined128), optionally validated
-   bucket views. Report setup/steady per-rank memory, aggregate tokens/sec,
-   GPU-seconds/token, actual parameter/state bytes and analytic matrix FLOPs.
-5. Tiny then actual ZeRO-1 graph/capacity integration. ZeRO-2 only if useful
-   memory needs justify the larger integration change. No offload/Stage3/FSDP.
+Source `6921c53` is pushed; runtime/code change is `bfa3649`. Active exec queue
+(session17974) runs combined Zero1 graph, single combinedB128, then DDP
+combinedB64 sequentially; only the last is still active. After it:
+
+1. Retain completed combined scaling evidence.
+2. DDP useful physical batches: RT128/192 per rank, combined128 per rank.
+3. ZeRO1 RT192 and combined128 per rank, matching the replicated candidates.
+   Consider one RT256 boundary probe only if useful; no bucket-view adoption
+   without separate checking. Report per-rank setup/steady memory, aggregate
+   tokens/sec, GPU-seconds/token, parameter/state bytes and matrix-FLOP estimates.
+4. Final inventory/report/PR. ZeRO2 remains conditional on a demonstrated need;
+   no offload/Stage3/FSDP or quality run is queued.
+
+Host standard-library audit: `python3 .runtime/olmo-two-gpu/audit/inventory.py`.
+It writes only audit artifacts, excludes running stages from final counts,
+rehashes source snapshots and retained archives, and labels B1 integration
+versus capacity measurements. Re-run after final retention. Do not sum
+compound checks across scopes or count replicated checks as independent cases.
 
 Root owns GPU execution. Agent work is isolated; source snapshots are frozen
 for running probes. Do not change runtime sources while a probe validates hashes.
