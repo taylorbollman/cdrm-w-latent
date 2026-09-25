@@ -68,18 +68,18 @@ tensor relative L2 9.0963e-8. The anchored result supports reduction-order/BF16
 trajectory divergence as an explanation; it does not erase this failure or
 clear the older native-versus-author BF16 qualification.
 
-Retained setup failures: `tiny-graph-01` used an empty DDP forward argument list
+Retained failed attempts: `tiny-graph-01` used an empty DDP forward argument list
 and hit installed PyTorch's moved_inputs[0] path; fixed by passing the static
 token tensor explicitly. `tiny-graph-02` restored unchanged persistent buffers
 and advanced their versions; fixed by restoring parameters only while checking
-fixed-buffer equality/storage/version. `tiny-graph-recovery-01` omitted the
+fixed-buffer equality/storage/version. This failed attempt executed four Adam updates per rank before the restoration error. `tiny-graph-recovery-01` omitted the
 dependency recorder output directory; corrected call. `rt-graph-01` launcher
 omitted required NCCL async-error settings and was rejected before process-group
 initialization. None is hidden by a passing retry; no numerical budget changed.
 
 ## Active queue
 
-`combined-graph-01` full-model B1/T512 correctness is running. Then:
+`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` is now running. Then:
 
 1. Actual combined graph reconstruction recovery; retain checkpoint.
 2. Actual combined ZeRO-1 fixed-gradient Adam and recovery; retain checkpoint.
@@ -99,9 +99,8 @@ training throughput. Timed capacity probes exclude those checks.
 
 Verified stage receipts are in `.runtime/olmo-two-gpu/retention/`; prefix:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T172000Z/`.
-All completed stages through `rt-recovery-01`, including failed tiny attempts,
-are retained. Actual graph results are being retained next. Source through
-`fe5ff69` is pushed. Original pretrained artifacts are retained by their existing
+All completed stages through `combined-graph-01`, including failed attempts,
+are retained. Source through `d88be56` is pushed. Original pretrained artifacts are retained by their existing
 O1 manifest/storage receipt, not repeatedly uploaded.
 
 Main disk has about19GiB free after cleaning the GCS-verified generated RT
