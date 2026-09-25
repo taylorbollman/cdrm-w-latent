@@ -99,8 +99,19 @@ def raw_snapshot(model, result):
 
 def exact_raw_check(model, result, reference):
     actual = {n:p.grad for n,p in model.named_parameters() if p.grad is not None}
-    rows = {n:tensor_check(value,reference['gradients'][n],atol=0.,rtol=0.)
-            for n,value in actual.items() if n in reference['gradients']}
+    rows = {}
+    for name, value in actual.items():
+        if name not in reference['gradients']:
+            continue
+        target = reference['gradients'][name]
+        cpu_value = value.detach().cpu()
+        # Exact equality needs no billion-element FP64 norm calculation. Keep
+        # full diagnostics for mismatches and reject identical infinities.
+        if torch.equal(cpu_value, target) and bool(torch.isfinite(cpu_value).all()):
+            rows[name] = dict(passed=True, finite=True, exact=True,
+                              relative_l2=0., max_absolute=0., max_relative=0.)
+        else:
+            rows[name] = tensor_check(cpu_value,target,atol=0.,rtol=0.)
     losses = tree_digests(result) == tree_digests(reference['losses'])
     ownership = actual.keys() == reference['gradients'].keys()
     return dict(passed=losses and ownership and all(r['passed'] for r in rows.values()),
