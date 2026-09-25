@@ -5,16 +5,17 @@ on the two H10080GB GPUs, T512. No quality training, bucket-view adoption or dyn
 layout work is queued. Branch `feat/olmo-ordinary-two-gpu`, based on merged PR30.
 Read the prospective protocol and execution-options note in this directory.
 
-The unchanged native-RoPE ordinary DDP B64/rank control is running as
-`.runtime/olmo-ordinary-two-gpu/ordinary-native-ddp-b64-01`. Its source is frozen.
-Agent is adding explicit ordinary-only Dao RoPE and proper no-RT selection to
-existing single/ZeRO-1 benchmark harnesses in an isolated worktree. Root owns all
-GPU commands. Do not cherry-pick runtime changes during a live probe.
+Native-RoPE ordinary DDP B64/rank control passed78,183.60tokens/s at source
+`0c6ace4`, with44.22GiB sampled free/rank. It is retained in GCS. Runtime
+extension `467bde7` is integrated and pushed;93focusedCPUtests pass and an
+independent review finds no material issue. Production defaults are unchanged.
 
-After control: integrate/test helper; actual ordinary Dao graph complete-update
-check B1/rank, Dao B64/B128, then adaptiveB192/B256 if memory supports. ZeRO-1 only
-if useful; matched single reference and repeat selected DDP point. Preserve
-fixed full CE and precision/optimizations; no new broad numeric campaign.
+Active root exec32463 runs ordinary DaoB1 full-update correctness, then Dao
+DDPB64 andB128 capacity sequentially with external timeouts. Source is frozen.
+Each stage is in `.runtime/olmo-ordinary-two-gpu/ordinary-dao-*`; inspect latest
+report/rankprogress before restarting. Do not edit runtime until the queue ends.
+After B128, inspect memory/gain before B192/B256; then conditionalZeRO1,
+matchedsingle reference and repeat selected DDP point. No broad numerics.
 
 The wrapper retains an unused frozen32MiB fusion module; report its resident
 bytes separately from1,176,764,416 active ordinary parameters. No RT/FBT/NextLat

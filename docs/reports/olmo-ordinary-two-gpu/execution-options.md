@@ -14,7 +14,7 @@ restriction on in-place gradient detachment in its
 [DDP reference](https://docs.pytorch.org/docs/2.14/generated/torch.nn.parallel.DistributedDataParallel.html).
 
 For our ordinary model, the active FP32 gradients occupy
-1,176,764,416 ×4 bytes =4.383 GiB per GPU. That is the approximate theoretical
+1,176,764,416 ×4 bytes =4.384 GiB per GPU. That is the approximate theoretical
 storage opportunity, not a measured net saving. Graph pools, activations and
 allocator behavior still determine usable headroom.
 
