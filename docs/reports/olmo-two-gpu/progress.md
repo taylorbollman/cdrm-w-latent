@@ -79,7 +79,9 @@ initialization. None is hidden by a passing retry; no numerical budget changed.
 
 ## Active queue
 
-`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` passes42checks (W&B `xq1w6i0m`), with six physical updates/rank and logical endpoint5; checkpoint retention is running. The updated terminal-check harness passes `tiny-capacity-01` (`wgvh2kza`) and `tiny-zero1-graph-01` (`jeubp3ph`), eight updates/rank each. Source `340fe25` includes those checks. Next:
+`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` passes42checks (W&B `xq1w6i0m`), with six physical updates/rank and logical endpoint5; checkpoint retention is verified. The updated terminal-check harness passes `tiny-capacity-01` (`wgvh2kza`) and `tiny-zero1-graph-01` (`jeubp3ph`), eight updates/rank each. Source `340fe25` includes those checks. The original actual combined ZeRO1 run `combined-zero1-01` now passes13checks/rank (W&B `2t6fk853`), four distributed updates and two reference Adam calls per rank. Retention is running. Native checkpoint consolidation exposed a sender byte-conversion bottleneck (~6minute CPU conversion for the4.724GiB shard, supported by a bounded CPU microbenchmark); a buffer-based transport fix is developed separately and will require its own recovery check.
+
+The matched single RTB128 run `single-rt-b128-01` passes at28,000.26inputtokens/s,2.34055s/update, with initial/terminal exact graph checks. W&B `eezfn9r8`. `ddp-rt-b64-01` is running. No two-GPU throughput claim yet. Next:
 
 1. Finish retaining actual combined graph reconstruction checkpoint.
 2. Actual combined ZeRO-1 fixed-gradient Adam and recovery; retain checkpoint.
