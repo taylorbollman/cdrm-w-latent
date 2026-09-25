@@ -48,16 +48,30 @@ Checks, in order:
    maximum absolute error/reference tensor peak <=1e-5. A zero reference
    requires zero error. This check deliberately keeps BF16 physical shapes
    identical, avoiding a large-batch/microbatch kernel comparison.
-5. Two bounded fused AdamW updates through the adapter, with two same-shaped
-   microbatches/update and independent global denominators. Clip global
-   accumulated gradients to1 after both backwards. Existing Adam policy:
-   LR1e-5, betas(0.9,0.95), epsilon1e-8, decay0.1 on matrices, two-update
-   warmup. Check expected accumulated gradient participation before each step.
-   Verify changed probe weights and finite parameters/moments after
-   each update. One-update CLI option is a labeled shorter diagnostic.
+5. Two canonical accumulated updates using the existing `optimizer_step`, then
+   two adapter accumulated updates from identical initial weights and RNG.
+   Each uses two same-shaped microbatches/update, independent global denominators,
+   and clipping to1 after both backwards. Existing Adam policy: fused AdamW,
+   LR1e-5, betas(0.9,0.95), epsilon1e-8, decay0.1 on matrices, two-update warmup.
+   The canonical and adapter branches both disable only the autocast weight
+   cache around the complete update; their forward-only enabled autocast
+   boundaries stay intact, and nested RT backward replay inherits the same
+   cache policy. W&B operations preserve RNG.
+6. Keep the initial model state on CPU. After the canonical branch, release its
+   optimizer/scheduler before restoring weights in place, then reconstruct the
+   fresh adapter optimizer/scheduler. Verify the initial model/RNG boundary
+   exactly. Never retain duplicate GPU models or optimizer states. At each
+   corresponding update require exact loss/count/metric equality, identical
+   input batches, and exact full model/optimizer/scheduler/counter/RNG digests.
+   Independently check expected gradient participation before every step and
+   changed probe weights plus finite parameters/moments after every step.
+   The primary diagnostic performs **four physical updates** across two
+   branches and reaches a **two-update logical endpoint**. The one-update CLI
+   option means two physical updates and one logical endpoint; it is a labeled
+   shorter diagnostic. The primary case has15 required gates.
 
 All gates retain failures and stop dependent work; no automatic budget changes.
-Physical optimizer steps are counted by a successful-step hook, including when
+Physical optimizer steps and per-branch counts are recorded by a successful-step hook, including when
 a later scheduler/health/logging operation fails. Backwards for references are
 not optimizer steps. No inference or training-quality interpretation is made
 from these changed weights, so no new long-term quality checkpoint is needed.

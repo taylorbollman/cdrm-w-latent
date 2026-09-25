@@ -23,8 +23,10 @@ reuse the original selected O1 checkpoint and its immutable GCS receipt.
 The helper writes `summary.json` in this directory. A complete primary scope
 requires passing B2/T512 RT-only and combined cases in both groups. Smaller or
 partial diagnostic selections remain labeled incomplete. Distributed preparation
-expects the configured one or two physical updates, with two microbatches per
-update; the primary protocol uses two. Recovery requires six physical updates
+expects the configured one or two logical updates on both canonical and adapter
+branches, with two microbatches per update; the primary protocol uses four
+physical steps and two logical endpoint steps. It verifies exact complete
+update comparisons, including weights/moments/scheduler/RNG. Recovery requires six physical updates
 across preparation/reference/restored branches, a four-update logical endpoint,
 and a hash/size-matched disposal receipt for its successful temporary checkpoint.
 It checks that the deleted file remains absent. This verifies the retained

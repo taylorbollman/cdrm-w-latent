@@ -42,7 +42,11 @@ CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc \
 ```
 
 Execute sequentially after any existing frozen-source queue has finished.
-Defaults are B2/T512 and two two-microbatch fused-Adam updates. W&B uses
+Defaults are B2/T512, two canonical accumulated fused-Adam updates and two
+adapter updates from the identical starting model/RNG: four physical steps,
+two logical endpoint steps, two microbatches per update. Every corresponding
+complete update must match exactly, including weights, moments, scheduler and
+RNG. W&B uses
 `taylorbollman/pretrained-fbt-rt-nextlat`, group `olmo-distributed-prepare`.
 See `protocol.md` for exact gates and fixed accumulation budgets. Runtime and
 source/protocol evidence are retained per create-only output directory; this

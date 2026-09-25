@@ -35,21 +35,36 @@ def adapter_raw():
     checks = [gradient_gate("world1_adapter_exact"), gradient_gate("same_order_accumulation_exact"),
               gradient_gate("independent_cpu_vjp_sum", exact=False)]
     health = {"passed": True, "nonfinite_parameters": [], "nonfinite_optimizer_tensors": []}
-    records = []
-    for i in (1, 2):
-        checks.extend([{"name": f"adapter_update_{i}_gradient_ownership", "passed": True,
-                        "expected_participation_matches": True, "missing_expected_gradients": [], "unexpected_gradients": []},
-                       {"name": f"adapter_update_{i}_health", "weights_changed": True, **health}])
-        records.append({"update": i, "microbatches": 2, "global_counts": counts, "input_tokens": 2048,
-                        "weights_changed": True, "state_health": health, "gradient_norm_before_clip": 2.})
-    return {"schema": report.GROUPS["distributed"]["schema"], "physical_optimizer_updates": 2,
+    records = {"reference": [], "adapter": []}
+    for branch in records:
+        for i in (1, 2):
+            checks.extend([{"name": f"{branch}_update_{i}_gradient_ownership", "passed": True,
+                            "expected_participation_matches": True, "missing_expected_gradients": [], "unexpected_gradients": []},
+                           {"name": f"{branch}_update_{i}_health", "weights_changed": True, **health}])
+            counters = {"optimizer_updates": i, "microbatches": 2*i, "documents": 4*i, "input_tokens": 2048*i,
+                        "ce_positions": counts["ce"]*i, "latent_pairs": counts["latent"]*i, "kl_triples": counts["kl"]*i}
+            records[branch].append({"metrics": {"update_completed": True, "counters": counters, "counts": counts,
+                                                "gradient_norm_before_clip": 2.},
+                "boundary": {"state": {"counters": counters, "model": {"p": "hash"},
+                    "optimizer": {"moments": "hash"}, "scheduler": {"epoch": i}}, "rng": {"cpu": "hash"}},
+                "batches": ["first", "second"], "weights_changed": True, "state_health": health})
+    checks.extend([{"name": "restored_initial_update_boundary", "passed": True,
+                    "bitwise_manifest_equal": {"model": True, "rng": True}},
+                   {"name": "physical_update_accounting", "passed": True, "physical_updates": 4, "logical_endpoint_updates": 2}])
+    checks.extend({"name": f"accumulated_update_{i}_exact", "passed": True,
+                   "bitwise_manifest_equal": {"metrics": True, "batches": True, "boundary": True}} for i in (1, 2))
+    return {"schema": report.GROUPS["distributed"]["schema"], "physical_optimizer_updates": 4,
+            "branch_physical_optimizer_updates": {"reference": 2, "adapter": 2},
             "configuration": {"case": "combined", "case_specification": {"name": "combined", "batch_size": 2, "length": 512},
                 "batch_size": 2, "length": 512, "updates": 2, "world_size": 1, "real_distributed_execution": False,
                 "cuda_graphs": False, "arm": "compiled-native", "precision": "bf16_mixed",
-                "accumulation_budgets": report.ACCUMULATION_BUDGETS},
+                "accumulation_budgets": report.ACCUMULATION_BUDGETS, "physical_updates_expected": 4,
+                "logical_endpoint_updates": 2, "complete_update_branches": ["reference", "adapter"]},
             "checks": checks, "expected_active_parameter_names": ["p"],
             "batches": {"microbatch_counts": locals_, "global_counts": counts},
-            "independent_reference_microbatches_completed": 2, "update_records": records}
+            "independent_reference_microbatches_completed": 2,
+            "initial_update_boundary": {"model": {"p": "hash"}, "rng": {"cpu": "hash"}},
+            "reference_records": records["reference"], "adapter_records": records["adapter"]}
 
 
 def recovery_raw(name):
@@ -138,7 +153,7 @@ def test_verified_selection_counts_actual_work_and_qualifies_scope(evidence):
     root, revision, raws, _ = evidence
     summary = report.summarize(list(raws), revision, root=root)
     assert summary["statuses"] == {"passed": 2}
-    assert summary["physical_optimizer_updates"] == 8
+    assert summary["physical_optimizer_updates"] == 10
     assert [row["logical_endpoint_updates"] for row in summary["runs"]] == [2, 4]
     assert not summary["primary_scope_complete"]  # RT-only cases not selected.
     assert "no two-GPU" in summary["scope"]
@@ -182,8 +197,22 @@ def test_passing_adapter_cannot_hide_missing_or_failed_evidence(evidence, mutati
     elif mutation == "gradient_names": raw["expected_active_parameter_names"].append("missing")
     elif mutation == "budget": raw["checks"][2]["budgets"] = {**report.ACCUMULATION_BUDGETS, "global_relative_l2": .1}
     elif mutation == "exactness": raw["checks"][0]["gradients"]["p"]["bitwise_equal"] = False
-    elif mutation == "health": raw["update_records"][0]["weights_changed"] = False
+    elif mutation == "health": raw["adapter_records"][0]["weights_changed"] = False
     elif mutation == "wandb": raw["wandb"]["status"] = "running"
+    write(path, raw)
+    with pytest.raises(ValueError): report.load_run(root, selection, revision)
+
+
+@pytest.mark.parametrize("mutation", ["moments", "scheduler", "rng", "clipping", "branch_count", "restore"])
+def test_passing_adapter_requires_complete_update_reference(evidence, mutation):
+    root, revision, selection, raw, path = selected(evidence)
+    actual = raw["adapter_records"][0]
+    if mutation == "moments": actual["boundary"]["state"]["optimizer"]["moments"] = "changed"
+    elif mutation == "scheduler": actual["boundary"]["state"]["scheduler"]["epoch"] += 1
+    elif mutation == "rng": actual["boundary"]["rng"]["cpu"] = "changed"
+    elif mutation == "clipping": actual["metrics"]["gradient_norm_before_clip"] += 1
+    elif mutation == "branch_count": raw["branch_physical_optimizer_updates"]["reference"] = 0
+    else: next(c for c in raw["checks"] if c["name"] == "restored_initial_update_boundary")["bitwise_manifest_equal"]["model"] = False
     write(path, raw)
     with pytest.raises(ValueError): report.load_run(root, selection, revision)
 
@@ -214,8 +243,9 @@ def test_failed_report_is_retained_and_not_promoted_even_if_observed_checks_pass
     write(path, raw)
     summary = report.summarize([selection], revision, root=root)
     assert summary["statuses"] == {"failed": 1}
-    assert summary["physical_optimizer_updates"] == (2 if group == "distributed" else 6)
+    assert summary["physical_optimizer_updates"] == (4 if group == "distributed" else 6)
     assert summary["runs"][0]["logical_endpoint_updates"] is None
+    assert summary["runs"][0]["error"] == {"type": "RuntimeError", "message": "sync failed"}
     assert not summary["primary_scope_complete"]
 
 

@@ -14,6 +14,22 @@ After the tracking-finalization failure-path correction, repeated the two new
 test files: 71 passed in 4.41s. This is an overlapping subset, not 71 additional
 distinct tests. git diff --cached --check passed.
 
+After adding the actual-model canonical-versus-adapter complete-update branch:
+
+python -m pytest -q tests/test_distributed_training_preparation.py \
+  tests/test_olmo_distributed_prepare.py tests/test_olmo_single_gpu_readiness_report.py \
+  tests/test_olmo_fbt_training.py tests/test_olmo_lm_training.py
+
+184 passed in 7.67s: 132 adapter/canonical tests plus 52 evidence-helper tests.
+The 132 comprise 60 objective tests, 24 bounded-harness tests and 48 existing
+FBT/LM optimizer tests. This supersedes the earlier overlapping scope.
+New checks cover two sequential canonical-versus-adapter complete updates in
+all eight modes, exact model/moment/scheduler/counter/RNG and metric comparison,
+in-place initial-weight restoration, and cache-only/RNG context preservation.
+The prepared actual-model GPU protocol now requires 15 gates and four physical
+updates (two reference, two adapter) at a two-update logical endpoint. No GPU
+execution was performed by this agent.
+
 Tests cover all eight RT/FBT/NextLat modes, checkpointing on/off, independent
 global objective counts, local/global empty auxiliary terms, exact world-one
 adapter semantics, simulated rank averaging and clipped Adam weights/moments,

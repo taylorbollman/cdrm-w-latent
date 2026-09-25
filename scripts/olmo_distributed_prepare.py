@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import argparse
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
 from dataclasses import asdict, replace
 from datetime import datetime, timezone
 import math
+import gc
 from pathlib import Path
 import shutil
 import subprocess
@@ -19,13 +20,17 @@ import torch
 
 from cdrm.pretrained.artifacts import sha256_file, write_json
 from cdrm.pretrained.distributed_training import ObjectiveForwardAdapter, sum_objective_counts
-from cdrm.pretrained.lm_training import TERMS
+from cdrm.pretrained.lm_training import (
+    TERMS, LMTrainingConfig, TrainingCounters, optimizer_step, optimizer_ownership,
+    optimizer_state_bytes, _rng_state, _restore_rng,
+)
+from scripts.olmo_f1_common import boundary_digests
 from scripts.olmo_rt_large_batch import (
     SOURCES as LARGE_BATCH_SOURCES, batch_for, compiler_configuration,
     dependency_record, check_dependencies, set_arm, optimizer_for, optimizer_flags,
     build_model, new_plan, selected_case, configure_determinism, require_container_gpu,
     validate_prepared_manifest, load_native_state_dict, load_native_tokenizer,
-    backend_context, state_health, OnlineTracker, tree_digests, track_optimizer_steps,
+    backend_context, state_health, OnlineTracker, tree_digests,
     detailed_memory_snapshot, active_names,
 )
 
@@ -35,6 +40,26 @@ SOURCES = tuple(sorted(set(LARGE_BATCH_SOURCES) | {
 }))
 ACCUMULATION_BUDGETS = {"global_relative_l2": 2e-6,
                         "tensor_relative_l2": 2e-6, "tensor_max_relative": 1e-5}
+
+
+@contextmanager
+def preserve_rng():
+    saved = _rng_state(None)
+    try:
+        yield
+    finally:
+        _restore_rng(saved, None)
+
+
+@contextmanager
+def disable_autocast_weight_cache():
+    """Preserve forward/backward autocast boundaries while changing cache only."""
+    previous = torch.is_autocast_cache_enabled()
+    torch.set_autocast_cache_enabled(False)
+    try:
+        yield
+    finally:
+        torch.set_autocast_cache_enabled(previous)
 
 
 def parse_args(argv=None):
@@ -106,6 +131,54 @@ def backward_sequence(model, batches, mode, global_counts, *, adapter=None):
 def gradients_cpu(model):
     return {name: p.grad.detach().cpu().clone()
             for name, p in model.named_parameters() if p.grad is not None}
+
+
+def adapter_optimizer_update(model, adapter, optimizer, scheduler, counters, batches, mode, *,
+                             config=LMTrainingConfig(precision="bf16_mixed")):
+    """Complete accumulated adapter update, compared to canonical optimizer_step.
+
+    The small harness owns this eager loop; it is not a distributed trainer.
+    No collectives or graph execution are inserted here.
+    """
+    optimizer_ownership(model, optimizer)
+    expected_precision = "bf16_mixed" if next(model.parameters()).device.type == "cuda" else "fp32"
+    if config.precision != expected_precision:
+        raise ValueError("This bounded adapter-update harness uses BF16 mixed on CUDA or explicit FP32 CPU tests")
+    denominators = sum_objective_counts([model.counts(batch) for batch in batches])
+    weights = model.objective_weights()
+    learning_rates = [group["lr"] for group in optimizer.param_groups]
+    records = backward_sequence(model, batches, mode, denominators, adapter=adapter)
+    totals = {term: sum(float(record["loss_sums"][term]) for record in records) for term in TERMS}
+    if not all(math.isfinite(value) for value in totals.values()):
+        raise FloatingPointError("Nonfinite adapter loss sum before update")
+    norm = torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],
+        float("inf") if config.max_grad_norm is None else config.max_grad_norm,
+        error_if_nonfinite=True, foreach=False)
+    optimizer.step()
+    if scheduler is not None:
+        scheduler.step()
+    optimizer.zero_grad(set_to_none=True)
+    counters.optimizer_updates += 1
+    counters.microbatches += len(batches)
+    counters.documents += sum(int(batch.valid_mask.any(-1).sum()) for batch in batches)
+    counters.input_tokens += sum(int(batch.valid_mask.sum()) for batch in batches)
+    counters.ce_positions += denominators["ce"]
+    counters.latent_pairs += denominators["latent"]
+    counters.kl_triples += denominators["kl"]
+    means = {term: totals[term]/denominators[term] if denominators[term] else 0. for term in TERMS}
+    return {"schema": "olmo-lm-optimizer-step-v1", "update_completed": True,
+        "loss_sums": totals, "counts": denominators, "loss_means": means,
+        "objective_weights": weights, "objective": sum(weights[t]*means[t] for t in TERMS),
+        "gradient_norm_before_clip": float(norm), "max_grad_norm": config.max_grad_norm,
+        "lr_used": learning_rates, "lr_next": [group["lr"] for group in optimizer.param_groups],
+        "optimizer_state_bytes_by_device": optimizer_state_bytes(optimizer), "counters": asdict(counters)}
+
+
+def update_equality(reference, actual, name):
+    keys = ("metrics", "batches", "boundary")
+    exact = {key: reference[key] == actual[key] for key in keys}
+    return {"name": name, "passed": all(exact.values()), "bitwise_manifest_equal": exact,
+            "scope": "Exact complete accumulated update: losses/counts, clipped Adam weights/moments, scheduler, counters, batches and RNG"}
 
 
 def add_gradients_cpu(total, addition):
@@ -204,18 +277,21 @@ def main(argv=None):
               "reuse_rope": True, "kv_only_writes": True, "cast_weights_once": True,
               "ce_chunk_size": 2048, "kl_chunk_size": 128, "autocast_cache": False,
               "tf32": False, "cuda_graphs": False, "seed": 20260922,
-              "health_update_microbatches": 2, "health_update_global_batch": 2*args.batch_size,
+              "update_microbatches": 2, "update_global_batch": 2*args.batch_size,
+              "complete_update_branches": ["reference", "adapter"],
+              "physical_updates_expected": 2*args.updates, "logical_endpoint_updates": args.updates,
               "accumulation_budgets": ACCUMULATION_BUDGETS,
               "scope": "Single GPU objective/gradient/accumulation preparation, not quality or throughput"}
     report = {"schema": "olmo-distributed-prepare-v1", "status": "running", "stage": "load",
               "configuration": config, "runtime": runtime, "determinism": determinism,
               "compiler_configuration": compiler, "checks": [], "physical_optimizer_updates": 0,
+              "branch_physical_optimizer_updates": {"reference": 0, "adapter": 0},
               "runtime_commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
               "source_hashes": {name: sha256_file(ROOT/name) for name in SOURCES},
               "protocol_sha256": sha256_file(PROTOCOL), "started_utc": datetime.now(timezone.utc).isoformat()}
     tracker = OnlineTracker(project="pretrained-fbt-rt-nextlat", group="olmo-distributed-prepare",
-                            name=args.output_dir.name, output_dir=args.output_dir)
-    hook = None
+                            name=args.output_dir.name, output_dir=args.output_dir, preserve_state=preserve_rng)
+    hooks = []
 
     def save(stage=None):
         if stage is not None:
@@ -291,44 +367,76 @@ def main(argv=None):
                                    name="independent_cpu_vjp_sum", exact=False, expected_names=expected_names))
             del independent, independent_losses, expected, actual, batches
 
-            save("adapter_health_updates")
-            optimizer, scheduler = optimizer_for(model, "compiled-native")
-            report["optimizer_flags"] = optimizer_flags(optimizer)
-            hook = track_optimizer_steps(optimizer, report)
-            report["update_records"] = []
-            for update in range(args.updates):
-                batches = [batch.to("cuda") for batch in unequal_batches(tokenizer, case, update+1)]
-                denominators = sum_objective_counts([model.counts(batch) for batch in batches])
-                records = backward_sequence(model, batches, case.mode(), denominators, adapter=adapter)
-                totals = {t: sum(float(record["loss_sums"][t]) for record in records) for t in TERMS}
-                if not all(math.isfinite(value) for value in totals.values()):
-                    raise FloatingPointError("Nonfinite adapter loss sum before update")
-                participation = expected_ownership(model, expected_names)
-                publish({"name": f"adapter_update_{update+1}_gradient_ownership", **participation,
-                         "passed": participation["expected_participation_matches"]})
-                norm = torch.nn.utils.clip_grad_norm_([p for p in model.parameters() if p.requires_grad],
-                                                      1., error_if_nonfinite=True, foreach=False)
-                learning_rates = [group["lr"] for group in optimizer.param_groups]
-                probe = model.backbone.backbone.layers[0].ff_out.weight.detach().flatten()[:4096].clone()
-                optimizer.step()
-                save()  # Successful physical steps survive later health/log failures.
-                scheduler.step()
-                changed = not torch.equal(probe, model.backbone.backbone.layers[0].ff_out.weight.detach().flatten()[:4096])
-                record = {"update": report["physical_optimizer_updates"], "microbatches": 2,
-                          "batches": [tree_digests(vars(batch)) for batch in batches],
-                          "global_counts": denominators, "loss_sums": totals,
-                          "input_tokens": sum(int(batch.valid_mask.sum()) for batch in batches),
-                          "gradient_norm_before_clip": float(norm), "lr_used": learning_rates,
-                          "weights_changed": changed, "state_health": state_health(model, optimizer)}
-                report["update_records"].append(record)
-                save()
-                tracker.log({"update": report["physical_optimizer_updates"],
-                             "train/gradient_norm_before_clip": float(norm),
-                             **{f"train/{t}": totals[t]/denominators[t] if denominators[t] else 0. for t in TERMS}})
-                publish({"name": f"adapter_update_{update+1}_health",
-                         **record["state_health"],
-                         "weights_changed": changed,
-                         "passed": changed and record["state_health"]["passed"]})
+            save("complete_update_reference")
+            initial_state = {name: value.detach().to("cpu", copy=True) for name, value in model.state_dict().items()}
+            initial_rng = _rng_state(None)
+            initial_state_digest = tree_digests(initial_state)
+            report["initial_update_boundary"] = {"model": initial_state_digest, "rng": tree_digests(initial_rng)}
+            training = LMTrainingConfig(precision="bf16_mixed", max_grad_norm=1.)
+            for branch in ("reference", "adapter"):
+                if branch == "adapter":
+                    model.load_state_dict(initial_state, strict=True)
+                    model.zero_grad(set_to_none=True)
+                    del initial_state
+                    gc.collect(); torch.cuda.empty_cache()
+                    _restore_rng(initial_rng, None)
+                    restored = {"model": tree_digests(model.state_dict()), "rng": tree_digests(_rng_state(None))}
+                    publish({"name": "restored_initial_update_boundary", "passed": restored == report["initial_update_boundary"],
+                             "bitwise_manifest_equal": {key: restored[key] == report["initial_update_boundary"][key]
+                                                        for key in restored}})
+                optimizer, scheduler = optimizer_for(model, "compiled-native")
+                report["optimizer_flags"] = optimizer_flags(optimizer)
+                counters = TrainingCounters()
+                report[branch+"_records"] = []
+
+                def validate_step(_optimizer, _args, _kwargs):
+                    participation = expected_ownership(model, expected_names)
+                    publish({"name": f"{branch}_update_{counters.optimizer_updates+1}_gradient_ownership",
+                             **participation, "passed": participation["expected_participation_matches"]})
+
+                def completed_step(_optimizer, _args, _kwargs):
+                    report["physical_optimizer_updates"] += 1
+                    report["branch_physical_optimizer_updates"][branch] += 1
+                    save()
+
+                hooks = [optimizer.register_step_pre_hook(validate_step), optimizer.register_step_post_hook(completed_step)]
+                save(branch+"_complete_updates")
+                for update in range(args.updates):
+                    batches = [batch.to("cuda") for batch in unequal_batches(tokenizer, case, update+1)]
+                    probe = model.backbone.backbone.layers[0].ff_out.weight.detach().flatten()[:4096].clone()
+                    # Match the cache policy in both forward and any nested
+                    # RT backward replay, without enabling outer autocast.
+                    with disable_autocast_weight_cache():
+                        if branch == "reference":
+                            metrics = optimizer_step(model, optimizer, batches, config=training,
+                                backbone_kwargs={"mode": case.mode()}, scheduler=scheduler, counters=counters)
+                        else:
+                            metrics = adapter_optimizer_update(model, adapter, optimizer, scheduler, counters,
+                                                               batches, case.mode(), config=training)
+                    changed = not torch.equal(probe, model.backbone.backbone.layers[0].ff_out.weight.detach().flatten()[:4096])
+                    record = {"metrics": metrics, "batches": [tree_digests(vars(batch)) for batch in batches],
+                        "boundary": {"state": boundary_digests(model, optimizer, scheduler, counters),
+                                     "rng": tree_digests(_rng_state(None))},
+                        "weights_changed": changed, "state_health": state_health(model, optimizer)}
+                    report[branch+"_records"].append(record)
+                    save()
+                    tracker.log({"update": report["physical_optimizer_updates"],
+                                 f"{branch}/gradient_norm_before_clip": metrics["gradient_norm_before_clip"],
+                                 **{f"{branch}/{t}": metrics["loss_means"][t] for t in TERMS}})
+                    publish({"name": f"{branch}_update_{update+1}_health", **record["state_health"],
+                             "weights_changed": changed, "passed": changed and record["state_health"]["passed"]})
+                    if branch == "adapter":
+                        publish(update_equality(report["reference_records"][update], record,
+                                                f"accumulated_update_{update+1}_exact"))
+                for hook in hooks: hook.remove()
+                hooks = []
+                del optimizer, scheduler, counters, batches
+                model.zero_grad(set_to_none=True)
+                gc.collect(); torch.cuda.empty_cache()
+            publish({"name": "physical_update_accounting",
+                "physical_updates": report["physical_optimizer_updates"], "logical_endpoint_updates": args.updates,
+                "passed": report["physical_optimizer_updates"] == 2*args.updates
+                    and report["branch_physical_optimizer_updates"] == {"reference": args.updates, "adapter": args.updates}})
             report["memory"] = detailed_memory_snapshot()
         if any(sha256_file(ROOT/name) != digest for name, digest in report["source_hashes"].items()):
             raise AssertionError("Runtime source changed during the run")
@@ -345,7 +453,7 @@ def main(argv=None):
         save()
         raise
     finally:
-        if hook is not None:
+        for hook in hooks:
             hook.remove()
         try:
             tracker.finish(succeeded=report["status"] == "passed")

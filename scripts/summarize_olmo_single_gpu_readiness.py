@@ -124,11 +124,18 @@ def validate_distributed(raw):
     require(config.get("world_size") == 1 and config.get("real_distributed_execution") is False
             and config.get("cuda_graphs") is False and config.get("arm") == "compiled-native",
             "Adapter preparation must remain explicitly single-GPU eager")
-    expected = {"world1_adapter_exact", "same_order_accumulation_exact", "independent_cpu_vjp_sum"}
-    expected |= {f"adapter_update_{i}_{suffix}" for i in range(1, updates+1)
-                 for suffix in ("gradient_ownership", "health")}
-    require(set(checks) == expected and raw["physical_optimizer_updates"] == updates,
+    expected = {"world1_adapter_exact", "same_order_accumulation_exact", "independent_cpu_vjp_sum",
+                "restored_initial_update_boundary", "physical_update_accounting"}
+    expected |= {f"{branch}_update_{i}_{suffix}" for branch in ("reference", "adapter")
+                 for i in range(1, updates+1) for suffix in ("gradient_ownership", "health")}
+    expected |= {f"accumulated_update_{i}_exact" for i in range(1, updates+1)}
+    require(set(checks) == expected and raw["physical_optimizer_updates"] == 2*updates
+            and raw.get("branch_physical_optimizer_updates") == {"reference": updates, "adapter": updates},
             "Adapter gates or physical update accounting differ")
+    require(config.get("physical_updates_expected") == 2*updates
+            and config.get("logical_endpoint_updates") == updates
+            and config.get("complete_update_branches") == ["reference", "adapter"],
+            "Adapter branch configuration differs")
     names = raw.get("expected_active_parameter_names")
     require(isinstance(names, list) and names and len(names) == len(set(names)), "Missing active-name declaration")
     for name in ("world1_adapter_exact", "same_order_accumulation_exact", "independent_cpu_vjp_sum"):
@@ -145,20 +152,39 @@ def validate_distributed(raw):
     if config["case"] == "combined":
         require(locals_[0]["latent"] > 0 and locals_[0]["kl"] > 0, "Combined auxiliary coverage missing")
     require(raw.get("independent_reference_microbatches_completed") == 2, "Independent references incomplete")
-    rows = raw.get("update_records", [])
-    require(len(rows) == updates, "Adapter update records missing")
-    for i, row in enumerate(rows, 1):
-        ownership, health = checks[f"adapter_update_{i}_gradient_ownership"], checks[f"adapter_update_{i}_health"]
-        require(ownership.get("expected_participation_matches") is True
-                and ownership.get("missing_expected_gradients") == ownership.get("unexpected_gradients") == [],
-                "Adapter update gradient ownership failed")
-        require(row.get("update") == i and row.get("microbatches") == 2
-                and row.get("global_counts") == counts
-                and row.get("input_tokens") == 2*config["batch_size"]*config["length"], "Adapter update accounting differs")
-        require(row.get("weights_changed") is True and health.get("weights_changed") is True
-                and row.get("state_health", {}).get("passed") is True
-                and row["state_health"].get("nonfinite_parameters") == row["state_health"].get("nonfinite_optimizer_tensors") == []
-                and finite(row.get("gradient_norm_before_clip")), "Unhealthy adapter update")
+    require(raw.get("initial_update_boundary", {}).get("model") and raw["initial_update_boundary"].get("rng")
+            and checks["restored_initial_update_boundary"].get("bitwise_manifest_equal") == {"model": True, "rng": True},
+            "Adapter branch initial weights/RNG restoration is unverified")
+    for branch in ("reference", "adapter"):
+        rows = raw.get(branch+"_records", [])
+        require(len(rows) == updates, "Complete-update branch records missing")
+        for i, row in enumerate(rows, 1):
+            ownership, health = checks[f"{branch}_update_{i}_gradient_ownership"], checks[f"{branch}_update_{i}_health"]
+            require(ownership.get("expected_participation_matches") is True
+                    and ownership.get("missing_expected_gradients") == ownership.get("unexpected_gradients") == [],
+                    "Complete-update gradient ownership failed")
+            metrics = row.get("metrics", {})
+            counters = {"optimizer_updates": i, "microbatches": 2*i, "documents": 2*i*config["batch_size"],
+                        "input_tokens": 2*i*config["batch_size"]*config["length"],
+                        "ce_positions": i*counts["ce"], "latent_pairs": i*counts["latent"], "kl_triples": i*counts["kl"]}
+            require(metrics.get("update_completed") is True and metrics.get("counts") == counts
+                    and metrics.get("counters") == counters, "Complete-update accounting differs")
+            boundary = row.get("boundary", {})
+            state = boundary.get("state", {})
+            require(state.get("counters") == counters and state.get("model") and state.get("optimizer")
+                    and state.get("scheduler") and boundary.get("rng") and len(row.get("batches", [])) == 2,
+                    "Complete-update model/optimizer/scheduler/RNG evidence missing")
+            require(row.get("weights_changed") is True and health.get("weights_changed") is True
+                    and row.get("state_health", {}).get("passed") is True
+                    and row["state_health"].get("nonfinite_parameters") == row["state_health"].get("nonfinite_optimizer_tensors") == []
+                    and finite(metrics.get("gradient_norm_before_clip")), "Unhealthy complete update")
+    for i, (reference, actual) in enumerate(zip(raw["reference_records"], raw["adapter_records"]), 1):
+        keys = ("metrics", "batches", "boundary")
+        require(checks[f"accumulated_update_{i}_exact"].get("bitwise_manifest_equal") == dict.fromkeys(keys, True)
+                and all(reference[key] == actual[key] for key in keys), "Canonical/adapter full-update comparison differs")
+    accounting = checks["physical_update_accounting"]
+    require(accounting.get("physical_updates") == 2*updates and accounting.get("logical_endpoint_updates") == updates,
+            "Physical/logical complete-update accounting gate differs")
     return updates
 
 
@@ -262,6 +288,17 @@ def verify_dependencies(raw, directory, root):
             "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"}
 
 
+def failure_detail(raw):
+    """Keep synchronization-only failures readable in the derived summary."""
+    error = raw.get("error")
+    if isinstance(error, dict): return error
+    if error is not None: return {"type": raw.get("error_type"), "message": str(error)}
+    if raw.get("tracking_finish_error"): return raw["tracking_finish_error"]
+    if raw.get("tracking_error_type"):
+        return {"type": raw["tracking_error_type"], "message": raw.get("tracking_error")}
+    return None
+
+
 def load_run(root, selection, revision):
     root = Path(root)
     group, name = parse_selection(selection)
@@ -304,7 +341,7 @@ def load_run(root, selection, revision):
            "checks": [check_summary(c) for c in raw["checks"]], "source_pairs_checked": len(hashes),
            "current_source_differences": differences, "dependency_verification": dependencies,
            "checkpoint_reference": source_checkpoint, "wandb_url": raw.get("wandb", {}).get("run_url"),
-           "error": raw.get("error"), "failure_stage": raw.get("stage") if raw["status"] != "passed" else None,
+           "error": failure_detail(raw), "failure_stage": raw.get("stage") if raw["status"] != "passed" else None,
            "checkpoint_disposal": raw.get("checkpoint_disposal"),
            "diagnostic_checkpoint_present": (directory / "diagnostic-boundary.pt").exists()}
     return row, raw
@@ -317,7 +354,7 @@ def summarize(selections, revision, *, overrides=None, root=ROOT):
     rows = [load_run(root, value, overrides.get(value, revision))[0] for value in selections]
     completed = {(row["group"], row["case"]) for row in rows if row["status"] == "passed"
                  and row["batch_size"] == 2 and row["length"] == 512
-                 and row["physical_optimizer_updates"] == (2 if row["group"] == "distributed" else 6)}
+                 and row["physical_optimizer_updates"] == (4 if row["group"] == "distributed" else 6)}
     return {"schema": SUMMARY_SCHEMA, "status": "completed", "created_utc": datetime.now(timezone.utc).isoformat(),
             "runtime_commit": resolve_commit(root, revision), "runs": rows,
             "statuses": dict(Counter(row["status"] for row in rows)),
