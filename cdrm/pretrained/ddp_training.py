@@ -173,7 +173,10 @@ class EagerDDPTrainer:
                     if batch.input_ids.device != self.device:
                         raise ValueError("Every batch must be on the model device")
                 contract = {"microbatches": len(microbatches), "config": asdict(config),
-                            "weights": weights, "backbone_kwargs": _plain(kwargs)}
+                            "weights": weights, "backbone_kwargs": _plain(kwargs),
+                            "objective_config": {"nextlat": self.model.config.to_dict(),
+                                                 "enabled": self.model.enabled,
+                                                 "gamma": self.model.gamma}}
             except Exception as exc:
                 error = f"{type(exc).__name__}: {exc}"
             self._coordinate_error(error, "update preflight")

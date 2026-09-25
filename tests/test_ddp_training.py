@@ -149,7 +149,8 @@ def test_real_two_rank_all_eight_modes_accumulation_and_adam(tmp_path):
 def _failure_worker(rank, filename):
     _initialize(rank, filename)
     try:
-        for failure in ("loss", "gradient", "preflight", "contract", "accumulation", "empty", "optimizer", "post_backward"):
+        for failure in ("loss", "gradient", "preflight", "contract", "objective_config",
+                        "accumulation", "empty", "optimizer", "post_backward", "discard"):
             model = make_model()
             trainer = EagerDDPTrainer(model)
             optimizer = build_adamw(model, lr=1e-4, eps=1e-4)
@@ -170,6 +171,8 @@ def _failure_worker(rank, filename):
                 batches = []
             if failure == "contract" and rank == 1:
                 config = LMTrainingConfig(max_grad_norm=.25)
+            if failure == "objective_config" and rank == 1:
+                model._gamma = .7
             if failure == "accumulation" and rank == 1:
                 batches = batches[:1]
             if failure == "empty":
@@ -179,7 +182,11 @@ def _failure_worker(rank, filename):
             if failure == "optimizer" and rank == 1:
                 optimizer.param_groups[0]["lr"] *= 2
             with pytest.raises(CoordinatedUpdateError):
-                if failure == "post_backward":
+                if failure == "discard":
+                    result = trainer.backward(batches, config=config,
+                        backbone_kwargs={"mode": FBTMode(rt_mode=RTMode((0,)))})
+                    trainer.discard(None if rank else result)
+                elif failure == "post_backward":
                     result = trainer.backward(batches, config=config,
                         backbone_kwargs={"mode": FBTMode(rt_mode=RTMode((0,)))})
                     if rank == 1:
