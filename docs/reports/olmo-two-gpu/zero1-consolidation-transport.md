@@ -63,7 +63,7 @@ optimizer overlap or runtime default is introduced. Source fingerprints identify
 the implementation change. Large serialized payloads and receive-side CUDA
 staging still exist; this is not a bounded-size communication redesign.
 
-## Validation and pending scope
+## Validation and measured GPU outcome
 
 Focused CPU tests verify exact native serialized bytes, nested/empty-state round
 trips, exporter lifetime after the helper returns, absence of the per-byte tensor
@@ -74,6 +74,18 @@ target ranks, before and after Adam initialization, while checking model/local
 state preservation and parameter-group synchronization.
 
 The existing real Gloo suite exercises checkpoint/restore and exact continuation
-for ordinary and combined models with fused and unfused Adam. GPU/NCCL tiny and
-actual-model recovery must pass before adopting this transport for training.
-The ongoing native run remains an unchanged, separately retained reference.
+for ordinary and combined models with fused and unfused Adam. The final focused
+CPU scope passes 54 tests; its scopes overlap earlier suites.
+
+Both `tiny-zero1-buffer-01` and actual-model `combined-zero1-buffer-01` pass the
+13 checks per rank, including two fixed-gradient comparisons to replicated Adam
+and exact next-update recovery from the consolidated checkpoint. The actual
+combined save took **83.4034 seconds on the slowest rank**, including native
+consolidation with the buffer conversion, disk writing and checkpoint hashing.
+GCS upload is excluded. The tiny save took approximately 0.0614 seconds.
+
+The original `combined-zero1-01` and corrected full checkpoints are separately
+verified in GCS. The comparison preserves optimizer math and checkpoint format;
+the original save has only the coarse wall-clock observation above, so this
+report does not claim a precise end-to-end speedup. Recovery reconstructs the
+model/optimizer/DDP in the same process group, not a fresh process launch.

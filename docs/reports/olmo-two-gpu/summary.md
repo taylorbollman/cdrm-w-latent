@@ -50,14 +50,15 @@ path during consolidation while preserving checkpoint bytes and optimizer
 math. The corrected full combined checkpoint save takes **83.4 seconds**,
 including consolidation, disk writing and hashing; GCS upload is separate.
 
-One numerical qualification remains: the independently evolving combined BF16
+This milestone retains an additional numerical qualification: the independently evolving combined BF16
 comparison passes raw-gradient budgets and has exact rank replicas, but its
 second update misses strict tolerances in **20 parameter and 7 moment tensors**.
 The largest parameter difference is **1.38e-6**. Both complete updates pass when
 compared from identical canonical starting state. This supports fixed-state
 distributed correctness while leaving longer-trajectory equivalence unresolved.
 The original failure and four corrected setup/restoration attempts remain in
-the evidence; tolerances were not relaxed.
+the evidence; tolerances were not relaxed. The older native-versus-author
+BF16 compatibility qualification also remains open.
 
 RT executes 1.177B parameters. Combined executes 1.268B during training,
 including 8.389M fusion and 82.727M training-only predictor parameters; its

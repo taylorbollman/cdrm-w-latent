@@ -150,8 +150,8 @@ pending placeholders from final reports before publishing.
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
 | DDP | RT | 128 / 256 | Passed | 55,767.65 | 50.132 | 77.461 | 52.492 | 24.783 |
 | DDP | RT | 192 / 384 | Passed | 59,034.62 | 63.806 | 77.566 | 66.813 | 10.467 |
-| DDP | Combined | 128 / 256 | Pending | — | — | — | — | — |
-| ZeRO-1 | RT | 192 / 384 | Pending | — | — | — | — | — |
+| DDP | Combined | 128 / 256 | Passed | 24,657.19 | 62.819 | 77.559 | 73.836 | 3.365 |
+| ZeRO-1 | RT | 192 / 384 | Passed | 58,187.06 | 59.432 | 77.566 | 62.775 | 14.504 |
 | ZeRO-1 | Combined | 128 / 256 | Pending | — | — | — | — | — |
 
 For RT, B192/rank improves throughput another 5.9% over B128/rank while reducing
