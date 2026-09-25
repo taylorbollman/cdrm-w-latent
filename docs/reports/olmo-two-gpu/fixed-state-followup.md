@@ -30,3 +30,12 @@ the functionality/efficiency milestone while retaining the independent-trajector
 qualification. If they fail, localize the fixed-state reduction/update discrepancy
 before accepting the affected execution path. Do not broaden into a quality or
 long-run precision campaign without a concrete reason.
+
+## Measured outcome
+
+`combined-anchored-01` passes both full fixed-state update comparisons with the
+original budgets. Gradient relative L2 is2.343016713e-9 then3.659744905e-9;
+replicas, losses, counts, model and Adam comparisons pass. W&B: `jkmiz5jt`.
+This supports the reduction-order/BF16 trajectory hypothesis and permits the
+functionality/efficiency work to continue. `actual-eager-01` remains failed;
+independently evolving BF16 trajectories are not established equivalent.
