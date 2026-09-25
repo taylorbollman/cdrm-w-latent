@@ -83,11 +83,47 @@ def snapshot_state(model, optimizer, scheduler, counters):
 
 def restore_state(model, optimizer, scheduler, counters, snapshot):
     pointers = {n: None if p.grad is None else p.grad.data_ptr() for n,p in model.named_parameters()}
-    model.load_state_dict(snapshot['model'], strict=True, assign=False)
+    saved=snapshot['model']
+    current=model.state_dict()
+    parameters=dict(model.named_parameters(remove_duplicate=False))
+    buffers=dict(model.named_buffers(remove_duplicate=False))
+    if saved.keys()!=current.keys():
+        raise ValueError('Graph restore model state keys differ from the prepared model')
+    unique_parameters={}
+    # Preflight the complete state before changing any parameter. Loading the
+    # whole state_dict would copy even unchanged persistent buffers, advancing
+    # their versions and invalidating PreparedFBTLayout's fixed-buffer contract.
+    for name,value in saved.items():
+        if (not isinstance(value,torch.Tensor) or value.shape!=current[name].shape
+                or value.dtype!=current[name].dtype):
+            raise ValueError(f'Graph restore tensor metadata differs: {name}')
+        if name in buffers:
+            if not torch.equal(buffers[name].detach().cpu(),value.detach().cpu()):
+                raise ValueError(f'Graph restore requires unchanged fixed model buffer: {name}')
+        elif name in parameters:
+            parameter=parameters[name]
+            if id(parameter) in unique_parameters:
+                other_name,_=unique_parameters[id(parameter)]
+                if not torch.equal(value.detach().cpu(),saved[other_name].detach().cpu()):
+                    raise ValueError(f'Graph restore tied parameter aliases disagree: {name}, {other_name}')
+            else:
+                unique_parameters[id(parameter)]=(name,parameter)
+        else:
+            raise ValueError(f'Unsupported non-tensor or extra model state in graph restore: {name}')
+    buffer_contract={n:(id(b),b.data_ptr(),b._version) for n,b in buffers.items()}
+    parameter_contract={n:(id(p),p.data_ptr()) for n,p in model.named_parameters()}
+    with torch.no_grad():
+        for name,parameter in unique_parameters.values():
+            parameter.copy_(saved[name])
     # Optimizer state is outside the graph; model/gradient storage is not replaced.
     optimizer.load_state_dict(snapshot['optimizer'])
     scheduler.load_state_dict(snapshot['scheduler'])
     for name,value in snapshot['counters'].items(): setattr(counters,name,value)
+    if buffer_contract!={n:(id(b),b.data_ptr(),b._version)
+                          for n,b in model.named_buffers(remove_duplicate=False)}:
+        raise AssertionError('Graph restore modified fixed buffer storage or versions')
+    if parameter_contract!={n:(id(p),p.data_ptr()) for n,p in model.named_parameters()}:
+        raise AssertionError('Graph restore replaced canonical parameter storage')
     if pointers != {n: None if p.grad is None else p.grad.data_ptr() for n,p in model.named_parameters()}:
         raise AssertionError('Restoring weights/optimizer replaced captured gradient storage')
 
