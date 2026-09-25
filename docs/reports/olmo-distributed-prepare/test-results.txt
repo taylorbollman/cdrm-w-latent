@@ -1,0 +1,62 @@
+Single-GPU distributed preparation CPU validation, 2026-09-25.
+
+Executed in the project Docker image with CDRM_DOCKER_GPUS=none and
+CDRM_FLASH_ATTENTION_SOURCE=installed. Isolated worktree selected through
+CDRM_ROOT; CDRM_ENV_FILE=/dev/null. No GPU execution or credential copies.
+
+python -m pytest -q tests/test_distributed_training_preparation.py \
+  tests/test_olmo_distributed_prepare.py tests/test_olmo_fbt_training.py \
+  tests/test_olmo_lm_training.py
+
+119 passed in 5.53s.
+
+After the tracking-finalization failure-path correction, repeated the two new
+test files: 71 passed in 4.41s. This is an overlapping subset, not 71 additional
+distinct tests. git diff --cached --check passed.
+
+After adding the actual-model canonical-versus-adapter complete-update branch:
+
+python -m pytest -q tests/test_distributed_training_preparation.py \
+  tests/test_olmo_distributed_prepare.py tests/test_olmo_single_gpu_readiness_report.py \
+  tests/test_olmo_fbt_training.py tests/test_olmo_lm_training.py
+
+184 passed in 7.67s: 132 adapter/canonical tests plus 52 evidence-helper tests.
+The 132 comprise 60 objective tests, 24 bounded-harness tests and 48 existing
+FBT/LM optimizer tests. This supersedes the earlier overlapping scope.
+New checks cover two sequential canonical-versus-adapter complete updates in
+all eight modes, exact model/moment/scheduler/counter/RNG and metric comparison,
+in-place initial-weight restoration, and cache-only/RNG context preservation.
+The prepared actual-model GPU protocol now requires 15 gates and four physical
+updates (two reference, two adapter) at a two-update logical endpoint. No GPU
+execution was performed by this agent.
+
+Tests cover all eight RT/FBT/NextLat modes, checkpointing on/off, independent
+global objective counts, local/global empty auxiliary terms, exact world-one
+adapter semantics, simulated rank averaging and clipped Adam weights/moments,
+FP32 concatenated-batch references, per-pass gamma, tying, detached diagnostics,
+the bounded harness's reference paths and independent participation/failure
+gates. Simulated rank averaging is algebra only: no actual DDP, NCCL, multi-GPU,
+distributed graph, sharding or distributed recovery check was performed.
+
+The actual-model GPU harness is prepared but not executed by this agent.
+Execution and retained GPU results belong to the milestone owner after the
+existing frozen-source queue completes.
+
+After the first actual-model attempt rejected an explicit mask under forced
+Flash SDPA (zero optimizer updates), added opt-in full_valid_causal dispatch.
+CPU container command extended the previous184-test scope with test_olmo_fbt.py:
+
+python -m pytest -q tests/test_olmo_fbt.py \
+  tests/test_distributed_training_preparation.py tests/test_olmo_distributed_prepare.py \
+  tests/test_olmo_single_gpu_readiness_report.py tests/test_olmo_fbt_training.py \
+  tests/test_olmo_lm_training.py
+
+247 passed in 8.43s. This is an overlapping expanded scope, not247 additional
+tests. New cases check explicit-math versus implicit-causal outputs and every
+gradient for ordinary/RT and standalone/FBT, tiled/non-tiled CPU references,
+and offset RoPE positions; every stack's mask dispatch; unchanged default;
+padding, packed-document, position, cache and boolean-option rejection before
+stack execution; identical canonical/adapter eager options. The existing all8
+complete-update CPU comparisons now use the same validated dispatch option.
+Independent code review found no remaining blocker. This CPU evidence does
+not validate GPU Flash kernels; actual-model reruns remain the owner's work.

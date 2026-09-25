@@ -6,9 +6,14 @@ Capacity/FA4/repeat/profile probes are complete:22reports,153physicalupdates.
 Repeated RT B192 reaches29.746k inputtokens/s, combined B12812.413k. Full-model
 RT B256 capture OOM and all three numerical failures are retained; ordinary
 FA4 is not adopted. Read the [large-batch results](reports/olmo-rt-large-batch/results.md).
-Close retention, then prepare recovery/global-loss/complete-update references on
-one GPU before real two-GPU DDP tests. Do not wait for physical B512 or exhaustive
-kernel optimization before distributed work.
+Capacity PR28 is merged and its GCS evidence verified. Subsequent single-GPU
+[preparation results](reports/olmo-single-gpu-readiness/results.md) pass all70
+primary GPU gates/20updates for RT and combined accumulation/complete-update
+and rebuilt-graph recovery. Retain the original zero-update mask-dispatch failure;
+the checked opt-in eager route fixes it without changing defaults or budgets.
+Next move to actual two-GPU eager DDP, then recovery/graphs/scaling and ZeRO1/2.
+Only one GPU is currently exposed; no distributed execution is yet validated.
+Do not wait for B512 or exhaustive kernel optimization before distributed work.
 This update takes precedence over older "next" entries below; existing
 numerical qualifications and the functionality-first goal remain unchanged.
 

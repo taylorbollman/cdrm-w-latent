@@ -12,8 +12,15 @@ failures and three OOMs, totaling153physicaloptimizerupdates. Reverse repeats
 and two untimed profiles are complete; see the [final results](reports/olmo-rt-large-batch/results.md).
 FA4 is not adopted: it does not move the RT B256 capture boundary, and its
 combined integration fails output/gradient budgets for a modest1GiB current
-reserved-memory saving. A1/A2 below are completed measurement scopes; A3 is the
-next implementation/GPU-check scope. Final retention accompanies the report.
+reserved-memory saving. A1/A2 below are completed measurement scopes with verified GCS retention.
+A3 is also complete: [one-GPU preparation results](reports/olmo-single-gpu-readiness/results.md)
+record70passing GPU gates/20updates for RT/combined accumulation, complete
+optimizer comparisons and checkpoint/graph reconstruction. Keep the original
+zero-update eager mask-dispatch failure and its checked opt-in fix. Both recovery
+branches rebuild graphs; accumulation uses same-shaped eager microbatches.
+No real DDP/NCCL, distributed graphs/recovery, sharding or scaling is established.
+The current action is C on two actual GPUs; optional B does not block it.
+Only one H100 is exposed now, idle, with no further GPU job queued.
 
 The actual step-60000 OLMo-1B has 16 layers, width2048, 16 attention heads and
 SwiGLU8192 per branch. These measurements select native RT at indices0/15.
@@ -79,10 +86,9 @@ remain distinguished. B512 has not been executed or established feasible.
    investigation. Tiny CPU tests and one-process GPU checks prepare the code;
    they do not validate distributed collectives.
 
-The remaining timed capacity/FA4/profile probes should require roughly1–2hours
-of single-H100 work if no new fault appears; engineering and recovery preparation
-are separate and less predictable. No need to keep a second GPU allocated for
-these serial measurements or CPU implementation work.
+Section A is complete. Its serial measurements and CPU implementation did not
+require a second GPU. No additional single-GPU optimization is required before
+beginning the actual two-GPU checks below.
 
 ## B. Optional single-GPU optimization, not a two-GPU prerequisite
 

@@ -1,0 +1,44 @@
+{
+  "checkpoint_reference": {
+    "generation": "1790022395832236",
+    "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+    "reused_without_upload": true,
+    "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+    "size_bytes": 4707065440,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors",
+    "verification": "Existing GCS generation, size, server MD5 and SHA256 metadata match selected O1 receipt"
+  },
+  "members": 344,
+  "objects": [
+    {
+      "generation": "1790301823822993",
+      "md5_base64": "7ujPWt0++NDtdBQvRJsX0g==",
+      "sha256": "fc6468cb99b6214b0817d0444791ff436e293eac3fd42d616cec5c4fa30dbd91",
+      "size_bytes": 1571876,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-single-gpu-readiness/20260925T020342Z/evidence.tar.gz"
+    },
+    {
+      "generation": "1790301824070207",
+      "md5_base64": "bS/8wAod14LC4mnByLYywA==",
+      "sha256": "2d4647dcb5d2238b1e45781f5fc87a35565516dbc1beb069d37d8a68c0c56ace",
+      "size_bytes": 134257,
+      "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-single-gpu-readiness/20260925T020342Z/retention-manifest.json"
+    }
+  ],
+  "physical_optimizer_updates": 20,
+  "receipt_object": {
+    "generation": "1790301824298359",
+    "md5_base64": "mUx3v149ULFUqlhGq9PbUg==",
+    "sha256": "882acb9d051de934890486b095d6e88b178be8b4aebd1c91b10ddeb400920240",
+    "size_bytes": 1422,
+    "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-single-gpu-readiness/20260925T020342Z/storage-receipt.json"
+  },
+  "runs": 5,
+  "schema": "olmo-single-gpu-readiness-retention-v1",
+  "status": "verified",
+  "statuses": {
+    "failed": 1,
+    "passed": 4
+  },
+  "weights_uploaded": false
+}

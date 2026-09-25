@@ -4,6 +4,44 @@ Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Single-GPU preparation complete, 2026-09-25:** read
+[results and scope](reports/olmo-single-gpu-readiness/results.md), its protocols,
+summary, test ledger and storage receipt. All four primary actual-checkpoint
+B2/T512 cases pass: RT/combined eager objective+accumulation+complete-update
+checks (15 gates/four physical updates each), and RT/combined save/load/graph
+reconstruction (20 gates/six physical updates each). Total70passing gates and
+20physicalupdates. Reference and adapter complete updates match bitwise; the
+independent CPU sums of microbatch gradients also match bitwise. Recovery
+matches every model/Adam/scheduler/counter/RNG/cursor/metric value, with both
+branches rebuilding graphs. Disposable two-update checkpoints were hash-verified
+and removed; original O1 checkpoint remains retained by reference.
+
+The original eager `distributed/rt-b2-t512-01` at `ed4333d` failed before any
+update/gate because finite FBT passed an unnecessary all-true explicit mask
+that forced Flash SDPA rejected. Keep that failure. Explicit opt-in
+`full_valid_causal=True` proves full validity/document restrictions and uses
+implicit causal attention; defaults and padding/cache restrictions stay unchanged.
+Corrected preparation at `f8be057`: `rt-b2-t512-02`, `combined-b2-t512-01`.
+Recovery at `ed4333d`: `rt-b2-t512-01`, `combined-b2-t512-01`. The final evidence
+selection retains all five reports with their exact runtime/source/protocol pins.
+CPU scopes256initial,247isolated dispatch and166final integration overlap;
+do not sum them into a distinct total. No acceptance budget was widened.
+
+**Next: move to two actual H100s for eager DDP correctness**, then distributed
+recovery, graphs, topology/scaling measurements, ZeRO1 and conditionalZeRO2 as
+laid out in [the approved plan](native-rt-single-to-two-gpu-plan.md). Only one
+H100 is currently exposed; it is idle and no job is queued. All eight feature
+combinations have CPU algebraic coverage; actual GPU preparation covers RT and
+combined with two RT layers(0/15), not every mode/shape. There is no real DDP/NCCL,
+graph-collective, sharding or distributed-recovery result yet. Same-shaped eager
+accumulation does not establish graph accumulation or BF16 equivalence to one
+larger physical batch. Fully valid GPU fixtures do not establish optimized
+padding/packed-document/online/cache support. Keep these separate scoped work,
+not prerequisites for starting two-GPU testing. Historical RT/FBT precision
+qualifications remain open. No quality training is authorized by these checks.
+For GCS use `env -u GOOGLE_APPLICATION_CREDENTIALS` inside the container to select
+mounted standard ADC; the inherited explicit path is stale.
+
 **Single-H100 capacity closeout, 2026-09-25:** the authorized
 [single-to-two-GPU plan](native-rt-single-to-two-gpu-plan.md) is executing.
 All 22 large-batch reports have finished: 16 passed, three numerical failures,
@@ -27,13 +65,10 @@ VJP. B512 is untested. FA4 does not move that boundary; combined B128 saves
 output and gradient budgets. RT FA4 and Dao RoPE retain loss-only misses.
 Keep these failures and historical native/author BF16 qualifications open.
 
-GPU queue ended idle. Finish report/retention/PR, then integrate the isolated
-objective adapter and graph-recovery preparation. Planned bounded GPU checks:
-RT/combined accumulation with unequal per-objective counts and matched complete
-Adam updates; RT/combined save/load/recapture with exact continuation. These
-single-device checks cannot establish actual DDP/NCCL, graph collectives or
-ZeRO compatibility. Next real hardware milestone needs two GPUs. Optional
-native RT memory/leaf-fusion work does not block it. No quality run is queued.
+Capacity PR28 is merged at `16a08d7`, and the GCS receipt verifies retained
+evidence. The subsequent one-GPU preparation checks are now complete above.
+Next real hardware milestone needs two GPUs. Optional native RT memory/leaf
+fusion does not block it. No quality run is queued.
 
 **Next milestone authorized,2026-09-24:** user reaffirmed native RT and emphasized
 the paper's physical B512/T512 utilization argument. Read
