@@ -1,12 +1,14 @@
 # Ordinary OLMo throughput on two H100s
 
-2026-09-25. **Draft:** the B32 follow-up, matched single-GPU reference and B64
-repeat are pending. Completed measurements below support a provisional default
-of **DDP B64 per GPU, global batch 128**, using Dao RoPE. Finalize the marked
-rows and retention inventory before publishing.
+2026-09-25. All eight stages and their evidence retention are complete. The
+recommended ordinary baseline is **DDP B64 per GPU, global batch 128**, using
+Dao RoPE: approximately **85,200 input tokens/s** on two H100s, with **44.9 GiB
+sampled free memory per GPU**. The matched single-GPU reference reaches 44,041
+tokens/s, giving **1.93× two-GPU scaling**.
 
-Ordinary OLMo reaches **85,152 input tokens/s** at B64 per GPU. Increasing the
-physical batch to B128 or B192 adds only **0.8% or 1.3% throughput**, while
+The two fresh-process B64 measurements are **85,152 and 85,274 input tokens/s**,
+a 0.14% spread. Increasing the physical batch to B128 or B192 adds only about
+**0.7% or 1.3% throughput** relative to the pooled B64 rate, while
 reducing sampled free memory from **44.9 GiB to 35.9 or 25.8 GiB per GPU**.
 This is a useful throughput plateau, so there is no reason to seek an OOM or
 test B256 merely to fill memory. ZeRO-1 is also deferred: DDP already leaves
@@ -57,15 +59,25 @@ complete updates. There is one physical microbatch per rank and no accumulation.
 | Ordinary RoPE | Local / global batch | Aggregate tokens/s | Seconds/update | GPU-microseconds/input token | Setup peak allocated GiB/GPU | Setup peak reserved GiB/GPU | Steady reserved GiB/GPU | Sampled free GiB/GPU |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | Native control | 64 / 128 | 78,183.60 | 0.83823 | 25.581 | 30.591 | 53.318 | 33.412 | 44.217 |
+| Dao | 32 / 64 | 80,279.48 | 0.40817 | 24.913 | 26.583 | 40.951 | 28.498 | 49.133 |
 | Dao | 64 / 128 | **85,151.90** | **0.76964** | **23.487** | 30.606 | 53.039 | 32.725 | **44.906** |
+| Dao, fresh-process repeat | 64 / 128 | **85,274.14** | **0.76853** | **23.454** | 30.606 | 53.039 | 32.725 | **44.906** |
 | Dao | 128 / 256 | 85,804.03 | 1.52757 | 23.309 | 38.658 | 76.734 | 41.703 | 35.926 |
 | Dao | 192 / 384 | 86,282.50 | 2.27865 | 23.180 | 46.708 | 76.666 | 51.803 | 25.824 |
 
 Memory columns use the larger reservation/allocated peak or smaller sampled
 free value across ranks. Dao improves the matched B64 native control by **8.9%**
 in this pair. Its current reservation is about 0.69 GiB lower; the main measured
-benefit is speed. The B64/B128/B192 curve is nearly flat. Small differences need
-the pending repeat before being interpreted as durable throughput gains.
+benefit is speed. Both B64 runs have identical reported memory figures. Their
+122.24 tokens/s range is 0.1435% of their mean; their pooled rate, using total
+tokens divided by total time, is **85,212.98 tokens/s**. The B64/B128/B192 curve
+is nearly flat. These short repeats support a stable direction, not a statistical
+guarantee of long-run throughput.
+
+B64 is 6.1–6.2% faster than B32. B32 saves only another 4.23 GiB of sampled
+headroom, which is unnecessary for the present ordinary baseline. It remains
+a reasonable smaller batch if a future addition needs that space. There is no
+gradient accumulation in any row.
 
 Setup reservation is not live activation size. The B128/B192 runs transiently
 reserve about 76.7 GiB during warmup, then release unused cache before capture.
@@ -75,23 +87,35 @@ setup allocated and reserved peaks, steady reservation and sampled device free
 memory together. Free memory is sampled at phase boundaries, not continuously;
 these values do not establish a maximum supported batch.
 
-### Follow-ups pending final reports
+### Matched single- versus two-GPU scaling
 
-| Follow-up | Purpose | Status | Aggregate tokens/s |
-| --- | --- | --- | ---: |
-| Dao DDP B32/GPU, global B64 | Check whether a still smaller physical batch remains near the plateau | Pending | — |
-| Dao single GPU B128 | Match the global batch and examples of DDP B64/GPU for scaling | Pending | — |
-| Fresh-process Dao DDP B64/GPU repeat | Check the recommended point's repeatability | Pending | — |
+Both rows use Dao RoPE, the same global batch of 128 and the same global
+examples. The single-GPU fixture concatenates the two rank fixtures.
 
-<!-- CLOSEOUT: fill these rows, update the default if B32 changes the tradeoff,
-record matched scaling and repeat variation, then refresh final receipts/counts. -->
+| Execution | Physical batch | Aggregate tokens/s | GPU-microseconds/input token |
+| --- | ---: | ---: | ---: |
+| One GPU | 128 | 44,041.29 | 22.706 |
+| Two GPUs, pooled B64 repeats | 64 each | 85,212.98 | 23.471 |
 
-The recommendation is provisional until these finish. **Skip B256 and ZeRO-1
-for this sweep:** the observed plateau and existing DDP headroom answer the
+The two individual DDP scaling factors are 1.9335× and 1.9362×; the pooled
+factor is **1.9348×**, about 96.7% of ideal 2× scaling. Total GPU time per input
+token increases only **3.3–3.4%**. The single-GPU row takes 1.48806 seconds/update,
+with setup peak allocated/reserved memory of 34.271/37.518 GiB, steady reservation
+37.518 GiB and sampled free memory 40.912 GiB. These are matched systems
+measurements; own eager/graph checks do not assert bitwise equivalence between
+different physical batch shapes.
+
+**B256 and ZeRO-1 were skipped for this sweep:** the observed plateau and
+existing DDP headroom answer the
 question of a useful batch without maximizing capacity. Larger global optimizer
 batches can still be chosen for a learning experiment, but that is a separate
 decision; batch-size changes are not learning-equivalent merely because their
 tokens/sec are similar.
+
+ZeRO-2 also remains deferred, **not ruled out as a possible throughput
+optimization**. It changes gradient communication/storage and needs its own
+graph/update/recovery checks. There is no demonstrated memory or throughput
+need for that additional change before using this ordinary baseline.
 
 ## Correctness and what the timings include
 
@@ -99,7 +123,7 @@ The actual Dao B1/GPU graph check passes initial exact raw eager/graph loss and
 gradient parity, exact replicas, and **two changed-input complete Adam update
 comparisons**. Each completed capacity row also passes initial and changed-weight
 terminal raw parity plus initial/final replica checks. No tolerance was relaxed,
-and all completed runs in this ordinary-only sweep pass so far. These are own
+and all eight runs in this ordinary-only sweep pass. These are own
 execution checks, not a new FP32-reference or long-training precision campaign.
 They do not clear older RT/native-author or other precision qualifications.
 
@@ -132,7 +156,9 @@ does not explain the large differences between setup and steady reservation.
 
 The native control records source HEAD `0c6ace4`; explicit ordinary Dao options
 and the B1 integration check record `467bde7`. Dao capacity rows record
-`1a98230`, with the same runtime implementation. Per-stage source snapshots and
+`1a98230`; the single-GPU and B64-repeat reports record `a69fe1b`. The source
+inventories of both follow-ups match the first Dao B64 run exactly; the HEAD
+change is documentation only. Per-stage source snapshots and
 SHA256 pins, dependency records, configuration and W&B links establish what ran.
 The first control predates the explicit RoPE flag; its frozen constructor and
 arm mapping establish native RoPE. Subsequent rows record the option directly.
@@ -142,16 +168,29 @@ W&B completed rows:
 [Dao correctness B1](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/y5noic5g),
 [Dao B64](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ay5416z1),
 [Dao B128](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/74bfhe6g),
-[Dao B192](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/868y5jy9).
+[Dao B192](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/868y5jy9),
+[Dao B32](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/hu9io4py),
+[Dao single B128](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/yqfpvlue),
+[Dao B64 repeat](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/qmqgesfz).
 
 The prospective [protocol](protocol.md) is retained with each run. Local evidence
 is under `.runtime/olmo-ordinary-two-gpu/`; stage retention receipts and original
 pretrained O1 checkpoint references are preserved. Disposable short capacity
-updates do not require extra full checkpoints. Evidence is progressively verified
-in `gs://fast-chunks`; final receipt totals remain pending the queue closeout.
+updates do not require extra full checkpoints. **All eight stage receipts are
+verified**, under
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T195200Z/`.
 
-Regenerate `.runtime/olmo-ordinary-two-gpu/audit/summarize.py` after all final
-reports and receipts, then run its CPU-container plot tool. It excludes running
-reports, checks true ordinary execution from mode/count/resource records, and
-keeps native/Dao and optimizer/GPU-count series separate. The earlier RT/combined
-inventory remains unchanged.
+The final local audit finds **eight passed reports, no failed/OOM/incomplete
+reports, seven throughput rows and 1,303 matching report-pinned source snapshot
+pairs**. There are 55 physical distributed optimizer executions (110 rank-level
+Adam calls) and eight single-GPU executions, or 118 optimizer calls overall.
+These include duplicated correctness branches, not steps of one learning run.
+Source, retained-archive and final-report/retention-manifest checks find no mismatch.
+Remote verification is recorded in stage receipts; the local audit does not
+make a new cloud request. The storage receipt provides the retained-object details.
+
+The generated audit and CPU-only plots live in
+`.runtime/olmo-ordinary-two-gpu/audit/`. They exclude nonfinal reports, check true
+ordinary execution from mode/count/resource records, and keep native/Dao and
+optimizer/GPU-count series separate. The earlier RT/combined inventory remains
+unchanged. No quality-training run was started by this benchmark milestone.
