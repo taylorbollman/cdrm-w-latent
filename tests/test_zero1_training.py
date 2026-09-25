@@ -221,3 +221,71 @@ def test_next_step_invalidates_old_consolidation_and_preserves_storage(one_rank_
     assert not optimizer.state and not optimizer._all_state_dicts
     with pytest.raises(RuntimeError, match="consolidat"):
         optimizer.state_dict()
+
+
+def test_harness_shared_gradient_reference_is_exact_and_detects_errors(one_rank_optimizer):
+    from scripts.olmo_two_gpu_zero1 import share_raw_gradients, fixed_gradient_check
+    model, optimizer, state = one_rank_optimizer
+    reference = copy.deepcopy(model)
+    reference_optimizer = build_adamw(reference, lr=1e-4, fused=True)
+    reference_optimizer.load_state_dict(copy.deepcopy(state))
+    model(torch.randn(2, 3)).sum().backward()
+    share_raw_gradients(model, reference)
+    assert all(p.grad is q.grad for p,q in zip(model.parameters(), reference.parameters()))
+    torch.nn.utils.clip_grad_norm_(model.parameters(), .3, foreach=False)
+    optimizer.step(); optimizer.zero_grad(set_to_none=True)
+    assert all(p.grad is not None for p in reference.parameters())
+    reference_optimizer.step(); reference_optimizer.zero_grad(set_to_none=True)
+    assert fixed_gradient_check(model, optimizer, reference, reference_optimizer)['passed']
+    with torch.no_grad(): next(reference.parameters()).view(-1)[0].add_(.1)
+    assert not fixed_gradient_check(model, optimizer, reference, reference_optimizer)['passed']
+
+
+@pytest.mark.parametrize('extra', [['--batch-size', '3'], ['--length', '1024']])
+def test_harness_rejects_capacity_scope(extra):
+    from scripts.olmo_two_gpu_zero1 import parse_args, ROOT
+    with pytest.raises(SystemExit):
+        parse_args(['--case', 'rt', '--output-dir', str(ROOT/'.runtime/unit-zero1'),
+                    '--checkpoint-dir', str(ROOT/'.runtime/unit-zero1-checkpoint'), *extra])
+
+
+def test_harness_resume_batch_keeps_predictor_active_with_fresh_tokens():
+    from scripts.olmo_two_gpu_zero1 import recovery_batch
+    from scripts.olmo_two_gpu_validate import make_batch
+    from scripts.olmo_f1_common import IntegrationCase
+    case = IntegrationCase('combined', fbt=True, nextlat=True, rt_layers=(0, 1), batch_size=1, length=8)
+    model = make_model(True)
+    batch = recovery_batch(case, None, 2, 0, 0, tiny=True)
+    original = make_batch(case, None, 2, 0, 0, tiny=True)
+    assert torch.equal(batch.input_ids, original.input_ids)
+    assert model.counts(original)['latent'] == model.counts(original)['kl'] == 0
+    assert model.counts(batch)['latent'] > 0 and model.counts(batch)['kl'] > 0
+    for rank, micro in ((0, 1), (1, 0), (1, 1)):
+        local = recovery_batch(case, None, 2, rank, micro, tiny=True)
+        assert model.counts(local)['latent'] == model.counts(local)['kl'] == 0
+    result = model.loss_sums(batch, backbone_kwargs={'mode': case.mode()})
+    (result.sums['ce'] + result.sums['latent'] + result.sums['kl']).backward()
+    assert all(parameter.grad is not None for parameter in model.predictor.parameters())
+
+
+def test_harness_checkpoint_pins_execution_flags_and_source_protocol():
+    from types import SimpleNamespace
+    from scripts.olmo_two_gpu_zero1 import checkpoint_configuration, checkpoint_fingerprint, ROOT, PROTOCOL
+    from scripts.olmo_f1_common import IntegrationCase
+    model = make_model(True)
+    case = IntegrationCase('combined', fbt=True, nextlat=True, rt_layers=(0, 1), batch_size=1, length=8)
+    config = checkpoint_configuration(model, case, LMTrainingConfig(), SimpleNamespace(tiny=True))
+    assert config['runtime']['attention_precision'] == 'fp32'
+    assert config['runtime']['ordinary_activation_checkpointing'] is True
+    assert config['autocast_cache_enabled'] is False and config['graphs'] is False
+    assert config['ddp']['find_unused_parameters'] is True
+    assert config['nextlat_enabled'] is True and config['nextlat'] == model.config.to_dict()
+    assert config['optimizer_sharding'].startswith('native-zero1')
+    model.backbone.backbone.kv_only_writes = not model.backbone.backbone.kv_only_writes
+    changed = checkpoint_configuration(model, case, LMTrainingConfig(), SimpleNamespace(tiny=True))
+    assert config != changed
+    sources = {str(PROTOCOL.relative_to(ROOT)): 'b'*64, 'cdrm/pretrained/zero1_training.py': 'c'*64}
+    fingerprint = checkpoint_fingerprint({'sources': sources, 'source_checkpoint': {'sha256': 'a'*64}})
+    assert fingerprint == {'checkpoint_sha256': 'a'*64, 'source_hashes': sources, 'protocol_sha256': 'b'*64}
+    sources['cdrm/pretrained/zero1_training.py'] = 'd'*64
+    assert fingerprint['source_hashes']['cdrm/pretrained/zero1_training.py'] == 'c'*64
