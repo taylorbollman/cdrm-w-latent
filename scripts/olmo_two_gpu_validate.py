@@ -30,6 +30,8 @@ from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters, opti
 from cdrm.pretrained.olmo import OLMoConfig
 from cdrm.pretrained.olmo_tiled import OLMoTiledRTForCausalLM
 from cdrm.pretrained.nextlat import NextLatBatch
+from cdrm.pretrained.olmo_artifacts import MANIFEST_FILENAME
+from scripts.olmo_lm_common import tree_digests
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
 from scripts.olmo_f1_common import IntegrationCase, build_model, boundary_digests
 from scripts.olmo_rt_large_batch import (batch_for, compiler_configuration, set_arm,
@@ -105,6 +107,64 @@ def check_update(model, optimizer, scheduler, counters, expected):
     return dict(passed=states_equal and metadata and all(r['passed'] for r in
         [*model_rows.values(), *moment_rows.values()]), metadata_exact=metadata,
         optimizer_ownership_exact=states_equal, parameters=model_rows, moments=moment_rows)
+
+
+def anchor_to_reference(model, optimizer, scheduler, counters, reference):
+    """Reset a completed eager update to canonical state, without replacing weights.
+
+    Call only after candidate metrics/comparisons have been recorded and the DDP
+    step has cleared gradients. This diagnostic deliberately prevents independent
+    trajectory drift. It is not a passing multi-step trajectory comparison.
+    """
+    if any(p.grad is not None for p in model.parameters()):
+        raise ValueError('Anchor only at a completed, cleared-gradient update boundary')
+    parameters=tuple((n,id(p),p.data_ptr()) for n,p in model.named_parameters())
+    model.load_state_dict(reference['model'],strict=True,assign=False)
+    # Avoid aliasing CPU test/reference tensors into a mutable optimizer. GPU
+    # loading also follows the optimizer's supported fused-state device rules.
+    optimizer.load_state_dict(cpu_copy(reference['optimizer']))
+    scheduler.load_state_dict(copy.deepcopy(reference['scheduler']))
+    for name,value in reference['counters'].items(): setattr(counters,name,value)
+    storage=parameters==tuple((n,id(p),p.data_ptr()) for n,p in model.named_parameters())
+    cleared=all(p.grad is None for p in model.parameters())
+    actual=boundary_digests(model,optimizer,scheduler,counters)
+    exact=actual==tree_digests(reference)
+    return dict(passed=storage and cleared and exact,canonical_state_exact=exact,
+                parameter_storage_preserved=storage,gradients_cleared=cleared,state_digest=actual)
+
+
+def persist_checkpoint_reference(artifacts,output_dir):
+    """Copy verified native provenance, without duplicating the weight checkpoint."""
+    artifacts,output_dir=Path(artifacts),Path(output_dir)
+    manifest=validate_prepared_manifest(artifacts)
+    source=artifacts/MANIFEST_FILENAME
+    target=output_dir/'checkpoint-reference'/MANIFEST_FILENAME
+    target.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(source,target)
+    digest=sha256_file(source)
+    if sha256_file(target)!=digest:
+        raise IOError('Copied native artifact manifest differs from verified source')
+    return dict(checkpoint=manifest['checkpoint'],manifest_path=str(target.relative_to(output_dir)),
+                manifest_sha256=digest,manifest_size_bytes=target.stat().st_size,
+                source_manifest_path=str(source))
+
+
+def finalize_report(output_dir,report,tracker,*,original_error=None):
+    """Persist primary outcome before SDK finalization; never replace its error."""
+    path=Path(output_dir)/'report.json'
+    write_json(path,report)
+    try:
+        if tracker is not None: tracker.finish(succeeded=report['passed'])
+    except BaseException as error:
+        report['tracking_finish_error']=dict(type=type(error).__name__,message=str(error))
+        report['passed']=False
+        if original_error is not None:
+            original_error.add_note(f'Tracking finalization also failed: {error}')
+        else:
+            report.setdefault('error',dict(type=type(error).__name__,message=str(error),traceback=traceback.format_exc()))
+            raise
+    finally:
+        write_json(path,report)
 
 
 def gather(value):
@@ -197,13 +257,16 @@ def run_case(args, name, tracker):
     case=IntegrationCase(name,fbt=is_fbt,nextlat=is_nextlat,
         rt_layers=(0,1 if args.tiny else 15) if is_rt else (),
         batch_size=args.batch_size,length=args.length,updates=args.updates)
-    torch.manual_seed(20260925)
+    torch.random.default_generator.manual_seed(20260925)
+    torch.cuda.manual_seed(20260925)
     model=construct(case,args,device)
     config=LMTrainingConfig(precision='fp32' if args.tiny else 'bf16_mixed')
     tokenizer=None if args.tiny else load_native_tokenizer(args.artifacts)
-    initial=cpu_copy(model.state_dict()) if rank==0 else None
+    anchor_updates=args.anchor_updates
+    owns_references=rank==0 or anchor_updates
+    initial=cpu_copy(model.state_dict()) if owns_references else None
     references=[]
-    if rank==0:
+    if owns_references:
         batches=[[move_batch(make_batch(case,tokenizer,u,r,m,tiny=args.tiny),device)
                   for r in range(2) for m in range(2)] for u in range(args.updates)]
         references=canonical_references(model,batches,case.mode(),args.updates,config)
@@ -215,41 +278,60 @@ def run_case(args, name, tracker):
     trainer=EagerDDPTrainer(model)
     optimizer,scheduler=optimizer_for(model,'compiled-native')
     counters=TrainingCounters()
-    report=dict(name=name,case=asdict(case),precision=config.precision,checks=[],passed=False)
+    report=dict(name=name,case=asdict(case),precision=config.precision,checks=[],passed=False,
+        anchor_updates=anchor_updates,comparison_scope=('each candidate step starts from canonical weights/moments; '
+        'not an independent multi-step trajectory' if anchor_updates else 'independent multi-step trajectories'),
+        physical_candidate_updates=0,physical_canonical_updates=args.updates*(2 if anchor_updates else 1))
+    progress_path=args.output_dir/(f'{name}-progress.json' if rank==0 else f'{name}-rank-{rank}-progress.json')
+    write_json(progress_path,report)
     for update in range(args.updates):
         batches=[move_batch(make_batch(case,tokenizer,update,rank,m,tiny=args.tiny),device) for m in range(2)]
         result=trainer.backward(batches,config=config,
                                 backbone_kwargs={'mode':case.mode(),'full_valid_causal':True})
-        grad_check=check_gradients(model,references[update]['gradients']) if rank==0 else {'passed':True}
-        gradient_digest=boundary_digests(model,optimizer,scheduler,counters)
-        # boundary_digests excludes gradients; include actual raw gradients separately.
-        from scripts.olmo_lm_common import tree_digests
+        grad_check=check_gradients(model,references[update]['gradients']) if owns_references else {'passed':True}
+        # Record candidate raw gradients before any assertion or anchor reset.
         raw_digest=tree_digests({n:p.grad for n,p in model.named_parameters() if p.grad is not None})
         replicas=gather(raw_digest)
         exact_gradients=replicas[0]==replicas[1]
+        row=dict(update=update+1,phase='raw_gradients',gradients=grad_check,
+                 replica_gradients_exact=exact_gradients,anchor_applied=False)
+        report['checks'].append(row)
+        write_json(progress_path,report)
         assert_all(grad_check['passed'] and exact_gradients,'raw reduced gradient comparison')
         metrics=trainer.step(result,optimizer,scheduler=scheduler,counters=counters)
-        update_check=check_update(model,optimizer,scheduler,counters,references[update]['state']) if rank==0 else {'passed':True}
+        report['physical_candidate_updates']+=1
+        row.update(phase='candidate_stepped',metrics=metrics)
+        write_json(progress_path,report)
+        update_check=check_update(model,optimizer,scheduler,counters,references[update]['state']) if owns_references else {'passed':True}
         replicas=gather(boundary_digests(model,optimizer,scheduler,counters))
         exact_state=replicas[0]==replicas[1]
         loss_check=True
-        if rank==0:
+        if owns_references:
             expected=references[update]['metrics']
             loss_check=(metrics['counts']==expected['counts'] and
                 all(math.isclose(metrics['loss_sums'][t],expected['loss_sums'][t],rel_tol=2e-6,abs_tol=2e-6) for t in TERMS))
-            row=dict(update=update+1,gradients=grad_check,state=update_check,
-                     replica_gradients_exact=exact_gradients,replica_state_exact=exact_state,
-                     loss_counts_match=loss_check,metrics=metrics)
-            report['checks'].append(row)
-            write_json(args.output_dir/f'{name}-progress.json',report)
+        row.update(phase='candidate_complete_update',state=update_check,
+                   replica_state_exact=exact_state,loss_counts_match=loss_check,metrics=metrics)
+        write_json(progress_path,report)
+        if rank==0:
             tracker.log({'update':update+1,f'{name}/gradient_l2':grad_check['global_relative_l2'],
                 f'{name}/objective':metrics['objective'],f'{name}/replicas_exact':exact_state})
             print(f'{name} DDP update {update+1}: gradient L2={grad_check["global_relative_l2"]:.3g}; state={update_check["passed"]}',flush=True)
         assert_all(update_check['passed'] and exact_state and loss_check,'complete update comparison')
-        if rank==0:
-            references[update]=None
-        del result,batches,gradient_digest
+        if anchor_updates:
+            anchored=anchor_to_reference(model,optimizer,scheduler,counters,references[update]['state'])
+            anchor_replicas=gather(anchored['state_digest'])
+            anchored['replicas_exact']=anchor_replicas[0]==anchor_replicas[1]
+            anchored['passed'] &= anchored['replicas_exact']
+            del anchored['state_digest']
+            row['anchor']=anchored
+            row['anchor_applied']=True
+            write_json(progress_path,report)
+            assert_all(anchored['passed'],'canonical anchor restore and replica agreement')
+        if owns_references: references[update]=None
+        del result,batches
     report['passed']=True
+    report['final_state_is_canonical_anchor']=anchor_updates
     if rank==0: write_json(args.output_dir/f'{name}-report.json',report)
     del trainer,optimizer,scheduler,model,references
     gc.collect();torch.cuda.empty_cache();dist.barrier()
@@ -263,6 +345,8 @@ def main():
     parser.add_argument('--batch-size',type=int,default=1)
     parser.add_argument('--length',type=int,default=512)
     parser.add_argument('--updates',type=int,default=2)
+    parser.add_argument('--anchor-updates',action='store_true',
+        help='Diagnostic: restore each canonical state before the next candidate update; not independent trajectories')
     parser.add_argument('--output-dir',type=Path,required=True)
     parser.add_argument('--artifacts',type=Path,default=ROOT/'.runtime/olmo1b-step60000/artifacts')
     args=parser.parse_args()
@@ -275,8 +359,10 @@ def main():
     compiler_configuration()
     dist.init_process_group('nccl',device_id=torch.device('cuda',int(os.environ['LOCAL_RANK'])),timeout=timedelta(minutes=30))
     if dist.get_world_size()!=2: raise RuntimeError('Requires two ranks')
-    rank=dist.get_rank();tracker=None
-    report=dict(schema='olmo-two-gpu-eager-v1',runtime=runtime,cases=[],passed=False)
+    rank=dist.get_rank();tracker=None;original_error=None
+    report=dict(schema='olmo-two-gpu-eager-v1',runtime=runtime,cases=[],passed=False,
+                anchor_updates=args.anchor_updates,
+                configuration={k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()})
     try:
         if rank==0:
             args.output_dir.mkdir(parents=True,exist_ok=False)
@@ -287,6 +373,9 @@ def main():
             for p in sources:
                 target=args.output_dir/'source-snapshot'/p.relative_to(ROOT)
                 target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target)
+            if not args.tiny:
+                report['checkpoint_reference']=persist_checkpoint_reference(args.artifacts,args.output_dir)
+            write_json(args.output_dir/'report.json',report)
             tracker=OnlineTracker(project='pretrained-fbt-rt-nextlat',group='olmo-two-gpu',
                 name=args.output_dir.name,output_dir=args.output_dir,preserve_state=preserve_local_rng)
             tracker.start({k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()})
@@ -303,14 +392,16 @@ def main():
                 report['cases'].append(run_case(args,name,tracker))
                 if rank==0: write_json(args.output_dir/'progress.json',report)
         report['passed']=True
-    except Exception as error:
+    except BaseException as error:
+        original_error=error
         report['error']=dict(type=type(error).__name__,message=str(error),traceback=traceback.format_exc())
         raise
     finally:
-        if rank==0:
-            if tracker: tracker.finish(succeeded=report['passed'])
-            write_json(args.output_dir/'report.json',report)
-        dist.destroy_process_group()
+        if rank==0 and args.output_dir.exists():
+            finalize_report(args.output_dir,report,tracker,original_error=original_error)
+        # A failed peer may be inside a collective. The launcher owns whole-job
+        # termination; never introduce an additional teardown collective on error.
+        if original_error is None: dist.destroy_process_group()
 
 
 if __name__=='__main__': main()
