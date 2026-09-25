@@ -1,0 +1,20 @@
+CPU readiness, 2026-09-25; isolated feat/olmo-graph-recovery worktree.
+
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed \
+  CDRM_ROOT=/home/taylorbollman/cdrm-w-latent-recovery-prep \
+  bash scripts/docker_shell.sh bash -lc \
+  'python -m pytest -q tests/test_olmo_graph_recovery.py tests/test_olmo_large_batch_validation.py tests/test_olmo_lm_training.py'
+
+88 passed in 7.99s.
+Includes 26 new recovery tests; the remaining 62 validate the existing CPU
+reference/lifecycle helper and canonical checkpoint/optimizer contracts.
+
+The full harness is exercised with real small RT and RT+FBT+NextLat autograd,
+Adam state, scheduler, tied parameters and actual checkpoint serialization.
+CUDA graph capture/replay, online W&B and GPU kernels are explicitly substituted
+in CPU orchestration tests; these results do not clear those GPU scopes.
+
+Failure tests cover configuration/optimizer mismatch before mutation, corrupted
+restored weights, scheduler failure after a successful optimizer call, tracking
+finish failure, incorrect cursor, and refused checkpoint deletion after failure
+or changed bytes. No GPU work was run from this worktree.
