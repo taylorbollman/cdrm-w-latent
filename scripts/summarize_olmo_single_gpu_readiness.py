@@ -63,7 +63,8 @@ PROJECT_FILES = (
     "docs/fbt-rt-nextlat-research-plan-v4.md", "AGENTS.md",
 )
 GROUP_TESTS = {
-    "distributed": ("tests/test_distributed_training_preparation.py", "tests/test_olmo_distributed_prepare.py"),
+    "distributed": ("tests/test_distributed_training_preparation.py", "tests/test_olmo_distributed_prepare.py",
+                    "tests/test_olmo_fbt.py"),
     "recovery": ("tests/test_olmo_graph_recovery.py",),
 }
 
