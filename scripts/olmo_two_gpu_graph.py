@@ -32,11 +32,13 @@ from cdrm.pretrained.resource_estimates import parameter_inventory
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
 from scripts.olmo_f1_common import IntegrationCase, active_names, boundary_digests, inference_names
 from scripts.olmo_lm_common import tree_digests
+from scripts.olmo_rt_efficiency import resource_card
 from scripts.olmo_two_gpu_validate import (construct, move_batch, cpu_copy, tensor_check,
     assert_all, preserve_local_rng, gather, TERMS)
 from scripts.olmo_rt_large_batch import (batch_for, optimizer_for, compiler_configuration,
     configure_determinism, require_container_gpu, backend_context, load_native_tokenizer,
-    validate_prepared_manifest, OnlineTracker, MemoryPhases, dependency_record, finish_tracking)
+    validate_prepared_manifest, OnlineTracker, MemoryPhases, dependency_record, finish_tracking,
+    detailed_memory_snapshot)
 
 PROTOCOL = ROOT / 'docs/reports/olmo-two-gpu/protocol.md'
 
@@ -193,6 +195,37 @@ def replica_check(model, optimizer, scheduler, counters):
                 state_exact=all(r['state']==records[0]['state'] for r in records))
 
 
+def aggregate_resources(rank_reports):
+    """Sum replica compute, but retain one architecture's parameter count."""
+    if not rank_reports:
+        raise ValueError('At least one rank resource record is required')
+    cards=[row['resources'] for row in rank_reports]
+    architecture=cards[0]['analytic_matrix_work']['parameter_counts']
+    if any(card['analytic_matrix_work']['parameter_counts']!=architecture for card in cards):
+        raise ValueError('Ranks describe different parameter architectures')
+    return dict(world_size=len(rank_reports),architecture_parameter_counts=architecture,
+        registered_unique_parameters=cards[0]['observed_parameters']['registered_unique'],
+        estimated_matrix_flops_per_global_update_minimum=sum(
+            card['analytic_matrix_work']['matrix_flops_minimum'] for card in cards),
+        estimated_matrix_flops_per_global_update_maximum=sum(
+            card['analytic_matrix_work']['matrix_flops_maximum'] for card in cards),
+        resident_state_per_rank=[dict(rank=row['rank'],**row['resident_state']) for row in rank_reports],
+        memory_per_rank=[dict(rank=row['rank'],setup=row['setup_memory'],steady=row.get('steady_memory'))
+                         for row in rank_reports],
+        scope='Analytic training matrix arithmetic summed across ranks, not measured hardware FLOPs; architecture parameters count once, while actual resident state is reported per rank. Communication, elementwise work and allocator/graph storage are outside the matrix estimate.')
+
+
+def steady_memory_summary(memory_phases,current):
+    """Timed phases each reset allocator peaks, so setup is not carried forward."""
+    rows=[row for name,row in memory_phases.items() if name.startswith('timed_update_')]
+    if not rows or any('end' not in row or not row.get('reset_peaks') for row in rows):
+        raise ValueError('Steady memory requires completed timed phases with reset peaks')
+    return {**current,**{key:max(row['end'][key] for row in rows)
+                        for key in ('peak_allocated_gib','peak_reserved_gib')},
+            'timed_updates':len(rows),
+            'scope':'Current allocator/device memory after timing; peaks are maxima of individually reset timed-update phases, excluding setup and final replica hashing.'}
+
+
 def run(args, rank_report, tracker):
     rank = dist.get_rank(); device = torch.device('cuda',int(os.environ['LOCAL_RANK']))
     case = IntegrationCase(args.case, fbt=args.case=='combined',nextlat=args.case=='combined',
@@ -232,6 +265,13 @@ def run(args, rank_report, tracker):
             rank_report.setdefault('preparation_updates',[]).append(metrics);persist()
         runtime.validate_execution()
         rank_report['optimizer_state_bytes_before_capture'] = optimizer_state_bytes(optimizer)
+        rank_report['resources'] = resource_card(runtime.adapter.plan,case,optimizer)
+        rank_report['resident_state'] = dict(
+            parameter_bytes=rank_report['resources']['observed_parameters']['resident_parameter_bytes'],
+            logical_gradient_bytes=sum(p.grad.numel()*p.grad.element_size()
+                                       for p in model.parameters() if p.grad is not None),
+            optimizer_state_bytes_by_device=optimizer_state_bytes(optimizer),
+            scope='Initialized parameter/gradient/optimizer tensors per rank; logical gradients may alias DDP buckets. Does not include separate communication buffers, graph pools, activations or allocator cache.')
     # Keep an eager prepared-DDP reference before graph allocation. This avoids
     # the known large-batch eager-validation beside live graph memory overlap.
     runtime.load_batch(fixed_batch(case,tokenizer,3,rank,tiny=args.tiny))
@@ -300,9 +340,12 @@ def run(args, rank_report, tracker):
                 'benchmark/slowest_rank_seconds':row['slowest_rank_seconds'],'train/objective':metrics['objective']})
         total_seconds=sum(row['slowest_rank_seconds'] for row in rates)
         rank_report['throughput']=dict(global_tokens_per_second=5*2*case.batch_size*case.length/total_seconds,
+            gpu_seconds_per_input_token=total_seconds/(5*case.batch_size*case.length),
             slowest_rank_seconds_per_update=total_seconds/5,physical_batch_per_rank=case.batch_size,
             global_batch=2*case.batch_size,accumulation_steps=1,
             timing_scope='batch validation/copy + captured DDP forward/loss/backward + global health/loss + clipping/Adam/scheduler; excluding fixture construction, outer timing barrier, reporting and digests')
+        rank_report['steady_memory']=steady_memory_summary(rank_report['memory_phases'],detailed_memory_snapshot())
+        persist()
         with phases.phase('final_replica_check'):
             check=replica_check(model,optimizer,scheduler,counters)
             rank_report['checks'].append(dict(name='final_replicas',**check));persist()
@@ -358,7 +401,8 @@ def main(argv=None):
             report.update(ranks=reports,status='passed',stage='complete',
                 physical_updates=reports[0]['physical_updates'],
                 rank_optimizer_steps=sum(r['physical_updates'] for r in reports),
-                distributed_optimizer_updates=reports[0]['physical_updates'])
+                distributed_optimizer_updates=reports[0]['physical_updates'],
+                resources=aggregate_resources(reports))
     except BaseException as error:
         original_error=error
         details=dict(type=type(error).__name__,message=str(error),traceback=traceback.format_exc())

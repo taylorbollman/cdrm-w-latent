@@ -156,3 +156,48 @@ def test_graph_restore_rejects_inconsistent_tied_parameter_snapshot():
     with pytest.raises(ValueError,match='tied parameter aliases disagree'):
         restore_state(model,optimizer,scheduler,counters,snapshot)
     assert torch.equal(model.weight,torch.ones_like(model.weight))
+
+
+def test_aggregate_resource_card_sums_compute_not_architecture_parameters():
+    from scripts.olmo_two_gpu_graph import aggregate_resources
+    architecture={'backbone':100,'fusion':20,'training_architecture':120}
+    reports=[dict(rank=rank,resources=dict(analytic_matrix_work=dict(parameter_counts=architecture,
+        matrix_flops_minimum=1000+rank,matrix_flops_maximum=2000+rank),
+        observed_parameters=dict(registered_unique=120)),resident_state=dict(parameter_bytes=480),
+        setup_memory=dict(peak_allocated_gib=3.+rank),steady_memory=dict(peak_allocated_gib=2.+rank))
+        for rank in range(2)]
+    result=aggregate_resources(reports)
+    assert result['estimated_matrix_flops_per_global_update_minimum']==2001
+    assert result['estimated_matrix_flops_per_global_update_maximum']==4001
+    assert result['registered_unique_parameters']==120
+    assert result['architecture_parameter_counts']['training_architecture']==120
+    assert [row['parameter_bytes'] for row in result['resident_state_per_rank']]==[480,480]
+    assert len(result['memory_per_rank'])==2
+
+
+def test_steady_memory_excludes_setup_peak_and_keeps_posttiming_current_memory():
+    from scripts.olmo_two_gpu_graph import steady_memory_summary
+    phases={'capture':dict(reset_peaks=True,end=dict(peak_allocated_gib=70.,peak_reserved_gib=75.)),
+            'timed_update_0':dict(reset_peaks=True,end=dict(peak_allocated_gib=35.,peak_reserved_gib=45.)),
+            'timed_update_1':dict(reset_peaks=True,end=dict(peak_allocated_gib=36.,peak_reserved_gib=44.))}
+    current=dict(allocated_gib=30.,reserved_gib=40.,peak_allocated_gib=1.,peak_reserved_gib=2.)
+    result=steady_memory_summary(phases,current)
+    assert result['allocated_gib']==30. and result['reserved_gib']==40.
+    assert result['peak_allocated_gib']==36. and result['peak_reserved_gib']==45.
+    assert result['timed_updates']==2
+
+
+def test_steady_memory_rejects_missing_peak_reset():
+    from scripts.olmo_two_gpu_graph import steady_memory_summary
+    with pytest.raises(ValueError,match='reset peaks'):
+        steady_memory_summary({'timed_update_0':dict(end={})},{})
+
+
+def test_existing_resource_card_accepts_ddp_adapter_plan_without_static_grad_initialization():
+    from scripts.olmo_rt_efficiency import resource_card
+    model,optimizer,_,_,runtime=tiny_prepared_model()
+    case=IntegrationCase('combined',fbt=True,nextlat=True,rt_layers=(0,1),batch_size=1,length=8)
+    assert runtime.adapter.plan.active_names is None
+    card=resource_card(runtime.adapter.plan,case,optimizer)
+    assert card['analytic_matrix_work']['matrix_flops_minimum']>0
+    assert card['observed_parameters']['registered_unique']==sum(p.numel() for p in model.parameters())
