@@ -14,6 +14,19 @@ cast reuse, RoPE reuse and KV-only writes. CE chunks2048/KL128, BF16 mixed with
 FP32 parameters, gradients and Adam moments, TF32 off, autocast cache off.
 Seed20260922. No CUDA graphs in this preparation harness.
 
+Every canonical and adapter forward, including both complete-update branches,
+uses the explicit `full_valid_causal=True` eager option. The existing input and
+document checks run first; all tokens must be valid, caches and packed documents
+remain unsupported, and supplied RoPE positions are preserved. Only after this
+proof is the redundant all-valid mask omitted from every fresh stack pass so
+deterministic Flash SDPA can dispatch. Default historical eager behavior remains
+unchanged. The original `rt-b2-t512-01` attempt passed an explicit all-valid mask
+to ordinary Flash SDPA, which rejects non-null masks in this environment; it
+failed before any adapter comparison or optimizer update. Preserve that raw
+failed report. This revision changes dispatch preparation, not the precision
+budget or objective semantics; CPU explicit-math forward/gradient equivalence
+and rejection tests accompany it.
+
 The adapter calls the canonical model.loss_sums through its forward method and
 returns one attached scalar objective plus detached diagnostics. Canonical
 FBT pass weighting remains base + gamma*mean(extra passes); position counts

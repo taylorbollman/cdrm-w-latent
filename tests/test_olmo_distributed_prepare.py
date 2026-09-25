@@ -123,6 +123,20 @@ def test_primary_defaults_and_frozen_sources_include_all_new_code():
     assert harness.PROTOCOL.is_file()
 
 
+def test_eager_branches_all_use_validated_implicit_causal_attention(monkeypatch):
+    model, full, mode = fixture()
+    seen = []
+    original = model.loss_sums
+    def tracked(*args, **kwargs):
+        seen.append(kwargs["backbone_kwargs"].copy())
+        return original(*args, **kwargs)
+    monkeypatch.setattr(model, "loss_sums", tracked)
+    counts = model.counts(full)
+    harness.backward_sequence(model, [full], mode, counts)
+    harness.backward_sequence(model, [full], mode, counts, adapter=ObjectiveForwardAdapter(model))
+    assert seen == [{"mode": mode, "full_valid_causal": True}]*2
+
+
 @pytest.mark.parametrize("fbt,rt,nextlat", [(f, r, n) for f in (False, True) for r in (False, True) for n in (False, True)])
 def test_two_complete_accumulated_updates_match_canonical_optimizer_exactly(monkeypatch, fbt, rt, nextlat):
     model, full, _ = fixture(nextlat=nextlat)
@@ -147,7 +161,7 @@ def test_two_complete_accumulated_updates_match_canonical_optimizer_exactly(monk
         for update in range(2):
             if branch == "reference":
                 metrics = optimizer_step(model, optimizer, batches, config=config,
-                    backbone_kwargs={"mode": mode}, scheduler=scheduler, counters=counters)
+                    backbone_kwargs=harness.backbone_options(mode), scheduler=scheduler, counters=counters)
             else:
                 metrics = harness.adapter_optimizer_update(model, adapter, optimizer, scheduler,
                                                            counters, batches, mode, config=config)

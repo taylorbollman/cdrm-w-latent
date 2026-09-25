@@ -88,9 +88,14 @@ def unequal_batches(tokenizer, case, update=0):
             replace(second, ce_mask=ce1, latent_mask=empty, kl_mask=empty.clone())]
 
 
+def backbone_options(mode):
+    """Identical validated dense-causal Flash dispatch for every eager branch."""
+    return {"mode": mode, "full_valid_causal": True}
+
+
 def canonical_forward(model, batch, mode, global_counts):
     """Independent reference: use existing sums and explicit canonical formula."""
-    result = model.loss_sums(batch, backbone_kwargs={"mode": mode})
+    result = model.loss_sums(batch, backbone_kwargs=backbone_options(mode))
     objective = sum(result.sums[t] * (result.weights[t] / global_counts[t])
                     for t in TERMS if global_counts[t] and result.weights[t])
     return {"objective": objective, "loss_sums": result.sums,
@@ -121,7 +126,7 @@ def backward_sequence(model, batches, mode, global_counts, *, adapter=None):
         with context:
             output = (canonical_forward(model, batch, mode, global_counts) if adapter is None
                       else adapter(batch, global_counts=global_counts, world_size=1,
-                                   backbone_kwargs={"mode": mode}))
+                                   backbone_kwargs=backbone_options(mode)))
         output["objective"].backward()
         records.append(loss_record(output))
         del output
@@ -273,6 +278,7 @@ def main(argv=None):
               "precision": "bf16_mixed", "parameter_optimizer_dtype": "float32",
               "arm": "compiled-native", "rt_backend": "native_triton_recompute",
               "ordinary_attention": "deterministic_flash_sdpa", "ordinary_rope": "native",
+              "full_valid_causal": True,
               "ordinary_pointwise": "compiled", "ordinary_checkpointing": "all",
               "reuse_rope": True, "kv_only_writes": True, "cast_weights_once": True,
               "ce_chunk_size": 2048, "kl_chunk_size": 128, "autocast_cache": False,
@@ -409,7 +415,7 @@ def main(argv=None):
                     with disable_autocast_weight_cache():
                         if branch == "reference":
                             metrics = optimizer_step(model, optimizer, batches, config=training,
-                                backbone_kwargs={"mode": case.mode()}, scheduler=scheduler, counters=counters)
+                                backbone_kwargs=backbone_options(case.mode()), scheduler=scheduler, counters=counters)
                         else:
                             metrics = adapter_optimizer_update(model, adapter, optimizer, scheduler, counters,
                                                                batches, case.mode(), config=training)

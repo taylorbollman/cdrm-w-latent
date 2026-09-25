@@ -280,3 +280,75 @@ def test_save_reload_preserves_fixed_scale_and_outputs():
 def test_invalid_finite_modes_rejected(kwargs):
     with pytest.raises((ValueError, TypeError)):
         FBTMode(**kwargs)
+
+
+@pytest.mark.parametrize("tiled", [False, True])
+@pytest.mark.parametrize("fbt,rt", [(f, r) for f in (False, True) for r in (False, True)])
+@pytest.mark.parametrize("offset_positions", [False, True])
+def test_full_valid_causal_preserves_explicit_math_outputs_and_all_gradients(tiled, fbt, rt, offset_positions):
+    explicit = _model(tiled=tiled)
+    implicit = copy.deepcopy(explicit)
+    x = torch.randn(2, 5, 32, requires_grad=True)
+    y = x.detach().clone().requires_grad_()
+    valid = torch.ones((2, 5), dtype=torch.bool)
+    docs = torch.tensor([[3]*5, [9]*5])
+    positions = torch.tensor([[3, 5, 8, 9, 12], [0, 2, 4, 6, 8]]) if offset_positions else None
+    mode = FBTMode(enabled=fbt, num_passes=3, rt_mode=RTMode((0,) if rt else ()))
+    kwargs = dict(attention_mask=valid, document_ids=docs, position_ids=positions, mode=mode)
+    a = explicit(inputs_embeds=x, **kwargs)
+    b = implicit(inputs_embeds=y, full_valid_causal=True, **kwargs)
+    torch.testing.assert_close(a.logits, b.logits, atol=2e-6, rtol=2e-5)
+    for first, second in zip(a.pass_hidden_states, b.pass_hidden_states):
+        torch.testing.assert_close(first, second, atol=2e-6, rtol=2e-5)
+    cotangent = torch.randn_like(a.logits)
+    (a.logits*cotangent).sum().backward()
+    (b.logits*cotangent).sum().backward()
+    torch.testing.assert_close(x.grad, y.grad, atol=2e-5, rtol=3e-4)
+    _grads_match(implicit, explicit)
+
+
+@pytest.mark.parametrize("enabled", [False, True])
+@pytest.mark.parametrize("opt_in", [None, False, True])
+def test_full_valid_causal_controls_every_stack_call_and_preserves_default(enabled, opt_in):
+    model = _model()
+    ids = torch.tensor([[2, 3, 4]])
+    positions = torch.tensor([[4, 7, 12]])
+    seen = []
+    handle = model.backbone.register_forward_pre_hook(
+        lambda module, args, kwargs: seen.append(kwargs.copy()), with_kwargs=True)
+    try:
+        extra = {} if opt_in is None else {"full_valid_causal": opt_in}
+        model(ids, attention_mask=torch.ones_like(ids, dtype=torch.bool), position_ids=positions,
+              mode=FBTMode(enabled=enabled, num_passes=3, rt_mode=RTMode((0,))), **extra)
+    finally:
+        handle.remove()
+    assert len(seen) == (3 if enabled else 1)
+    for call in seen:
+        assert torch.equal(call["position_ids"], positions)
+        if opt_in:
+            assert call["attention_mask"] is None
+        else:
+            assert torch.equal(call["attention_mask"], torch.ones_like(ids, dtype=torch.bool))
+
+
+@pytest.mark.parametrize("kwargs,error,match", [
+    ({"attention_mask": torch.tensor([[True, False, True]])}, ValueError, "all tokens valid"),
+    ({"attention_mask": torch.tensor([[1, 2, 1]])}, ValueError, "0/1"),
+    ({"document_ids": torch.tensor([[1, 1, 2]])}, ValueError, "multi-document"),
+    ({"document_ids": torch.tensor([[1, -1, 1]])}, ValueError, "nonnegative document"),
+    ({"document_ids": torch.tensor([[1., 1., 1.]])}, ValueError, "int64"),
+    ({"position_ids": torch.tensor([[0, -1, 2]])}, ValueError, "nonnegative"),
+    ({"position_ids": torch.tensor([[0., 1., 2.]])}, ValueError, "int64"),
+    ({"position_ids": torch.tensor([[0, 1]])}, ValueError, "int64"),
+    ({"use_cache": True}, ValueError, "do not accept caches"),
+    ({"past_key_values": object()}, ValueError, "do not accept caches"),
+    ({"full_valid_causal": 1}, TypeError, "must be boolean"),
+    ({"full_valid_causal": torch.tensor(True)}, TypeError, "must be boolean"),
+])
+def test_full_valid_causal_rejects_invalid_contract_before_any_stack(monkeypatch, kwargs, error, match):
+    model = _model()
+    def forbidden(*args, **kwargs):
+        raise AssertionError("stack executed before validation")
+    monkeypatch.setattr(model, "_stack", forbidden)
+    with pytest.raises(error, match=match):
+        model(torch.tensor([[2, 3, 4]]), **{"full_valid_causal": True, **kwargs})

@@ -246,7 +246,18 @@ class OLMoFBT(nn.Module):
 
     def forward(self, input_ids=None, *, inputs_embeds=None, attention_mask=None,
                 document_ids=None, position_ids=None, mode: FBTMode = FBTMode(),
-                return_logits=True, past_key_values=None, use_cache=False) -> FBTOutput:
+                return_logits=True, past_key_values=None, use_cache=False,
+                full_valid_causal: bool = False) -> FBTOutput:
+        """Finite passes, optionally using implicit causal attention for full rows.
+
+        ``full_valid_causal`` is an explicit eager-dispatch option, not permission
+        to ignore padding or document boundaries. Prove all tokens valid after
+        normal input/document validation, then omit the redundant all-valid
+        mask in every fresh stack call. This permits Flash SDPA dispatch while
+        preserving supplied RoPE positions. Cached/padded sequences cannot opt in.
+        """
+        if type(full_valid_causal) is not bool:
+            raise TypeError("full_valid_causal must be boolean")
         if not isinstance(mode, FBTMode):
             raise TypeError("mode must be an FBTMode")
         if past_key_values is not None or use_cache:
@@ -256,8 +267,11 @@ class OLMoFBT(nn.Module):
             input_ids, inputs_embeds, attention_mask, position_ids, None,
         )
         documents = self._documents(valid, document_ids)
+        if full_valid_causal and not bool(valid.all()):
+            raise ValueError("full_valid_causal requires all tokens valid; padding is unsupported")
+        stack_mask = None if full_valid_causal else valid
         first_mode = RTMode(()) if mode.enabled else mode.rt_mode
-        hidden = self._stack(embeddings, first_mode, attention_mask=valid,
+        hidden = self._stack(embeddings, first_mode, attention_mask=stack_mask,
                              position_ids=positions).last_hidden_state
         states = [hidden]
         if mode.enabled:
@@ -265,7 +279,7 @@ class OLMoFBT(nn.Module):
             for _ in range(1, mode.num_passes):
                 suffix = self._blend(hidden[:, :-1], embeddings[:, 1:], mode.beta, eligible)
                 fused_inputs = torch.cat((embeddings[:, :1], suffix), dim=1)
-                hidden = self._stack(fused_inputs, mode.rt_mode, attention_mask=valid,
+                hidden = self._stack(fused_inputs, mode.rt_mode, attention_mask=stack_mask,
                                      position_ids=positions).last_hidden_state
                 states.append(hidden)
         return FBTOutput(self.project_logits(hidden) if return_logits else None,
