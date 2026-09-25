@@ -327,7 +327,8 @@ def main(argv=None):
             tracker.start({key: str(value) if isinstance(value, Path) else value for key, value in vars(args).items()})
             print(tracker.record["run_url"], flush=True)
             return {"sources": hashes, "git_head": subprocess.check_output(
-                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(), "dependencies": dependency_record(),
+                ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+                "dependencies": dependency_record(args.output_dir, include_dao=False, include_fa4=False),
                 "source_checkpoint": checkpoint, "wandb": tracker.record,
                 "ddp_teardown_api": {"name": "DistributedDataParallel._remove_autograd_hooks",
                     "torch_version": str(torch.__version__), "source": hook_source,
