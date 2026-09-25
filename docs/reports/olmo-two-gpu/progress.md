@@ -79,9 +79,9 @@ initialization. None is hidden by a passing retry; no numerical budget changed.
 
 ## Active queue
 
-`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` is now running. Then:
+`combined-graph-01` full-model B1/T512 correctness passed all four compound checks on both ranks (W&B `qldwb8so`); its evidence is verified in GCS. `combined-graph-recovery-01` passes42checks (W&B `xq1w6i0m`), with six physical updates/rank and logical endpoint5; checkpoint retention is running. The updated terminal-check harness passes `tiny-capacity-01` (`wgvh2kza`) and `tiny-zero1-graph-01` (`jeubp3ph`), eight updates/rank each. Source `340fe25` includes those checks. Next:
 
-1. Actual combined graph reconstruction recovery; retain checkpoint.
+1. Finish retaining actual combined graph reconstruction checkpoint.
 2. Actual combined ZeRO-1 fixed-gradient Adam and recovery; retain checkpoint.
 3. Matched single-GPU B128 versus two-GPU B64/rank scaling for RT and combined.
 4. Comfortable larger local batches (RT128/192, combined128), optionally validated
@@ -109,7 +109,7 @@ verify GCS before local cleanup, retain local manifest/receipt. Never treat loca
 SSD as durable. For GCS container calls use `env -u GOOGLE_APPLICATION_CREDENTIALS`
 to select mounted ADC; inherited custom ADC path is stale. Never print secrets.
 
-Latest focused CPU scope:91passed (graph runtime/harness, anchored validation,
+Final capacity integration CPU scope:77passed (replicated graph, single-reference, ZeRO1 graph and ZeRO1 runtime tests). Earlier focused CPU scope:91passed (graph runtime/harness, anchored validation,
 graph recovery and ZeRO1). Earlier scopes:129 integrated,58 static-input fix,
 44 eager recovery/checkpoint,24 retention,13 single-reference,64 eager and32
 checkpoint. These scopes overlap: do not sum them into a distinct total.
