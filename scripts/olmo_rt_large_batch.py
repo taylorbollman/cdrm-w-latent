@@ -320,8 +320,11 @@ class MemoryPhases:
         self.observe(name, "begin")
         try:
             yield
-        except BaseException:
-            self.observe(name, "error")
+        except BaseException as error:
+            try:
+                self.observe(name, "error")
+            except Exception as observation_error:
+                error.add_note(f"Memory phase observer also failed: {observation_error}")
             raise
         else:
             self.observe(name, "end")
@@ -334,6 +337,20 @@ class MemoryPhases:
         for key in ("peak_allocated_gib", "peak_reserved_gib"):
             result[key] = max([result[key], *(row.get("end", row["start"])[key] for row in self.rows.values())])
         return result
+
+
+def finish_tracking(tracker, report, *, original_error=None):
+    """A logging failure invalidates success, without replacing a primary failure."""
+    try:
+        tracker.finish(succeeded=report["status"] == "passed")
+    except BaseException as error:
+        report["tracking_finish_error"] = {"type": type(error).__name__, "message": str(error)}
+        if report["status"] == "passed":
+            report["status"] = "failed"
+        if original_error is not None:
+            original_error.add_note(f"Tracking finalization also failed: {error}")
+            return
+        raise
 
 
 def full_step_profile(plan, optimizer, scheduler, counters, batch, directory):
@@ -636,7 +653,7 @@ def main(argv=None):
         if hook is not None:
             hook.remove()
         try:
-            tracker.finish(succeeded=report["status"] == "passed")
+            finish_tracking(tracker, report, original_error=sys.exception())
         finally:
             report["finished_utc"] = datetime.now(timezone.utc).isoformat()
             save()

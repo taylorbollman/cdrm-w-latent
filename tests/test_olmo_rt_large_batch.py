@@ -281,3 +281,78 @@ def test_numerical_miss_can_be_retained_without_promoting_or_deferring_operation
     summary = harness.final_check_summary([miss, {"name": "candidate_changed_weights", "passed": True}])
     assert summary == {"status": "failed", "numerical_compatibility_passed": False,
                        "operational_checks_passed": True}
+
+
+@pytest.mark.parametrize("secondary_failure", ["snapshot", "persist"])
+def test_memory_phase_observation_failure_cannot_replace_original_oom(monkeypatch, secondary_failure):
+    _, _, report, _, phases = memory_fixture(monkeypatch)
+    original = torch.OutOfMemoryError("original allocation failure")
+    def fail():
+        raise RuntimeError("secondary observer failure")
+    with pytest.raises(torch.OutOfMemoryError) as caught:
+        with phases.phase("capture"):
+            if secondary_failure == "snapshot":
+                monkeypatch.setattr(harness, "detailed_memory_snapshot", fail)
+            else:
+                phases.persist = fail
+            raise original
+    assert caught.value is original
+    assert any("secondary observer failure" in note for note in original.__notes__)
+    assert "capture" in report["memory_phases"]
+
+
+def test_memory_phase_end_observation_failure_is_not_silently_accepted(monkeypatch):
+    _, _, _, _, phases = memory_fixture(monkeypatch)
+    with pytest.raises(RuntimeError, match="end persistence failure"):
+        with phases.phase("completed_compute"):
+            def fail():
+                raise RuntimeError("end persistence failure")
+            phases.persist = fail
+
+
+class FinishingTracker:
+    def __init__(self, error=None):
+        self.error = error
+        self.calls = []
+    def finish(self, *, succeeded):
+        self.calls.append(succeeded)
+        if self.error is not None:
+            raise self.error
+
+
+@pytest.mark.parametrize("status", ["passed", "failed", "oom"])
+def test_successful_tracking_finish_preserves_experiment_status(status):
+    report = {"status": status}
+    tracker = FinishingTracker()
+    harness.finish_tracking(tracker, report)
+    assert tracker.calls == [status == "passed"]
+    assert report == {"status": status}
+
+
+def test_failed_tracking_finish_revokes_passed_status_and_raises_original_tracking_error():
+    error = RuntimeError("tracking synchronization failure")
+    report = {"status": "passed"}
+    with pytest.raises(RuntimeError) as caught:
+        harness.finish_tracking(FinishingTracker(error), report)
+    assert caught.value is error
+    assert report["status"] == "failed"
+    assert report["tracking_finish_error"] == {"type": "RuntimeError", "message": str(error)}
+
+
+@pytest.mark.parametrize("status,primary", [
+    ("oom", torch.OutOfMemoryError("primary allocation failure")),
+    ("failed", AssertionError("primary numerical failure")),
+])
+def test_tracking_failure_preserves_active_primary_exception_and_status(status, primary):
+    import sys
+    report = {"status": status}
+    secondary = RuntimeError("secondary tracking failure")
+    with pytest.raises(type(primary)) as caught:
+        try:
+            raise primary
+        finally:
+            harness.finish_tracking(FinishingTracker(secondary), report, original_error=sys.exception())
+    assert caught.value is primary
+    assert report["status"] == status
+    assert report["tracking_finish_error"]["message"] == str(secondary)
+    assert any("secondary tracking failure" in note for note in primary.__notes__)
