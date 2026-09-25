@@ -1,11 +1,51 @@
 # OLMo / RT / FBT / NextLat: functionality and execution plan
 
+**2026-09-25 authorized execution-order update:** the transition is in
+[single-H100 closeout and two-GPU readiness](native-rt-single-to-two-gpu-plan.md).
+Capacity/FA4/repeat/profile probes are complete:22reports,153physicalupdates.
+Repeated RT B192 reaches29.746k inputtokens/s, combined B12812.413k. Full-model
+RT B256 capture OOM and all three numerical failures are retained; ordinary
+FA4 is not adopted. Read the [large-batch results](reports/olmo-rt-large-batch/results.md).
+Close retention, then prepare recovery/global-loss/complete-update references on
+one GPU before real two-GPU DDP tests. Do not wait for physical B512 or exhaustive
+kernel optimization before distributed work.
+This update takes precedence over older "next" entries below; existing
+numerical qualifications and the functionality-first goal remain unchanged.
+
 Updated 2026-09-24. **Current authoritative forward plan.**
 
 This supersedes the next-experiment queue in [v3](fbt-rt-nextlat-research-plan-v3.md).
 The priority is functionality, numerical health, integration and reasonable
 execution cost before quality comparisons. Completed O1–O5e evidence remains
 valid within its recorded scope.
+
+**Next milestone authorized,2026-09-24:** prioritize native RT physical-batch
+scaling after bounded integration of the accepted ordinary fusions. See the
+[large-batch plan](native-rt-large-batch-plan.md) for B64/128 upward toward512 at
+T512, RT-only and combinedK2+NextLat, and separate setup/capture/steady memory
+accounting. B64 is not an established throughput optimum. The paper's utilization
+argument concerns per-device batch, not gradient accumulation. This milestone
+precedes RT leaf compilation and the older recovery/online queue. User authorized
+execution plus a conditional ordinary-FA4 memory check near capacity. Preserve the existing precision qualifications and native math.
+
+**RT decision,2026-09-24:** user adopts optimized native RT and moves on from
+the backend-selection comparison. Keep author-derived as an experimental
+reference; preserve its isolated B128 throughput/memory advantages and unresolved
+full-model BF16 qualification. Full-model B64/T512 rates were effectively tied,
+and the latest ordinary fusions were not part of those historical comparisons.
+No new backend-adjudication run is queued. Use the already validated rounded
+compiled ordinary SwiGLU; prioritize bounded compilation of the RT finish/writer
+region if further RT profiling supports it. Evaluate Dao/Liger/xFormers/custom
+activation alternatives only against that measured path when useful.
+
+**User accepted,2026-09-24:** select the PR27 Dao-RoPE/fused-Adam ordinary T512
+configuration for future runs, with rounded compiled SwiGLU, Flash SDPA and
+all-layer checkpointing. Historical controls/default reproduction remain
+available; record execution options in new run/checkpoint configurations.
+[Clarification and candidate follow-ups](rt-backend-numerical-clarification.md)
+records Dao standalone SwiGLU, measured absence of FA4 memory gains, and why
+the31%/16% RT backend gradient mismatch is not an error measured against FP32.
+No new GPU run is launched by this explanatory update.
 
 **Latest milestone complete,2026-09-24:** native-FP32 Dao RoPE and fused AdamW
 are implemented as independent opt-ins; read

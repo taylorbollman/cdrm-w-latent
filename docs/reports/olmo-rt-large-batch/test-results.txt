@@ -1,0 +1,41 @@
+Native RT large-batch milestone verification ledger
+
+All Python tests ran in the explicit CPU-only project container. GPU probes
+ran separately in the installed-FA project GPU container on one H10080GB.
+Counts below overlap and must not be added into a claimed distinct total.
+
+Initial static/capture suites:129 passed
+  test_static_capture_preparation, test_static_training,
+  test_static_nextlat, test_olmo_static
+Ordinary/RT routing scope:119 passed
+  test_olmo_ordinary_rope, test_olmo_ordinary_execution,
+  test_olmo_ordinary_checkpointing, test_olmo_rt_efficiency,
+  test_olmo_ordinary_fusions
+New large-batch harness after arm additions:36 passed
+Phase-end synchronization scope:46 passed (overlaps harness/capture tests)
+Reordered validation combined scope:142 passed (overlapping scoped tests)
+Final validation helper:37 passed
+Final pre-warmup cleanup/capture observer suite:16 passed
+Evidence helper before retention-log refinement:77 passed
+
+Initial harness fixture failures used invalid KL chunk4; fixture corrected
+to required128 without changing the runtime guard or numerical budgets.
+
+Additional final evidence tests and GPU selection accounting recorded below
+once complete. Raw GPU reports preserve failed loss screens and OOM phases.
+
+2026-09-25 evidence helper including retention-log refinement:79 passed in8.42s
+  python -m pytest -q tests/test_summarize_olmo_rt_large_batch.py
+  Explicit CPU container; overlaps the prior77-test scope.
+
+2026-09-25 evidence helper with standalone integration qualifications:80 passed in9.32s
+  Added case-specific capacity/plot protection against treating own operational
+  success as clearance of a failed cross-configuration integration screen.
+  Explicit CPU container; overlaps prior79-test scope.
+
+2026-09-25 final reporting-hardening/evidence scope:125 passed in10.31s
+  45 large-batch harness tests, including failure-report hardening;80 evidence tests.
+  Explicit CPU container; overlaps earlier45/80 scopes, not125 additional cases.
+  GPU selection:22 reports,16pass/3numericalfail/3OOM,153physical updates.
+  100/103 recorded gates;all98 recorded operational gates pass;OOM inventories
+  remain incomplete.1269 frozen-source pairs and4compressed profiles verified.

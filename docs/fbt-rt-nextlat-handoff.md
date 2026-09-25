@@ -1,8 +1,76 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-24. **Read this first after compaction or interruption.**
+Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Single-H100 capacity closeout, 2026-09-25:** the authorized
+[single-to-two-GPU plan](native-rt-single-to-two-gpu-plan.md) is executing.
+All 22 large-batch reports have finished: 16 passed, three numerical failures,
+three OOMs, 153 physical optimizer updates. Read
+[results](reports/olmo-rt-large-batch/results.md), the capacity/profile audits,
+and the final evidence summary/receipt. Reverse repeats support RT B192 at
+29.744–29.748k input tokens/s and combined B128 at 12.411–12.415k, T512.
+Setup reserved peaks are 62.926/65.971 GiB; current reserved 60.918/65.113 GiB.
+RT selects layers 0/15 within the full 16-layer step60000 OLMo-1B; combined is
+K2 FBT plus NextLat. Keep native ordinary RoPE, rounded compiled ordinary
+SwiGLU, fused AdamW, deterministic Flash SDPA, checkpointing and CUDA graphs;
+native RT uses Triton tiles/recompute, cast/RoPE reuse and KV-only writes.
+
+All final GPU measurements ran at `a2bc709`; earlier run-specific revisions
+remain in the evidence. Reporting-only commits `4e1bff5`/`f583703` followed the
+finished queue and preserve primary failures if observers/tracking also fail.
+The corrected validation order removes eager/live-graph workspace overlap;
+RT B256 still fails actual capture in the reconstructed full-sequence weight
+VJP. B512 is untested. FA4 does not move that boundary; combined B128 saves
+1 GiB current reserved with under1% throughput gain, but its integration fails
+output and gradient budgets. RT FA4 and Dao RoPE retain loss-only misses.
+Keep these failures and historical native/author BF16 qualifications open.
+
+GPU queue ended idle. Finish report/retention/PR, then integrate the isolated
+objective adapter and graph-recovery preparation. Planned bounded GPU checks:
+RT/combined accumulation with unequal per-objective counts and matched complete
+Adam updates; RT/combined save/load/recapture with exact continuation. These
+single-device checks cannot establish actual DDP/NCCL, graph collectives or
+ZeRO compatibility. Next real hardware milestone needs two GPUs. Optional
+native RT memory/leaf-fusion work does not block it. No quality run is queued.
+
+**Next milestone authorized,2026-09-24:** user reaffirmed native RT and emphasized
+the paper's physical B512/T512 utilization argument. Read
+[native RT large-batch plan](native-rt-large-batch-plan.md). B64 was a development
+headroom choice, not a measured optimum; older two-RT-layer B128 improved
+throughput16.8% but setup reserved76.80GiB (current49.04GiB). First integrate the
+accepted ordinary fusions in RT-only and combined with bounded checks, then
+measure physical B64/128 upward toward512 as feasible. Separate setup/capture
+and steady memory before assigning a limit. Profile sequential RT leaf fusion
+at the resulting useful batch. Accumulation is not a substitute for physical
+batch utilization. User authorized execution and a conditional ordinary-FA4 memory comparison
+near capacity. Branch feat/native-rt-large-batch; see its frozen report protocol.
+
+**RT backend selected,2026-09-24:** user chose to adopt optimized native RT
+and move on after confirming the matched speed comparison. Native is already
+the runtime default; retain the author-derived port as an experimental reference.
+The full16-layer B64/T512 model with RT at0/15 was effectively tied:
+native/author22,430.8/22,425.7 tokens/s, combinedK2+NextLat11,195.8/11,186.5.
+Isolated B128 author gains7.5–8.6% and memory savings remain valid in that scope.
+These comparisons predate PR26/27 ordinary optimizations. Selection does not
+clear the31%/16% BF16 compatibility qualification. No further author/native
+precision campaign is required merely to record this engineering choice or
+automatically queued. Continue the functionality-first roadmap with native.
+Keep validated rounded compiled SwiGLU for ordinary layers; first RT optimization
+candidate is a bounded compiled finish/writer region. Specialized activation
+libraries remain optional measured alternatives, not an open-ended survey.
+
+**Accepted configuration and clarification,2026-09-24:** user accepted Dao RoPE
+plus fused AdamW for upcoming ordinary T512 runs, with the PR27 rounded compiled
+SwiGLU/Flash SDPA/all-checkpoint baseline. Apply explicitly and record in future
+configuration; do not rewrite historical baselines/resume identity. Read
+[RT numerical clarification](rt-backend-numerical-clarification.md) for the
+31%/16% full-model versus0.33% shared-cotangent distinction. Neither BF16
+backend is established as the full-model FP32 winner. Dao standalone SwiGLU
+avoids TE module issues but changes BF16 rounding; FA4 has no measured full-model
+memory saving at the tested shapes. Next precision/capacity probes are proposals,
+not new GPU jobs. Existing RT/FBT and online qualifications remain.
 
 **User refinement,2026-09-24:** finish the ordinary fused-RoPE/Adam investigation
 below. Add DeepSpeed ZeRO1/2 as explicit memory/scaling candidates after the

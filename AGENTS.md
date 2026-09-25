@@ -31,6 +31,38 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 user approved docs/native-rt-single-to-two-gpu-plan.md. Single-H100
+capacity queue finished:22reports,16pass/3numericfail/3OOM,153actualupdates.
+Read current handoff and docs/reports/olmo-rt-large-batch/results.md. Reverse
+repeats support RT B19229.746k/s and combined B12812.413k/s atT512. Keep native
+ordinaryRoPE/compiledroundedSwiGLU/fusedAdam/FlashSDPA and nativeTritonRT at0/15.
+FA4 doesnotchangeRTB256captureOOM; combined saves1GiB but failsintegration,
+so notadopted. FinalGPUruntimea2bc709; laterreporting-onlyhardening4e1bff5/f583703.
+Next finish retention/PR, then oneGPUadapter/accumulation/fullupdate/recovery
+checks from isolatedworktrees before genuine twoGPU DDP/graphs/recovery/scaling
+and ZeRO1/conditional2. OptionalRT memory/fusion doesnotblockdistributedwork.
+Verify live processes before new GPU work; no quality training is queued.
+
+2026-09-24 authorized milestone: user reaffirms native RT and the paper's
+physical B512/T512 emphasis. Read docs/native-rt-large-batch-plan.md. Integrate
+accepted ordinary fusions in RT/combined with bounded checks, then scale physical
+batch from64/128 toward512 if feasible. B64 is a conservative development point,
+not a measured optimum. Diagnose setup/capture versus steady memory before
+declaring capacity; accumulation does not supply large-batch RT utilization.
+Profile RT leaf only after measuring useful batches. User authorized execution
+and a conditional ordinary-FA4 memory comparison near capacity. Current work
+is on feat/native-rt-large-batch; frozen protocol under docs/reports/olmo-rt-large-batch/.
+
+2026-09-24 user decision: adopt optimized native RT and move on; author-derived
+stays an experimental reference. Native was already default. Full-model B64/T512
+speed was tied; isolated author B128 advantages and31%/16% BF16 qualifications
+remain recorded, not resolved by this choice. No further backend-adjudication
+run is queued. User also accepted PR27 Dao RoPE/fused Adam for upcoming ordinary
+T512 runs with rounded compiled SwiGLU. Read the current handoff and
+`docs/rt-backend-numerical-clarification.md`. Prefer a bounded RT finish/writer
+compile experiment over a broad activation-library survey when returning to
+RT optimization. Other combinations still need their integration checks.
+
 Latest ordinary fusion milestone is complete (2026-09-24), runtime b70b3ec.
 Read `docs/reports/olmo-ordinary-fusions/results.md`, numerical/profile audits,
 usage and current handoff. Opt-in Dao native-FP32 RoPE plus fused AdamW improves

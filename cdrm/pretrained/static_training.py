@@ -7,7 +7,9 @@ There is one physical batch per update; accumulation is deliberately unsupported
 """
 from __future__ import annotations
 
+from contextlib import contextmanager
 from dataclasses import asdict, replace
+import gc
 import math
 import torch
 
@@ -25,6 +27,25 @@ def normalized_objective(result):
     if not parts:
         raise ValueError("Update has no valid positively weighted objective")
     return sum(parts)
+
+
+@contextmanager
+def _preparation_phase(observer, phase):
+    """Notify only outside capture; preserve the actual failure if observation fails."""
+    if observer is not None:
+        observer(phase, "begin")
+    try:
+        yield
+    except BaseException as error:
+        if observer is not None:
+            try:
+                observer(phase, "error")
+            except Exception as observation_error:
+                error.add_note(f"Preparation observer also failed: {observation_error}")
+        raise
+    else:
+        if observer is not None:
+            observer(phase, "end")
 
 
 class StaticFBTTraining:
@@ -147,30 +168,65 @@ class StaticFBTTraining:
         if not self.active_names:
             raise ValueError("Static objective has no participating parameter")
 
-    def capture(self, *, warmup=10):
+    def capture(self, *, warmup=10, release_transient_cache=False, phase_observer=None):
+        """Prepare/capture without changing the canonical tensor computation.
+
+        Optional ``phase_observer(phase, event)`` receives begin/end/error for
+        gradient_initialization, warmup, capture, and optional
+        pre_warmup_transient_cleanup/transient_cleanup.
+        It can persist synchronized allocator/device snapshots and reset peak
+        counters, but must be read-only with respect to model/layout/gradient
+        tensors. Callbacks never run inside the graph context; failed capture
+        observation runs only after that context exits. Observation is disabled
+        by default and this method itself never resets allocator peak counters.
+
+        ``release_transient_cache`` explicitly collects unreachable Python
+        objects and releases unused allocator cache after synchronized gradient
+        initialization, before warmup stream creation, and again after
+        synchronized warmup, before graph creation. It cannot release live
+        model/optimizer/gradient tensors or graph-owned storage, and is not a
+        model memory optimization. The default retains the historical allocator
+        preparation behavior.
+        """
         if self.batch.input_ids.device.type != "cuda":
             raise ValueError("CUDA graph capture requires CUDA; no CPU fallback")
         if type(warmup) is not int or warmup < 1:
             raise ValueError("Warmup must be a positive integer")
+        if type(release_transient_cache) is not bool:
+            raise TypeError("release_transient_cache must be boolean")
+        if phase_observer is not None and not callable(phase_observer):
+            raise TypeError("phase_observer must be callable or None")
         if self.graph is not None:
             raise ValueError("This training plan already owns a captured graph")
-        self.initialize_gradients()
-        stream = torch.cuda.Stream()
-        stream.wait_stream(torch.cuda.current_stream())
-        with torch.cuda.stream(stream):
-            for _ in range(warmup):
-                self._tensor_backward()
-        self.warmup_backward_calls += warmup
-        torch.cuda.current_stream().wait_stream(stream)
-        torch.cuda.synchronize()
-        self.validate_execution()
-        graph = torch.cuda.CUDAGraph()
-        with torch.cuda.graph(graph, stream=stream):
-            result = self._tensor_backward()
-        torch.cuda.synchronize()
-        self.graph, self.graph_result = graph, result
-        self.capture_backward_calls += 1
-        self.validate_execution()
+        with _preparation_phase(phase_observer, "gradient_initialization"):
+            self.initialize_gradients()
+        if release_transient_cache:
+            with _preparation_phase(phase_observer, "pre_warmup_transient_cleanup"):
+                torch.cuda.synchronize()
+                gc.collect()
+                torch.cuda.empty_cache()
+        with _preparation_phase(phase_observer, "warmup"):
+            stream = torch.cuda.Stream()
+            stream.wait_stream(torch.cuda.current_stream())
+            with torch.cuda.stream(stream):
+                for _ in range(warmup):
+                    self._tensor_backward()
+                    self.warmup_backward_calls += 1
+            torch.cuda.current_stream().wait_stream(stream)
+            torch.cuda.synchronize()
+        if release_transient_cache:
+            with _preparation_phase(phase_observer, "transient_cleanup"):
+                gc.collect()
+                torch.cuda.empty_cache()
+        with _preparation_phase(phase_observer, "capture"):
+            self.validate_execution()
+            graph = torch.cuda.CUDAGraph()
+            with torch.cuda.graph(graph, stream=stream):
+                result = self._tensor_backward()
+            torch.cuda.synchronize()
+            self.graph, self.graph_result = graph, result
+            self.capture_backward_calls += 1
+            self.validate_execution()
 
     def backward(self, *, replay=False):
         self.initialize_gradients()
