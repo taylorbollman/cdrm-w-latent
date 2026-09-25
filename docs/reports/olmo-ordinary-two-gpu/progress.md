@@ -10,12 +10,17 @@ Native-RoPE ordinary DDP B64/rank control passed78,183.60tokens/s at source
 extension `467bde7` is integrated and pushed;93focusedCPUtests pass and an
 independent review finds no material issue. Production defaults are unchanged.
 
-Active root exec32463 runs ordinary DaoB1 full-update correctness, then Dao
-DDPB64 andB128 capacity sequentially with external timeouts. Source is frozen.
-Each stage is in `.runtime/olmo-ordinary-two-gpu/ordinary-dao-*`; inspect latest
-report/rankprogress before restarting. Do not edit runtime until the queue ends.
-After B128, inspect memory/gain before B192/B256; then conditionalZeRO1,
-matchedsingle reference and repeat selected DDP point. No broad numerics.
+Dao B1 correctness passes exact initial gradients and two changed-input full
+Adam comparisons. Dao DDP B64/B128/B192 pass at85.15k/85.80k/86.28k tokens/s;
+sampled free44.91/35.93/25.82GiB perGPU. Larger batches add only0.8–1.3% overB64,
+so no B256 or ZeRO1 is needed to answer the useful-batch question.
+
+Active root exec79070 runs B192(completed), then DaoDDPB32, singleDaoB128 and
+DaoDDPB64repeat sequentially. Inspect report/process before restarting. This
+lower-batch check tests where the plateau begins; matchedsingle tests scaling,
+and repeat checks the prospective B64 recommendation. Runtime sources frozen.
+All completed stages are retained progressively. CPUintegration93passed(3.26s),
+log `.runtime/olmo-ordinary-two-gpu/logs/integrated-cpu-tests.log`.
 
 The wrapper retains an unused frozen32MiB fusion module; report its resident
 bytes separately from1,176,764,416 active ordinary parameters. No RT/FBT/NextLat
