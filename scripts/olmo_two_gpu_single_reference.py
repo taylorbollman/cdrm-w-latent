@@ -27,13 +27,14 @@ from cdrm.pretrained.static_training import StaticFBTTraining
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
 from scripts.olmo_f1_common import IntegrationCase
 from scripts.olmo_two_gpu_validate import construct,preserve_local_rng
-from scripts.olmo_two_gpu_graph import fixed_batch
+from scripts.olmo_two_gpu_graph import fixed_batch,steady_memory_summary
 from scripts.olmo_large_batch_validation import (snapshot_eager_cpu,replay_compare_cpu,
     snapshot_replay_cpu,release_graph_then_compare_eager_cpu)
 from scripts.olmo_rt_efficiency import resource_card
 from scripts.olmo_rt_large_batch import (optimizer_for,compiler_configuration,
     configure_determinism,require_container_gpu,backend_context,load_native_tokenizer,
-    validate_prepared_manifest,OnlineTracker,MemoryPhases,dependency_record,finish_tracking)
+    validate_prepared_manifest,OnlineTracker,MemoryPhases,dependency_record,finish_tracking,
+    detailed_memory_snapshot)
 
 PROTOCOL=ROOT/'docs/reports/olmo-two-gpu/protocol.md'
 
@@ -139,8 +140,11 @@ def run(args,report,tracker):
                      'benchmark/seconds_per_update':elapsed,'train/objective':metrics['objective']})
     total_seconds=sum(row['seconds'] for row in rates)
     report['throughput']=dict(global_tokens_per_second=5*case.batch_size*case.length/total_seconds,
+        gpu_seconds_per_input_token=total_seconds/(5*case.batch_size*case.length),
         seconds_per_update=total_seconds/5,physical_batch=case.batch_size,global_batch=case.batch_size,
         timing_scope='batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication')
+    report['steady_memory']=steady_memory_summary(report['memory_phases'],detailed_memory_snapshot())
+    persist()
     # Recheck changed weights without the large eager-plus-live-graph memory peak.
     with phases.phase('final_graph_reference'):
         reference=snapshot_replay_cpu(plan)

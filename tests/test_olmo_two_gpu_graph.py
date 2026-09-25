@@ -201,3 +201,104 @@ def test_existing_resource_card_accepts_ddp_adapter_plan_without_static_grad_ini
     card=resource_card(runtime.adapter.plan,case,optimizer)
     assert card['analytic_matrix_work']['matrix_flops_minimum']>0
     assert card['observed_parameters']['registered_unique']==sum(p.numel() for p in model.parameters())
+
+
+class TerminalCPUTraining:
+    """Real CPU autograd with fake graph/reducer handles; not CUDA evidence."""
+    def __init__(self):
+        self.model=torch.nn.Linear(2,2)
+        self.ddp=SimpleNamespace(reducer=object())
+        self.graph_result=None
+        self.graph=None
+        self.events=[]
+        self._capture_started=True
+        self.mutation=None
+        self.retired=[]
+        self.graph_reference=None
+        self.result_reference=None
+
+    def validate_execution(self):
+        self.events.append('validate')
+
+    def _addresses(self):
+        return {n:None if p.grad is None else p.grad.data_ptr() for n,p in self.model.named_parameters()}
+
+    def calculate(self):
+        for p in self.model.parameters():
+            if p.grad is not None: p.grad.zero_()
+        objective=self.model(torch.tensor([[.25,.5],[.5,.75]])).square().sum()
+        objective.backward()
+        return {'objective':objective.detach(),'loss_sums':{'ce':objective.detach()}}
+
+    def backward(self,*,replay):
+        assert not replay
+        assert self.graph is None and self.graph_result is None
+        assert self.graph_reference() is None and self.result_reference() is None
+        self.events.append('eager')
+        result=self.calculate()
+        if self.mutation=='gradient': self.model.weight.grad.add_(.125)
+        if self.mutation=='storage':
+            self.retired.append(self.model.weight.grad)
+            self.model.weight.grad=self.model.weight.grad.clone()
+        if self.mutation=='reducer': self.ddp.reducer=object()
+        return result
+
+
+def terminal_cpu_fixture(monkeypatch):
+    import weakref
+    import scripts.olmo_two_gpu_graph as module
+    runtime=TerminalCPUTraining()
+    # Simulate changed weights before the terminal replay.
+    with torch.no_grad(): runtime.model.weight.add_(.125)
+    runtime.graph_result=runtime.calculate()
+    runtime.result_reference=weakref.ref(runtime.graph_result['objective'])
+    reference=raw_snapshot(runtime.model,runtime.graph_result)
+    class Graph:
+        def __init__(self): self.result=runtime.graph_result
+        def reset(self):
+            runtime.events.append('reset')
+            self.result=None
+    runtime.graph=Graph()
+    runtime.graph_reference=weakref.ref(runtime.graph)
+    monkeypatch.setattr(module.torch.cuda,'synchronize',lambda:runtime.events.append('sync'))
+    def cleanup():
+        assert runtime.graph_reference() is None and runtime.result_reference() is None
+        runtime.events.append('empty_cache')
+    monkeypatch.setattr(module.torch.cuda,'empty_cache',cleanup)
+    return runtime,reference,module
+
+
+def test_terminal_ddp_parity_releases_graph_outputs_before_eager_and_preserves_reducer(monkeypatch):
+    runtime,reference,module=terminal_cpu_fixture(monkeypatch)
+    addresses=runtime._addresses();reducer=runtime.ddp.reducer
+    parameters={n:p.detach().clone() for n,p in runtime.model.named_parameters()}
+    check=module.release_graph_then_compare_ddp_eager_cpu(runtime,reference)
+    assert check['passed'] and check['graph_released_before_eager']
+    assert check['reducer_and_gradient_storage_preserved']
+    assert runtime.events.index('reset')<runtime.events.index('empty_cache')<runtime.events.index('eager')
+    assert runtime._addresses()==addresses and runtime.ddp.reducer is reducer
+    assert runtime._capture_started  # No unsupported graph recapture is enabled.
+    assert all(torch.equal(p,parameters[n]) for n,p in runtime.model.named_parameters())
+
+
+def test_terminal_ddp_parity_retains_numeric_failure(monkeypatch):
+    runtime,reference,module=terminal_cpu_fixture(monkeypatch)
+    runtime.mutation='gradient'
+    check=module.release_graph_then_compare_ddp_eager_cpu(runtime,reference)
+    assert not check['passed'] and not check['gradients']['weight']['passed']
+
+
+@pytest.mark.parametrize('mutation',['storage','reducer'])
+def test_terminal_ddp_parity_rejects_eager_storage_or_reducer_changes(monkeypatch,mutation):
+    runtime,reference,module=terminal_cpu_fixture(monkeypatch)
+    runtime.mutation=mutation
+    with pytest.raises(ValueError,match='Terminal eager check changed'):
+        module.release_graph_then_compare_ddp_eager_cpu(runtime,reference)
+
+
+def test_terminal_ddp_reference_must_not_retain_non_cpu_tensors(monkeypatch):
+    runtime,reference,module=terminal_cpu_fixture(monkeypatch)
+    reference['losses']['objective']=torch.empty((),device='meta')
+    with pytest.raises(ValueError,match='detached CPU'):
+        module.release_graph_then_compare_ddp_eager_cpu(runtime,reference)
+    assert runtime.graph is not None and 'reset' not in runtime.events

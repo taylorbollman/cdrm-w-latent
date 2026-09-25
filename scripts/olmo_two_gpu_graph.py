@@ -156,6 +156,52 @@ def exact_raw_check(model, result, reference):
                 losses_exact=losses, ownership_exact=ownership, gradients=rows)
 
 
+def release_graph_then_compare_ddp_eager_cpu(runtime, reference):
+    """Terminal raw check without overlapping eager work and a live graph pool.
+
+    The caller snapshots a fresh replay to CPU and retains no graph output
+    references. Keep the existing DDP reducer and persistent gradient storage;
+    this is graph teardown, not checkpoint teardown or DDP reconstruction.
+    """
+    if runtime.graph is None:
+        raise ValueError('Terminal DDP validation requires a live graph')
+
+    def validate_cpu_values(value):
+        if isinstance(value, torch.Tensor):
+            if value.device.type != 'cpu' or value.requires_grad:
+                raise ValueError('Terminal DDP reference tensors must be detached CPU values')
+        elif isinstance(value, dict):
+            for child in value.values(): validate_cpu_values(child)
+        elif isinstance(value, (list, tuple)):
+            for child in value: validate_cpu_values(child)
+
+    validate_cpu_values(reference)
+    runtime.validate_execution()
+    addresses = runtime._addresses()
+    ddp, reducer = runtime.ddp, runtime.ddp.reducer
+    torch.cuda.synchronize()
+    runtime.graph_result = None
+    graph = runtime.graph
+    graph.reset()
+    runtime.graph = None
+    del graph
+    gc.collect()
+    torch.cuda.empty_cache()
+    runtime.validate_execution()
+    if runtime.ddp is not ddp or runtime.ddp.reducer is not reducer or runtime._addresses() != addresses:
+        raise ValueError('Graph release changed DDP reducer or persistent gradient storage')
+    result = runtime.backward(replay=False)
+    try:
+        check = exact_raw_check(runtime.model, result, reference)
+    finally:
+        del result
+    runtime.validate_execution()
+    if runtime.ddp is not ddp or runtime.ddp.reducer is not reducer or runtime._addresses() != addresses:
+        raise ValueError('Terminal eager check changed DDP reducer or persistent gradient storage')
+    check.update(graph_released_before_eager=True, reducer_and_gradient_storage_preserved=True)
+    return check
+
+
 def finish_step(runtime, optimizer, scheduler, counters, result):
     """Global health, clipping and fused Adam remain outside capture."""
     sums = torch.stack([result['loss_sums'][term].to(torch.float64) for term in TERMS])
@@ -346,6 +392,15 @@ def run(args, rank_report, tracker):
             timing_scope='batch validation/copy + captured DDP forward/loss/backward + global health/loss + clipping/Adam/scheduler; excluding fixture construction, outer timing barrier, reporting and digests')
         rank_report['steady_memory']=steady_memory_summary(rank_report['memory_phases'],detailed_memory_snapshot())
         persist()
+        # Final-weight raw parity is untimed and releases graph storage before
+        # eager execution, preserving the capacity measurement's memory scope.
+        with phases.phase('final_graph_reference'):
+            reference=raw_snapshot(model,runtime.backward(replay=True))
+        with phases.phase('final_graph_released_eager_validation'):
+            check=release_graph_then_compare_ddp_eager_cpu(runtime,reference)
+            rank_report['checks'].append(dict(name='changed_weight_graph_vs_eager',**check));persist()
+            assert_all(check['passed'],'final changed-weight prepared DDP eager/graph raw values')
+            del reference
         with phases.phase('final_replica_check'):
             check=replica_check(model,optimizer,scheduler,counters)
             rank_report['checks'].append(dict(name='final_replicas',**check));persist()
