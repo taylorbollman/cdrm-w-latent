@@ -25,6 +25,8 @@ DDP/NCCL. Clipping, Adam, scheduler and health checks remain outside capture.
 ## Bounded adaptive sequence
 
 1. Small actual ordinary Dao DDP complete-update graph/eager check at B1/rank.
+   The unchanged native B64 control may run first while the explicit Dao option
+   is integrated; Dao capacity starts after its small correctness check.
    Reuse established graph and optimizer validation; no broad precision campaign.
 2. Matched native/Dao DDP B64/rank, then Dao B128/rank. The native control keeps
    an execution-matched reference to the prior RT/combined measurements.
