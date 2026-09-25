@@ -1,0 +1,27 @@
+Single-GPU distributed preparation CPU validation, 2026-09-25.
+
+Executed in the project Docker image with CDRM_DOCKER_GPUS=none and
+CDRM_FLASH_ATTENTION_SOURCE=installed. Isolated worktree selected through
+CDRM_ROOT; CDRM_ENV_FILE=/dev/null. No GPU execution or credential copies.
+
+python -m pytest -q tests/test_distributed_training_preparation.py \
+  tests/test_olmo_distributed_prepare.py tests/test_olmo_fbt_training.py \
+  tests/test_olmo_lm_training.py
+
+119 passed in 5.53s.
+
+After the tracking-finalization failure-path correction, repeated the two new
+test files: 71 passed in 4.41s. This is an overlapping subset, not 71 additional
+distinct tests. git diff --cached --check passed.
+
+Tests cover all eight RT/FBT/NextLat modes, checkpointing on/off, independent
+global objective counts, local/global empty auxiliary terms, exact world-one
+adapter semantics, simulated rank averaging and clipped Adam weights/moments,
+FP32 concatenated-batch references, per-pass gamma, tying, detached diagnostics,
+the bounded harness's reference paths and independent participation/failure
+gates. Simulated rank averaging is algebra only: no actual DDP, NCCL, multi-GPU,
+distributed graph, sharding or distributed recovery check was performed.
+
+The actual-model GPU harness is prepared but not executed by this agent.
+Execution and retained GPU results belong to the milestone owner after the
+existing frozen-source queue completes.
