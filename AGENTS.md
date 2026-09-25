@@ -31,6 +31,13 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 ordinary-only two-GPU throughput follow-up is active on
+feat/olmo-ordinary-two-gpu. Read docs/reports/olmo-ordinary-two-gpu/progress.md
+before the completed RT milestone below. Native ordinary B64/rank control passes
+78.2k/s; ordinary Dao correctness/B64/B128 queue is active. Root owns GPU work;
+inspect live processes before restarting. No RT/FBT/NextLat, no quality run.
+
+
 2026-09-25 two-H100 milestone is complete. Read docs/reports/olmo-two-gpu/
 results.md, summary.md, progress.md, usage.md, test-ledger.md and storage-receipt.md.
 31attempts:26passed/5retainedfailures, all retained in GCS with8checkpoint stages.

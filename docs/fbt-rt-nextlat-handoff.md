@@ -4,6 +4,15 @@ Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Ordinary-only throughput follow-up active, 2026-09-25:** the user requested
+base-model batch/memory/throughput before moving on. Read the [live handoff](reports/olmo-ordinary-two-gpu/progress.md)
+and [prospective protocol](reports/olmo-ordinary-two-gpu/protocol.md). No experimental
+feature executes. Source467bde7 adds only explicit benchmark options; native B64
+control passes78.2k/s. Dao correctness/capacity queue is active; check processes.
+[Execution terminology](reports/olmo-ordinary-two-gpu/execution-options.md) explains
+bucket views and layout changes; neither is being adopted in this follow-up.
+
+
 **Two-H100 milestone complete, 2026-09-25:** read
 [results](reports/olmo-two-gpu/results.md), [summary](reports/olmo-two-gpu/summary.md)
 and [current interruption handoff](reports/olmo-two-gpu/progress.md). Two H10080GB
