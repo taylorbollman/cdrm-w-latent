@@ -30,6 +30,7 @@ RETENTION_SCHEMA = "olmo-rt-large-batch-retention-v1"
 RUNTIME = ".runtime/olmo-rt-large-batch"
 DOCS = "docs/reports/olmo-rt-large-batch"
 PROTOCOL = DOCS + "/protocol.md"
+VALIDATION_SOURCE = "scripts/olmo_large_batch_validation.py"
 ARTIFACT = ".runtime/olmo1b-step60000/artifacts/artifact-manifest.json"
 RECEIPT = "docs/reports/olmo1b-o1/storage-receipt.json"
 MAX_BYTES = 64 * 1024**2
@@ -57,7 +58,9 @@ PROJECT_FILES = (
     "scripts/olmo_ordinary_fusions_report.py", "scripts/olmo_rt_efficiency_report.py",
     "scripts/olmo_rt_author_integration_report.py", "scripts/olmo_rt_efficiency_retain.py",
     "scripts/openelm_retain.py", "scripts/olmo_tiled_retain.py", "scripts/docker_shell.sh",
+    VALIDATION_SOURCE, "tests/test_olmo_large_batch_validation.py",
     "docker/requirements-docker.txt", "docs/native-rt-large-batch-plan.md",
+    "docs/native-rt-single-to-two-gpu-plan.md",
     "docs/fbt-rt-nextlat-handoff.md", "docs/fbt-rt-nextlat-research-plan-v4.md", RECEIPT, "AGENTS.md",
 )
 BATCH_FIELDS = {"input_ids", "valid_mask", "document_ids", "ce_mask", "latent_mask", "kl_mask"}
@@ -140,6 +143,13 @@ def validate_memory(raw):
         require({"load_model", "prepare_plan", "dispatch", "preparation_updates", "capture_warmup",
                  "capture_capture", "validation_initial", "timing", "backward_timing", "health"} <= phases.keys(),
                 "Passing capacity report lacks required measured phases")
+        config = raw["configuration"]
+        if config.get("validation_order", "live-graph") == "before-capture":
+            require({"validation_references", "validation_changed_tokens", "validation_changed_weights"}
+                    <= phases.keys(), "Before-capture validation lacks measured phases")
+        if "validation_order" in config and config.get("release_transient_cache"):
+            require({"capture_pre_warmup_transient_cleanup", "capture_transient_cleanup"} <= phases.keys(),
+                    "New cleanup policy lacks measured pre/post-warmup phases")
         for key in ("setup_memory", "steady_memory"):
             snapshot = raw.get(key)
             require(isinstance(snapshot, dict) and snapshot_keys <= snapshot.keys()
@@ -168,6 +178,14 @@ def validate_fixtures(raw):
             require(isinstance(rows, list) and len(rows) == count, "Missing capacity fixture inventory: " + key)
             batches.extend(rows)
         require(raw["preparation_batches"][0] == raw["initial_batch"], "Preparation fixture differs")
+        if config.get("validation_order", "live-graph") == "before-capture":
+            references = raw.get("validation_reference_batches")
+            require(isinstance(references, dict) and set(references) == {"initial", "changed"},
+                    "Missing before-capture reference fixture hashes")
+            require(references["initial"] == raw["preparation_batches"][2]
+                    and references["changed"] == raw["preparation_batches"][1],
+                    "Before-capture reference fixtures differ from preparation batches 2/1")
+            batches.extend(references.values())
         if config.get("profile"):
             batches.append(raw.get("profile_batch"))
     for batch in batches:
@@ -190,6 +208,26 @@ def validate_record(record, index, raw):
         "ce_positions": index * counts["ce"], "latent_pairs": index * counts["latent"],
         "kl_triples": index * counts["kl"]}
     require(record.get("counters") == expected, "Canonical update counters differ")
+
+
+def validate_before_capture(raw):
+    checks = {check["name"]: check for check in raw["checks"]}
+    for name, replays in (("capacity_initial_graph", 1), ("capacity_changed_tokens_overwrite", 2),
+                          ("capacity_changed_weights", None)):
+        check = checks[name]
+        require(all(check.get(key) is True for key in (
+            "storage_matches", "ownership_matches", "loss_names_match", "all_bitwise_equal")),
+            "Before-capture validation lacks exact storage/ownership checks: " + name)
+        for field in ("losses", "gradients"):
+            rows = check.get(field)
+            require(isinstance(rows, dict) and rows
+                    and all(row.get("bitwise_equal") is True for row in rows.values()),
+                    "Before-capture validation lacks exact tensor evidence: " + name)
+        if replays is not None:
+            require(check.get("replays_checked") == replays,
+                    "Before-capture validation replay count differs: " + name)
+    require(checks["capacity_changed_weights"].get("graph_released_before_eager") is True,
+            "Terminal eager validation did not record graph release")
 
 
 def validate_resources(raw):
@@ -228,6 +266,9 @@ def validate_finished(raw):
     require(config.get("case") in {"rt", "combined"} and config.get("arm") in ARMS
             and config.get("reference_arm") in ARMS and config.get("stage") in EXPECTED_CHECKS,
             "Unknown case, arm or stage")
+    order = config.get("validation_order", "live-graph")
+    require(order in {"live-graph", "before-capture"}
+            and (order == "live-graph" or config["stage"] == "capacity"), "Invalid validation order")
     require(isinstance(checks, list) and all(isinstance(c, dict) and isinstance(c.get("name"), str)
             and type(c.get("passed")) is bool for c in checks), "Invalid check inventory")
     require(len({c["name"] for c in checks}) == len(checks), "Duplicate checks")
@@ -302,6 +343,8 @@ def validate_finished(raw):
     validate_fixtures(raw)
     validate_resources(raw)
     if config["stage"] == "capacity":
+        if order == "before-capture":
+            validate_before_capture(raw)
         require(len(raw.get("preparation_records", [])) == 3 and len(raw.get("timed_records", [])) == 5,
                 "Missing optimizer records")
         for index, record in enumerate(raw["preparation_records"] + raw["timed_records"], 1):
@@ -355,6 +398,8 @@ def load_run(root, name, revision):
     require(resolve_commit(root, raw.get("runtime_commit")) == revision, "Report runtime revision differs")
     hashes = raw.get("source_hashes")
     require(isinstance(hashes, dict) and ESSENTIAL_SOURCES <= hashes.keys(), "Missing essential source snapshots")
+    if raw["configuration"].get("validation_order", "live-graph") == "before-capture":
+        require(VALIDATION_SOURCE in hashes, "Missing before-capture validation source snapshot")
     differences = {}
     for source, expected in hashes.items():
         if source != "scripts/docker_shell.sh":
@@ -376,11 +421,15 @@ def load_run(root, name, revision):
     row = {"name": name, "runtime_commit": revision, "report_path": path.relative_to(root).as_posix(),
         "report_sha256": digest(path), "status": raw["status"],
         **{key: config[key] for key in ("case", "arm", "reference_arm", "stage")},
+        "validation_order": config.get("validation_order", "live-graph"),
+        "validation_reference_batches": raw.get("validation_reference_batches"),
         "physical_optimizer_updates": raw["physical_optimizer_updates"], "source_pairs_checked": len(hashes),
         "gate_groups": gate_groups(raw), "checks": [check_summary(c) for c in raw["checks"]],
         "current_source_differences": differences, "dependency_verification": dependencies,
         "wandb_url": raw.get("wandb", {}).get("run_url"), "error": raw.get("error"),
         "failure_stage": raw.get("stage") if raw["status"] != "passed" else None,
+        "failed_memory_phases": sorted(name for name, phase in raw.get("memory_phases", {}).items()
+                                       if phase.get("error")),
         "memory_phases": raw.get("memory_phases", {}),
         "numerical_compatibility_passed": raw.get("numerical_compatibility_passed"),
         "operational_checks_passed": raw.get("operational_checks_passed"), **traces}
@@ -390,11 +439,23 @@ def load_run(root, name, revision):
 def signature(raw):
     ignored = {"arm", "reference_arm", "output_dir", "artifacts", "profile", "continue_after_compatibility_miss",
                "ordinary_attention", "ordinary_pointwise", "ordinary_rope_backend", "fused_adam"}
-    payload = {"configuration": {key: value for key, value in raw["configuration"].items() if key not in ignored},
+    config = {"validation_order": "live-graph", **raw["configuration"]}
+    payload = {"configuration": {key: value for key, value in config.items() if key not in ignored},
         **{key: raw.get(key) for key in ("checkpoint", "runtime", "determinism", "nextlat_config",
             "initial_batch", "preparation_batches", "timed_batches", "counts", "parameters",
             "protocol_sha256", "source_hashes")},
         "dependency_packages": raw.get("dependencies", {}).get("packages")}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
+
+
+def runtime_fingerprint(raw):
+    """Identify verified runtime content independently of reporting-only commits."""
+    dependencies = raw.get("dependencies", {})
+    payload = {key: raw.get(key) for key in ("source_hashes", "protocol_sha256", "checkpoint",
+        "runtime", "determinism", "nextlat_config")}
+    payload["dependencies"] = {"packages": dependencies.get("packages"), **{
+        key: {name: record["sha256"] for name, record in dependencies.get(key, {}).items()}
+        for key in ("dao_sources", "fa4_sources")}}
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
 
 
@@ -426,8 +487,17 @@ def summarize(names, revision, *, overrides=None, root=ROOT):
             continue
         config = raw["configuration"]
         capacity = {"name": row["name"], "status": row["status"], "runtime_commit": row["runtime_commit"],
+            "validation_order": row["validation_order"],
             **{key: config.get(key) for key in ("case", "arm", "batch_size", "length", "release_transient_cache")},
+            "runtime_fingerprint": runtime_fingerprint(raw),
+            "selected_same_case_arm_integration": [{"name": candidate["name"],
+                "runtime_commit": candidate["runtime_commit"], "status": candidate["status"],
+                "compatibility_complete_and_passed": candidate["gate_groups"]["compatibility"]["complete_and_passed"],
+                "operational_complete_and_passed": candidate["gate_groups"]["operational"]["complete_and_passed"]}
+                for candidate in rows if candidate["stage"] == "correctness"
+                and candidate["case"] == row["case"] and candidate["arm"] == row["arm"]],
             "comparison_signature": signature(raw), "failure_stage": row["failure_stage"],
+            "failed_memory_phases": row["failed_memory_phases"],
             **{key: raw.get(key) for key in ("input_tokens_per_second", "ce_targets_per_second",
                 "forward_loss_backward_tokens_per_second", "full_update", "forward_loss_backward",
                 "setup_memory", "steady_memory", "memory_phases", "parameters", "counts", "resources")}}
@@ -439,14 +509,14 @@ def summarize(names, revision, *, overrides=None, root=ROOT):
                 for arm in sorted({row["arm"] for row in members})}
         medians = {arm: statistics.median(values) for arm, values in arms.items()}
         summary["comparison_groups"].append({"comparison_signature": cohort,
-            **{key: members[0][key] for key in ("case", "batch_size", "length", "release_transient_cache")},
+            **{key: members[0][key] for key in ("case", "batch_size", "length", "release_transient_cache", "validation_order")},
             "runs": [row["name"] for row in members],
             "arms": {arm: {"runs": len(values), "median_input_tokens_per_second": medians[arm],
                 "minimum_input_tokens_per_second": min(values), "maximum_input_tokens_per_second": max(values)}
                 for arm, values in arms.items()},
             "gain_fraction_vs_control": {arm: value / medians["control"] - 1 for arm, value in medians.items()
                 if arm != "control"} if "control" in medians else {},
-            "scope": "Same shape, fixtures, all frozen runtime sources, precision, protocol and capture-cleanup policy; only declared arm choices differ."})
+            "scope": "Same shape, fixtures, all frozen runtime sources, precision, protocol, validation order and capture-cleanup policy; only declared arm choices differ."})
     return summary
 
 
@@ -460,32 +530,41 @@ def render_plot(summary, directory):
     figure, axes = plt.subplots(2, len(cases), figsize=(6 * len(cases), 8), squeeze=False)
     for column, case in enumerate(cases):
         selected = [row for row in rows if row["case"] == case]
-        # Never join source revisions or cleanup policies into one capacity curve.
+        # Reporting-only commits may share a curve; runtime bytes, dependencies,
+        # protocol and cleanup policy must still agree.
         groups = defaultdict(list)
         for row in selected:
-            groups[(row["arm"], row["runtime_commit"], row["release_transient_cache"])].append(row)
-        for (arm, revision, cleanup), group in sorted(groups.items(), key=lambda item: str(item[0])):
+            groups[(row["arm"], row["runtime_fingerprint"], row["release_transient_cache"], row["validation_order"])].append(row)
+        for (arm, fingerprint, cleanup, order), group in sorted(groups.items(), key=lambda item: str(item[0])):
             by_batch = defaultdict(list)
             for row in group:
                 by_batch[row["batch_size"]].append(row)
             batches = sorted(by_batch)
-            label = f"{arm} / {revision[:7]}" + (" / cleanup" if cleanup else "")
-            axes[0, column].plot(batches, [statistics.median(r["input_tokens_per_second"] for r in by_batch[b]) / 1000
+            label = f"{arm} / content {fingerprint[:7]}" + (" / cleanup" if cleanup else "")
+            if order != "live-graph":
+                label += " / " + order
+            if any(not check["compatibility_complete_and_passed"] for row in group
+                   for check in row["selected_same_case_arm_integration"]):
+                label += " / integration not cleared"
+            line, = axes[0, column].plot(batches, [statistics.median(r["input_tokens_per_second"] for r in by_batch[b]) / 1000
                 for b in batches], "o-", label=label)
             for field, style in (("peak_allocated_gib", "o-"), ("peak_reserved_gib", "s--")):
                 axes[1, column].plot(batches, [max(r["setup_memory"][field] for r in by_batch[b]) for b in batches],
-                                     style, label=label + " / " + field.replace("peak_", "").replace("_gib", ""))
+                                     style, color=line.get_color(),
+                                     label=label + " / " + field.replace("peak_", "").replace("_gib", ""))
         axes[0, column].set_title(case + ": complete updates, T512")
         axes[0, column].set_ylabel("Input tokens/s (thousands)")
         axes[1, column].set_ylabel("Setup peak memory (GiB)")
-        for axis in axes[:, column]:
+        for index, axis in enumerate(axes[:, column]):
             axis.set_xlabel("Physical batch per GPU")
-            axis.legend(fontsize=7)
+            axis.legend(fontsize=7, **({"loc": "upper left", "bbox_to_anchor": (0, -.2)} if index else {}))
             axis.spines[["top", "right"]].set_visible(False)
     figure.suptitle("Native OLMo RT: bounded throughput and setup memory")
-    figure.text(.02, .015, "H100 · BF16 mixed · CUDA graphs · 5 timed updates/run. Failed attempts remain in summary.\n"
-                "Single-run medians are directional; setup peaks include preparation/validation. No quality claim.", fontsize=9)
-    figure.tight_layout(rect=(0, .065, 1, .96))
+    figure.text(.02, .015, "H100 · BF16 mixed · CUDA graphs · 5 timed updates/run.\n"
+                "Failed attempts remain in summary. Setup peaks include preparation/validation.\n"
+                "Operational capacity passes do not clear numerical integration failures.\n"
+                "Run medians are directional; no quality claim.", fontsize=8)
+    figure.tight_layout(rect=(0, .085, 1, .96))
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
     for suffix in ("pdf", "png"):
@@ -524,7 +603,11 @@ def collect_evidence(root=ROOT):
         prefix = "runtime/" + row["name"] + "/"
         add(path, prefix + "report.json")
         add(path.parent / "protocol.md", prefix + "protocol.md")
-        add(runtime / (row["name"] + ".log"), "logs/" + row["name"] + ".log")
+        log_name = row["name"] + ".log"
+        run_logs = [candidate for candidate in (runtime / "logs" / log_name, runtime / log_name)
+                    if candidate.exists() or candidate.is_symlink()]
+        require(len(run_logs) == 1, "Require exactly one retained run log: " + row["name"])
+        add(run_logs[0], "logs/" + log_name)
         for source in raw["source_hashes"]:
             add(path.parent / "source-snapshot" / source, prefix + "source-snapshot/" + source)
         for key, base in (("dao_sources", "flash_attn"), ("fa4_sources", "flash_attn/cute")):

@@ -32,7 +32,7 @@ def evidence(tmp_path):
     root = tmp_path / "repo"
     root.mkdir()
     git(root, "init")
-    for name in report.ESSENTIAL_SOURCES:
+    for name in report.ESSENTIAL_SOURCES | {report.VALIDATION_SOURCE}:
         write(root, name, "frozen " + name)
     write(root, report.PROTOCOL, "frozen protocol")
     git(root, "add", ".")
@@ -61,11 +61,11 @@ def phase():
 
 
 def add_run(evidence, name, *, arm="optimized", case="rt", stage="capacity", status="passed", revision=None,
-            batch=None, cleanup=False, profile=False):
+            batch=None, cleanup=False, profile=False, validation_order=None):
     root, revision = evidence.root, revision or evidence.second
     directory = root / report.RUNTIME / name
     hashes = {}
-    for source in report.ESSENTIAL_SOURCES:
+    for source in report.ESSENTIAL_SOURCES | {report.VALIDATION_SOURCE}:
         path = write(directory, "source-snapshot/" + source, git(root, "show", revision + ":" + source))
         hashes[source] = report.digest(path)
     protocol = write(directory, "protocol.md", git(root, "show", revision + ":" + report.PROTOCOL))
@@ -80,6 +80,8 @@ def add_run(evidence, name, *, arm="optimized", case="rt", stage="capacity", sta
         "fbt": case == "combined", "nextlat": case == "combined", "capture_warmup_backwards": 10,
         "kv_only_writes": True, "mode": {"enabled": case == "combined", "num_passes": 2 if case == "combined" else 1,
                                           "rt_mode": {"selected_layers": [0, 15]}}}
+    if validation_order is not None:
+        config["validation_order"] = validation_order
     counts = {"ce": batch * 511, "latent": batch * 511 if case == "combined" else 0,
               "kl": batch * 510 if case == "combined" else 0}
     parameters = {"registered_unique": 110, "trainable": 100, "executed_declared": 100,
@@ -142,6 +144,23 @@ def add_run(evidence, name, *, arm="optimized", case="rt", stage="capacity", sta
         raw["full_step_profile"]["update_record"] = record(9)
         raw["profile_batch"] = fixture_batch(batch, 9)
         raw["post_profile_health"] = {"passed": True}
+    if validation_order == "before-capture":
+        raw["validation_reference_batches"] = {"initial": deepcopy(raw["preparation_batches"][2]),
+                                               "changed": deepcopy(raw["preparation_batches"][1])}
+        raw["memory_phases"].update({name: phase() for name in (
+            "validation_references", "validation_changed_tokens", "validation_changed_weights")})
+        for name, replays in (("capacity_initial_graph", 1), ("capacity_changed_tokens_overwrite", 2),
+                              ("capacity_changed_weights", None)):
+            check = next(check for check in raw["checks"] if check["name"] == name)
+            check.update(storage_matches=True, ownership_matches=True, loss_names_match=True, all_bitwise_equal=True,
+                losses={"loss": {"bitwise_equal": True}}, gradients={"weight": {"bitwise_equal": True}})
+            if replays is None:
+                check["graph_released_before_eager"] = True
+            else:
+                check["replays_checked"] = replays
+    if validation_order is not None and cleanup:
+        raw["memory_phases"].update({name: phase() for name in (
+            "capture_pre_warmup_transient_cleanup", "capture_transient_cleanup")})
     if status != "passed":
         raw.update(stage="capture", checks=[], physical_optimizer_updates=3,
                    error={"type": "OutOfMemoryError", "message": "retained setup failure"})
@@ -154,12 +173,17 @@ def add_run(evidence, name, *, arm="optimized", case="rt", stage="capacity", sta
 def test_runtime_source_and_arm_contract():
     from scripts import olmo_rt_large_batch as harness
     assert report.ESSENTIAL_SOURCES <= set(harness.SOURCES)
+    assert report.VALIDATION_SOURCE in harness.SOURCES
     assert report.ARMS == {key: tuple(value[name] for name in ("attention", "pointwise", "rope", "fused_adam"))
                            for key, value in harness.ARMS.items()}
 
 
 def test_failed_shapes_updates_and_wandb_remain_visible(evidence):
-    add_run(evidence, "old-oom", revision=evidence.first, status="oom", batch=256)
+    path, raw = add_run(evidence, "old-oom", revision=evidence.first, status="oom", batch=256)
+    # The old harness kept stage=capture when validation failed after capture.
+    raw["memory_phases"]["capture_capture"] = phase()
+    raw["memory_phases"]["validation_initial"]["error"] = True
+    write(path.parent, "report.json", raw)
     add_run(evidence, "control", arm="control")
     add_run(evidence, "optimized")
     result = report.summarize(["old-oom", "control", "optimized"], evidence.second,
@@ -167,9 +191,64 @@ def test_failed_shapes_updates_and_wandb_remain_visible(evidence):
     assert result["statuses"] == {"oom": 1, "passed": 2}
     assert result["physical_optimizer_updates"] == 19
     assert result["capacity"][0]["failure_stage"] == "capture"
-    assert result["runs"][0]["memory_phases"]["capture_capture"]["error"]
+    assert result["capacity"][0]["failed_memory_phases"] == ["validation_initial"]
+    assert result["runs"][0]["failed_memory_phases"] == ["validation_initial"]
+    assert not result["runs"][0]["memory_phases"]["capture_capture"].get("error")
     assert result["runs"][1]["wandb_url"].startswith("https://wandb.ai/")
     assert result["comparison_groups"][0]["gain_fraction_vs_control"] == {"optimized": 0.}
+
+
+@pytest.mark.parametrize("profile,cleanup", [(False, False), (True, True)])
+def test_before_capture_preserves_full_updates_and_terminal_evidence(evidence, profile, cleanup):
+    add_run(evidence, "before", case="combined", validation_order="before-capture", profile=profile, cleanup=cleanup)
+    result = report.summarize(["before"], evidence.second, root=evidence.root)
+    row = result["runs"][0]
+    assert result["physical_optimizer_updates"] == 8 + int(profile)
+    assert row["validation_order"] == "before-capture"
+    assert set(row["validation_reference_batches"]) == {"initial", "changed"}
+    terminal = next(check for check in row["checks"] if check["name"] == "capacity_changed_weights")
+    assert terminal["graph_released_before_eager"] and terminal["storage_matches"]
+    assert result["comparison_groups"][0]["validation_order"] == "before-capture"
+
+
+@pytest.mark.parametrize("damage", ["references", "initial_batch", "changed_batch", "storage", "release",
+    "replays", "gradients", "source", "phase", "cleanup", "order"])
+def test_before_capture_rejects_missing_or_inconsistent_validation_evidence(evidence, damage):
+    path, raw = add_run(evidence, "before", validation_order="before-capture", cleanup=True)
+    checks = {check["name"]: check for check in raw["checks"]}
+    if damage == "references": raw.pop("validation_reference_batches")
+    elif damage == "initial_batch": raw["validation_reference_batches"]["initial"] = raw["preparation_batches"][0]
+    elif damage == "changed_batch": raw["validation_reference_batches"]["changed"] = raw["preparation_batches"][2]
+    elif damage == "storage": checks["capacity_initial_graph"]["storage_matches"] = False
+    elif damage == "release": checks["capacity_changed_weights"]["graph_released_before_eager"] = False
+    elif damage == "replays": checks["capacity_changed_tokens_overwrite"]["replays_checked"] = 1
+    elif damage == "gradients": checks["capacity_changed_weights"]["gradients"]["weight"]["bitwise_equal"] = False
+    elif damage == "source": raw["source_hashes"].pop(report.VALIDATION_SOURCE)
+    elif damage == "phase": raw["memory_phases"].pop("validation_references")
+    elif damage == "cleanup": raw["memory_phases"].pop("capture_pre_warmup_transient_cleanup")
+    elif damage == "order": raw["configuration"]["validation_order"] = "unknown"
+    write(path.parent, "report.json", raw)
+    with pytest.raises(ValueError):
+        report.summarize(["before"], evidence.second, root=evidence.root)
+
+
+def test_validation_order_normalizes_legacy_default_and_separates_curves(evidence, tmp_path, monkeypatch):
+    import matplotlib.pyplot as plt
+
+    add_run(evidence, "legacy")
+    add_run(evidence, "explicit", validation_order="live-graph")
+    add_run(evidence, "before", validation_order="before-capture")
+    result = report.summarize(["legacy", "explicit", "before"], evidence.second, root=evidence.root)
+    assert len({row["runtime_fingerprint"] for row in result["capacity"]}) == 1
+    assert sorted(len(group["runs"]) for group in result["comparison_groups"]) == [1, 2]
+    assert {group["validation_order"] for group in result["comparison_groups"]} == {"live-graph", "before-capture"}
+    figures, close = [], plt.close
+    monkeypatch.setattr(plt, "close", figures.append)
+    report.render_plot(result, tmp_path / "plots")
+    figure = figures[-1]
+    assert len(figure.axes[0].lines) == 2
+    assert sum("before-capture" in line.get_label() for line in figure.axes[0].lines) == 1
+    close(figure)
 
 
 @pytest.mark.parametrize("case", ["rt", "combined"])
@@ -229,6 +308,36 @@ def test_completed_numeric_failure_stays_failed_with_successful_operational_chec
     assert result["statuses"] == {"failed": 1} and result["physical_optimizer_updates"] == 6
     assert result["runs"][0]["gate_groups"]["operational"]["complete_and_passed"]
     assert not result["runs"][0]["gate_groups"]["compatibility"]["complete_and_passed"]
+
+
+
+def test_capacity_and_plot_preserve_failed_integration_qualification(evidence, tmp_path, monkeypatch):
+    import matplotlib.pyplot as plt
+
+    path, raw = add_run(evidence, "failed-integration", stage="correctness", arm="fa4-native")
+    next(c for c in raw["checks"] if c["name"] == "same_state_candidate_vs_reference")["passed"] = False
+    raw.update(status="failed", compatibility_miss_continued=True, numerical_compatibility_passed=False,
+        operational_checks_passed=True, error={"type": "AssertionError", "message": "retained numeric miss"})
+    raw["configuration"]["continue_after_compatibility_miss"] = True
+    write(path.parent, "report.json", raw)
+    add_run(evidence, "operational-capacity", arm="fa4-native")
+    add_run(evidence, "different-case", arm="fa4-native", case="combined")
+    result = report.summarize(["failed-integration", "operational-capacity", "different-case"],
+        evidence.second, root=evidence.root)
+    capacity = {row["name"]: row for row in result["capacity"]}
+    assert capacity["operational-capacity"]["status"] == "passed"
+    checks = capacity["operational-capacity"]["selected_same_case_arm_integration"]
+    assert len(checks) == 1 and checks[0]["status"] == "failed"
+    assert not checks[0]["compatibility_complete_and_passed"]
+    assert checks[0]["operational_complete_and_passed"]
+    assert capacity["different-case"]["selected_same_case_arm_integration"] == []
+    figures, close = [], plt.close
+    monkeypatch.setattr(plt, "close", figures.append)
+    report.render_plot(result, tmp_path / "plots")
+    figure = figures[-1]
+    assert sum("integration not cleared" in line.get_label() for axis in figure.axes for line in axis.lines) == 3
+    assert any("Operational capacity passes do not clear" in text.get_text() for text in figure.texts)
+    close(figure)
 
 
 @pytest.mark.parametrize("missing", ["dao_sources", "fa4_sources"])
@@ -307,6 +416,37 @@ def test_plot_capacity_and_setup_memory(evidence, tmp_path):
     assert (tmp_path / "plots/capacity.png").read_bytes().startswith(b"\x89PNG")
 
 
+@pytest.mark.parametrize("change", ["reporting", "source", "protocol", "dependency"])
+def test_capacity_curves_follow_verified_content_across_commits(evidence, tmp_path, monkeypatch, change):
+    import matplotlib.pyplot as plt
+
+    add_run(evidence, "b64", batch=64)
+    changed_path = {"source": "cdrm/pretrained/olmo.py", "protocol": report.PROTOCOL}.get(
+        change, "docs/reporting-note.md")
+    write(evidence.root, changed_path, "capacity follow-up " + change)
+    git(evidence.root, "add", changed_path)
+    git(evidence.root, "commit", "-m", change)
+    revision = git(evidence.root, "rev-parse", "HEAD")
+    path, raw = add_run(evidence, "b128", batch=128, revision=revision)
+    if change == "dependency":
+        source = "layers/rotary.py"
+        dependency = write(path.parent, "dependency-snapshot/flash_attn/" + source, "new installed dependency")
+        raw["dependencies"]["dao_sources"][source]["sha256"] = report.digest(dependency)
+        write(path.parent, "report.json", raw)
+    result = report.summarize(["b64", "b128"], revision, root=evidence.root,
+        overrides={"b64": evidence.second})
+    rows = result["capacity"]
+    assert [row["runtime_commit"] for row in rows] == [evidence.second, revision]
+    assert (rows[0]["runtime_fingerprint"] == rows[1]["runtime_fingerprint"]) == (change == "reporting")
+    figures, close = [], plt.close
+    monkeypatch.setattr(plt, "close", figures.append)
+    report.render_plot(result, tmp_path / "plots")
+    figure = figures[-1]
+    curves = [list(line.get_xdata()) for line in figure.axes[0].lines]
+    close(figure)
+    assert sorted(curves) == ([[64, 128]] if change == "reporting" else [[64], [128]])
+
+
 @pytest.fixture
 def retained(evidence, monkeypatch):
     add_run(evidence, "complete", profile=True)
@@ -336,6 +476,22 @@ def test_retention_contains_only_selected_evidence(retained):
     assert "runtime/oom/report.json" in members
     assert "runtime/complete/dependency-snapshot/flash_attn/layers/rotary.py" in members
     assert not any(name.endswith((".env", "weights.safetensors")) for name in members)
+
+
+def test_retention_supports_actual_run_log_subdirectory(retained):
+    runtime = retained.root / report.RUNTIME
+    (runtime / "logs").mkdir()
+    for name in ("complete.log", "oom.log"):
+        (runtime / name).rename(runtime / "logs" / name)
+    _, _, members = report.collect_evidence(retained.root)
+    assert members["logs/complete.log"] == runtime / "logs/complete.log"
+    assert members["logs/oom.log"] == runtime / "logs/oom.log"
+
+
+def test_retention_rejects_ambiguous_run_log_locations(retained):
+    write(retained.root, report.RUNTIME + "/logs/complete.log", "conflicting duplicate log")
+    with pytest.raises(ValueError, match="exactly one retained run log"):
+        report.collect_evidence(retained.root)
 
 
 @pytest.mark.parametrize("damage", ["summary", "report", "trace", "log", "symlink", "checkpoint"])

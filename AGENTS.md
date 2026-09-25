@@ -31,6 +31,18 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 user approved docs/native-rt-single-to-two-gpu-plan.md. Single-H100
+capacity queue finished:22reports,16pass/3numericfail/3OOM,153actualupdates.
+Read current handoff and docs/reports/olmo-rt-large-batch/results.md. Reverse
+repeats support RT B19229.746k/s and combined B12812.413k/s atT512. Keep native
+ordinaryRoPE/compiledroundedSwiGLU/fusedAdam/FlashSDPA and nativeTritonRT at0/15.
+FA4 doesnotchangeRTB256captureOOM; combined saves1GiB but failsintegration,
+so notadopted. FinalGPUruntimea2bc709; laterreporting-onlyhardening4e1bff5/f583703.
+Next finish retention/PR, then oneGPUadapter/accumulation/fullupdate/recovery
+checks from isolatedworktrees before genuine twoGPU DDP/graphs/recovery/scaling
+and ZeRO1/conditional2. OptionalRT memory/fusion doesnotblockdistributedwork.
+Verify live processes before new GPU work; no quality training is queued.
+
 2026-09-24 authorized milestone: user reaffirms native RT and the paper's
 physical B512/T512 emphasis. Read docs/native-rt-large-batch-plan.md. Integrate
 accepted ordinary fusions in RT/combined with bounded checks, then scale physical

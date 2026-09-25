@@ -1,5 +1,17 @@
 # OLMo / RT / FBT / NextLat: functionality and execution plan
 
+**2026-09-25 authorized execution-order update:** the transition is in
+[single-H100 closeout and two-GPU readiness](native-rt-single-to-two-gpu-plan.md).
+Capacity/FA4/repeat/profile probes are complete:22reports,153physicalupdates.
+Repeated RT B192 reaches29.746k inputtokens/s, combined B12812.413k. Full-model
+RT B256 capture OOM and all three numerical failures are retained; ordinary
+FA4 is not adopted. Read the [large-batch results](reports/olmo-rt-large-batch/results.md).
+Close retention, then prepare recovery/global-loss/complete-update references on
+one GPU before real two-GPU DDP tests. Do not wait for physical B512 or exhaustive
+kernel optimization before distributed work.
+This update takes precedence over older "next" entries below; existing
+numerical qualifications and the functionality-first goal remain unchanged.
+
 Updated 2026-09-24. **Current authoritative forward plan.**
 
 This supersedes the next-experiment queue in [v3](fbt-rt-nextlat-research-plan-v3.md).
