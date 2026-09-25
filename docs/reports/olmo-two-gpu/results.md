@@ -1,8 +1,7 @@
 # Two-H100 integration, recovery and scaling
 
-2026-09-25. **Draft closeout:** functionality and matched-batch scaling results
-below are complete; the larger-batch capacity queue is still running. Finalize
-the explicitly pending rows and inventory before publishing this report.
+2026-09-25. **Completed engineering milestone.** All planned functionality,
+recovery and bounded capacity stages are complete and retained. No job is queued.
 
 Native RT now works with real two-rank DDP, captured NCCL backward, and
 recoverable training state in the tested configurations. At the same global
@@ -140,11 +139,12 @@ W&B: [single RT](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/e
 [single combined](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/watsz35j),
 [DDP combined](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zt5q993w).
 
-### Larger physical batches — pending closeout
+### Larger physical batches
 
-RT DDP rows have completed; the remaining rows are queued measurements, **not
-completed results or supported capacity claims**. Finalize retention and replace
-pending placeholders from final reports before publishing.
+All rows pass initial and changed-weight terminal raw eager/graph checks and
+their replica/state-ownership checks. Memory uses the larger rank value for
+allocated/reserved columns and the smaller rank value for free memory, sampled
+after capture/timing. ZeRO-1 steady memory includes parameter-broadcast buffers.
 
 | Backend | Mode | Local / global batch | Status | Aggregate tokens/s | Setup peak allocated GiB/rank | Setup peak reserved GiB/rank | Steady reserved GiB/rank | Sampled free GiB/rank |
 | --- | --- | ---: | --- | ---: | ---: | ---: | ---: | ---: |
@@ -152,7 +152,7 @@ pending placeholders from final reports before publishing.
 | DDP | RT | 192 / 384 | Passed | 59,034.62 | 63.806 | 77.566 | 66.813 | 10.467 |
 | DDP | Combined | 128 / 256 | Passed | 24,657.19 | 62.819 | 77.559 | 73.836 | 3.365 |
 | ZeRO-1 | RT | 192 / 384 | Passed | 58,187.06 | 59.432 | 77.566 | 62.775 | 14.504 |
-| ZeRO-1 | Combined | 128 / 256 | Pending | — | — | — | — | — |
+| ZeRO-1 | Combined | 128 / 256 | Passed | 24,398.21 | 58.095 | 77.508 | 69.664 | 7.537 |
 
 For RT, B192/rank improves throughput another 5.9% over B128/rank while reducing
 sampled free memory from 24.8 to 10.5 GiB per GPU. Update times are 2.35032 and
@@ -163,10 +163,39 @@ transient setup reservations even though cache release leaves usable headroom.
 W&B: [RT B128/rank](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/o5rhk350)
 and [RT B192/rank](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/aw43q0xt).
 
-The capacity recommendation awaits these results. No gradient bucket-view
-option is adopted. DDP does not pool VRAM; global B512 would require B256 on each
-GPU, unless accumulated. Accumulation does not supply a larger physical RT
-matrix. This milestone has not established physical B512 or all-layer RT.
+Combined DDP B128/rank gains only 5.35% throughput over B64/rank, with
+3.37 GiB free versus 30.53 GiB. It fits this fixed diagnostic, but is too tight
+as a default for adding features. At B128/rank, ZeRO-1 trades approximately
+1.05% throughput for 4.17 GiB more minimum sampled headroom. RT ZeRO-1 at
+B192/rank trades approximately 1.44% throughput for 4.04 GiB more headroom.
+These small speed differences are directional five-update observations.
+
+Recommended operating points:
+
+- **Development and architectural additions:** RT DDP B128/rank (55.8k/s,
+  24.8 GiB free); combined DDP B64/rank (23.4k/s, 30.5 GiB free).
+- **Frozen larger-batch configurations:** RT ZeRO-1 B192/rank (58.2k/s,
+  14.5 GiB free); combined ZeRO-1 B128/rank (24.4k/s, 7.5 GiB free).
+  The latter has moderate headroom, so additions still need a shape check.
+- **Unmodified RT with replicated Adam:** DDP B192/rank also works (59.0k/s,
+  10.5 GiB free). ZeRO-1 is optional; no global runtime default changed.
+
+At the same physical B128/rank, DDP reaches approximately 1.99 times the
+single-GPU rate for both modes, while processing twice the global batch. This
+weak-scaling result differs from the matched-global-batch speedups above.
+Do not infer faster learning per optimizer step from either systems comparison.
+
+W&B: [combined DDP B128](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/nmv7nu8r),
+[RT ZeRO-1 B192](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/m11j5e6b),
+[combined ZeRO-1 B128](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/xsg5anc0).
+
+No gradient bucket-view option is adopted. DDP does not pool VRAM; global B512
+would require physical B256 on each GPU unless accumulated. Accumulation does
+not supply a larger physical RT matrix. The previous one-GPU B256 capture failed;
+this milestone does not establish two-GPU B256/rank feasibility, and does not
+repeat that boundary merely to maximize usage. ZeRO-2 is deferred until its
+extra memory supports a required configuration. This scope does not establish
+physical B512 or all-layer RT.
 
 ## Parameters and arithmetic accounting
 
@@ -229,17 +258,22 @@ integration tooling, `cf8f414` for the matched RT measurements, and `bfa3649` fo
 the consolidation transport change. Later graph/combined measurements record
 `6921c53`; the fast full-model recovery records `18eebc9`. Per-report source
 hashes, not just branch HEAD, establish the implementation measured. The larger
-RT DDP rows record `1a67303`, with the same runtime implementation.
+RT DDP rows and RT ZeRO-1 record `1a67303`; the final combined ZeRO-1
+row records `b615830`, with the same runtime implementation.
 
-**Draft inventory at completion of the matched-batch comparisons:** 26 final
-stage reports, 21 passed and five failed;
-26 verified stage retention receipts, including eight checkpoint stages; 3,682
-report-pinned source snapshot pairs rehashed successfully. Running larger-batch
-reports are excluded. This is **not the final milestone count**: rerun
-`.runtime/olmo-two-gpu/audit/inventory.py` after completing the queue and retention.
+**Final audited inventory:** 31 completed stage reports: 26 passed and five
+failed, with no unfinished stage or OOM in this milestone. All 31 stage retention
+receipts are verified, including eight checkpoint stages. All 4,492 report-pinned
+source snapshot pairs rehash successfully, with no archive/report-retention
+mismatch. The two pre-execution setup stubs (`rt-graph-01` and
+`tiny-graph-recovery-01`) lack full report source pins and remain explicitly
+listed as such; their available setup/error evidence is retained.
 
-<!-- CLOSEOUT: replace draft inventory above with final audited totals and
-fill the pending capacity table/recommendation. Preserve any new failed/OOM rows. -->
+The inventory counts 173 distributed optimizer executions (346 rank calls),
+16 single-GPU benchmark executions and 50 canonical-reference Adam calls:
+412 calls in total across engineering/reference branches, not a learning run.
+See [storage receipt](storage-receipt.md), [test ledger](test-ledger.md) and the
+retained audit for provenance. Compound checks are not summed into this count.
 
 The final capacity-integration CPU scope has **77 passing tests**; the transport
 change has a **54-test focused scope**. Earlier 91-, 129- and other reported
@@ -255,9 +289,10 @@ manifests and cleanup receipts remain. Evidence archives additionally receive
 downloaded-SHA verification. Original pretrained artifacts use the existing O1
 manifest/receipt. No credential values are part of this report.
 
-After capacity closeout, select DDP or ZeRO-1 and a comfortable physical batch
-from measured setup and steady memory, then return to the user for the next
-learning experiment. ZeRO-2 needs a demonstrated useful memory target before
-expanding scope. Fresh-process restart, dynamic graph layouts, additional RT
-layers, changed context lengths and quality experiments remain separate tests.
-See [usage.md](usage.md) for execution and recovery contracts.
+This is the planned review point. Before a long interruption-sensitive campaign,
+add a fresh-process checkpoint restart rehearsal for the chosen execution path
+and real data cursor. Then select a short learning pilot or longer ordinary
+baseline using these measured costs. Dynamic graph layouts, additional RT
+layers and changed context lengths remain scoped follow-ups. Existing Q/K and
+precision qualifications remain; no model-quality conclusion follows from this
+milestone. See [usage.md](usage.md) for execution and recovery contracts.

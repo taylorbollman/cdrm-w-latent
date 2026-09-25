@@ -1,8 +1,7 @@
 # Two-H100 milestone summary
 
-2026-09-25. **Draft pending the larger-batch capacity closeout.** Completed
-functionality and matched-batch results are summarized here; [results.md](results.md)
-contains the detailed scope, failures and pending rows.
+2026-09-25. **Milestone complete.** [results.md](results.md) contains the detailed
+scope, measurements and retained qualifications. No quality run is queued.
 
 The native RT stack now passes real two-GPU DDP, CUDA-graph and checkpoint
 reconstruction checks in the selected configuration. Both ordinary gradients
@@ -27,14 +26,18 @@ At the same global batch of 128 and sequence length 512:
 
 These measure five complete updates after preparation, including clipping,
 optimizer and communication. Own eager/graph raw checks pass before and after
-changed weights. Setup memory can greatly exceed steady memory, so the pending
-larger-batch measurements will determine comfortable operating points. Completed
-RT DDP reaches **55,768 tokens/s at B128/GPU** and **59,035 at B192/GPU**;
-sampled free memory is 24.8 and 10.5 GiB/GPU, respectively. The latter buys
-another 5.9% throughput with less room for additions. High setup reserved peaks
-include releasable warmup cache; low allocated memory during graph replay also
-omits the full reserved graph footprint. The report keeps these measures separate.
-Combined B128/GPU and matched ZeRO-1 capacity rows remain pending.
+changed weights. Setup peaks, graph-pool reservation and sampled device memory
+are reported separately; low replay allocator usage is not the whole footprint.
+
+For architectural development, use **RT DDP B128/GPU** (55.8k tokens/s,
+24.8 GiB sampled free) or **combined DDP B64/GPU** (23.4k/s, 30.5 GiB free).
+For the fixed larger-batch configuration, **ZeRO-1 RT B192/GPU** achieves
+58.2k/s with 14.5 GiB minimum sampled free, and **ZeRO-1 combined B128/GPU**
+achieves 24.4k/s with 7.5 GiB free. ZeRO-1 costs roughly 1–1.5% throughput
+versus matched DDP and recovers about 4 GiB of net headroom in these probes.
+Combined DDP B128 fits at24.7k/s but leaves only3.4 GiB free; it is not the
+recommended default for additions. DDP RT B192 is also viable at59.0k/s with
+10.5 GiB free. These are physical per-GPU batches; global batches are doubled.
 
 Recovery checks reproduce the next gradients, loss, full optimizer/model state,
 data cursor and local RNG draws exactly: actual RT eager recovery passes 24
@@ -72,7 +75,13 @@ after retention verification. W&B runs are in
 group `olmo-two-gpu`. [Usage instructions](usage.md) describe the exact runtime,
 checkpoint and launch contracts.
 
-**Remaining closeout:** finish larger-batch DDP/ZeRO-1 timings and memory checks,
-retain them, update the final inventory and recommend the operating batch and
-optimizer. ZeRO-2, bucket-view adoption, dynamic graph layouts and quality runs
-remain outside the completed scope.
+All 31 stage attempts are retained:26 passed and five failed. The source/archive
+audit verifies4,492 pinned source pairs and all31 stage receipts, including eight
+checkpoint stages. See [storage receipt](storage-receipt.md) and
+[test ledger](test-ledger.md).
+
+**Next review decision:** select the next workload and execution point. Before a
+long campaign, rehearse a fresh-process restart with its real data cursor. There
+is no need to add ZeRO-2 or chase physical B512 first. Bucket-view adoption,
+dynamic graph layouts, new RT-layer selections and quality runs remain outside
+this completed scope.

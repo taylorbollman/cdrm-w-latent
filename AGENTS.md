@@ -31,16 +31,18 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-25 two-H100 work is active on feat/olmo-two-gpu; source6921c53 pushed.
-Read docs/reports/olmo-two-gpu/progress.md before historical single-GPU status.
-Tiny and actual eager/graphs/recovery/ZeRO1 scopes pass, except the retained
-combined independent-BF16-trajectory update qualification; anchored checks pass.
-Actual RT eager recovery, combined graph recovery and ZeRO1 recovery/checkpoint
-transport fix pass. All full checkpoints verified in GCS. MatchedRT globalB128:
-single28.0k vs twoGPUB64/rank47.4k tok/s. Combined matched scaling is active,
-then larger DDP/ZeRO1 batches. Real NV18/NCCL, actual capturedDDP collectives.
-Only~19GiB persistent diskfree after verified duplicate cleanup; keep one actual
-checkpoint at a time. No quality run. Inspect live state before restarting.
+2026-09-25 two-H100 milestone is complete. Read docs/reports/olmo-two-gpu/
+results.md, summary.md, progress.md, usage.md, test-ledger.md and storage-receipt.md.
+31attempts:26passed/5retainedfailures, all retained in GCS with8checkpoint stages.
+Native RT at0/15 within16layerOLMo; combined=K2FBT+RT+NextLat. RealDDP/NCCL
+CUDAgraphs and scoped reconstruction recovery pass; freshprocess restart untested.
+Independent combinedBF16 update qualification and older native/author findings
+remain. Development:DDPRT B128/rank55.8k/s,combinedB64/rank23.4k/s.
+Fixedlargerbatch:ZeRO1RT B192/rank58.2k/s,combinedB128/rank24.4k/s.
+Noqualityjobqueued; GPUqueuefinished. Persistentdisk~19GiBfree; cloudverify
+fullcheckpointbeforeduplicatecleanup. Reviewresults beforechoosingnextworkload.
+
+## Historical milestones (hardware availability below is historical)
 
 2026-09-25 single-GPU preparation is complete. Read current handoff and
  docs/reports/olmo-single-gpu-readiness/results.md. Four actual B2/T512 cases

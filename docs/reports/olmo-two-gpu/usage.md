@@ -138,7 +138,8 @@ the pinned OLMo-1B step60000 artifacts; actual execution uses BF16 mixed,
 ordinary checkpointing, native RoPE, rounded compiled ordinary SwiGLU, fused
 Adam and optimized native RT. Tiny probes use FP32 fixtures.
 
-The following are scaling commands, **not measured performance claims**:
+The following reproduce the scaling harnesses. Use [results.md](results.md) for
+measured shapes, memory and qualifications:
 
 ```bash
 # Equal global physical batch: one GPU B128 versus two GPUs B64 each.
@@ -149,10 +150,10 @@ graph_probe scripts/olmo_two_gpu_graph.py --case rt --stage capacity \
   --batch-size 64 --length 512 \
   --output-dir .runtime/olmo-two-gpu/example-ddp-rt-b64
 
-# Conditional ZeRO-1 capacity after correctness/recovery and graph integration.
+# ZeRO-1 capacity after correctness/recovery and graph integration.
 graph_probe scripts/olmo_two_gpu_zero1_graph.py --case rt --stage capacity \
-  --batch-size 128 --length 512 \
-  --output-dir .runtime/olmo-two-gpu/example-zero1-rt-b128
+  --batch-size 192 --length 512 \
+  --output-dir .runtime/olmo-two-gpu/example-zero1-rt-b192
 ```
 
 Repeat matched cases with `--case combined`; investigate RT B128/B192 and
@@ -190,13 +191,18 @@ full-state checkpoints need roughly 13–14 GiB each. Check free persistent disk
 keep one new actual checkpoint at a time, and verify GCS retention before any
 local cleanup. Keep the manifest and a cleanup receipt. Local SSD is disposable.
 
-At this documentation snapshot, tiny eight-mode eager, tiny eager/graph recovery,
-tiny ZeRO-1 recovery, actual ordinary/RT eager, actual RT eager recovery and
-actual RT/combined graph correctness pass. Actual combined independent eager
-update 2 retains strict parameter/moment tolerance failures despite passing
-raw-gradient budgets; the anchored fixed-state comparison passes unchanged
-budgets. This does not clear independent trajectory equivalence or the older
-native/author BF16 qualification. Actual combined graph recovery, actual ZeRO-1,
-the new ZeRO-1 graph integration and capacity/scaling require their own final
-reports. Check progress.md before deciding what remains; command availability
-alone is not validation. No Q/K-normalization or model-quality conclusion follows.
+Tiny eight-mode eager, actual ordinary/RT eager, actual RT/combined graph
+correctness, actual RT eager recovery, actual combined graph recovery and
+actual combined ZeRO-1 recovery now pass their declared checks. The transport
+fix also passes actual full-model recovery; its measured checkpoint save is
+83.4 seconds, excluding cloud upload. Matched-batch scaling and larger physical
+batches have separate reports in [results.md](results.md).
+
+Actual combined independent eager update 2 retains strict parameter/moment
+tolerance failures despite passing raw-gradient budgets; the anchored fixed-state
+comparison passes unchanged budgets. This does not clear independent trajectory
+equivalence or the older native/author BF16 qualification. Recovery is tested by
+reconstructing model/optimizer/DDP within the same process group; a fresh
+`torchrun` launch or VM restart remains untested. No Q/K-normalization or
+model-quality conclusion follows. No bucket-view GPU adoption, ZeRO-2, dynamic
+graph layout, all-layer RT or physical B512 claim is made.

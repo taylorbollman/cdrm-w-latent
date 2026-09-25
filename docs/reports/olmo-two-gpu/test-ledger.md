@@ -77,8 +77,9 @@ unknown older command arguments or claim a repository-wide test-suite pass.
 
 ## GPU validation categories
 
-All GPU work ran inside the project container on two distinct H100 80GB devices,
-one process per device. Reports freeze source hashes and runtime configuration.
+All GPU work ran inside the project container. Distributed probes used two
+distinct H100 80GB devices, one process per device; matched single-GPU references
+used one of those devices. Reports freeze source hashes and runtime configuration.
 “Exact” below means the tested same-candidate comparisons are bitwise equal;
 canonical references with different reduction ordering use the frozen budgets.
 
