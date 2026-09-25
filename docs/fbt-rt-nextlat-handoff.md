@@ -4,6 +4,24 @@ Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Ordinary-only throughput follow-up complete, 2026-09-25:** the user requested
+base-model batch/memory/throughput before moving on. Read the [results](reports/olmo-ordinary-two-gpu/results.md),
+[handoff](reports/olmo-ordinary-two-gpu/progress.md) and [storage receipt](reports/olmo-ordinary-two-gpu/storage-receipt.md).
+No experimental feature executes. Source467bde7 adds explicit benchmark options;
+native B64 control passes78.2k/s. Recommend Dao RoPE DDP B64/rank,T512:
+85.2k inputtokens/s with44.9GiB sampled free/rank. B128/B192 add only about1%;
+matchedsingleB12844.0k/s gives1.93x scaling. Eight stages pass,93CPUtests;
+all evidence retained. No GPUjob/qualitytraining queued; GPUs verified idle.
+[Execution terminology](reports/olmo-ordinary-two-gpu/execution-options.md) explains
+bucket views and layout changes; neither is being adopted in this follow-up.
+Read [ZeRO-2/NextLat clarification](reports/olmo-ordinary-two-gpu/zero2-nextlat-clarifications.md):
+ZeRO2 remains a possible throughput/memory experiment for the selected workload,
+not a prerequisite. These graphs use one microbatch/update, not accumulation.
+Current OLMo NextLat includes SmoothL1+KL with both coefficients1.0; historical
+A5 configurations differed. Future standalone one-GPU tests can use a one-GPU
+VM; this matched reference used the same host for a controlled scaling comparison.
+
+
 **Two-H100 milestone complete, 2026-09-25:** read
 [results](reports/olmo-two-gpu/results.md), [summary](reports/olmo-two-gpu/summary.md)
 and [current interruption handoff](reports/olmo-two-gpu/progress.md). Two H10080GB

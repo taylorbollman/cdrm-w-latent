@@ -25,15 +25,15 @@ from cdrm.pretrained.lm_training import LMTrainingConfig,TrainingCounters,optimi
 from cdrm.pretrained.nextlat import NextLatBatch
 from cdrm.pretrained.static_training import StaticFBTTraining
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
-from scripts.olmo_f1_common import IntegrationCase
 from scripts.olmo_two_gpu_validate import construct,preserve_local_rng
-from scripts.olmo_two_gpu_graph import fixed_batch,steady_memory_summary
+from scripts.olmo_two_gpu_graph import (fixed_batch,steady_memory_summary,performance_options,
+    performance_case,configure_performance_model,performance_dependencies,performance_protocols)
 from scripts.olmo_large_batch_validation import (snapshot_eager_cpu,replay_compare_cpu,
     snapshot_replay_cpu,release_graph_then_compare_eager_cpu)
 from scripts.olmo_rt_efficiency import resource_card
 from scripts.olmo_rt_large_batch import (optimizer_for,compiler_configuration,
     configure_determinism,require_container_gpu,backend_context,load_native_tokenizer,
-    validate_prepared_manifest,OnlineTracker,MemoryPhases,dependency_record,finish_tracking,
+    validate_prepared_manifest,OnlineTracker,MemoryPhases,finish_tracking,
     detailed_memory_snapshot)
 
 PROTOCOL=ROOT/'docs/reports/olmo-two-gpu/protocol.md'
@@ -42,7 +42,8 @@ PROTOCOL=ROOT/'docs/reports/olmo-two-gpu/protocol.md'
 def parse_args(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tiny',action='store_true')
-    parser.add_argument('--case',choices=('rt','combined'),required=True)
+    parser.add_argument('--case',choices=('ordinary','rt','combined'),required=True)
+    parser.add_argument('--ordinary-rope-backend',choices=('native','dao'),default='native')
     parser.add_argument('--batch-size',type=int,default=128,
                         help='One-GPU physical/global batch; paired DDP uses half on each rank')
     parser.add_argument('--length',type=int,default=512)
@@ -56,6 +57,8 @@ def parse_args(argv=None):
         parser.error('The paired fixture requires a positive even physical batch')
     if not 8<=args.length<=2048 or (not args.tiny and args.length!=512):
         parser.error('Initial full-model scaling uses T512; tiny checks allow T8..2048')
+    try: performance_options(args)
+    except ValueError as error: parser.error(str(error))
     return args
 
 
@@ -82,8 +85,7 @@ def paired_batch(case,tokenizer,update,*,tiny):
 
 def run(args,report,tracker):
     device=torch.device('cuda',torch.cuda.current_device())
-    case=IntegrationCase(args.case,fbt=args.case=='combined',nextlat=args.case=='combined',
-        rt_layers=(0,1 if args.tiny else 15),batch_size=args.batch_size,length=args.length)
+    case=performance_case(args)
     report.update(case=asdict(case),mode=asdict(case.mode()),physical_updates=0,
         configuration={**report['configuration'],'physical_batch_per_gpu':case.batch_size,
             'global_batch':case.batch_size,'paired_ddp_physical_batch_per_gpu':case.batch_size//2,
@@ -100,10 +102,11 @@ def run(args,report,tracker):
     config=LMTrainingConfig(precision='fp32' if args.tiny else 'bf16_mixed')
     with phases.phase('construct'):
         model=construct(case,args,device)
+        report['execution_options']=configure_performance_model(model,args)
         tokenizer=None if args.tiny else load_native_tokenizer(args.artifacts)
         batch=paired_batch(case,tokenizer,0,tiny=args.tiny)
         plan=StaticFBTTraining(model,batch,mode=case.mode(),config=config)
-        optimizer,scheduler=optimizer_for(model,'compiled-native')
+        optimizer,scheduler=optimizer_for(model,performance_options(args)['optimizer_arm'])
         counters=TrainingCounters()
     with phases.phase('eager_adam_preparation'):
         for index in range(3):
@@ -169,15 +172,16 @@ def main(argv=None):
     torch.set_float32_matmul_precision('highest');compiler_configuration()
     args.output_dir.mkdir(parents=True,exist_ok=False)
     report=dict(schema='olmo-two-gpu-single-reference-v1',status='running',stage='setup',runtime=runtime,checks=[],
-        configuration={k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()})
+        configuration={**{k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()},
+                       **performance_options(args)})
     tracker=None;original_error=None
     try:
         sources=[*sorted((ROOT/'cdrm/pretrained').glob('*.py')),*sorted((ROOT/'scripts').glob('olmo*.py')),
                  ROOT/'scripts/experiment_tracking.py',ROOT/'scripts/docker_shell.sh']
-        if PROTOCOL.exists(): sources.append(PROTOCOL)
+        sources.extend(performance_protocols(args))
         report['sources']={str(path.relative_to(ROOT)):sha256_file(path) for path in sources}
         report['git_head']=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-        report['dependencies']=dependency_record(args.output_dir,include_dao=False,include_fa4=False)
+        report['dependencies']=performance_dependencies(args)
         if not args.tiny: report['checkpoint']=validate_prepared_manifest(args.artifacts)['checkpoint']
         for path in sources:
             target=args.output_dir/'source-snapshot'/path.relative_to(ROOT)

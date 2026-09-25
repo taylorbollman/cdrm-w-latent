@@ -101,7 +101,7 @@ def test_terminal_release_requires_existing_graph():
 
 
 @pytest.mark.parametrize('extra', [['--length', '256'], ['--batch-size', '0'], ['--batch-size', '513'],
-                                 ['--stage', 'integration', '--batch-size', '9'], ['--case', 'ordinary']])
+                                 ['--stage', 'integration', '--batch-size', '9'], ['--case', 'unknown']])
 def test_cli_bounded_actual_scope(extra):
     with pytest.raises(SystemExit):
         harness.parse_args(['--case', 'rt', '--output-dir', str(harness.ROOT/'.runtime/zero1-unit'), *extra])

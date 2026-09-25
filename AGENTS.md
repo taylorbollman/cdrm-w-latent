@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 ordinary-only two-GPU throughput follow-up is complete. Read
+docs/reports/olmo-ordinary-two-gpu/results.md and progress.md before the RT
+milestone below. Recommend Dao RoPE DDP B64/rank at T512:85.2k tokens/s,
+44.9GiB sampled free/rank; B128/B192 add only about1%. Matched singleB128
+44.0k/s yields1.93x scaling. Eight stages pass;93CPUtests; all evidence retained.
+No RT/FBT/NextLat executes in this sweep; no quality run or GPUjob is queued.
+ZeRO2 deferred, not ruled out for throughput; graph accumulation not validated.
+Read zero2-nextlat-clarifications.md for reduction tradeoffs and confirmation
+that current OLMo NextLat uses active SmoothL1+KL (both coefficients1.0).
+
+
 2026-09-25 two-H100 milestone is complete. Read docs/reports/olmo-two-gpu/
 results.md, summary.md, progress.md, usage.md, test-ledger.md and storage-receipt.md.
 31attempts:26passed/5retainedfailures, all retained in GCS with8checkpoint stages.

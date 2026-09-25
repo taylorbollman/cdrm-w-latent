@@ -30,17 +30,18 @@ from cdrm.pretrained.ddp_graph_training import PreparedDDPObjective, DDPGraphTra
 from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters
 from cdrm.pretrained.zero1_training import zero1_state_inventory, zero1_checkpoint_configuration
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
-from scripts.olmo_f1_common import IntegrationCase, active_names
+from scripts.olmo_f1_common import active_names
 from scripts.olmo_lm_common import tree_digests
 from scripts.olmo_rt_efficiency import resource_card
 from scripts.olmo_two_gpu_graph import (fixed_batch, raw_snapshot, exact_raw_check,
-    finish_step, aggregate_resources, steady_memory_summary)
+    finish_step, aggregate_resources, steady_memory_summary, performance_options,
+    performance_case, configure_performance_model, performance_dependencies, performance_protocols)
 from scripts.olmo_two_gpu_recovery import execution_configuration, seed_local
 from scripts.olmo_two_gpu_zero1 import make_optimizer
 from scripts.olmo_two_gpu_validate import construct, move_batch, gather, assert_all, preserve_local_rng, TERMS
 from scripts.olmo_rt_large_batch import (compiler_configuration, configure_determinism,
     require_container_gpu, backend_context, load_native_tokenizer, validate_prepared_manifest,
-    OnlineTracker, MemoryPhases, dependency_record, finish_tracking, detailed_memory_snapshot)
+    OnlineTracker, MemoryPhases, finish_tracking, detailed_memory_snapshot)
 
 PROTOCOL = ROOT/'docs/reports/olmo-two-gpu/protocol.md'
 
@@ -48,7 +49,8 @@ PROTOCOL = ROOT/'docs/reports/olmo-two-gpu/protocol.md'
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tiny', action='store_true')
-    parser.add_argument('--case', choices=('rt', 'combined'), required=True)
+    parser.add_argument('--case', choices=('ordinary', 'rt', 'combined'), required=True)
+    parser.add_argument('--ordinary-rope-backend', choices=('native','dao'), default='native')
     parser.add_argument('--stage', choices=('integration', 'capacity'), default='capacity')
     parser.add_argument('--batch-size', type=int, default=2)
     parser.add_argument('--length', type=int, default=512)
@@ -65,6 +67,8 @@ def parse_args(argv=None):
         parser.error('Initial actual-model graph scope uses T512')
     if args.stage == 'integration' and args.batch_size > 8:
         parser.error('Bound initial integration to physical B1..8')
+    try: performance_options(args)
+    except ValueError as error: parser.error(str(error))
     return args
 
 
@@ -156,8 +160,7 @@ def release_graph_for_eager(runtime, *, synchronize=None, cleanup=None):
 
 def run(args, report, tracker):
     rank = dist.get_rank(); device = torch.device('cuda', int(os.environ['LOCAL_RANK']))
-    case = IntegrationCase(args.case, fbt=args.case=='combined', nextlat=args.case=='combined',
-        rt_layers=(0, 1 if args.tiny else 15), batch_size=args.batch_size, length=args.length)
+    case = performance_case(args)
     config = LMTrainingConfig(precision='fp32' if args.tiny else 'bf16_mixed')
     report.update(case=asdict(case), mode=asdict(case.mode()), physical_updates=0)
     def persist():
@@ -171,6 +174,7 @@ def run(args, report, tracker):
     with phases.phase('construct'):
         seed_local(20260925, device)
         model = construct(case, args, device)
+        options = configure_performance_model(model, args)
         tokenizer = None if args.tiny else load_native_tokenizer(args.artifacts)
         batch = fixed_batch(case, tokenizer, 0, rank, tiny=args.tiny)
         counts = torch.tensor([model.counts(batch)[term] for term in TERMS], device=device, dtype=torch.int64)
@@ -182,6 +186,7 @@ def run(args, report, tracker):
         optimizer, scheduler = make_optimizer(model)
         counters = TrainingCounters()
         configuration = execution_configuration(model, case, config, args)
+        configuration.update(options)
         configuration.update(schema='olmo-two-gpu-zero1-graph-execution-v1', graphs=True,
             ddp=dict(static_graph=True, find_unused_parameters=False, broadcast_buffers=False,
                      gradient_as_bucket_view=args.bucket_view),
@@ -278,15 +283,17 @@ def main(argv=None):
     rank = dist.get_rank(); tracker = None; original_error = None
     local = dict(schema='olmo-two-gpu-zero1-graph-rank-v1', rank=rank, status='running', stage='setup', checks=[])
     report = dict(schema='olmo-two-gpu-zero1-graph-v1', status='running', runtime=runtime_info,
-                  configuration={key: str(value) if isinstance(value, Path) else value for key,value in vars(args).items()})
+                  configuration={**{key: str(value) if isinstance(value, Path) else value for key,value in vars(args).items()},
+                                 **performance_options(args)})
     try:
         if rank == 0:
             args.output_dir.mkdir(parents=True, exist_ok=False)
             sources = [*sorted((ROOT/'cdrm/pretrained').glob('*.py')), *sorted((ROOT/'scripts').glob('olmo*.py')),
-                       ROOT/'scripts/experiment_tracking.py', ROOT/'scripts/docker_shell.sh', PROTOCOL]
+                       ROOT/'scripts/experiment_tracking.py', ROOT/'scripts/docker_shell.sh',
+                       *performance_protocols(args)]
             report['sources'] = {str(path.relative_to(ROOT)): sha256_file(path) for path in sources}
             report['git_head'] = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
-            report['dependencies'] = dependency_record(args.output_dir, include_dao=False, include_fa4=False)
+            report['dependencies'] = performance_dependencies(args)
             if not args.tiny: report['checkpoint'] = validate_prepared_manifest(args.artifacts)['checkpoint']
             for path in sources:
                 target = args.output_dir/'source-snapshot'/path.relative_to(ROOT)
