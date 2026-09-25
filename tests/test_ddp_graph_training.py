@@ -266,3 +266,29 @@ def test_tensor_diagnostic_outputs_are_all_detached():
         elif isinstance(value, (tuple,list)):
             for child in value: check(child)
     check({key:value for key,value in output.items() if key != "objective"})
+
+
+def test_updated_weights_remain_valid_after_gradient_freeze():
+    adapter, _ = prepared_setup()
+    runtime = DDPGraphTraining(adapter,expected_active_names=active_names(adapter))
+    adapter()["objective"].backward();runtime._freeze_gradients()
+    addresses=runtime.gradient_addresses.copy()
+    with torch.no_grad():
+        for parameter in adapter.model.parameters(): parameter.add_(1e-5)
+    runtime.validate_execution()
+    assert runtime._addresses()==addresses
+    for parameter in adapter.model.parameters():
+        if parameter.grad is not None: parameter.grad.zero_()
+    runtime.validate_execution()
+
+
+def test_prepared_eager_execution_can_precede_capture():
+    adapter, _ = prepared_setup()
+    runtime = DDPGraphTraining(adapter,expected_active_names=active_names(adapter))
+    class Wrapped(torch.nn.Module):
+        def forward(self): return adapter()
+    runtime.ddp=Wrapped()
+    result=runtime.backward(replay=False)
+    assert result['objective'].requires_grad
+    assert runtime.graph is None
+    with pytest.raises(ValueError,match="Capture"): runtime.backward(replay=True)

@@ -232,23 +232,21 @@ class DDPGraphTraining:
         self.active_names = active
         self.gradient_addresses = self._addresses()
 
-    def capture(self, *, warmup=11, release_transient_cache=False, phase_observer=None):
+    def prepare(self, *, warmup=11, phase_observer=None):
+        """Construct and warm real DDP; permits eager Adam setup before capture."""
         if self.device.type != "cuda":
             raise ValueError("Distributed CUDA graph capture requires CUDA; no CPU fallback")
         if type(warmup) is not int or warmup < 11:
             raise ValueError("At least 11 DDP-enabled eager warmup iterations are required")
-        if type(release_transient_cache) is not bool:
-            raise TypeError("release_transient_cache must be boolean")
         if phase_observer is not None and not callable(phase_observer):
             raise TypeError("phase_observer must be callable or None")
-        if self._capture_started:
-            raise ValueError("Distributed capture was already attempted; create a fresh wrapper and plan")
+        if self.ddp is not None or self._capture_started:
+            raise ValueError("Distributed preparation was already attempted; create a fresh wrapper and plan")
         self.validate_execution()
         if torch.cuda.current_device() != self.device.index:
             raise ValueError("Set the rank's CUDA device before constructing distributed graphs")
         if any(p.grad is not None for _, p in self._parameters):
             raise ValueError("Start distributed capture at a cleared gradient boundary")
-        self._capture_started = True
         try:
             with _preparation_phase(phase_observer, "distributed_contract"):
                 self._validate_distributed_contract()
@@ -274,6 +272,25 @@ class DDPGraphTraining:
                     raise ValueError("DDP gradient addresses did not stabilize during warmup")
                 self._freeze_gradients()
                 self.validate_execution()
+        except BaseException:
+            self._failed = True
+            raise
+
+    def capture(self, *, warmup=11, release_transient_cache=False, phase_observer=None):
+        if type(warmup) is not int or warmup < 11:
+            raise ValueError("At least 11 DDP-enabled eager warmup iterations are required")
+        if type(release_transient_cache) is not bool:
+            raise TypeError("release_transient_cache must be boolean")
+        if phase_observer is not None and not callable(phase_observer):
+            raise TypeError("phase_observer must be callable or None")
+        if self._capture_started:
+            raise ValueError("Distributed capture was already attempted; create a fresh wrapper and plan")
+        self.validate_execution()
+        if self.ddp is None:
+            self.prepare(warmup=warmup, phase_observer=phase_observer)
+        self.validate_execution()
+        self._capture_started = True
+        try:
             if release_transient_cache:
                 with _preparation_phase(phase_observer, "transient_cleanup"):
                     gc.collect()
@@ -300,8 +317,10 @@ class DDPGraphTraining:
         if type(replay) is not bool:
             raise TypeError("replay must be boolean")
         self.validate_execution()
-        if self.graph is None:
-            raise ValueError("Capture the distributed graph before backward")
+        if replay and self.graph is None:
+            raise ValueError("Capture the distributed graph before replay backward")
+        if self.ddp is None:
+            raise ValueError("Prepare DDP before eager backward")
         try:
             if replay:
                 self.graph.replay()
