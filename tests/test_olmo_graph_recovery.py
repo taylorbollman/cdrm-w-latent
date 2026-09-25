@@ -245,3 +245,16 @@ def test_tracking_finish_failure_cannot_publish_passed_status(monkeypatch, tmp_p
     assert report["status"] == "failed"
     assert report["physical_optimizer_updates"] == 6
     assert report["tracking_error_type"] == "RuntimeError"
+
+
+def test_determinism_is_configured_before_gpu_probe_can_initialize_cuda(monkeypatch, tmp_path):
+    events = []
+    monkeypatch.setattr(recovery, "ROOT", tmp_path)
+    monkeypatch.setattr(recovery, "configure_determinism", lambda enabled: events.append("determinism"))
+    def probe():
+        events.append("gpu_probe")
+        raise RuntimeError("stop before actual CUDA work")
+    monkeypatch.setattr(recovery, "require_container_gpu", probe)
+    with pytest.raises(RuntimeError, match="stop before actual CUDA"):
+        recovery.main(["--case", "rt", "--output-dir", str(tmp_path / "run")])
+    assert events == ["determinism", "gpu_probe"]

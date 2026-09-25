@@ -142,8 +142,8 @@ def verified_discard_checkpoint(path, receipt, checks, *, expected_updates, actu
 
 def main(argv=None):
     args = parse_args(argv)
+    determinism = configure_determinism(True)  # Must precede any CUDA initialization.
     runtime = require_container_gpu()  # No silent CPU fallback.
-    determinism = configure_determinism(True)
     torch.set_num_threads(4)
     random.seed(SEED); np.random.seed(SEED); torch.manual_seed(SEED)
     torch.backends.cuda.matmul.allow_tf32 = False
