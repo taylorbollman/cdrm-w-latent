@@ -334,6 +334,8 @@ def main(argv=None):
                     "torch_version": str(torch.__version__), "source": hook_source,
                     "source_sha256": hashlib.sha256(hook_source.encode()).hexdigest()}}
         report.update(gather(coordinated("rank-zero setup", setup))[0])
+        if rank == 0:
+            report["wandb"] = tracker.record
         coordinated("record setup", lambda: persist("setup"))
         with disable_autocast_weight_cache(), backend_context("math" if args.tiny else "flash"):
             run(args, report, tracker, persist, publish)
@@ -348,6 +350,7 @@ def main(argv=None):
     finally:
         report["finished_utc"] = utc_now()
         if rank == 0 and args.output_dir.is_dir():
+            write_json(args.output_dir / "report.json", report)
             try:
                 if tracker is not None:
                     finish_tracking(tracker, report, original_error=original_error)

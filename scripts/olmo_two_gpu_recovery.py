@@ -40,6 +40,7 @@ from scripts.olmo_lm_common import tree_digests
 from scripts.olmo_rt_large_batch import (
     OnlineTracker, backend_context, compiler_configuration, configure_determinism,
     load_native_tokenizer, optimizer_for, require_container_gpu, validate_prepared_manifest,
+    finish_tracking,
 )
 from scripts.olmo_two_gpu_validate import construct, gather, make_batch, move_batch, preserve_local_rng
 
@@ -313,6 +314,7 @@ def main(argv=None):
         raise RuntimeError("Recovery check requires two ranks on two actual GPUs")
     rank = dist.get_rank()
     tracker = None
+    original_error = None
     report = {"schema": "olmo-two-gpu-recovery-v1", "started_utc": utc_now(),
               "runtime": runtime, "passed": False, "status": "running", "checks": [],
               "physical_updates_per_rank": 0, "scope": "eager_same_world_size_reconstruction"}
@@ -358,6 +360,8 @@ def main(argv=None):
 
         setup = coordinated("rank-zero setup", setup_rank_zero)
         report.update(gather(setup)[0])
+        if rank == 0:
+            report["wandb"] = tracker.record
         coordinated("record setup", lambda: persist("setup"))
         with disable_autocast_weight_cache(), backend_context("math" if args.tiny else "flash"):
             run_case(args, report, tracker, persist, publish)
@@ -365,25 +369,26 @@ def main(argv=None):
                 sha256_file(args.output_dir / "source-snapshot" / name) == digest
                 for name, digest in report["sources"].items()))
         report.update(status="passed", passed=True, stage="complete")
-    except Exception as error:
+    except BaseException as error:
+        original_error = error
         report.update(status="failed", passed=False,
                       error={"type": type(error).__name__, "message": str(error), "traceback": traceback.format_exc()})
         raise
     finally:
         report["finished_utc"] = utc_now()
         if rank == 0:
+            if args.output_dir.is_dir():
+                write_json(args.output_dir / "report.json", report)
             try:
                 if tracker is not None:
-                    tracker.finish(succeeded=report["passed"])
-            except Exception as error:
-                report.update(status="failed", passed=False,
-                              tracking_error={"type": type(error).__name__, "message": str(error)})
-                raise
+                    finish_tracking(tracker, report, original_error=original_error)
             finally:
+                report["passed"] = report["status"] == "passed"
                 if args.output_dir.is_dir():
                     write_json(args.output_dir / "report.json", report)
                     persist()
-        dist.destroy_process_group()
+        if original_error is None:
+            dist.destroy_process_group()
 
 
 if __name__ == "__main__":
