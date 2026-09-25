@@ -6,6 +6,9 @@ Dao RoPE: approximately **85,200 input tokens/s** on two H100s, with **44.9 GiB
 sampled free memory per GPU**. The matched single-GPU reference reaches 44,041
 tokens/s, giving **1.93× two-GPU scaling**.
 
+[Throughput plot](ordinary-throughput.pdf), [memory plot](ordinary-memory.pdf),
+[measurement CSV](ordinary-performance.csv) and [storage receipt](storage-receipt.md).
+
 The two fresh-process B64 measurements are **85,152 and 85,274 input tokens/s**,
 a 0.14% spread. Increasing the physical batch to B128 or B192 adds only about
 **0.7% or 1.3% throughput** relative to the pooled B64 rate, while
@@ -116,6 +119,9 @@ ZeRO-2 also remains deferred, **not ruled out as a possible throughput
 optimization**. It changes gradient communication/storage and needs its own
 graph/update/recovery checks. There is no demonstrated memory or throughput
 need for that additional change before using this ordinary baseline.
+See [ZeRO-2 and NextLat clarification](zero2-nextlat-clarifications.md) for the
+accumulation/reduction tradeoff and the active auxiliary objective outside this
+ordinary-only benchmark.
 
 ## Correctness and what the timings include
 
