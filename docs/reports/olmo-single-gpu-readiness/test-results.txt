@@ -1,0 +1,22 @@
+Single-GPU readiness evidence helper CPU validation, 2026-09-25.
+
+Executed in the project Docker image with CDRM_DOCKER_GPUS=none,
+CDRM_FLASH_ATTENTION_SOURCE=installed and CDRM_ENV_FILE=/dev/null,
+using the isolated cdrm-w-latent-ddp-prep worktree. No GPU or cloud upload.
+
+python -m pytest -q tests/test_olmo_single_gpu_readiness_report.py
+
+46 passed in 1.51s.
+
+Coverage: explicit selected-run provenance against real temporary Git commits;
+source/protocol/report mutations and self-consistent forged current snapshots;
+adapter gradient participation, loss/count, precision-budget and physical-update
+gates; recovery branch/state/RNG/logical-vs-physical accounting and successful
+checkpoint disposal; tracking-only failures preserved without promotion;
+dependency snapshots; path/log safety; failed checkpoint/credential exclusion;
+summary revalidation; dry-run archive construction; mocked create-only GCS
+upload and downloaded-byte hash mismatch detection.
+
+These tests validate evidence handling. They do not assert that the actual-model
+GPU cases have executed. The milestone owner appends their execution results
+and group-specific CPU test totals when closing the milestone.
