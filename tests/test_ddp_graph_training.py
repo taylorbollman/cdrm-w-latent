@@ -168,9 +168,10 @@ def test_tensor_backward_invokes_wrapped_forward_and_overwrites(monkeypatch):
     runtime = DDPGraphTraining(adapter, expected_active_names=active_names(adapter))
     calls = []
     class Wrapped(torch.nn.Module):
-        def forward(self):
+        def forward(self, input_ids):
+            assert input_ids is adapter.plan.batch.input_ids
             calls.append("forward")
-            return adapter()
+            return adapter(input_ids)
     runtime.ddp = Wrapped()
     runtime._tensor_backward()
     initial = grads(adapter.model)
@@ -286,9 +287,15 @@ def test_prepared_eager_execution_can_precede_capture():
     adapter, _ = prepared_setup()
     runtime = DDPGraphTraining(adapter,expected_active_names=active_names(adapter))
     class Wrapped(torch.nn.Module):
-        def forward(self): return adapter()
+        def forward(self, input_ids): return adapter(input_ids)
     runtime.ddp=Wrapped()
     result=runtime.backward(replay=False)
     assert result['objective'].requires_grad
     assert runtime.graph is None
     with pytest.raises(ValueError,match="Capture"): runtime.backward(replay=True)
+
+
+def test_prepared_ddp_rejects_a_different_input_buffer():
+    adapter, _ = prepared_setup()
+    with pytest.raises(ValueError, match="prepared static token storage"):
+        adapter(adapter.plan.batch.input_ids.clone())

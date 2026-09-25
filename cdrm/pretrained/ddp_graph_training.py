@@ -69,9 +69,14 @@ class PreparedDDPObjective(nn.Module):
         self.validate_execution()
         self.plan.load_batch(batch)
 
-    def forward(self):
+    def forward(self, input_ids=None):
         # No tensor-to-host reads, input validation or denominator collectives.
         # The Python structure and scalar coefficients are fixed at preparation.
+        # GPU DDP's input mover in the installed build rejects an empty argument
+        # tuple. Pass the existing static token storage through its real forward
+        # boundary; no data copy or extra differentiable branch is introduced.
+        if input_ids is not None and input_ids is not self.plan.batch.input_ids:
+            raise ValueError("DDP input must be the prepared static token storage")
         result = self.plan.loss_sums()
         objective = sum(result.sums[t] * coefficient for t, coefficient in self._coefficients)
         return {"objective": objective,
@@ -188,7 +193,7 @@ class DDPGraphTraining:
                 parameter.grad.zero_()
         with torch.autocast(self.device.type, dtype=torch.bfloat16,
                             enabled=self.adapter.plan.config.precision == "bf16_mixed", cache_enabled=False):
-            result = self.ddp()
+            result = self.ddp(self.adapter.plan.batch.input_ids)
         result["objective"].backward()
         return result
 
