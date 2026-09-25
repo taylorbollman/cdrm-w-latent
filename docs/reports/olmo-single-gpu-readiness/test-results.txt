@@ -36,3 +36,54 @@ upload and downloaded-byte hash mismatch detection.
 These tests validate evidence handling. They do not assert that the actual-model
 GPU cases have executed. The milestone owner appends their execution results
 and group-specific CPU test totals when closing the milestone.
+
+Root integration at frozen runtime ed4333d (before actual-model GPU execution):
+256 passed in 12.24s. This includes the integrated adapter, canonical FBT/LM,
+graph-recovery and evidence-handling suites; it overlaps the earlier184-test
+result and is not an additional distinct-test count.
+
+After the first distributed-preparation attempt failed before any optimizer
+update because Flash SDPA rejects an explicit attention mask, the isolated
+dispatch fix68496a0 added opt-in full_valid_causal=True. CPU container validation:
+
+python -m pytest -q tests/test_olmo_fbt.py \
+  tests/test_distributed_training_preparation.py tests/test_olmo_distributed_prepare.py \
+  tests/test_olmo_single_gpu_readiness_report.py tests/test_olmo_fbt_training.py \
+  tests/test_olmo_lm_training.py
+
+247 passed in 8.43s. This overlaps the prior suites; it adds explicit-math
+forward/all-gradient equivalence, per-pass/default dispatch checks, strict
+padding/document/position/cache rejection, and canonical/adapter eager-option
+propagation. No GPU execution occurred in that CPU-only container. Independent
+review found no remaining blocker before the corrected GPU runs.
+
+Helper-only follow-up ceb0336 includes the existing test_olmo_fbt.py dispatch
+regressions in retained evidence. Repeated the affected evidence-helper suite:
+52 passed in 1.65s. This is an overlapping verification after that allowlist
+change; no GPU/runtime/protocol or numerical-budget change was involved.
+
+After root integration of dispatch fixec11573 and retention helperf8be057:
+166 passed in 10.06s across test_olmo_fbt.py,
+test_olmo_distributed_prepare.py, test_olmo_graph_recovery.py and
+test_olmo_single_gpu_readiness_report.py. This focused integration rerun
+overlaps the preceding scopes and includes both GPU harnesses' CPU contracts.
+Corrected distributed-preparation GPU runs are pinned to f8be057; recovery
+runs and the original zero-update failed attempt remain pinned to ed4333d.
+
+Actual-model GPU results, 2026-09-25 (milestone owner execution):
+  distributed/rt-b2-t512-01, ed4333d: failed before adapter/optimizer,0 updates.
+  distributed/rt-b2-t512-02, f8be057: passed15/15 gates,4 physical/2 logical.
+  distributed/combined-b2-t512-01, f8be057: passed15/15,4 physical/2 logical.
+  recovery/rt-b2-t512-01, ed4333d: passed20/20,6 physical/4 logical.
+  recovery/combined-b2-t512-01, ed4333d: passed20/20,6 physical/4 logical.
+All four primary B2/T512 cases finished;70 passing gates,20 physical updates.
+Every raw-gradient comparison in the adapter preparation, including independent
+CPU VJP summation, is bitwise exact for RT65/combined71 expected tensors. Both
+complete accumulated update comparisons per case are exact. Recovery checks
+full model/optimizer/scheduler/counter/RNG/cursor restoration and exact subsequent
+updates, with both comparison branches rebuilding CUDA graphs.
+
+Five-report evidence summary generated with explicit per-run commit overrides:
+statuses failed1/passed4; primary_scope_complete=true;300 frozen source pairs
+verified. Original failed report remains failed. git diff --check passed.
+Summary generation performed no GPU work or cloud upload.

@@ -31,17 +31,20 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-25 user approved docs/native-rt-single-to-two-gpu-plan.md. Single-H100
-capacity queue finished:22reports,16pass/3numericfail/3OOM,153actualupdates.
-Read current handoff and docs/reports/olmo-rt-large-batch/results.md. Reverse
-repeats support RT B19229.746k/s and combined B12812.413k/s atT512. Keep native
-ordinaryRoPE/compiledroundedSwiGLU/fusedAdam/FlashSDPA and nativeTritonRT at0/15.
-FA4 doesnotchangeRTB256captureOOM; combined saves1GiB but failsintegration,
-so notadopted. FinalGPUruntimea2bc709; laterreporting-onlyhardening4e1bff5/f583703.
-Next finish retention/PR, then oneGPUadapter/accumulation/fullupdate/recovery
-checks from isolatedworktrees before genuine twoGPU DDP/graphs/recovery/scaling
-and ZeRO1/conditional2. OptionalRT memory/fusion doesnotblockdistributedwork.
-Verify live processes before new GPU work; no quality training is queued.
+2026-09-25 single-GPU preparation is complete. Read current handoff and
+ docs/reports/olmo-single-gpu-readiness/results.md. Four actual B2/T512 cases
+pass70gates/20physicalupdates: RT+combined eager accumulation/complete updates
+are exact; RT+combined checkpoint/graph reconstruction continuations are exact.
+FirsteagerRTattemptfailed0updates due redundant full-valid mask; retained.
+Opt-in full_valid_causal fixes Flash dispatch and preserves defaults/padding/cache
+restrictions. Corrected adapter runtimef8be057; recovery/firstfailureed4333d.
+CPU scopes256/247/166overlap. No realDDP/NCCL/distributedgraphs/sharding validated.
+GPU ended idle. Next actualhardware milestone needs twoH100s; use approved
+ docs/native-rt-single-to-two-gpu-plan.md. Do not add B512, broadnumerics or
+optionalRTfusion as prerequisites. Noqualitytrainingqueued. Inspectliveprocesses
+before resuming. CapacityPR28merged16a08d7, evidenceverified:22reports/153updates,
+RTB19229.746k/s and combinedB12812.413k/s atT512; FA4notadopted, B256captureOOM
+retained. NativeRTselected at0/15; priorprecisionqualificationsstayopen.
 
 2026-09-24 authorized milestone: user reaffirms native RT and the paper's
 physical B512/T512 emphasis. Read docs/native-rt-large-batch-plan.md. Integrate

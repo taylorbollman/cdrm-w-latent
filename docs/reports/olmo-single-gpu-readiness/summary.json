@@ -1,0 +1,1084 @@
+{
+  "created_utc": "2026-09-25T02:00:04.694400+00:00",
+  "physical_optimizer_updates": 20,
+  "primary_scope_complete": true,
+  "qualification": "Failed reports remain failed. Recovery has six actual steps across branches and a four-update logical endpoint; branches both rebuild graphs. No throughput or quality claim.",
+  "runs": [
+    {
+      "batch_size": 2,
+      "case": "rt",
+      "checkpoint_disposal": null,
+      "checkpoint_reference": {
+        "generation": "1790022395832236",
+        "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors"
+      },
+      "checks": [],
+      "current_source_differences": {
+        "cdrm/pretrained/olmo_fbt.py": {
+          "current_sha256": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+          "reported_sha256": "237576033af0d2ae5ee9fd0ee6750299351cabc9e20b07d11d8aaa32e3689fe2"
+        },
+        "scripts/olmo_distributed_prepare.py": {
+          "current_sha256": "1bc57ebc01ebd7f0fc159823d476d2baa640fa1357660ee31169dba22abc6c25",
+          "reported_sha256": "b0973e44860ed96220a6c45920d629056c164f07c3c91df9ecc0082d6a04476e"
+        }
+      },
+      "dependency_verification": {
+        "files_checked": 0,
+        "packages": {
+          "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+          "flash-attn-4": "4.0.0b20",
+          "nvidia-cutlass-dsl": "4.6.0.dev0",
+          "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+          "transformer-engine": "2.16.0+4220403e",
+          "triton": "3.7.0+gitb7fa781f.nv26.6"
+        },
+        "present": true,
+        "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"
+      },
+      "diagnostic_checkpoint_present": false,
+      "error": {
+        "message": "No available kernel. Aborting execution.",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/cdrm-w-latent/scripts/olmo_distributed_prepare.py\", line 341, in main\n    expected = backward_sequence(model, [full], case.mode(), local_counts)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/scripts/olmo_distributed_prepare.py\", line 122, in backward_sequence\n    output = (canonical_forward(model, batch, mode, global_counts) if adapter is None\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/scripts/olmo_distributed_prepare.py\", line 93, in canonical_forward\n    result = model.loss_sums(batch, backbone_kwargs={\"mode\": mode})\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/fbt_training.py\", line 77, in loss_sums\n    output = self.backbone(inputs_embeds=embeddings, attention_mask=batch.valid_mask,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo_fbt.py\", line 260, in forward\n    hidden = self._stack(embeddings, first_mode, attention_mask=valid,\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo_fbt.py\", line 222, in _stack\n    return self.backbone(inputs_embeds=embeddings, return_logits=False, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo_tiled.py\", line 650, in forward\n    hidden, present = self._forward_prepared(\n                      ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo_tiled.py\", line 731, in _forward_prepared\n    x = checkpoint(ordinary, x, positions, key_positions, attention_mask,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/_compile.py\", line 54, in inner\n    return disable_fn(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/_dynamo/eval_frame.py\", line 1353, in _fn\n    return fn(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/utils/checkpoint.py\", line 518, in checkpoint\n    ret = function(*args, **kwargs)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo_tiled.py\", line 451, in _ordinary_block_hidden\n    hidden, _ = layer(x, past=None, query_positions=query_positions,\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1778, in _wrapped_call_impl\n    return self._call_impl(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 1789, in _call_impl\n    return forward_call(*args, **kwargs)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/workspace/cdrm-w-latent/cdrm/pretrained/olmo.py\", line 196, in forward\n    attended = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, dropout_p=0.0, is_causal=is_causal)\n               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: No available kernel. Aborting execution.\n",
+        "type": "RuntimeError"
+      },
+      "failure_stage": "single_microbatch_world1",
+      "group": "distributed",
+      "length": 512,
+      "logical_endpoint_updates": null,
+      "name": "rt-b2-t512-01",
+      "physical_optimizer_updates": 0,
+      "report_path": ".runtime/olmo-distributed-prepare/rt-b2-t512-01/report.json",
+      "report_sha256": "1dab4a449ece53e4d7919d01ecf2339f99190769db9cb236cc210fd696f80297",
+      "runtime_commit": "ed4333d532d808c57d2b2c89a592bb7f584bddf9",
+      "selection": "distributed/rt-b2-t512-01",
+      "source_pairs_checked": 60,
+      "status": "failed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/9vijknoo"
+    },
+    {
+      "batch_size": 2,
+      "case": "rt",
+      "checkpoint_disposal": null,
+      "checkpoint_reference": {
+        "generation": "1790022395832236",
+        "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors"
+      },
+      "checks": [
+        {
+          "all_bitwise_equal": true,
+          "budgets": null,
+          "exact_required": true,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "world1_adapter_exact",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "all_bitwise_equal": true,
+          "budgets": null,
+          "exact_required": true,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "same_order_accumulation_exact",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "all_bitwise_equal": true,
+          "budgets": {
+            "global_relative_l2": 2e-06,
+            "tensor_max_relative": 1e-05,
+            "tensor_relative_l2": 2e-06
+          },
+          "exact_required": false,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "independent_cpu_vjp_sum",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "reference_update_1_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "reference_update_1_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "reference_update_2_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "reference_update_2_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "restored_initial_update_boundary",
+          "passed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "adapter_update_1_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "adapter_update_1_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "accumulated_update_1_exact",
+          "passed": true,
+          "scope": "Exact complete accumulated update: losses/counts, clipped Adam weights/moments, scheduler, counters, batches and RNG"
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "adapter_update_2_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "adapter_update_2_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "accumulated_update_2_exact",
+          "passed": true,
+          "scope": "Exact complete accumulated update: losses/counts, clipped Adam weights/moments, scheduler, counters, batches and RNG"
+        },
+        {
+          "logical_endpoint_updates": 2,
+          "name": "physical_update_accounting",
+          "passed": true,
+          "physical_updates": 4
+        }
+      ],
+      "current_source_differences": {},
+      "dependency_verification": {
+        "files_checked": 0,
+        "packages": {
+          "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+          "flash-attn-4": "4.0.0b20",
+          "nvidia-cutlass-dsl": "4.6.0.dev0",
+          "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+          "transformer-engine": "2.16.0+4220403e",
+          "triton": "3.7.0+gitb7fa781f.nv26.6"
+        },
+        "present": true,
+        "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"
+      },
+      "diagnostic_checkpoint_present": false,
+      "error": null,
+      "failure_stage": null,
+      "group": "distributed",
+      "length": 512,
+      "logical_endpoint_updates": 2,
+      "name": "rt-b2-t512-02",
+      "physical_optimizer_updates": 4,
+      "report_path": ".runtime/olmo-distributed-prepare/rt-b2-t512-02/report.json",
+      "report_sha256": "23123957a792272c1135b4d0b5d1592ecc23958fe9d85d77bea3715a8040db8d",
+      "runtime_commit": "f8be0573031221652c8418ce065585245c8373bb",
+      "selection": "distributed/rt-b2-t512-02",
+      "source_pairs_checked": 60,
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/rdhvqpcb"
+    },
+    {
+      "batch_size": 2,
+      "case": "combined",
+      "checkpoint_disposal": null,
+      "checkpoint_reference": {
+        "generation": "1790022395832236",
+        "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors"
+      },
+      "checks": [
+        {
+          "all_bitwise_equal": true,
+          "budgets": null,
+          "exact_required": true,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "world1_adapter_exact",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "all_bitwise_equal": true,
+          "budgets": null,
+          "exact_required": true,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "same_order_accumulation_exact",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "all_bitwise_equal": true,
+          "budgets": {
+            "global_relative_l2": 2e-06,
+            "tensor_max_relative": 1e-05,
+            "tensor_relative_l2": 2e-06
+          },
+          "exact_required": false,
+          "expected_participation_matches": true,
+          "finite": true,
+          "global_gradient_relative_l2": 0.0,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": 0.0,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": 0.0
+            }
+          },
+          "losses_and_counts_exact": true,
+          "losses_finite": true,
+          "name": "independent_cpu_vjp_sum",
+          "ownership_matches": true,
+          "passed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "reference_update_1_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "reference_update_1_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "reference_update_2_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "reference_update_2_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "restored_initial_update_boundary",
+          "passed": true
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "adapter_update_1_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "adapter_update_1_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "accumulated_update_1_exact",
+          "passed": true,
+          "scope": "Exact complete accumulated update: losses/counts, clipped Adam weights/moments, scheduler, counters, batches and RNG"
+        },
+        {
+          "expected_participation_matches": true,
+          "name": "adapter_update_2_gradient_ownership",
+          "passed": true
+        },
+        {
+          "name": "adapter_update_2_health",
+          "passed": true,
+          "weights_changed": true
+        },
+        {
+          "name": "accumulated_update_2_exact",
+          "passed": true,
+          "scope": "Exact complete accumulated update: losses/counts, clipped Adam weights/moments, scheduler, counters, batches and RNG"
+        },
+        {
+          "logical_endpoint_updates": 2,
+          "name": "physical_update_accounting",
+          "passed": true,
+          "physical_updates": 4
+        }
+      ],
+      "current_source_differences": {},
+      "dependency_verification": {
+        "files_checked": 0,
+        "packages": {
+          "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+          "flash-attn-4": "4.0.0b20",
+          "nvidia-cutlass-dsl": "4.6.0.dev0",
+          "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+          "transformer-engine": "2.16.0+4220403e",
+          "triton": "3.7.0+gitb7fa781f.nv26.6"
+        },
+        "present": true,
+        "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"
+      },
+      "diagnostic_checkpoint_present": false,
+      "error": null,
+      "failure_stage": null,
+      "group": "distributed",
+      "length": 512,
+      "logical_endpoint_updates": 2,
+      "name": "combined-b2-t512-01",
+      "physical_optimizer_updates": 4,
+      "report_path": ".runtime/olmo-distributed-prepare/combined-b2-t512-01/report.json",
+      "report_sha256": "60c19ea35bf97ab2fb27b0785ce7edb8b61be001be2b25a5f811f1fcd7b651e1",
+      "runtime_commit": "f8be0573031221652c8418ce065585245c8373bb",
+      "selection": "distributed/combined-b2-t512-01",
+      "source_pairs_checked": 60,
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/tbmtchvi"
+    },
+    {
+      "batch_size": 2,
+      "case": "rt",
+      "checkpoint_disposal": {
+        "deleted_after_success": true,
+        "reason": "Disposable two-update diagnostic; source checkpoint retained separately",
+        "sha256": "af658b7314a7d49febb056cad95fe12b9b9eb91119e9269a68db90eb68669065",
+        "size_bytes": 14154866857
+      },
+      "checkpoint_reference": {
+        "generation": "1790022395832236",
+        "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors"
+      },
+      "checks": [
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "preparation_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "preparation_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "boundary_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "save_execution_contract",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "save_preserves_boundary",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "reference_boundary_loss_gradients",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "reference_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "reference_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "reference_final_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "reference_state_health",
+          "passed": true
+        },
+        {
+          "name": "restored_boundary",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_boundary_loss_gradients",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "restored_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "restored_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 65,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 3,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "restored_final_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "restored_final_state_rng_cursor",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_update_metrics",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_state_health",
+          "passed": true
+        },
+        {
+          "name": "physical_update_accounting",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "frozen_sources_dependencies",
+          "passed": true
+        }
+      ],
+      "current_source_differences": {
+        "cdrm/pretrained/olmo_fbt.py": {
+          "current_sha256": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+          "reported_sha256": "237576033af0d2ae5ee9fd0ee6750299351cabc9e20b07d11d8aaa32e3689fe2"
+        }
+      },
+      "dependency_verification": {
+        "files_checked": 0,
+        "packages": {
+          "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+          "flash-attn-4": "4.0.0b20",
+          "nvidia-cutlass-dsl": "4.6.0.dev0",
+          "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+          "transformer-engine": "2.16.0+4220403e",
+          "triton": "3.7.0+gitb7fa781f.nv26.6"
+        },
+        "present": true,
+        "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"
+      },
+      "diagnostic_checkpoint_present": false,
+      "error": null,
+      "failure_stage": null,
+      "group": "recovery",
+      "length": 512,
+      "logical_endpoint_updates": 4,
+      "name": "rt-b2-t512-01",
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-graph-recovery/rt-b2-t512-01/report.json",
+      "report_sha256": "938387ec096d4311cccbdf0c339b3918037b9edc591cff9c2a018f9e1c795958",
+      "runtime_commit": "ed4333d532d808c57d2b2c89a592bb7f584bddf9",
+      "selection": "recovery/rt-b2-t512-01",
+      "source_pairs_checked": 60,
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/w8b68887"
+    },
+    {
+      "batch_size": 2,
+      "case": "combined",
+      "checkpoint_disposal": {
+        "deleted_after_success": true,
+        "reason": "Disposable two-update diagnostic; source checkpoint retained separately",
+        "sha256": "0b1c04256b059064a05d936ea0d27e21e499979abcc3d3813eb63e8db79a9903",
+        "size_bytes": 15214707013
+      },
+      "checkpoint_reference": {
+        "generation": "1790022395832236",
+        "md5_base64": "Ewj7L/fkQ1sk59gBObku4Q==",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo1b-step60000/20260921T202457Z/checkpoint/model.safetensors"
+      },
+      "checks": [
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "preparation_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "preparation_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "boundary_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "save_execution_contract",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "save_preserves_boundary",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "reference_boundary_loss_gradients",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "reference_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "reference_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "reference_final_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "reference_state_health",
+          "passed": true
+        },
+        {
+          "name": "restored_boundary",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_boundary_loss_gradients",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "restored_eager_graph",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "replays_checked": 2,
+          "storage_matches": true
+        },
+        {
+          "name": "restored_capture_rng",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "all_bitwise_equal": true,
+          "gradients": {
+            "all_bitwise_equal": true,
+            "tensor_count": 71,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight"
+            },
+            "worst_relative_l2": {
+              "name": "backbone.backbone.transformer.blocks.0.att_proj.weight",
+              "relative_l2": null
+            }
+          },
+          "graph_released_before_eager": true,
+          "loss_names_match": true,
+          "losses": {
+            "all_bitwise_equal": true,
+            "tensor_count": 6,
+            "worst_max_relative": {
+              "max_relative": null,
+              "name": "pass0/ce"
+            },
+            "worst_relative_l2": {
+              "name": "pass0/ce",
+              "relative_l2": null
+            }
+          },
+          "name": "restored_final_released_graph_eager",
+          "ownership_matches": true,
+          "passed": true,
+          "reference_storage": "CPU full gradients; one tensor streamed at a time; untimed",
+          "storage_matches": true
+        },
+        {
+          "name": "restored_final_state_rng_cursor",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_update_metrics",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "restored_state_health",
+          "passed": true
+        },
+        {
+          "name": "physical_update_accounting",
+          "passed": true,
+          "scope": "Exact tensor dtype/shape/SHA256 and scalar equality"
+        },
+        {
+          "name": "frozen_sources_dependencies",
+          "passed": true
+        }
+      ],
+      "current_source_differences": {
+        "cdrm/pretrained/olmo_fbt.py": {
+          "current_sha256": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+          "reported_sha256": "237576033af0d2ae5ee9fd0ee6750299351cabc9e20b07d11d8aaa32e3689fe2"
+        }
+      },
+      "dependency_verification": {
+        "files_checked": 0,
+        "packages": {
+          "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+          "flash-attn-4": "4.0.0b20",
+          "nvidia-cutlass-dsl": "4.6.0.dev0",
+          "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+          "transformer-engine": "2.16.0+4220403e",
+          "triton": "3.7.0+gitb7fa781f.nv26.6"
+        },
+        "present": true,
+        "scope": "Installed package versions and recorded source snapshots; native/SDPA arms request no Dao/FA4 source overlay"
+      },
+      "diagnostic_checkpoint_present": false,
+      "error": null,
+      "failure_stage": null,
+      "group": "recovery",
+      "length": 512,
+      "logical_endpoint_updates": 4,
+      "name": "combined-b2-t512-01",
+      "physical_optimizer_updates": 6,
+      "report_path": ".runtime/olmo-graph-recovery/combined-b2-t512-01/report.json",
+      "report_sha256": "e5f7fd7185faec9edfd4bca9371562d84c383d66e7875a81a28dfe69fa4f4f57",
+      "runtime_commit": "ed4333d532d808c57d2b2c89a592bb7f584bddf9",
+      "selection": "recovery/combined-b2-t512-01",
+      "source_pairs_checked": 60,
+      "status": "passed",
+      "wandb_url": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/dj4loi7u"
+    }
+  ],
+  "runtime_commit": "f8be0573031221652c8418ce065585245c8373bb",
+  "schema": "olmo-single-gpu-readiness-summary-v1",
+  "scope": "Single-GPU objective/accumulation and graph-rebuild recovery only; no two-GPU/DDP/NCCL/sharding validation",
+  "source_pairs_checked": 300,
+  "status": "completed",
+  "statuses": {
+    "failed": 1,
+    "passed": 4
+  }
+}
