@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 two-H100 work is now authorized and active on feat/olmo-two-gpu.
+Read docs/reports/olmo-two-gpu/progress.md before using the older single-GPU
+status below. Hardware is two H10080GB with NV18/NCCL2.30.5. Eager tiny eight
+modes and actual ordinary/RT pass; combined independent update2 has a retained
+parameter/moment tolerance failure despite passing raw-gradient budgets and
+exact replicas. Fixed-state follow-up is running. Tiny eager distributed recovery
+passes24gates and its checkpoint is verified in GCS. Graph integration and later
+capacity/ZeRO1 remain in progress; do not claim them complete from CPU tests.
+Retain checkpoints progressively; only~19GiB free on the persistent main disk,
+so verify GCS before cleaning any actual checkpoint. No quality run is queued.
+
 2026-09-25 single-GPU preparation is complete. Read current handoff and
  docs/reports/olmo-single-gpu-readiness/results.md. Four actual B2/T512 cases
 pass70gates/20physicalupdates: RT+combined eager accumulation/complete updates

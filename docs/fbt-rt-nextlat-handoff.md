@@ -4,6 +4,23 @@ Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Two-H100 milestone active, 2026-09-25:** the user now provides two H10080GBs
+and authorizes the approved distributed plan, with progressive checkpoint and
+work retention. Read [live progress](reports/olmo-two-gpu/progress.md) and
+[fixed-state qualification follow-up](reports/olmo-two-gpu/fixed-state-followup.md).
+Active branch `feat/olmo-two-gpu`. NV18/NCCL is confirmed; tiny eight-mode DDP
+and actual ordinary/RT two-update checks pass. Combined independent-trajectory
+update2 retains a strict parameter/moment failure, while raw gradients, counts
+and exact rank replicas pass. A bounded anchored diagnostic is in progress.
+Tiny eager recovery passes24gates with a GCS-verified checkpoint. Actual graph
+capture/initial parity succeeds after an empty-DDP-input fix; complete-update
+comparison exposed a harness restore-buffer-version issue whose fix is ready.
+Both failed graph attempts remain retained. Genuine full-model recovery,
+complete graph checks, scaling and ZeRO1 are still pending. No quality training.
+Inspect processes and the live record before restarting. Main disk is nearly
+full: keep one new actual checkpoint locally at a time and verify GCS retention
+before deletion. See prior single-GPU results below as completed background.
+
 **Single-GPU preparation complete, 2026-09-25:** read
 [results and scope](reports/olmo-single-gpu-readiness/results.md), its protocols,
 summary, test ledger and storage receipt. All four primary actual-checkpoint
