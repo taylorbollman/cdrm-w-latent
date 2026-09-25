@@ -43,10 +43,51 @@ from scripts.olmo_rt_large_batch import (batch_for, optimizer_for, compiler_conf
 PROTOCOL = ROOT / 'docs/reports/olmo-two-gpu/protocol.md'
 
 
+def performance_options(args):
+    """Shared opt-in backend selection for the three performance harnesses."""
+    rope = args.ordinary_rope_backend
+    if args.case not in ('ordinary', 'rt', 'combined') or rope not in ('native', 'dao'):
+        raise ValueError('Unsupported performance case or ordinary RoPE backend')
+    if rope == 'dao' and (args.case != 'ordinary' or args.tiny):
+        raise ValueError('Dao RoPE is limited to the non-tiny ordinary performance case')
+    return dict(ordinary_rope_backend=rope,
+                optimizer_arm='optimized' if rope == 'dao' else 'compiled-native',
+                fused_adam=True)
+
+
+def performance_case(args):
+    performance_options(args)
+    return IntegrationCase(args.case, fbt=args.case == 'combined', nextlat=args.case == 'combined',
+        rt_layers=() if args.case == 'ordinary' else (0, 1 if args.tiny else 15),
+        batch_size=args.batch_size, length=args.length)
+
+
+def configure_performance_model(model, args):
+    options = performance_options(args)
+    # construct() keeps its established compiled-native preparation. This is
+    # the only model flag changed by this opt-in, before static preparation.
+    model.backbone.backbone.ordinary_rope_backend = options['ordinary_rope_backend']
+    return options
+
+
+def performance_dependencies(args):
+    options = performance_options(args)
+    return dependency_record(args.output_dir,
+        include_dao=options['ordinary_rope_backend'] == 'dao', include_fa4=False)
+
+
+def performance_protocols(args):
+    paths = [PROTOCOL]
+    if args.case == 'ordinary':
+        paths.append(ROOT/'docs/reports/olmo-ordinary-two-gpu/protocol.md')
+    return [path for path in paths if path.exists()]
+
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--tiny', action='store_true')
     parser.add_argument('--case', choices=('ordinary','rt','combined'), required=True)
+    parser.add_argument('--ordinary-rope-backend', choices=('native','dao'), default='native')
     parser.add_argument('--stage', choices=('correctness','capacity'), required=True)
     parser.add_argument('--batch-size', type=int, default=2)
     parser.add_argument('--length', type=int, default=512)
@@ -63,6 +104,8 @@ def parse_args(argv=None):
         parser.error('Complete-update correctness is bounded to physical B1..8')
     if args.stage == 'capacity' and not args.tiny and args.length != 512:
         parser.error('Initial full-model capacity uses T512')
+    try: performance_options(args)
+    except ValueError as error: parser.error(str(error))
     return args
 
 
@@ -274,9 +317,7 @@ def steady_memory_summary(memory_phases,current):
 
 def run(args, rank_report, tracker):
     rank = dist.get_rank(); device = torch.device('cuda',int(os.environ['LOCAL_RANK']))
-    case = IntegrationCase(args.case, fbt=args.case=='combined',nextlat=args.case=='combined',
-        rt_layers=() if args.case=='ordinary' else (0,1 if args.tiny else 15),
-        batch_size=args.batch_size,length=args.length)
+    case = performance_case(args)
     rank_report['case'] = asdict(case)
     rank_report['mode'] = asdict(case.mode())
     rank_report['physical_updates'] = 0
@@ -292,6 +333,7 @@ def run(args, rank_report, tracker):
     torch.cuda.manual_seed(20260925)
     with phases.phase('construct'):
         model = construct(case,args,device)
+        rank_report['execution_options'] = configure_performance_model(model,args)
         tokenizer = None if args.tiny else load_native_tokenizer(args.artifacts)
         cpu_batch = fixed_batch(case,tokenizer,0,rank,tiny=args.tiny)
         counts = torch.tensor([model.counts(cpu_batch)[t] for t in TERMS],device=device,dtype=torch.int64)
@@ -300,7 +342,7 @@ def run(args, rank_report, tracker):
             global_counts=dict(zip(TERMS,counts.cpu().tolist())),world_size=2,config=config)
         runtime = DDPGraphTraining(adapter,expected_active_names=sorted(active_names(model,case.mode())),
                                    gradient_as_bucket_view=args.bucket_view)
-        optimizer,scheduler = optimizer_for(model,'compiled-native')
+        optimizer,scheduler = optimizer_for(model,performance_options(args)['optimizer_arm'])
         counters = TrainingCounters()
     runtime.prepare(warmup=11,phase_observer=phases.capture_observer)
     with phases.phase('eager_adam_preparation'):
@@ -427,16 +469,17 @@ def main(argv=None):
     rank=dist.get_rank();tracker=None;original_error=None
     rank_report=dict(schema='olmo-two-gpu-graph-rank-v1',rank=rank,status='running',stage='setup',checks=[])
     report=dict(schema='olmo-two-gpu-graph-v1',status='running',stage='setup',runtime=runtime,ranks=[],
-        configuration={k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()})
+        configuration={**{k:str(v) if isinstance(v,Path) else v for k,v in vars(args).items()},
+                       **performance_options(args)})
     try:
         if rank==0:
             args.output_dir.mkdir(parents=True,exist_ok=False)
             sources=[*sorted((ROOT/'cdrm/pretrained').glob('*.py')),*sorted((ROOT/'scripts').glob('olmo*.py')),
                      ROOT/'scripts/experiment_tracking.py',ROOT/'scripts/docker_shell.sh']
-            if PROTOCOL.exists(): sources.append(PROTOCOL)
+            sources.extend(performance_protocols(args))
             report['sources']={str(p.relative_to(ROOT)):sha256_file(p) for p in sources}
             report['git_head']=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
-            report['dependencies']=dependency_record(args.output_dir,include_dao=False,include_fa4=False)
+            report['dependencies']=performance_dependencies(args)
             if not args.tiny: report['checkpoint']=validate_prepared_manifest(args.artifacts)['checkpoint']
             for p in sources:
                 target=args.output_dir/'source-snapshot'/p.relative_to(ROOT)
