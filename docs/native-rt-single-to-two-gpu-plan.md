@@ -1,6 +1,6 @@
 # Native RT: single-H100 closeout and two-GPU readiness
 
-Updated 2026-09-25 after interruption. The user approved this execution
+Updated 2026-09-25 after two-H100 closeout. The user approved this execution
 order after reviewing the updated plan. It refines the
 [large-batch plan](native-rt-large-batch-plan.md) and V4 section 8. It does not
 change the frozen prospective benchmark protocol or authorize quality training.
@@ -18,9 +18,19 @@ record70passing GPU gates/20updates for RT/combined accumulation, complete
 optimizer comparisons and checkpoint/graph reconstruction. Keep the original
 zero-update eager mask-dispatch failure and its checked opt-in fix. Both recovery
 branches rebuild graphs; accumulation uses same-shaped eager microbatches.
-No real DDP/NCCL, distributed graphs/recovery, sharding or scaling is established.
-The current action is C on two actual GPUs; optional B does not block it.
-Only one H100 is exposed now, idle, with no further GPU job queued.
+C is now complete in its declared scope on two H10080GB/NV18 GPUs: real DDP
+and NCCL graphs, fixed-state gradient/full-update checks, reconstruction recovery,
+ZeRO-1 and matched/large-batch measurements. See [two-GPU results](reports/olmo-two-gpu/results.md).
+31attempts:26passed and5retainedfailures; all retained. NoGPUjobqueued.
+Development candidates are RTDDP B128/rank andcombinedDDP B64/rank; fixedlarger
+candidates are RTZeRO1 B192/rank andcombinedZeRO1 B128/rank. The independent
+combinedBF16 trajectory qualification remains. Freshprocess restart is untested;
+rehearse it with the chosen data cursor beforelongtraining. C below is the
+original execution checklist, retained to make scope traceable. OptionalB,
+ZeRO2 and physicalB512 remain deferred without a required use case.
+
+The following capacity table is the historical single-GPU evidence, distinct
+from the completed two-GPU measurements linked above.
 
 The actual step-60000 OLMo-1B has 16 layers, width2048, 16 attention heads and
 SwiGLU8192 per branch. These measurements select native RT at indices0/15.

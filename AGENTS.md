@@ -31,6 +31,19 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-25 two-H100 milestone is complete. Read docs/reports/olmo-two-gpu/
+results.md, summary.md, progress.md, usage.md, test-ledger.md and storage-receipt.md.
+31attempts:26passed/5retainedfailures, all retained in GCS with8checkpoint stages.
+Native RT at0/15 within16layerOLMo; combined=K2FBT+RT+NextLat. RealDDP/NCCL
+CUDAgraphs and scoped reconstruction recovery pass; freshprocess restart untested.
+Independent combinedBF16 update qualification and older native/author findings
+remain. Development:DDPRT B128/rank55.8k/s,combinedB64/rank23.4k/s.
+Fixedlargerbatch:ZeRO1RT B192/rank58.2k/s,combinedB128/rank24.4k/s.
+Noqualityjobqueued; GPUqueuefinished. Persistentdisk~19GiBfree; cloudverify
+fullcheckpointbeforeduplicatecleanup. Reviewresults beforechoosingnextworkload.
+
+## Historical milestones (hardware availability below is historical)
+
 2026-09-25 single-GPU preparation is complete. Read current handoff and
  docs/reports/olmo-single-gpu-readiness/results.md. Four actual B2/T512 cases
 pass70gates/20physicalupdates: RT+combined eager accumulation/complete updates

@@ -4,6 +4,30 @@ Updated 2026-09-25. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Two-H100 milestone complete, 2026-09-25:** read
+[results](reports/olmo-two-gpu/results.md), [summary](reports/olmo-two-gpu/summary.md)
+and [current interruption handoff](reports/olmo-two-gpu/progress.md). Two H10080GB
+with NV18/NCCL; native RT0/15 in the16layerOLMo. Tiny eight-mode and selected
+actual eager/graphed/recovery/ZeRO-1 paths pass; combined independent BF16
+update2 retains the strict parameter/moment qualification. Anchored fixed-state
+updates pass unchanged budgets; older native/author findings remain unresolved.
+Recovery reconstructs within one process group; freshprocess/VMrestart untested.
+
+MatchedglobalB128 gives1.69x RT and1.89x combined scaling. Development candidates:
+DDPRT B128/rank55.8k/s,combinedB64/rank23.4k/s. Fixedlargerbatch:
+ZeRO1RT B192/rank58.2k/s with14.5GiBfree,combinedB128/rank24.4k/s with7.5GiBfree.
+All31attempts(26pass/5fail) and8checkpoint stages retained in GCS;4,492source
+pairs verified. NoGPUjob or qualitycampaign queued. Next review choosesworkload;
+add freshprocess recovery rehearsal beforelongtraining. Read [usage](reports/olmo-two-gpu/usage.md)
+and [storage receipt](reports/olmo-two-gpu/storage-receipt.md) for operational
+contracts. Fullgeneratedcheckpointlocalduplicates were removed only after
+cloudverification/rehash; persistentdisk~19GiBfree. Runtimecode `bfa3649`.
+
+## Historical single-GPU preparation and earlier milestones
+
+The older hardware availability and prospective next actions below describe
+those completed stages; the two-GPU position above supersedes them.
+
 **Single-GPU preparation complete, 2026-09-25:** read
 [results and scope](reports/olmo-single-gpu-readiness/results.md), its protocols,
 summary, test ledger and storage receipt. All four primary actual-checkpoint
