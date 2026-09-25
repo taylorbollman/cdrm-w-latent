@@ -22,17 +22,25 @@ Completed:
   Real Gloo workers cover coordinated rejection and exact same-world-size resume.
   CPU counts overlap existing preparation tests; they are not GPU evidence.
 
-In progress: actual ordinary/RT/combined eager B1perrank/T512, two complete
-updates each, under `.runtime/olmo-two-gpu/actual-eager-01/` (W&B `n4wmj1r4`).
-Root owns GPU execution. Inspect live processes/logs before restarting.
+Actual ordinary and RT eager B1perrank/T512, two complete updates each, now
+pass. Gradient L2 ordinary:1.00e-8/5.57e-9; RT:3.73e-9/6.48e-9. Exact inter-rank
+gradient and complete-state replicas; reference state/metrics pass the frozen
+budgets. Each global update includes two accumulation microbatches per rank
+(four documents total). Combined remains in progress under
+`.runtime/olmo-two-gpu/actual-eager-01/` (W&B `n4wmj1r4`). Root owns GPU execution.
+Inspect live processes/logs before restarting.
 
 Next: complete actual eager checks, save and reconstruct genuine two-rank
 RT/combined checkpoints, then real DDP CUDA graphs and measured scaling.
 Prepared graph and recovery harnesses are being developed in isolated worktrees.
 Native ZeRO-1 follows validated DDP; ZeRO-2 remains conditional.
 
-Persistence: initial protocol/runtime/harness commits are pushed to origin.
-Main disk has only about23GiB free; actual model+Adam checkpoint is13–14GiB.
+Persistence: source commits through recovery harness `29b0cb5` are pushed.
+NCCL and tiny eager evidence is verified in GCS under
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T172000Z/`
+with stage suffixes `nccl-01` and `tiny-eager-01`. Local receipts are under
+`.runtime/olmo-two-gpu/retention/`. Main disk has only about19GiB free;
+actual model+Adam checkpoint is13–14GiB.
 Retain one new actual checkpoint at a time in GCS, verify before cleaning local
 bytes, and preserve failed attempts. Never treat local SSD as durable.
 For GCS container calls use `env -u GOOGLE_APPLICATION_CREDENTIALS` to select
