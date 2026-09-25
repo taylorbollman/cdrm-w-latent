@@ -26,9 +26,16 @@ Actual ordinary and RT eager B1perrank/T512, two complete updates each, now
 pass. Gradient L2 ordinary:1.00e-8/5.57e-9; RT:3.73e-9/6.48e-9. Exact inter-rank
 gradient and complete-state replicas; reference state/metrics pass the frozen
 budgets. Each global update includes two accumulation microbatches per rank
-(four documents total). Combined remains in progress under
-`.runtime/olmo-two-gpu/actual-eager-01/` (W&B `n4wmj1r4`). Root owns GPU execution.
-Inspect live processes/logs before restarting.
+(four documents total). Combined update1 passes. Update2 passes raw gradients,
+loss/counts and exact replicas but fails stricter complete-update elementwise
+tolerances:20 parameter/7 moment tensors. See `fixed-state-followup.md`; no
+budgets changed. The failed overall `actual-eager-01` report is retained in GCS.
+
+Tiny combined eager recovery now passes24checks: full state, next RNG draws,
+cursor, raw gradients and next update reproduce exactly. Four physical updates
+per rank/logical endpoint3. W&B `zlmvso6v`, `tiny-recovery-01/report.json`.
+Tiny actual-DDP graph correctness is running as `tiny-graph-01`; inspect live
+processes/logs before restarting. Root owns GPU execution.
 
 Next: complete actual eager checks, save and reconstruct genuine two-rank
 RT/combined checkpoints, then real DDP CUDA graphs and measured scaling.
