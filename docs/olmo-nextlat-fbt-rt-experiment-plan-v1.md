@@ -486,7 +486,10 @@ as well, so it cannot consume uncounted jitter draws or perturb resumed data.
    can be an endpoint diagnostic after core inference is validated; Semantic
    Tube and other architectural additions remain deferred.
 
-The next implementation milestone is (1), after review of this draft. The main
+The user authorized the portable part of milestone (1), completed on 2026-09-28;
+see [results](reports/olmo-campaign-readiness/results.md) and
+[remaining integration](reports/olmo-campaign-readiness/usage.md). This is not
+completion of the full trainer/data/inference readiness program. The main
 decision points are measurable readiness/cost, the common LR/effective batch,
 generation policy, SFT retention at 1024, and which RT comparisons survive the
 early screen. No long-run promise relies on the historical K2 benchmark.

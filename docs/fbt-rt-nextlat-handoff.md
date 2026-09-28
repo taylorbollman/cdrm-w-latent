@@ -4,6 +4,22 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Portable campaign readiness complete, 2026-09-28:** read
+[results](reports/olmo-campaign-readiness/results.md),
+[usage/next integration](reports/olmo-campaign-readiness/usage.md) and
+[progress](reports/olmo-campaign-readiness/progress.md). Runtime714f31c introduces
+opt-in K4/configured RT bootstrap, independently normalized CE/auxiliary losses,
+external deterministic jitter, explicit Adam/token schedule and bounded pinned
+data preparation. Broad CPU706pass; final ingest28pass (overlap). Fresh-process
+tiny CPU continuation exact. Actual pretrained NFR B1/T16 passes all4 GPUstages,
+literal aggregation loss/gradients exact,71active gradients finite,2finiteAdam
+updates,60unchanged source hashes. W&B kb0lbu1k synced. Large initial clipping is
+reported, not treated as LR validation. This is a portable slice of milestone1;
+padded Flash, graph jitter/masks/accumulation, per-rank inputs and distributed
+fresh-process restart remain. Existing numerical qualifications stay open.
+No production corpus, LR calibration, qualitytraining or hardware job launched.
+Code saved/pushed throughout; GCS evidence linked in report. Do not rerun smoke.
+
 **Portable readiness authorized, 2026-09-28:** user approves initial work useful
 on the current machine, with progress saved every 20–30 minutes; warn before any
 longer non-resumable operation. Implementation is on `feat/olmo-campaign-readiness`.
