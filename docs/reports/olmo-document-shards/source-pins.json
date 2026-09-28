@@ -1,0 +1,164 @@
+{
+  "schema": "dolma-v1_5-coverage-source-selection-v1",
+  "hf_repo": "allenai/dolma",
+  "hf_revision": "7f48140530a023e9ea4c5cfb141160922727d4d3",
+  "selection_seed": "cdrm-dolma-v1_5-coverage-20260928",
+  "selection": "minimum SHA256(seed NUL URL) within each of seven broad sources; not production weighted sampling",
+  "sources": [
+    {
+      "source": "books",
+      "url": "https://olmo-data.org/dolma-v1_5r1/books/books-0001.json.gz",
+      "source_url_count": 3,
+      "http_head_status": 206,
+      "object_size_bytes": 3230166910,
+      "etag": "\"844c2fa94e122845cba7de715c454306-386\"",
+      "last_modified": "Sat, 02 Dec 2023 18:51:19 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "c4",
+      "url": "https://olmo-data.org/dolma-v1_5r1/c4/c4-0021.json.gz",
+      "source_url_count": 86,
+      "http_head_status": 206,
+      "object_size_bytes": 4047664975,
+      "etag": "\"7fdc8703d06074a469a3dc45884008b3-483\"",
+      "last_modified": "Sat, 02 Dec 2023 18:59:05 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "common_crawl",
+      "url": "https://olmo-data.org/dolma-v1_5r1/cc_en_tail/cc_en_tail-1458.json.gz",
+      "source_url_count": 2877,
+      "http_head_status": 206,
+      "object_size_bytes": 966791278,
+      "etag": "\"5a9beb3c7df342c4bc1d88fe0cd2b40f-116\"",
+      "last_modified": "Sun, 03 Dec 2023 02:32:12 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "pes2o",
+      "url": "https://olmo-data.org/dolma-v1_5r1/pes2o/pes2o_v2-0025.json.gz",
+      "source_url_count": 26,
+      "http_head_status": 206,
+      "object_size_bytes": 477949183,
+      "etag": "\"07c20928f238fc25f9ccd655e251b1a4-57\"",
+      "last_modified": "Sun, 03 Dec 2023 02:45:21 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "reddit",
+      "url": "https://olmo-data.org/dolma-v1_5r1/reddit/reddit-v5-dedupe-pii-nsfw-toxic-0044.json.gz",
+      "source_url_count": 78,
+      "http_head_status": 206,
+      "object_size_bytes": 2127043706,
+      "etag": "\"1777b299275966dd7c42d7d5439310dc-254\"",
+      "last_modified": "Sun, 03 Dec 2023 02:53:34 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:08 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "stack",
+      "url": "https://olmo-data.org/dolma-v1_5r1/stack/stack-v4-train-0021.json.gz",
+      "source_url_count": 149,
+      "http_head_status": 206,
+      "object_size_bytes": 1733168813,
+      "etag": "\"3188cf9bb7fe70d68ca0cca81821612f-207\"",
+      "last_modified": "Sun, 03 Dec 2023 03:01:57 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    },
+    {
+      "source": "wiki",
+      "url": "https://olmo-data.org/dolma-v1_5r1/wiki/en_simple_wiki_v0-0001.json.gz",
+      "source_url_count": 2,
+      "http_head_status": 206,
+      "object_size_bytes": 2204313187,
+      "etag": "\"c32f9a64e05306e1b70a9e25f0c49e97-263\"",
+      "last_modified": "Sun, 03 Dec 2023 03:22:15 GMT",
+      "observed_at": "Mon, 28 Sep 2026 21:58:07 GMT",
+      "complete_remote_object_sha256": null
+    }
+  ],
+  "head_request_headers": {
+    "User-Agent": "curl/8.0",
+    "Range": "bytes=0-99"
+  },
+  "complete_remote_object_verification": "Not performed: header metadata only. ETag is multipart and is not a content SHA256.",
+  "source_lists": {
+    "urls-v1_5.txt": {
+      "sha256": "0b660ad1cd93a840d759a4efa82f800a0580fd693de6da64dba484aa55d21efc",
+      "size_bytes": 228153,
+      "url_count": 3221,
+      "directory_counts": {
+        "books": 3,
+        "c4": 86,
+        "cc_en_head": 611,
+        "cc_en_middle": 773,
+        "cc_en_tail": 1493,
+        "pes2o": 26,
+        "reddit": 78,
+        "stack": 149,
+        "wiki": 2
+      }
+    },
+    "urls-v1_5-sample.txt": {
+      "sha256": "d8b00c66388a160637a71f76672a1648a5b50ff3670f561065b946de3da72d6f",
+      "size_bytes": 194553,
+      "url_count": 2418,
+      "directory_counts": {
+        "books": 3,
+        "c4": 86,
+        "cc_en_head": 571,
+        "cc_en_middle": 722,
+        "cc_en_tail": 781,
+        "pes2o": 26,
+        "reddit": 78,
+        "stack": 149,
+        "wiki": 2
+      }
+    },
+    "urls-v1_7.txt": {
+      "sha256": "9fa8c2f0eb57149ff7914b35ca2ffb8da221c02786d712bcba5f6c39d294b49e",
+      "size_bytes": 171893,
+      "url_count": 2419,
+      "directory_counts": {
+        "books": 3,
+        "c4-filtered": 171,
+        "cc_en_head": 275,
+        "cc_en_middle": 379,
+        "cc_en_tail": 444,
+        "cc_news_head": 5,
+        "cc_news_middle": 3,
+        "cc_news_tail": 1,
+        "falcon-refinedweb-filtered": 500,
+        "pes2o": 26,
+        "proof_pile_2-algebraic_stack": 16,
+        "proof_pile_2-open_web_math": 13,
+        "reddit": 78,
+        "redpajama-arxiv": 100,
+        "redpajama-stackexchange": 26,
+        "starcoder": 49,
+        "tulu_flan": 66,
+        "wiki": 2,
+        "wikiref_megawika": 262
+      }
+    }
+  },
+  "olmo_code": {
+    "revision": "ae84d479fa5775b1935b50b2120e0b514313ce18",
+    "files": {
+      "olmo-ae84d47-train.py": {
+        "sha256": "74aa94647ae3e13e495b55d8ab0d205a3936eefd5ffbaf5ecaa504cd15b117f6",
+        "size_bytes": 53580
+      },
+      "olmo-ae84d47-memmap_dataset.py": {
+        "sha256": "2c9c8e0337ac38215b904d1e03e5c893d110da45d8383866979c7bb3478ba36e",
+        "size_bytes": 10221
+      }
+    }
+  }
+}
