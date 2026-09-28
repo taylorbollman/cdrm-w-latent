@@ -53,16 +53,21 @@ class FBTConfig:
 
 @dataclass(frozen=True)
 class FBTMode:
-    """K includes the ordinary first pass; K1 is always ordinary when enabled.
+    """K includes the first pass, with a versioned, explicit RT policy.
 
     Disabled FBT executes exactly one standalone RT/ordinary pass. Beta zero
-    disables feedback, independently of RT writes on any extra passes.
+    disables feedback independently of RT. ``ordinary-v1`` preserves historical
+    checkpoints, including ordinary K1; ``configured-rt-v1`` executes rt_mode on
+    every pass. Training jitter requires externally supplied unit-uniform noise,
+    so assigning noise to logical examples is independent of microbatch shape.
     """
 
     enabled: bool = True
     num_passes: int = 2
     beta: float = 1.0
     rt_mode: RTMode = RTMode(())
+    first_pass_policy: str = "ordinary-v1"
+    feedback_jitter: float = 0.0
 
     def __post_init__(self):
         if type(self.enabled) is not bool:
@@ -71,7 +76,20 @@ class FBTMode:
             raise ValueError("num_passes must be a positive integer")
         if not isinstance(self.rt_mode, RTMode):
             raise TypeError("rt_mode must be an RTMode")
+        if self.first_pass_policy not in ("ordinary-v1", "configured-rt-v1"):
+            raise ValueError("first_pass_policy must be ordinary-v1 or configured-rt-v1")
+        if (isinstance(self.feedback_jitter, bool)
+                or not isinstance(self.feedback_jitter, (float, int))
+                or not math.isfinite(self.feedback_jitter) or self.feedback_jitter < 0):
+            raise ValueError("feedback_jitter must be finite and nonnegative")
+        object.__setattr__(self, "feedback_jitter", float(self.feedback_jitter))
         object.__setattr__(self, "beta", _unit_interval(self.beta, "beta"))
+
+    @property
+    def initial_rt_mode(self):
+        if self.enabled and self.first_pass_policy == "ordinary-v1":
+            return RTMode(())
+        return self.rt_mode
 
 
 @dataclass(frozen=True)
@@ -244,10 +262,41 @@ class OLMoFBT(nn.Module):
         blended = fused if beta == 1.0 else (1.0 - beta) * embeddings + beta * fused
         return torch.where(eligible.unsqueeze(-1), blended, embeddings)
 
+    def _validate_feedback_noise(self, feedback_noise, mode, shape, device, dtype, *, check_values=True):
+        """Validate explicit unit noise outside capture; no model-owned RNG.
+
+        Values must be finite and in [-1, 1]. The caller samples independently
+        from Uniform[-1,1] keyed to logical examples/pass and reuses the same
+        draw for recomputation. Shape is [B,T-1,D], one tensor per feedback pass.
+        Tensor metadata checks are capture-safe; value checks are external.
+        """
+        active = (self.training and mode.enabled and mode.num_passes > 1
+                  and mode.beta > 0 and mode.feedback_jitter > 0)
+        if not active:
+            if feedback_noise is not None:
+                raise ValueError("feedback_noise is only accepted for active training jitter")
+            return None
+        if not isinstance(feedback_noise, (tuple, list)) or len(feedback_noise) != mode.num_passes - 1:
+            raise ValueError("Training feedback jitter requires one external noise tensor per feedback pass")
+        for noise in feedback_noise:
+            if (not isinstance(noise, Tensor) or tuple(noise.shape) != tuple(shape)
+                    or noise.device != device or noise.dtype != dtype or noise.requires_grad):
+                raise ValueError("feedback_noise must match shifted feedback shape/device/dtype and have no gradient")
+            if check_values and (not bool(torch.isfinite(noise).all()) or bool((noise.abs() > 1).any())):
+                raise ValueError("feedback_noise must be finite unit noise in [-1, 1]")
+        return tuple(feedback_noise)
+
+    @staticmethod
+    def _jitter_feedback(previous_hidden, mode, eligible, noise):
+        if noise is None:
+            return previous_hidden
+        return previous_hidden + torch.where(eligible.unsqueeze(-1),
+            noise * mode.feedback_jitter, torch.zeros_like(noise))
+
     def forward(self, input_ids=None, *, inputs_embeds=None, attention_mask=None,
                 document_ids=None, position_ids=None, mode: FBTMode = FBTMode(),
                 return_logits=True, past_key_values=None, use_cache=False,
-                full_valid_causal: bool = False) -> FBTOutput:
+                full_valid_causal: bool = False, feedback_noise=None) -> FBTOutput:
         """Finite passes, optionally using implicit causal attention for full rows.
 
         ``full_valid_causal`` is an explicit eager-dispatch option, not permission
@@ -255,6 +304,10 @@ class OLMoFBT(nn.Module):
         normal input/document validation, then omit the redundant all-valid
         mask in every fresh stack call. This permits Flash SDPA dispatch while
         preserving supplied RoPE positions. Cached/padded sequences cannot opt in.
+
+        Nonzero training ``mode.feedback_jitter`` requires external unit noise;
+        evaluation is deterministic and rejects supplied noise. No RNG state is
+        consumed by this forward path, including activation recomputation.
         """
         if type(full_valid_causal) is not bool:
             raise TypeError("full_valid_causal must be boolean")
@@ -267,17 +320,20 @@ class OLMoFBT(nn.Module):
             input_ids, inputs_embeds, attention_mask, position_ids, None,
         )
         documents = self._documents(valid, document_ids)
+        noise = self._validate_feedback_noise(feedback_noise, mode,
+            embeddings[:, 1:].shape, embeddings.device, embeddings.dtype)
         if full_valid_causal and not bool(valid.all()):
             raise ValueError("full_valid_causal requires all tokens valid; padding is unsupported")
         stack_mask = None if full_valid_causal else valid
-        first_mode = RTMode(()) if mode.enabled else mode.rt_mode
-        hidden = self._stack(embeddings, first_mode, attention_mask=stack_mask,
+        hidden = self._stack(embeddings, mode.initial_rt_mode, attention_mask=stack_mask,
                              position_ids=positions).last_hidden_state
         states = [hidden]
         if mode.enabled:
             eligible = valid[:, 1:] & valid[:, :-1] & (documents[:, 1:] == documents[:, :-1])
-            for _ in range(1, mode.num_passes):
-                suffix = self._blend(hidden[:, :-1], embeddings[:, 1:], mode.beta, eligible)
+            for pass_index in range(1, mode.num_passes):
+                previous = self._jitter_feedback(hidden[:, :-1], mode, eligible,
+                    None if noise is None else noise[pass_index - 1])
+                suffix = self._blend(previous, embeddings[:, 1:], mode.beta, eligible)
                 fused_inputs = torch.cat((embeddings[:, :1], suffix), dim=1)
                 hidden = self._stack(fused_inputs, mode.rt_mode, attention_mask=stack_mask,
                                      position_ids=positions).last_hidden_state

@@ -83,7 +83,9 @@ class PreparedDDPObjective(nn.Module):
                 "loss_sums": {t: result.sums[t].detach() for t in TERMS},
                 "pass_loss_sums": tuple({t: p.sums[t].detach() for t in TERMS}
                                          for p in result.pass_losses),
-                "pass_coefficients": result.pass_coefficients}
+                "pass_coefficients": result.pass_coefficients,
+                "term_pass_coefficients": result.term_pass_coefficients,
+                "pass_loss_policy": result.pass_loss_policy}
 
 
 def _active_contract(model, expected_active_names):
@@ -208,6 +210,7 @@ class DDPGraphTraining:
                   "counts": self.adapter.global_counts, "weights": self.adapter.plan.weights,
                   "mode": asdict(self.adapter.plan.mode), "nextlat": asdict(self.model.config),
                   "enabled": self.model.enabled, "gamma": self.model.gamma,
+                  "pass_loss_policy": self.model.pass_loss_policy,
                   "training": asdict(self.adapter.plan.config),
                   "expected_active_names": self.expected_active_names,
                   "gradient_as_bucket_view": self.gradient_as_bucket_view,

@@ -184,11 +184,14 @@ class PreparedFBTLayout:
         if not torch.equal(positions, self._positions_cpu):
             raise ValueError("Fresh positions differ from the prepared layout")
 
-    def validate_execution(self, mode: FBTMode = FBTMode(), *, expected_signature=None):
+    def validate_execution(self, mode: FBTMode = FBTMode(), *, expected_signature=None, feedback_noise=None):
         """Verify ownership/layout/settings externally; optimizer value updates are allowed."""
         if not isinstance(mode, FBTMode):
             raise TypeError("Static mode must be an FBTMode")
         self.core._validate_rt_mode(mode.rt_mode)
+        noise = self.core._validate_feedback_noise(feedback_noise, mode,
+            (self._shape[0], self._shape[1] - 1, self.core.config.model_dim),
+            self._device, self.core.token_embeddings.weight.dtype)
         if ((self.all_tokens_valid, self.is_causal) != self._static_flags
                 or id(self.rope_tables) != self._rope_owner
                 or id(self.ordinary_rope_tables) != self._ordinary_rope_owner
@@ -200,14 +203,16 @@ class PreparedFBTLayout:
             raise ValueError("Prepared fixed model buffers changed")
         if self.core.readout_weight is not self.core.token_embeddings.weight:
             raise ValueError("Native tied embedding/readout ownership changed")
-        # K1 is an ordinary bootstrap, even if future passes select RT blocks.
-        active_rt = RTMode(()) if mode.enabled and mode.num_passes == 1 else mode.rt_mode
+        active_rt = mode.initial_rt_mode if mode.enabled and mode.num_passes == 1 else mode.rt_mode
         self.base._validate_author_scope(active_rt, all_tokens_valid=self.all_tokens_valid)
-        # Every enabled finite FBT mode starts with an ordinary bootstrap,
-        # including K2+ modes whose later passes select every layer for RT.
-        self.base._validate_ordinary_scope(RTMode(()) if mode.enabled else active_rt,
+        self.base._validate_ordinary_scope(mode.initial_rt_mode,
             attention_mask=self.attention_mask, is_causal=self.is_causal)
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
+            # Values may be copied into these buffers between graph replays;
+            # replacing their storage requires capture against the new buffers.
+            "feedback_noise_buffers": None if noise is None else tuple(
+                (id(value), value.data_ptr(), tuple(value.shape), tuple(value.stride()),
+                 str(value.device), str(value.dtype)) for value in noise),
             "ordinary_attention_backend": self.base.ordinary_attention_backend,
             "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
             "ordinary_checkpoint_layers": self.base.ordinary_checkpoint_layers,
@@ -244,18 +249,22 @@ class PreparedFBTLayout:
             ordinary_rope_tables=self.ordinary_rope_tables,
             checkpoint_ordinary=self.base._checkpoint_ordinary_enabled())[0]
 
-    def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode()) -> PreparedFBTOutput:
+    def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode(), *, feedback_noise=None) -> PreparedFBTOutput:
         """Tensor-only finite pass body; external validation is required before replay."""
         if input_ids.shape != self._shape or input_ids.dtype != torch.long or input_ids.device != self._device:
             raise ValueError("Static token buffer shape/dtype/device differs")
         if not isinstance(mode, FBTMode):
             raise TypeError("Static mode must be an FBTMode")
         embeddings = self.core.token_embeddings(input_ids)
-        hidden = self._stack(embeddings, RTMode(()) if mode.enabled else mode.rt_mode)
+        noise = self.core._validate_feedback_noise(feedback_noise, mode,
+            embeddings[:, 1:].shape, embeddings.device, embeddings.dtype, check_values=False)
+        hidden = self._stack(embeddings, mode.initial_rt_mode)
         states = [hidden]
         if mode.enabled:
-            for _ in range(1, mode.num_passes):
-                suffix = self.core._blend(hidden[:, :-1], embeddings[:, 1:], mode.beta, self.feedback_eligible)
+            for pass_index in range(1, mode.num_passes):
+                previous = self.core._jitter_feedback(hidden[:, :-1], mode, self.feedback_eligible,
+                    None if noise is None else noise[pass_index - 1])
+                suffix = self.core._blend(previous, embeddings[:, 1:], mode.beta, self.feedback_eligible)
                 fused_inputs = torch.cat((embeddings[:, :1], suffix), dim=1)
                 hidden = self._stack(fused_inputs, mode.rt_mode)
                 states.append(hidden)

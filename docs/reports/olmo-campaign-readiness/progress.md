@@ -24,8 +24,17 @@ Work ownership while active:
 - `readiness_data`: campaign_data.py and its tests/data-contract note.
 - Root: campaign recipe/optimizer/schedule/noise, integration, documentation.
 
-Current execution: implementation in progress. CPU container validated; no GPU
-probe started. No individual operation planned requires 20 minutes of
-uninterruptible execution. Completed tests and remaining limitations will be
-recorded here before closure. New graph accumulation/dynamic layouts and
-distributed fresh-process recovery belong to the next multi-GPU integration.
+Implementation checkpoint: portable model/loss/data/recipe APIs are in place.
+CPU suites pass: model+legacy129, loss/integration+legacy301, data+legacy49,
+recipe21, attribution38. These suites overlap; do not sum them as unique tests.
+No GPU probe started. H100 was verified idle inside the required container.
+Next: fresh-process CPU resume and a short actual-checkpoint GPU probe. No
+individual operation planned requires 20 minutes of uninterruptible execution.
+
+New graph accumulation/dynamic layouts and distributed fresh-process recovery
+belong to the next multi-GPU integration. Graph trainers explicitly reject
+nonzero jitter until their noise-buffer lifecycle is qualified. Eager DDP needs
+a separate tensor-input channel for per-rank jitter; backbone_kwargs metadata
+cannot carry it. Historical checkpoint exact configurations must be retained:
+new mode fields do not imply an automatic old-schema resume migration. Native
+pretrained tensor loading is unchanged; campaign Adam starts fresh.

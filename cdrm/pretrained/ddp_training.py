@@ -176,7 +176,8 @@ class EagerDDPTrainer:
                             "weights": weights, "backbone_kwargs": _plain(kwargs),
                             "objective_config": {"nextlat": self.model.config.to_dict(),
                                                  "enabled": self.model.enabled,
-                                                 "gamma": self.model.gamma}}
+                                                 "gamma": self.model.gamma,
+                                                 "pass_loss_policy": self.model.pass_loss_policy}}
             except Exception as exc:
                 error = f"{type(exc).__name__}: {exc}"
             self._coordinate_error(error, "update preflight")
