@@ -22,9 +22,8 @@ def test_long_context_ordinary_preserves_actual_base_model_selection():
     assert not args.check_attention_parity
 
 
-@pytest.mark.parametrize('case',['rt','combined'])
-def test_long_context_does_not_expand_rt_scope(case):
-    with pytest.raises(SystemExit): single.parse_args(argv(case=case))
+def test_long_context_does_not_expand_rt_only_scope():
+    with pytest.raises(SystemExit): single.parse_args(argv(case='rt'))
 
 
 def test_t512_defaults_keep_original_group_and_no_new_probes():

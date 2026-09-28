@@ -4,6 +4,20 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Combined T2048 SDPA benchmark complete, 2026-09-28:** read
+[results and plots](reports/olmo-combined-long-context/results.md),
+[progress](reports/olmo-combined-long-context/progress.md) and
+[storage receipt](reports/olmo-combined-long-context/storage-receipt.md).
+K2 FBT, native RT0/15, both NextLat losses and native ordinary RoPE.
+Repeated B32/T2048:9,184.55inputtokens/s,69.014GiBreserved,7.914GiBsampledfree.
+Saved T512B12812,361.82/s reused:25.70%less throughput at equalinputtokens.
+B16/T2048:7,501.52/s,40.986GiBreserved,35.977GiBfree. All4stages/20checks/
+32updates pass;137CPUtests;652newsourcepins verify. Evidence retained inGCS.
+No FA4/newT512/qualityrun; productionmathunchanged; olderprecisionqualifications
+remain. GPUidle; pauseforreview. The last interrupted repeat finished normally;
+do not rerun it. A targetedlong-contextRTprofile is a possible next step,
+not an automaticallyauthorizedqueue.
+
 **Ordinary T2048 benchmark complete,2026-09-28:** read
 [results and plots](reports/olmo-ordinary-long-context/results.md),
 [current handoff](reports/olmo-ordinary-long-context/progress.md) and
