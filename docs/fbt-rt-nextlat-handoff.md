@@ -4,6 +4,18 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Campaign two-H100 integration active, 2026-09-28:** user supplied two H10080GB
+GPUs and a1TB boot disk. Branch `feat/olmo-campaign-two-gpu`, from `dde3240`.
+Read [frozen protocol](reports/olmo-campaign-two-gpu/protocol.md) and
+[live progress](reports/olmo-campaign-two-gpu/progress.md). Root alone launches
+GPU stages. NCCL five-size sanity passed; W&Bci14andb. All86 retained tokenized
+files restored to SSD with generation-pinned SHA256 checks;7,054,230tokens and
+12,512unique documents verify. Do not retokenize. Next gates: real campaign
+DDP accumulation/local+sync graphs, actual pretrained checks, fresh-process
+checkpoint restart with GCS retention, then representative K4/T1024 capacity.
+Preserve progress every20–30min. No quality campaign or production mixture
+approved by this readiness milestone. Existing precision qualifications remain.
+
 **Reusable document preparation complete, 2026-09-28:** read
 [results](reports/olmo-document-shards/results.md),
 [usage](reports/olmo-document-shards/usage.md),
