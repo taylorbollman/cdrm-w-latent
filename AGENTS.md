@@ -31,6 +31,19 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 campaign graph integration complete. Read
+docs/reports/olmo-campaign-graph/results.md, usage.md and progress.md first.
+Runtimebe11ac1: changing right-padding/masks/jitter/counts with local CUDA graph
+accumulation; eager DDP per-microbatch jitter. CPU867pass plus28focused(overlap).
+Actual pretrained NFR K4/RT0,15 B2/T16: both probes pass11stages; raw gradients
+and complete two-update Adam trajectory exact versus same-BF16 eager. Final
+repeat removes diagnostic autograd stream warning. W&B7fumon57 synced; artifacts
+retained inGCS. GPUidle; ready for two GPUs now. Next realNCCL accumulation,
+captured local/final-sync microbatches, fresh-process checkpoint restart, then
+K4/T1024 resource calibration. Local graph runner is explicitlyworld_size1;
+CPU/Gloo is not GPUdistributedacceptance. Noqualityrun or productiondata;
+priorBF16qualificationsremain. Saveprogress every20–30min.
+
 2026-09-28 portable campaign readiness complete. Read
 docs/reports/olmo-campaign-readiness/results.md, usage.md and progress.md first.
 Runtime714f31c: opt-in K4/RTonallpasses, separate CE/auxpassweights, keyedjitter,

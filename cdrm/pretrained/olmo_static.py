@@ -16,7 +16,7 @@ from torch import Tensor
 from .nextlat import NextLatBatch, _validate_batch
 from .olmo_fbt import FBTMode, FBTOutput, OLMoFBT
 from .olmo_rope import build_dao_rope_tables, build_rope_tables
-from .olmo_tiled import OLMoTiledRTForCausalLM
+from .olmo_tiled import OLMoTiledRTForCausalLM, _validate_right_padded_mask
 from .recurrent import RTMode
 
 
@@ -47,13 +47,22 @@ class PreparedFBTLayout:
     This model layout does not freeze CE/latent/KL selection masks. The separate
     prepared loss layout must validate those, along with target indices/counts.
     No online/prefix cache is supported here. Padded masks remain explicit;
-    their backend compatibility requires separate GPU evidence.
+    their backend compatibility requires separate GPU evidence unless explicit
+    ``right_padded_causal=True`` proves an index-causal valid-prefix layout.
+    That opt-in permits `load_batch` to refill validity/eligibility in place;
+    positions and RoPE storage remain fixed. Invalid outputs are zeroed.
     """
-    def __init__(self, core: OLMoFBT, batch: NextLatBatch, position_ids: Tensor | None = None):
+    def __init__(self, core: OLMoFBT, batch: NextLatBatch, position_ids: Tensor | None = None,
+                 *, right_padded_causal: bool = False):
         if not isinstance(core, OLMoFBT) or not isinstance(core.backbone, OLMoTiledRTForCausalLM):
             raise TypeError("Prepared finite forwarding requires OLMoFBT over native OLMoTiledRTForCausalLM")
+        if type(right_padded_causal) is not bool:
+            raise TypeError("right_padded_causal must be boolean")
+        if right_padded_causal and position_ids is not None:
+            raise ValueError("Dynamic right-padded layouts own canonical arange positions; do not supply position_ids")
         self.core = core
         self.base = core.backbone
+        self.right_padded_causal = right_padded_causal
         _validate_batch(batch, one_document_per_row=True)
         self._shape = tuple(batch.input_ids.shape)
         self._device = core.readout_weight.device
@@ -62,20 +71,26 @@ class PreparedFBTLayout:
         cpu_ids = _cpu(batch.input_ids)
         self._check_tokens(cpu_ids)
         self._valid_cpu = _cpu(batch.valid_mask)
+        if self.right_padded_causal:
+            _validate_right_padded_mask(self._valid_cpu)
         docs = _cpu(batch.document_ids)
         self._eligible_cpu = self._valid_cpu[:, 1:] & self._valid_cpu[:, :-1] & (docs[:, 1:] == docs[:, :-1])
         self._explicit_positions = position_ids is not None
-        if position_ids is None:
+        if self.right_padded_causal:
+            self._positions_cpu = torch.arange(self._shape[1], dtype=torch.long).expand(self._shape).clone()
+        elif position_ids is None:
             self._positions_cpu = (self._valid_cpu.long().cumsum(-1)-1).clamp_min(0)
         else:
             self._positions_cpu = self._validate_positions(position_ids)
         self.valid_mask = self._valid_cpu.to(self._device, copy=True)
         self.position_ids = self._positions_cpu.to(self._device, copy=True)
         self.feedback_eligible = self._eligible_cpu.to(self._device, copy=True)
-        self.all_tokens_valid = bool(self._valid_cpu.all())
-        self.is_causal = self.all_tokens_valid
-        self._static_flags = (self.all_tokens_valid, self.is_causal)
-        if self.all_tokens_valid:
+        # In dynamic mode the capture must remain correct when the next batch
+        # has padding even if the initial batch happened to be fully valid.
+        self.all_tokens_valid = bool(self._valid_cpu.all()) if not self.right_padded_causal else False
+        self.is_causal = self.all_tokens_valid or self.right_padded_causal
+        self._static_flags = (self.all_tokens_valid, self.is_causal, self.right_padded_causal)
+        if self.is_causal:
             self.attention_mask = None
         else:
             indices = torch.arange(self._shape[1], device=self._device)
@@ -147,8 +162,11 @@ class PreparedFBTLayout:
     def metadata(self):
         return {"schema": "olmo-static-fbt-layout-v1", "batch_size": self._shape[0], "length": self._shape[1],
             "valid_tokens": int(self._valid_cpu.sum()), "documents": int(self._valid_cpu.any(-1).sum()),
-            "all_tokens_valid": self.all_tokens_valid, "all_valid_causal_lowering_proved": self.all_tokens_valid,
-            "attention_representation": "causal_without_mask" if self.all_tokens_valid else "explicit_boolean_causal_padding_mask",
+            "all_tokens_valid": bool(self._valid_cpu.all()), "all_valid_causal_lowering_proved": self.all_tokens_valid,
+            "right_padded_causal": self.right_padded_causal,
+            "dynamic_valid_prefixes": self.right_padded_causal,
+            "invalid_outputs_zeroed": self.right_padded_causal,
+            "attention_representation": "causal_without_mask" if self.is_causal else "explicit_boolean_causal_padding_mask",
             "explicit_positions": self._explicit_positions, "valid_mask_sha256": _digest(self._valid_cpu),
             "position_ids_sha256": _digest(self._positions_cpu), "feedback_eligible_sha256": _digest(self._eligible_cpu),
             "document_contract": "one independent document per row; no cache or packed documents",
@@ -184,15 +202,45 @@ class PreparedFBTLayout:
         if not torch.equal(positions, self._positions_cpu):
             raise ValueError("Fresh positions differ from the prepared layout")
 
-    def validate_execution(self, mode: FBTMode = FBTMode(), *, expected_signature=None, feedback_noise=None):
-        """Verify ownership/layout/settings externally; optimizer value updates are allowed."""
-        if not isinstance(mode, FBTMode):
-            raise TypeError("Static mode must be an FBTMode")
-        self.core._validate_rt_mode(mode.rt_mode)
-        noise = self.core._validate_feedback_noise(feedback_noise, mode,
-            (self._shape[0], self._shape[1] - 1, self.core.config.model_dim),
-            self._device, self.core.token_embeddings.weight.dtype)
-        if ((self.all_tokens_valid, self.is_causal) != self._static_flags
+    def validate_replacement_batch(self, batch: NextLatBatch):
+        """Nonmutating preflight; return detached CPU validity and eligibility.
+
+        Unlike ``validate_batch``, the candidate may differ from the currently
+        loaded prefixes. Returned tensors own separate storage; validation does
+        not authorize external mutation of the prepared model/layout buffers.
+        """
+        if not self.right_padded_causal:
+            raise ValueError("Batch replacement requires an explicit dynamic right_padded_causal layout")
+        self._validate_prepared_ownership()
+        _validate_batch(batch, one_document_per_row=True)
+        if (tuple(batch.input_ids.shape) != self._shape
+                or (batch.input_ids.device != self._device and batch.input_ids.device.type != "cpu")):
+            raise ValueError("Fresh batch shape/device differs from the prepared layout")
+        self._check_tokens(_cpu(batch.input_ids))
+        valid, docs = _cpu(batch.valid_mask), _cpu(batch.document_ids)
+        _validate_right_padded_mask(valid)
+        eligible = valid[:, 1:] & valid[:, :-1] & (docs[:, 1:] == docs[:, :-1])
+        return valid, eligible
+
+    def load_batch(self, batch: NextLatBatch):
+        """Refill only authorized dynamic prefix buffers outside graph capture.
+
+        This does not copy token IDs, loss masks or jitter. Their owners must
+        validate and refill those separately before replay. Do not refill any
+        saved forward inputs until that invocation's backward has completed.
+        ``validate_batch`` continues to require equality with the loaded layout.
+        """
+        valid, eligible = self.validate_replacement_batch(batch)
+        self.valid_mask.copy_(valid)
+        self.feedback_eligible.copy_(eligible)
+        self._valid_cpu, self._eligible_cpu = valid, eligible
+        # Copies above preserve addresses, shape and RoPE ownership. Accept
+        # only their authorized version increments; external mutation is caught
+        # before the next load rather than laundered into the saved signatures.
+        self._owned_versions = self._owned_signature()
+
+    def _validate_prepared_ownership(self):
+        if ((self.all_tokens_valid, self.is_causal, self.right_padded_causal) != self._static_flags
                 or id(self.rope_tables) != self._rope_owner
                 or id(self.ordinary_rope_tables) != self._ordinary_rope_owner
                 or self._owned_signature() != self._owned_versions):
@@ -203,11 +251,22 @@ class PreparedFBTLayout:
             raise ValueError("Prepared fixed model buffers changed")
         if self.core.readout_weight is not self.core.token_embeddings.weight:
             raise ValueError("Native tied embedding/readout ownership changed")
+
+    def validate_execution(self, mode: FBTMode = FBTMode(), *, expected_signature=None, feedback_noise=None):
+        """Verify ownership/layout/settings externally; optimizer value updates are allowed."""
+        if not isinstance(mode, FBTMode):
+            raise TypeError("Static mode must be an FBTMode")
+        self.core._validate_rt_mode(mode.rt_mode)
+        noise = self.core._validate_feedback_noise(feedback_noise, mode,
+            (self._shape[0], self._shape[1] - 1, self.core.config.model_dim),
+            self._device, self.core.token_embeddings.weight.dtype)
+        self._validate_prepared_ownership()
         active_rt = mode.initial_rt_mode if mode.enabled and mode.num_passes == 1 else mode.rt_mode
         self.base._validate_author_scope(active_rt, all_tokens_valid=self.all_tokens_valid)
         self.base._validate_ordinary_scope(mode.initial_rt_mode,
             attention_mask=self.attention_mask, is_causal=self.is_causal)
         signature = {"mode": asdict(mode), "ordinary_activation_checkpointing": self.base.ordinary_activation_checkpointing,
+            "right_padded_causal": self.right_padded_causal,
             # Values may be copied into these buffers between graph replays;
             # replacing their storage requires capture against the new buffers.
             "feedback_noise_buffers": None if noise is None else tuple(
@@ -241,13 +300,14 @@ class PreparedFBTLayout:
         return signature
 
     def _stack(self, embeddings, mode):
-        return self.base._forward_prepared(embeddings, mode=mode,
+        hidden = self.base._forward_prepared(embeddings, mode=mode,
             positions=self.position_ids, key_positions=self.position_ids, key_valid=self.valid_mask,
             attention_mask=self.attention_mask, is_causal=self.is_causal,
             all_tokens_valid=self.all_tokens_valid,
             query_rope=self.rope_tables, key_rope=self.rope_tables,
             ordinary_rope_tables=self.ordinary_rope_tables,
             checkpoint_ordinary=self.base._checkpoint_ordinary_enabled())[0]
+        return hidden.masked_fill(~self.valid_mask.unsqueeze(-1), 0) if self.right_padded_causal else hidden
 
     def forward(self, input_ids: Tensor, mode: FBTMode = FBTMode(), *, feedback_noise=None) -> PreparedFBTOutput:
         """Tensor-only finite pass body; external validation is required before replay."""
