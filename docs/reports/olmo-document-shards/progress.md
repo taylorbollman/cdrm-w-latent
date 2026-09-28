@@ -4,6 +4,15 @@
 turn, before moving to two GPUs. Branch `feat/olmo-document-shards`, based on
 main `3b26007`. No GPU/model execution or quality training in this milestone.
 
+Implementation saved/pushed at `253f5ac`. All seven official source extracts
+complete (v2 explicit empty-string skip with line audit), raw files uploaded and
+verified. CPU124pass. First two token shards/config uploaded and restored from
+GCS into a fresh directory; resumed preparation and separate uninterrupted run
+both complete:28shards,12,514inputrows,12,512uniquedocuments,7,054,230tokens.
+Detailed independent byte/token audit and final retention are next. All work is
+CPU-only; no two-GPU test started. The early extraction attempt stopped on an
+empty Common Crawl row; retain its log as development evidence, not a corpus.
+
 Boot disk has about12GiB free. Local SSD has about737GiB free; all substantial
 raw/token data and scratch will go under
 `/mnt/localssd/cdrm-data/olmo-dolma-v1_5-readiness-20260928`. Small source,
