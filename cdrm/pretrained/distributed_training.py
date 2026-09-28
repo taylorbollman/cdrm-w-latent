@@ -18,6 +18,61 @@ from torch import nn
 from .fbt_training import FBTNextLatLM
 from .lm_training import TERMS, _counts
 from .nextlat import NextLatBatch, NextLatLosses
+from .olmo_fbt import FBTMode
+
+
+def validate_microbatch_inputs(model: FBTNextLatLM, batch: NextLatBatch, *,
+                               backbone_kwargs=None, tensor_inputs=None,
+                               training: bool | None = None) -> dict:
+    """Validate rank-local tensor inputs separately from shared configuration.
+
+    Currently the only input is ``feedback_noise``: one [B,T-1,D] FP32 tensor
+    per active feedback pass. These tensors are never configuration and must
+    never enter object collectives or checkpoint metadata. Eager DDP calls this
+    for *every* microbatch in coordinated preflight before its first forward.
+    The adapter repeats validation for callers outside that trainer.
+
+    ``training=True`` lets trainer preflight validate its upcoming train-mode
+    execution without changing module modes before all ranks accept the update.
+    Empty local slots still supply correctly shaped finite noise (usually zeros).
+    """
+    if not isinstance(model, FBTNextLatLM):
+        raise TypeError("Expected canonical FBTNextLatLM")
+    kwargs = {} if backbone_kwargs is None else dict(backbone_kwargs)
+    if "feedback_noise" in kwargs:
+        raise ValueError("feedback_noise belongs in per-microbatch tensor_inputs, not shared backbone_kwargs")
+    if tensor_inputs is None:
+        inputs = {}
+    elif isinstance(tensor_inputs, Mapping):
+        inputs = dict(tensor_inputs)
+    else:
+        raise TypeError("Each microbatch tensor_inputs entry must be a mapping or None")
+    if set(inputs) - {"feedback_noise"}:
+        raise ValueError("Unknown per-microbatch tensor input; only feedback_noise is supported")
+    mode = kwargs.get("mode", FBTMode())
+    if not isinstance(mode, FBTMode):
+        raise TypeError("mode must be FBTMode")
+    if training is None:
+        training = model.backbone.training
+    if type(training) is not bool:
+        raise TypeError("training must be boolean")
+    active = training and mode.enabled and mode.num_passes > 1 and mode.beta > 0 and mode.feedback_jitter > 0
+    noise = inputs.get("feedback_noise")
+    if not active:
+        if noise is not None:
+            raise ValueError("feedback_noise is only accepted for active training jitter")
+        return {}
+    if not isinstance(noise, (tuple, list)) or len(noise) != mode.num_passes - 1:
+        raise ValueError("Training feedback jitter requires one external noise tensor per feedback pass")
+    expected_shape = (*batch.input_ids.shape[:1], batch.input_ids.shape[1] - 1, model.config.model_dim)
+    weight = model.backbone.readout_weight
+    for value in noise:
+        if (not isinstance(value, torch.Tensor) or tuple(value.shape) != expected_shape
+                or value.device != weight.device or value.dtype != weight.dtype or value.requires_grad):
+            raise ValueError("feedback_noise must match shifted feedback shape/device/dtype and have no gradient")
+        if not bool(torch.isfinite(value).all()) or bool((value.abs() > 1).any()):
+            raise ValueError("feedback_noise must be finite unit noise in [-1, 1]")
+    return {"feedback_noise": tuple(noise)}
 
 
 def sum_objective_counts(counts: Sequence[Mapping[str, int]]) -> dict[str, int]:
@@ -108,11 +163,14 @@ class ObjectiveForwardAdapter(nn.Module):
         self.training = model.training
 
     def forward(self, batch: NextLatBatch, *, global_counts: Mapping[str, int],
-                world_size: int = 1, backbone_kwargs=None) -> dict:
+                world_size: int = 1, backbone_kwargs=None, tensor_inputs=None) -> dict:
         local_counts = self.model.counts(batch)
         weights = self.model.objective_weights()
         _, denominators = _normalization_contract(local_counts, weights, global_counts, world_size)
-        result = self.model.loss_sums(batch, backbone_kwargs=backbone_kwargs)
+        inputs = validate_microbatch_inputs(self.model, batch, backbone_kwargs=backbone_kwargs,
+                                           tensor_inputs=tensor_inputs)
+        kwargs = {} if backbone_kwargs is None else dict(backbone_kwargs)
+        result = self.model.loss_sums(batch, backbone_kwargs={**kwargs, **inputs})
         if result.counts != local_counts or result.weights != weights:
             raise ValueError("Forward objectives differ from precomputed counts or weights")
         objective = ddp_normalized_objective(result, global_counts=denominators, world_size=world_size)

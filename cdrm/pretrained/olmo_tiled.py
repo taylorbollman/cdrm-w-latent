@@ -27,6 +27,18 @@ from .olmo_recurrent import OLMoRTForCausalLM
 from .recurrent import RTExecutionContext, RTMode
 
 
+def _validate_right_padded_mask(valid: Tensor) -> None:
+    """Prove valid queries cannot attend padding under index-causal attention.
+
+    Every row is a valid prefix followed by padding; an empty prefix is valid.
+    This validation is outside graph bodies. Native RT still receives `valid`.
+    """
+    if valid.ndim != 2 or valid.dtype != torch.bool:
+        raise ValueError("right_padded_causal requires a boolean [batch, length] validity mask")
+    if bool((valid[:, 1:] & ~valid[:, :-1]).any()):
+        raise ValueError("right_padded_causal requires contiguous valid prefixes; left padding and gaps are unsupported")
+
+
 @dataclass(frozen=True)
 class _Invocation:
     config: OLMoConfig
@@ -589,9 +601,30 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         if torch.is_autocast_enabled(device_type) and torch.get_autocast_dtype(device_type) != torch.bfloat16:
             raise ValueError("Author RT supports FP32 or BF16 mixed precision only")
 
+    def _prepare_right_padded_inputs(self, input_ids, inputs_embeds, attention_mask, position_ids):
+        """Validate dynamic prefixes without constructing a [B,1,T,T] mask.
+
+        Canonical arange RoPE positions also cover padding storage, whose output
+        is discarded. Supplied positions remain supported by the eager path.
+        """
+        x, valid, positions, _, _, _ = self._prepare_inputs(
+            input_ids, inputs_embeds, None, position_ids, None, cache_type=OLMoTiledCache)
+        if attention_mask is not None:
+            if attention_mask.shape != valid.shape or attention_mask.device != x.device:
+                raise ValueError("attention_mask must match right-padded input shape/device")
+            if attention_mask.dtype != torch.bool and not bool(((attention_mask == 0) | (attention_mask == 1)).all()):
+                raise ValueError("attention_mask must be boolean or contain only 0/1")
+            valid = attention_mask.to(torch.bool)
+            _validate_right_padded_mask(valid)
+        return x, valid, positions, positions, None, True
+
     def forward(self, input_ids=None, *, mode=RTMode(), inputs_embeds=None,
                 attention_mask=None, position_ids=None, past_key_values=None,
-                use_cache=False, return_logits=True):
+                use_cache=False, return_logits=True, right_padded_causal=False):
+        if type(right_padded_causal) is not bool:
+            raise TypeError("right_padded_causal must be boolean")
+        if right_padded_causal and (past_key_values is not None or use_cache):
+            raise ValueError("right_padded_causal supports cache-free independent rows only")
         if not isinstance(mode, RTMode):
             raise TypeError("mode must be an RTMode")
         if any(index >= self.config.num_layers for index in mode.selected_layers):
@@ -599,10 +632,16 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
         checkpoint_ordinary = self._checkpoint_ordinary_enabled()
         if checkpoint_ordinary and (use_cache or past_key_values is not None):
             raise ValueError("Ordinary activation checkpointing requires cache-free grad-enabled training")
-        x, valid, positions, key_positions, mask, causal = self._prepare_inputs(
-            input_ids, inputs_embeds, attention_mask, position_ids, past_key_values,
-            cache_type=OLMoTiledCache,
-        )
+        if right_padded_causal:
+            # Only ordinary attention omits the mask. Recurrence must retain
+            # key_valid to prevent padded positions becoming persistent memory.
+            x, valid, positions, key_positions, mask, causal = self._prepare_right_padded_inputs(
+                input_ids, inputs_embeds, attention_mask, position_ids)
+        else:
+            x, valid, positions, key_positions, mask, causal = self._prepare_inputs(
+                input_ids, inputs_embeds, attention_mask, position_ids, past_key_values,
+                cache_type=OLMoTiledCache,
+            )
         # This dynamic validation boundary is outside prepared graph bodies.
         # The common mask-free case needs no device reduction/synchronization.
         all_tokens_valid = None
@@ -655,6 +694,8 @@ class OLMoTiledRTForCausalLM(OLMoRTForCausalLM):
             all_tokens_valid=all_tokens_valid,
             query_rope=native_rope, key_rope=native_rope, ordinary_rope_tables=ordinary_rope_tables,
         )
+        if right_padded_causal:
+            hidden = hidden.masked_fill(~valid.unsqueeze(-1), 0)
         cache = OLMoTiledCache(tuple(present), valid.clone(), key_positions.clone(), mode,
                               versions, generation, context, self.attention_precision,
                               self.cast_weights_once, self.tile_backend,

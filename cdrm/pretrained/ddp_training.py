@@ -21,7 +21,8 @@ import torch
 import torch.distributed as dist
 from torch.nn.parallel import DistributedDataParallel
 
-from .distributed_training import ObjectiveForwardAdapter, sum_objective_counts
+from .distributed_training import (ObjectiveForwardAdapter, sum_objective_counts,
+                                   validate_microbatch_inputs)
 from .fbt_training import FBTNextLatLM
 from .lm_training import (LMTrainingConfig, TERMS, TrainingCounters,
                           _batch_statistics, _plain, optimizer_ownership,
@@ -144,13 +145,18 @@ class EagerDDPTrainer:
 
     def backward(self, microbatches: Sequence, *,
                  config: LMTrainingConfig = LMTrainingConfig(),
-                 backbone_kwargs: Mapping | None = None) -> DDPBackwardResult:
+                 backbone_kwargs: Mapping | None = None,
+                 microbatch_inputs: Sequence[Mapping | None] | None = None) -> DDPBackwardResult:
         """Reduce global raw gradients without clipping or updating any state.
 
         Each term differentiates ``world_size * local_sum / global_count``;
         DDP's default average supplies the matching global mean. Counts are
         independent for CE, latent and KL; pass weighting stays canonical.
         There is no additional division by accumulation length.
+
+        ``backbone_kwargs`` is identical serializable metadata on all ranks.
+        ``microbatch_inputs`` carries rank-local feedback-noise tensors, one
+        mapping per microbatch; payloads never enter object collectives.
         """
         try:
             error = None
@@ -172,8 +178,15 @@ class EagerDDPTrainer:
                 for batch in microbatches:
                     if batch.input_ids.device != self.device:
                         raise ValueError("Every batch must be on the model device")
+                inputs = ([None] * len(microbatches) if microbatch_inputs is None
+                          else list(microbatch_inputs))
+                if len(inputs) != len(microbatches):
+                    raise ValueError("microbatch_inputs must have one entry per local microbatch")
+                inputs = [validate_microbatch_inputs(self.model, batch, backbone_kwargs=kwargs,
+                             tensor_inputs=item, training=True) for batch, item in zip(microbatches, inputs)]
                 contract = {"microbatches": len(microbatches), "config": asdict(config),
                             "weights": weights, "backbone_kwargs": _plain(kwargs),
+                            "tensor_input_channel": "local-microbatch-feedback-noise-v1",
                             "objective_config": {"nextlat": self.model.config.to_dict(),
                                                  "enabled": self.model.enabled,
                                                  "gamma": self.model.gamma,
@@ -201,7 +214,7 @@ class EagerDDPTrainer:
                     with torch.autocast(self.device.type, dtype=torch.bfloat16,
                          enabled=config.precision == "bf16_mixed", cache_enabled=False):
                         result = self.ddp(batch, global_counts=counts, world_size=self.world_size,
-                                          backbone_kwargs=kwargs)
+                                          backbone_kwargs=kwargs, tensor_inputs=inputs[index])
                         objective = result["objective"]
                     local_sums = torch.stack([result["loss_sums"][t] for t in TERMS])
                     self._healthy(torch.isfinite(local_sums).all() & torch.isfinite(objective.detach()),
@@ -293,6 +306,8 @@ class EagerDDPTrainer:
 
     def optimizer_step(self, optimizer, microbatches: Sequence, *,
                        config: LMTrainingConfig = LMTrainingConfig(), backbone_kwargs=None,
+                       microbatch_inputs: Sequence[Mapping | None] | None = None,
                        scheduler=None, counters: TrainingCounters | None = None) -> dict:
-        result = self.backward(microbatches, config=config, backbone_kwargs=backbone_kwargs)
+        result = self.backward(microbatches, config=config, backbone_kwargs=backbone_kwargs,
+                               microbatch_inputs=microbatch_inputs)
         return self.step(result, optimizer, scheduler=scheduler, counters=counters)

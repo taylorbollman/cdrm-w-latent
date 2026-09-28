@@ -296,7 +296,8 @@ class OLMoFBT(nn.Module):
     def forward(self, input_ids=None, *, inputs_embeds=None, attention_mask=None,
                 document_ids=None, position_ids=None, mode: FBTMode = FBTMode(),
                 return_logits=True, past_key_values=None, use_cache=False,
-                full_valid_causal: bool = False, feedback_noise=None) -> FBTOutput:
+                full_valid_causal: bool = False, feedback_noise=None,
+                right_padded_causal: bool = False) -> FBTOutput:
         """Finite passes, optionally using implicit causal attention for full rows.
 
         ``full_valid_causal`` is an explicit eager-dispatch option, not permission
@@ -305,28 +306,46 @@ class OLMoFBT(nn.Module):
         mask in every fresh stack call. This permits Flash SDPA dispatch while
         preserving supplied RoPE positions. Cached/padded sequences cannot opt in.
 
+        ``right_padded_causal`` additionally permits valid-prefix rows, including
+        empty rows. Ordinary attention uses an implicit causal mask; native RT
+        retains token validity and every stack zeros invalid output queries.
+        This opt-in requires the native tiled backbone and no packed documents.
+
         Nonzero training ``mode.feedback_jitter`` requires external unit noise;
         evaluation is deterministic and rejects supplied noise. No RNG state is
         consumed by this forward path, including activation recomputation.
         """
         if type(full_valid_causal) is not bool:
             raise TypeError("full_valid_causal must be boolean")
+        if type(right_padded_causal) is not bool:
+            raise TypeError("right_padded_causal must be boolean")
+        if right_padded_causal and full_valid_causal:
+            raise ValueError("Choose either right_padded_causal or full_valid_causal")
+        if right_padded_causal:
+            from .olmo_tiled import OLMoTiledRTForCausalLM
+            if not isinstance(self.backbone, OLMoTiledRTForCausalLM):
+                raise ValueError("right_padded_causal requires the native tiled backbone")
         if not isinstance(mode, FBTMode):
             raise TypeError("mode must be an FBTMode")
         if past_key_values is not None or use_cache:
             raise ValueError("Finite FBT passes do not accept caches; use forward_online explicitly")
         self._validate_rt_mode(mode.rt_mode)
-        embeddings, valid, positions, _, _, _ = self.backbone._prepare_inputs(
-            input_ids, inputs_embeds, attention_mask, position_ids, None,
-        )
+        if right_padded_causal:
+            embeddings, valid, positions, _, _, _ = self.backbone._prepare_right_padded_inputs(
+                input_ids, inputs_embeds, attention_mask, position_ids)
+        else:
+            embeddings, valid, positions, _, _, _ = self.backbone._prepare_inputs(
+                input_ids, inputs_embeds, attention_mask, position_ids, None,
+            )
         documents = self._documents(valid, document_ids)
         noise = self._validate_feedback_noise(feedback_noise, mode,
             embeddings[:, 1:].shape, embeddings.device, embeddings.dtype)
         if full_valid_causal and not bool(valid.all()):
             raise ValueError("full_valid_causal requires all tokens valid; padding is unsupported")
         stack_mask = None if full_valid_causal else valid
+        stack_options = {"right_padded_causal": True} if right_padded_causal else {}
         hidden = self._stack(embeddings, mode.initial_rt_mode, attention_mask=stack_mask,
-                             position_ids=positions).last_hidden_state
+                             position_ids=positions, **stack_options).last_hidden_state
         states = [hidden]
         if mode.enabled:
             eligible = valid[:, 1:] & valid[:, :-1] & (documents[:, 1:] == documents[:, :-1])
@@ -336,7 +355,7 @@ class OLMoFBT(nn.Module):
                 suffix = self._blend(previous, embeddings[:, 1:], mode.beta, eligible)
                 fused_inputs = torch.cat((embeddings[:, :1], suffix), dim=1)
                 hidden = self._stack(fused_inputs, mode.rt_mode, attention_mask=stack_mask,
-                                     position_ids=positions).last_hidden_state
+                                     position_ids=positions, **stack_options).last_hidden_state
                 states.append(hidden)
         return FBTOutput(self.project_logits(hidden) if return_logits else None,
                          hidden, tuple(states))
