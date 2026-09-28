@@ -4,6 +4,16 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Combined T1024 benchmark in preparation, 2026-09-28:** read the
+[protocol](reports/olmo-combined-t1024/protocol.md) and
+[progress](reports/olmo-combined-t1024/progress.md). User is considering T1024
+as a compromise for an early RT value screen (~500M tokens plus SFT), with
+FA4 set aside. Current scope is B32/B64 T1024 SDPA throughput and memory,
+reusing saved T512/T2048 references; no quality-training launch. Same K2,
+native RT0/15, both NextLat losses and native ordinary RoPE. After benchmarking,
+review context choice and future matched FBT+NextLat with/without RT controls.
+
+
 **Combined T2048 SDPA benchmark complete, 2026-09-28:** read
 [results and plots](reports/olmo-combined-long-context/results.md),
 [progress](reports/olmo-combined-long-context/progress.md) and

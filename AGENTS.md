@@ -31,6 +31,13 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 combined T1024 compromise benchmark is in preparation. Read
+ docs/reports/olmo-combined-t1024/protocol.md and progress.md first.
+FA4 is set aside. Same K2/RT0,15/NextLat/nativeRoPE/SDPA as saved contexts;
+new B32 then B64 plus repeat, no T512/T2048 rerun or quality training.
+The approximately500M-token+SFT RT value screen is planning context only.
+
+
 2026-09-28 combined T2048 benchmark complete: read
  docs/reports/olmo-combined-long-context/results.md and progress.md first.
 SDPA-only, K2 FBT, nativeRT0/15, NextLat bothlosses, nativeRoPE. RepeatedB32
