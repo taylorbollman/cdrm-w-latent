@@ -8,8 +8,9 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 T2048 SDPA/FA4 speed and memory versus saved T512; explicitly reuse T512 evidence.
 Read [current progress](reports/olmo-ordinary-long-context/progress.md) and
 [frozen protocol](reports/olmo-ordinary-long-context/protocol.md). Runtimeedf3d0b
-adds benchmark selectors only,111CPUtests pass. Root GPUstagefa4-check-b2-01
-is active; inspect report/process before resuming. No qualitytraining or RT scope.
+adds benchmark selectors only,111CPUtests pass. PrimaryB16/B32pairs finished;
+FA4givesabout4%speedgain, no meaningfulmemorysaving. ReverseB32repeatsactive;
+inspectcurrentprogress/report/process before resuming. No qualitytraining or RT scope.
 
 
 **Ordinary-only throughput follow-up complete, 2026-09-25:** the user requested

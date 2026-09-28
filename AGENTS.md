@@ -34,7 +34,7 @@ W&B tracking.
 2026-09-28 ordinary T2048 follow-up is active on one H100. Read
 docs/reports/olmo-ordinary-long-context/progress.md and frozen protocol first.
 User says reuse saved T512 reference; do not rerun T512 or FA4T512.
-Runtimeedf3d0b/111CPUtests; rootowns GPU, firstfa4-check-b2-01 exec33439.
+Runtimeedf3d0b/111CPUtests; rootowns GPU; inspect current progress before resuming.
 No RT/FBT/NextLat/qualitytraining. Preserve older T2048 numerical qualifications.
 
 
