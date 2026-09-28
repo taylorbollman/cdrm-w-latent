@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read-only combined T2048 evidence audit and optional CPU figures.
+"""Read-only combined T1024/T2048 evidence audit and optional CPU figures.
 
 Adapted from the ordinary long-context local audit. Raw stage files are never
 modified. Retention checks inspect saved receipts/local archives, not the cloud.
@@ -19,6 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 PROTOCOL = 'docs/reports/olmo-combined-long-context/protocol.md'
+PROTOCOLS = {1024: 'docs/reports/olmo-combined-t1024/protocol.md', 2048: PROTOCOL}
 PARAMETERS = dict(backbone=1176764416, fusion=8388608, nextlat_training_only=82726912,
                   training_architecture=1267879936, deployable_inference=1185153024)
 REQUIRED_SOURCES = {'scripts/olmo_two_gpu_single_reference.py', 'scripts/olmo_two_gpu_validate.py',
@@ -43,9 +44,9 @@ def read(path):
     return json.loads(path.read_text())
 
 
-def source_check(directory, report, historical=False):
+def source_check(directory, report, historical=False, length=2048):
     pins = report.get('sources', {})
-    required = REQUIRED_SOURCES | (set() if historical else {PROTOCOL})
+    required = REQUIRED_SOURCES | (set() if historical else {PROTOCOLS[length]})
     issues = [f'missing source pin: {name}' for name in sorted(required - pins.keys())]
     verified = 0
     for name, sha in pins.items():
@@ -144,12 +145,12 @@ def backend_evidence(directory, report, historical=False):
     return result
 
 
-def contract_check(report, historical=False):
+def contract_check(report, historical=False, expected_length=2048):
     case, mode, cfg = (report.get(key, {}) for key in ('case', 'mode', 'configuration'))
     resources = report.get('resources', {})
     ledger, observed = resources.get('analytic_matrix_work', {}), resources.get('observed_parameters', {})
     batch, length = case.get('batch_size'), case.get('length')
-    shape_ok = type(batch) is int and batch >= 2 and batch % 2 == 0 and length == (512 if historical else 2048)
+    shape_ok = type(batch) is int and batch >= 2 and batch % 2 == 0 and length == (512 if historical else expected_length)
     expected = dict(ce=batch*(length-1), latent=batch*(length-1), kl=batch*(length//2)) if shape_ok else {}
     checks = dict(shape=shape_ok, case=case.get('name') == 'combined',
         features=case.get('fbt') is True and case.get('nextlat') is True and mode.get('enabled') is True,
@@ -190,7 +191,7 @@ def contract_check(report, historical=False):
     return dict(passed=all(checks.values()), checks=checks, expected_counts_per_pass=expected)
 
 
-def dispatch_check(report, historical=False):
+def dispatch_check(report, historical=False, length=2048):
     if historical:
         return dict(passed=True, scope='Historical dispatch inferred from verified frozen source; no new instrumentation.')
     row = next((c for c in report.get('checks', [])
@@ -199,13 +200,13 @@ def dispatch_check(report, historical=False):
     shapes = rt.get('forward_tiles_by_shape', {})
     triton = rt.get('forward_triton_tiles_by_shape', {})
     expected = dict(Counter(f'{boundary & -boundary}x{boundary & -boundary}'
-                           for boundary in range(1, 2048)))
+                           for boundary in range(1, length)))
     expected = {k:2*v for k,v in expected.items()}
     checks = dict(ordinary=row.get('ordinary', {}).get('passed') is True,
         native_rt=rt.get('passed') is True, forward=shapes == expected,
         triton=triton == {k:v for k,v in expected.items() if int(k.split('x')[0]) <= 256},
-        eager=rt.get('forward_eager_tiles_by_shape') == {'512x512': 4, '1024x1024': 2},
-        backward=rt.get('backward_recomputed_triton_calls') == rt.get('expected_backward_recomputed_triton_calls') == 4094)
+        eager=rt.get('forward_eager_tiles_by_shape') == {k:v for k,v in expected.items() if int(k.split('x')[0]) > 256},
+        backward=rt.get('backward_recomputed_triton_calls') == rt.get('expected_backward_recomputed_triton_calls') == 2*(length-1))
     return dict(passed=all(checks.values()), checks=checks, observed=row)
 
 
@@ -227,11 +228,11 @@ def timing_check(report):
     return dict(passed=all(checks.values()), checks=checks, total_timed_tokens=tokens, total_timed_seconds=seconds, tokens_per_second=rate)
 
 
-def flatten_stage(directory, historical=False):
+def flatten_stage(directory, historical=False, expected_length=2048, retained=False):
     report = read(directory/'report.json')
-    source, deps = source_check(directory, report, historical), dependency_check(directory, report)
+    source, deps = source_check(directory, report, historical, expected_length), dependency_check(directory, report)
     retention = retention_check(directory)
-    backend, contract, timing = backend_evidence(directory, report, historical), contract_check(report, historical), timing_check(report)
+    backend, contract, timing = backend_evidence(directory, report, historical), contract_check(report, historical, expected_length), timing_check(report)
     checks = report.get('checks', [])
     names = [r.get('name') for r in checks]
     missing = sorted((OWN_CHECKS if historical else NEW_CHECKS) - set(names))
@@ -241,7 +242,7 @@ def flatten_stage(directory, historical=False):
     config, case = report.get('configuration', {}), report.get('case', {})
     batch, length = case.get('batch_size'), case.get('length')
     diagnostic = not historical and (batch == 2 or config.get('stage') == 'correctness')
-    dispatch = dispatch_check(report, historical)
+    dispatch = dispatch_check(report, historical, expected_length)
     setup, steady = report.get('setup_memory', {}), report.get('steady_memory', {})
     memory_valid = all(isinstance(container.get(k), (int, float)) and math.isfinite(container[k]) and container[k] >= 0
         for container, keys in ((setup, ('peak_allocated_gib', 'peak_reserved_gib')),
@@ -257,7 +258,8 @@ def flatten_stage(directory, historical=False):
         (not all(r['verified'] for r in backend.values()), 'native RoPE / SDPA backend unverified')):
         if condition: reasons.append(reason)
     setup, steady = report.get('setup_memory', {}), report.get('steady_memory', {})
-    return dict(stage=directory.name, origin='historical_T512_reference' if historical else 'new_T2048_experiment',
+    return dict(stage=directory.name, origin=('historical_T512_reference' if historical else
+            f'historical_T{expected_length}_reference' if retained else f'new_T{expected_length}_experiment'),
         report=str(directory/'report.json'), report_sha256=digest(directory/'report.json'),
         status=report.get('status', 'incomplete'), error=report.get('error'), diagnostic=diagnostic,
         batch_size=batch, length=length, input_tokens_per_update=batch*length if type(batch) is int and type(length) is int else None,
@@ -296,7 +298,7 @@ def pooled_measurements(rows):
         if historical and row['origin'] != 'historical_T512_reference':
             row['rate_ratio_to_historical'] = row['tokens_per_second']/historical['tokens_per_second']
             row['same_input_tokens_per_update'] = row['input_tokens_per_update'] == historical['input_tokens_per_update']
-    return result
+    return sorted(result, key=lambda row: (row['length'], row['batch_size'], row['origin']))
 
 
 def write_csv(path, rows):
@@ -307,28 +309,42 @@ def write_csv(path, rows):
         writer.writerows({k:json.dumps(v, sort_keys=True) if isinstance(v, (dict, list)) else v for k,v in row.items()} for row in rows)
 
 
-def audit(evidence, historical):
+def audit(evidence, historical, length=2048, comparison_dirs=()):
+    if length not in PROTOCOLS:
+        raise ValueError('Only T1024 and T2048 are supported')
     rows, unreadable = [], []
-    candidates = [(p.parent, False) for p in sorted(evidence.glob('*/report.json'))]
-    if (historical/'report.json').is_file(): candidates.append((historical, True))
-    for directory, old in candidates:
-        try: rows.append(flatten_stage(directory, historical=old))
+    candidates = [(p.parent, False, length, False) for p in sorted(evidence.glob('*/report.json'))]
+    if (historical/'report.json').is_file(): candidates.append((historical, True, 512, True))
+    candidates += [(p, False, 2048, True) for p in comparison_dirs]
+    seen = set()
+    for directory, old, expected_length, retained in candidates:
+        resolved = directory.resolve()
+        if resolved in seen:
+            raise ValueError(f'Duplicate evidence stage: {resolved}')
+        seen.add(resolved)
+        try: rows.append(flatten_stage(directory, historical=old, expected_length=expected_length, retained=retained))
         except (OSError, ValueError, TypeError, KeyError) as exc:
-            unreadable.append(dict(stage=directory.name, historical=old, error=str(exc)))
+            unreadable.append(dict(stage=directory.name, historical=old or retained, error=str(exc)))
     old = next((r for r in rows if r['origin'] == 'historical_T512_reference'), None)
-    new = [r for r in rows if r['origin'] == 'new_T2048_experiment']
-    if old:
-        for row in new:
-            before, after = old['runtime_sources'], row['runtime_sources']
-            row['historical_comparison'] = dict(all_pretrained_runtime_sources_equal=bool(before) and before == after,
+    new = [r for r in rows if r['origin'] == f'new_T{length}_experiment']
+    references = [r for r in rows if r['origin'].startswith('historical_')]
+    for row in new:
+        row['retained_comparisons'] = []
+        for reference in references:
+            before, after = reference['runtime_sources'], row['runtime_sources']
+            comparison = dict(reference_stage=reference['stage'], reference_origin=reference['origin'],
+                all_pretrained_runtime_sources_equal=bool(before) and before == after,
                 unchanged_source_pairs=sum(after.get(k) == v for k,v in before.items()),
                 changed_or_missing_sources=sorted(k for k,v in before.items() if after.get(k) != v),
                 added_sources=sorted(after.keys()-before.keys()),
-                torch_cuda_gpu_equal=all(row['runtime'].get(k) == old['runtime'].get(k) for k in ('torch', 'cuda', 'gpu')),
+                torch_cuda_gpu_equal=all(row['runtime'].get(k) == reference['runtime'].get(k) for k in ('torch', 'cuda', 'gpu')),
                 package_changes={k:dict(historical=v, current=row['dependency_packages'].get(k))
-                    for k,v in old['dependency_packages'].items() if row['dependency_packages'].get(k) != v})
+                    for k,v in reference['dependency_packages'].items() if row['dependency_packages'].get(k) != v})
+            row['retained_comparisons'].append(comparison)
+            if reference is old:
+                row['historical_comparison'] = comparison
     final = [r for r in new if r['status'] in ('passed', 'failed', 'oom')]
-    return dict(schema='olmo-combined-long-context-audit-v1', generated_utc=datetime.now(timezone.utc).isoformat(),
+    return dict(schema='olmo-combined-long-context-audit-v1', benchmark_length=length, generated_utc=datetime.now(timezone.utc).isoformat(),
         rows=rows, unreadable_reports=unreadable, pooled=pooled_measurements(rows),
         summary=dict(new_reports=len(new), new_final_reports=len(final), new_statuses=dict(Counter(r['status'] for r in new)),
             new_physical_updates=sum(r['physical_updates'] for r in final),
@@ -338,14 +354,16 @@ def audit(evidence, historical):
             new_plot_eligible=sum(r['plot_eligible'] for r in new),
             new_operational_checks=sum(r['gates']['recorded'] for r in final),
             new_operational_checks_passed=sum(r['gates']['passed'] for r in final)),
-        notes=['Historical T512 is explicitly selected; it is not a new or interleaved measurement.',
+        notes=['Historical T512 and optional T2048 references are explicitly selected; neither is a new or interleaved measurement.',
             'SDPA only. No FA4 comparison/adoption or numerical equivalence claim.',
             'K2 ordinary bootstrap + feedback with native RT0/15; NextLat on both passes. Tokens count input once.',
             'Pooled rates are total timed tokens / total timed wall seconds, not averages of rates.',
             'B2 diagnostic and every failed/incomplete report stay in the ledger but not performance figures.',
             'Saved receipt verification is not a fresh cloud request; pending retention does not invalidate measured performance.',
             'Free memory is sampled, not continuous; steady allocated omits reserved graph pools.',
-            'Equal input tokens does not equal physical batch, recurrence depth or model quality.'])
+            'Equal input tokens does not equal physical batch, recurrence depth or model quality.',
+            'Context selection precedes a future RT screen: compare combined against matched FBT + NextLat without RT.',
+            'A possible 500M-token continuation plus SFT is planning context, not launched or evaluated by this audit.'])
 
 
 def plot(result, output):
@@ -369,7 +387,7 @@ def plot(result, output):
             ax.set_ylabel(title); ax.set_ylim(0, max(values)*1.16); ax.grid(axis='y', alpha=.2)
             ax.spines[['top', 'right']].set_visible(False)
         fig.suptitle('Combined FBT + native RT + NextLat: one H100, Flash SDPA')
-        fig.text(.5, .012, 'Graphs, ordinary-layer checkpointing, native RoPE, fused Adam. Historical T512 is not a new measurement.', ha='center', fontsize=8)
+        fig.text(.5, .012, 'Graphs, ordinary-layer checkpointing, native RoPE, fused Adam. Historical references are not new measurements.', ha='center', fontsize=8)
         fig.tight_layout(rect=(0,.05,1,.94))
         for suffix in ('pdf', 'png'): fig.savefig(output/f'{name}.{suffix}', dpi=170, bbox_inches='tight')
         plt.close(fig)
@@ -379,21 +397,31 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--evidence-dir', type=Path, default=ROOT/'.runtime/olmo-combined-long-context')
     parser.add_argument('--historical-dir', type=Path, default=ROOT/'.runtime/olmo-two-gpu/single-combined-b128-01')
+    parser.add_argument('--length', type=int, choices=tuple(PROTOCOLS), default=2048,
+                        help='Expected length of new evidence; default preserves the T2048 audit')
+    parser.add_argument('--comparison-dir', type=Path, action='append', default=[],
+                        help='Retained T2048 stage to include as a historical reference; repeat for pooled runs')
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--plots', action='store_true')
     args = parser.parse_args(argv)
     evidence, historical, output = (p.resolve() for p in (args.evidence_dir, args.historical_dir, args.output_dir))
-    if output == evidence or output.is_relative_to(historical) or any(output.is_relative_to(p.parent) for p in evidence.glob('*/report.json')):
+    comparisons = [p.resolve() for p in args.comparison_dir]
+    if any(not (p/'report.json').is_file() for p in comparisons):
+        parser.error('Every comparison directory must contain report.json')
+    stage_paths = [p.parent.resolve() for p in evidence.glob('*/report.json')] + [historical] + comparisons
+    if len(stage_paths) != len(set(stage_paths)):
+        parser.error('Evidence directories must be unique; do not count retained references twice')
+    if output == evidence or any(output == p or output.is_relative_to(p) or p.is_relative_to(output) for p in stage_paths):
         parser.error('Derived output must not overlap raw stage evidence')
     output.mkdir(parents=True, exist_ok=True)
-    result = audit(evidence, historical)
+    result = audit(evidence, historical, args.length, comparisons)
     (output/'summary.json').write_text(json.dumps(result, indent=2, sort_keys=True)+'\n')
     fields = ('stage', 'origin', 'status', 'diagnostic', 'length', 'batch_size', 'input_tokens_per_update',
         'tokens_per_second', 'seconds_per_update', 'setup_peak_allocated_gib', 'setup_peak_reserved_gib',
         'steady_reserved_gib', 'sampled_free_gib', 'physical_updates', 'plot_eligible', 'plot_exclusion_reasons', 'gates', 'wandb')
     write_csv(output/'stages.csv', [{k:r[k] for k in fields} for r in result['rows']])
     write_csv(output/'performance.csv', result['pooled'])
-    lines = ['# Combined OLMo T2048 evidence summary', '', *result['notes'], '',
+    lines = [f'# Combined OLMo T{args.length} evidence summary', '', *result['notes'], '',
         '| Origin | T / B | Runs | Input tokens/s | Setup allocated / reserved GiB | Steady reserved / sampled free GiB |',
         '| --- | ---: | ---: | ---: | ---: | ---: |']
     for r in result['pooled']:

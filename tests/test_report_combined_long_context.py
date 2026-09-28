@@ -14,9 +14,9 @@ def write(path, value):
     path.write_text(json.dumps(value) if isinstance(value, dict) else value)
 
 
-def fixture(tmp_path, *, batch=16, historical=False):
+def fixture(tmp_path, *, batch=16, historical=False, length=2048):
     directory = tmp_path/('historical' if historical else 'new')
-    length = 512 if historical else 2048
+    length = 512 if historical else length
     counts = dict(ce=batch*(length-1), latent=batch*(length-1), kl=batch*length//2)
     tokens = batch*length
     metric = dict(counts=counts, objective_weights=dict(ce=1., latent=1., kl=1.),
@@ -49,13 +49,13 @@ def fixture(tmp_path, *, batch=16, historical=False):
         dependencies=dict(packages={'torch':'fixture'}, dao_sources={}, fa4_sources={}), runtime={}, sources={})
     if not historical:
         gate = next(r for r in report['checks'] if r['name'] == 'combined_dispatch_native_rt_and_ordinary')
-        expected = dict(audit.Counter(f'{i & -i}x{i & -i}' for i in range(1,2048)))
+        expected = dict(audit.Counter(f'{i & -i}x{i & -i}' for i in range(1,length)))
         expected = {k:2*v for k,v in expected.items()}
         gate.update(ordinary=dict(passed=True), native_rt=dict(passed=True,
             forward_tiles_by_shape=expected, forward_triton_tiles_by_shape={k:v for k,v in expected.items() if int(k.split('x')[0]) <= 256},
-            forward_eager_tiles_by_shape={'512x512':4, '1024x1024':2},
-            backward_recomputed_triton_calls=4094, expected_backward_recomputed_triton_calls=4094))
-    for source in audit.REQUIRED_SOURCES | (set() if historical else {audit.PROTOCOL}):
+            forward_eager_tiles_by_shape={k:v for k,v in expected.items() if int(k.split('x')[0]) > 256},
+            backward_recomputed_triton_calls=2*(length-1), expected_backward_recomputed_triton_calls=2*(length-1)))
+    for source in audit.REQUIRED_SOURCES | (set() if historical else {audit.PROTOCOLS[length]}):
         path = directory/'source-snapshot'/source
         write(path, 'source fixture\n')
         report['sources'][source] = audit.digest(path)
@@ -145,3 +145,92 @@ def test_output_cannot_overwrite_raw_stage(tmp_path):
     with pytest.raises(SystemExit):
         audit.main(['--evidence-dir',str(tmp_path),'--historical-dir',str(tmp_path/'absent'),
                     '--output-dir',str(directory/'derived')])
+
+
+def test_t1024_has_its_own_protocol_and_dynamic_dispatch(tmp_path):
+    directory, report = fixture(tmp_path, batch=64, length=1024)
+    row = audit.flatten_stage(directory, expected_length=1024)
+    assert row['plot_eligible'] and row['origin'] == 'new_T1024_experiment'
+    rt = row['dispatch']['observed']['native_rt']
+    assert sum(rt['forward_tiles_by_shape'].values()) == 2046
+    assert sum(rt['forward_triton_tiles_by_shape'].values()) == 2044
+    assert rt['forward_eager_tiles_by_shape'] == {'512x512': 2}
+    assert rt['backward_recomputed_triton_calls'] == 2046
+    assert not audit.flatten_stage(directory)['plot_eligible']
+    report['sources'].pop(audit.PROTOCOLS[1024])
+    write(directory/'report.json', report)
+    assert not audit.flatten_stage(directory, expected_length=1024)['plot_eligible']
+
+
+@pytest.mark.parametrize('alter', ['old_dispatch', 'extra_large_tile', 'fa4', 'wrong_kl_mask'])
+def test_t1024_rejects_other_execution_recipe(tmp_path, alter):
+    directory, report = fixture(tmp_path, length=1024)
+    rt = next(r for r in report['checks'] if r['name'] == 'combined_dispatch_native_rt_and_ordinary')['native_rt']
+    if alter == 'old_dispatch':
+        rt['backward_recomputed_triton_calls'] = rt['expected_backward_recomputed_triton_calls'] = 4094
+    elif alter == 'extra_large_tile':
+        rt['forward_eager_tiles_by_shape']['1024x1024'] = 2
+    elif alter == 'fa4':
+        report['configuration']['ordinary_attention_backend'] = 'fa4'
+    elif alter == 'wrong_kl_mask':
+        report['timed_updates'][0]['metrics']['counts']['kl'] //= 2
+    write(directory/'report.json', report)
+    assert not audit.flatten_stage(directory, expected_length=1024)['plot_eligible']
+
+
+def test_t2048_comparison_keeps_full_contract_and_is_historical(tmp_path):
+    evidence = tmp_path/'active'
+    fixture(evidence, batch=64, length=1024)
+    old512, _ = fixture(tmp_path/'old512', batch=128, historical=True)
+    old2048, report = fixture(tmp_path/'old2048', batch=32)
+    result = audit.audit(evidence, old512, length=1024, comparison_dirs=[old2048])
+    assert result['summary']['new_reports'] == 1
+    assert result['summary']['new_physical_updates'] == 8
+    assert len(result['pooled']) == 3
+    origins = {r['origin'] for r in result['pooled']}
+    assert origins == {'new_T1024_experiment', 'historical_T512_reference', 'historical_T2048_reference'}
+    row = next(r for r in result['rows'] if r['origin'] == 'historical_T2048_reference')
+    assert row['dispatch']['passed'] and row['combined_contract']['checks']['explicit_objectives']
+    assert row['source_check']['verified_pairs'] == len(audit.REQUIRED_SOURCES)+1
+    report['model_contract']['nextlat']['lambda_kl'] = 0.
+    write(old2048/'report.json', report)
+    result = audit.audit(evidence, old512, length=1024, comparison_dirs=[old2048])
+    assert len(result['pooled']) == 2
+    assert result['summary']['new_reports'] == 1
+
+
+def test_retained_t2048_repeats_pool_without_inflating_new_totals(tmp_path):
+    evidence = tmp_path/'active'
+    fixture(evidence, batch=64, length=1024)
+    old512, _ = fixture(tmp_path/'old512', batch=128, historical=True)
+    one, _ = fixture(tmp_path/'old2048a', batch=32)
+    two, report = fixture(tmp_path/'old2048b', batch=32)
+    for row in report['timed_updates']: row['seconds'] *= 2
+    report['throughput']['global_tokens_per_second'] /= 2
+    report['throughput']['seconds_per_update'] *= 2
+    write(two/'report.json', report)
+    result = audit.audit(evidence, old512, length=1024, comparison_dirs=[one,two])
+    pooled = next(r for r in result['pooled'] if r['origin'] == 'historical_T2048_reference')
+    assert pooled['runs'] == 2 and pooled['tokens_per_second'] == 2*5*65536/(10+20)
+    assert pooled['same_input_tokens_per_update'] is True
+    assert result['summary']['new_physical_updates'] == 8
+    with pytest.raises(ValueError, match='Duplicate evidence'):
+        audit.audit(evidence, old512, length=1024, comparison_dirs=[one,one])
+
+
+def test_cli_retained_reference_protected_from_output(tmp_path):
+    evidence = tmp_path/'active'
+    fixture(evidence, length=1024)
+    retained, _ = fixture(tmp_path/'prior', batch=32)
+    base = ['--length','1024','--evidence-dir',str(evidence),
+            '--historical-dir',str(tmp_path/'absent'),'--comparison-dir',str(retained)]
+    with pytest.raises(SystemExit):
+        audit.main(base + ['--output-dir',str(retained/'derived')])
+    with pytest.raises(SystemExit):
+        audit.main(base + ['--output-dir',str(retained.parent)])
+    with pytest.raises(SystemExit):
+        audit.main(base + ['--comparison-dir',str(retained),'--output-dir',str(tmp_path/'out')])
+    audit.main(base + ['--output-dir',str(tmp_path/'out')])
+    result = json.loads((tmp_path/'out/summary.json').read_text())
+    assert result['benchmark_length'] == 1024 and result['summary']['new_reports'] == 1
+    assert 'T1024 evidence summary' in (tmp_path/'out/summary.md').read_text()
