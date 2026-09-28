@@ -46,7 +46,12 @@ same captured graph and buffer addresses. Test:
 Raw-gradient element budgets retain the previous smoke's `atol=3e-5, rtol=3e-4`;
 report actual absolute/relative errors, not only pass flags. This is a replay
 comparison within BF16 execution, not renewed BF16-versus-FP32 qualification.
-The executable harness fixes complete-update comparison budgets before launch.
+Complete-update budgets are fixed before launch: parameter elements use
+`atol=3e-6, rtol=3e-5`, with aggregate parameter-update relative L2 at most1e-3
+against the actual update from initial weights (not the large background weight
+norm). Adam moments use `atol=3e-5, rtol=3e-4` plus aggregate relative L2 at
+most1e-3, excluding exact-checked optimizer step counters. Loss-sum budgets are
+`atol=1e-5, rtol=3e-6`; objective uses `atol=1e-6, rtol=3e-6`.
 
 Each stage atomically records results and syncs W&B. Use a 15-minute launcher
 timeout and a fresh output directory per attempt. CPU snapshots support this

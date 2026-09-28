@@ -6,7 +6,7 @@ Save source/progress every 20–30 minutes. No long training or allocation.
 
 Branch: `feat/olmo-campaign-graph-integration`, based on PR35/main `50aa1fe`.
 
-Implementation underway:
+Implementation completed at `e2fba4c`; bounded GPU acceptance is next:
 
 - Model agent: opt-in valid-prefix padding fast path; native RT keeps true key
   validity, ordinary causal Flash omits redundant padding masks; mutable prepared
@@ -26,5 +26,13 @@ global parameter participation within one captured graph.
 
 CPU/Gloo tests are reference diagnostics, not actual multi-GPU/NCCL acceptance.
 Use CPU Docker explicitly; all GPU work must use the project GPU container.
-Runtime sources must be frozen before source-pinned GPU probe launch. GPU probe
-stages have bounded timeouts and save reports independently. No GPU run started.
+Final CPU suite: **867 passed in 51.58 seconds**. This includes all-eight-arm
+raw-gradient accumulation references, two-rank CPU/Gloo jitter/empty-slot/Adam
+checks, and actual tiny checkpoint publication preserving persistent buffers.
+Earlier development failures were fixture/setup mistakes, corrected in this
+final passing suite; raw logs remain local. H100 verified idle inside container.
+
+Runtime sources are frozen for source-pinned GPU probe launch. The probe compares
+one captured graph under changing padding/noise/counts, empty-slot zero behavior,
+and two complete eager versus replay Adam updates. See protocol.md for budgets.
+Launcher limit15minutes; each stage saves independently. No GPU run started yet.
