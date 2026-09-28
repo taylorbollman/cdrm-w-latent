@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 portable campaign readiness complete. Read
+docs/reports/olmo-campaign-readiness/results.md, usage.md and progress.md first.
+Runtime714f31c: opt-in K4/RTonallpasses, separate CE/auxpassweights, keyedjitter,
+explicitAdam/tokenclock, bounded pinnedraw/tokenizeddata contracts. CPU706pass;
+finalingest28pass(overlap), freshprocessCPUresumeexact. PretrainedNFR B1/T16
+4GPUstagespass, independent loss/grad assemblyexact,2finiteupdates,60sourcepins.
+W&Bkb0lbu1k synced; evidenceGCSretained. Largeinitialclipping is diagnostic only.
+Portable slice complete; next paddedFlash, perrankjitter, graphmasks/accumulation
+and actualdistributed freshprocessrestart. Noqualityrun/productiondata/calibration
+orhardwarelaunch. PriorBF16qualificationsremain. Saveworkevery20–30min.
+
 2026-09-28 combined T1024 benchmark complete. Read
  docs/reports/olmo-combined-t1024/results.md and progress.md first.
 Same K2/nativeRT0,15/NextLat/nativeRoPE/SDPA. B64 repeated11,092.06tok/s,

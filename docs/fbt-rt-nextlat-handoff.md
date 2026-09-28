@@ -4,6 +4,49 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Portable campaign readiness complete, 2026-09-28:** read
+[results](reports/olmo-campaign-readiness/results.md),
+[usage/next integration](reports/olmo-campaign-readiness/usage.md) and
+[progress](reports/olmo-campaign-readiness/progress.md). Runtime714f31c introduces
+opt-in K4/configured RT bootstrap, independently normalized CE/auxiliary losses,
+external deterministic jitter, explicit Adam/token schedule and bounded pinned
+data preparation. Broad CPU706pass; final ingest28pass (overlap). Fresh-process
+tiny CPU continuation exact. Actual pretrained NFR B1/T16 passes all4 GPUstages,
+literal aggregation loss/gradients exact,71active gradients finite,2finiteAdam
+updates,60unchanged source hashes. W&B kb0lbu1k synced. Large initial clipping is
+reported, not treated as LR validation. This is a portable slice of milestone1;
+padded Flash, graph jitter/masks/accumulation, per-rank inputs and distributed
+fresh-process restart remain. Existing numerical qualifications stay open.
+No production corpus, LR calibration, qualitytraining or hardware job launched.
+Code saved/pushed throughout; GCS evidence linked in report. Do not rerun smoke.
+
+**Portable readiness authorized, 2026-09-28:** user approves initial work useful
+on the current machine, with progress saved every 20–30 minutes; warn before any
+longer non-resumable operation. Implementation is on `feat/olmo-campaign-readiness`.
+Read [live progress](reports/olmo-campaign-readiness/progress.md). This authorizes
+bounded model/objective/optimizer/data readiness and checks, not long training
+or the unreviewed later campaign. Multi-GPU integration/calibration follows.
+
+**Hardware planning clarification, 2026-09-28:** user confirms training will be
+multi-GPU, possibly H200 141GB; only an eight-H200 option is currently available
+to them. Final hardware remains undecided. The campaign draft's section 9 now
+prioritizes reusable small CPU/one-GPU checks, then early two-GPU integration
+and calibration. H100-to-H200 acceptance is scoped; 2-to-8-rank resume requires
+explicit migration because existing loaders reject changed world size. Avoid
+a separate one-GPU capacity/calibration campaign. No hardware job was launched.
+
+**Experiment campaign draft for review, 2026-09-28:** the user supplied two
+protocol/hyperparameter briefs and selected training context 1024. Read
+[the proposed experiment plan](olmo-nextlat-fbt-rt-experiment-plan-v1.md).
+It proposes eight arms, K4 with RT on every pass where enabled, revised loss
+normalization, common effective batch with variable physical batches, Dolma,
+500M plus cooldown/SFT screening, and later selected compute-matched extensions.
+These semantics differ from the completed K2 benchmark. Graph accumulation,
+real-data masks, evaluator/generation integration and fresh-process restart need
+scoped work. The document is a **proposal awaiting review**, not an approved
+implementation queue or training launch. No model/trainer changes or GPU runs
+were made in this planning turn; historical evidence and qualifications stand.
+
 **Combined T1024 benchmark complete, 2026-09-28:** read
 [results and plots](reports/olmo-combined-t1024/results.md),
 [progress](reports/olmo-combined-t1024/progress.md),

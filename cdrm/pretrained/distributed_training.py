@@ -54,7 +54,7 @@ def ddp_normalized_objective(result: NextLatLosses, *,
                              global_counts: Mapping[str, int], world_size: int) -> torch.Tensor:
     """Preserve canonical FBT/NextLat sums under default DDP averaging.
 
-    FBT's base-plus-gamma-mean-extra-pass policy is already in ``result.sums``;
+    FBT's selected per-term pass weighting is already in ``result.sums``;
     do not multiply counts by K or average per-rank means. A locally empty but
     globally active term keeps its canonical attached zero, allowing that rank
     to participate without inventing parameter gradients. Globally empty terms
@@ -125,4 +125,6 @@ class ObjectiveForwardAdapter(nn.Module):
             "pass_loss_sums": tuple({t: loss.sums[t].detach() for t in TERMS}
                                     for loss in result.pass_losses),
             "pass_coefficients": result.pass_coefficients,
+            "term_pass_coefficients": result.term_pass_coefficients,
+            "pass_loss_policy": result.pass_loss_policy,
         }

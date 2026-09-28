@@ -49,9 +49,14 @@ def group_for(name):
 
 def component_objectives(result):
     """Keep cross-pass derivatives attached and each term's own denominator."""
-    return [(p, term, coefficient * result.weights[term] * loss.sums[term] / result.counts[term])
-        for p, (coefficient, loss) in enumerate(zip(result.pass_coefficients, result.pass_losses))
-        for term in TERMS if coefficient and result.weights[term] and result.counts[term]]
+    components = []
+    for p, loss in enumerate(result.pass_losses):
+        for term in TERMS:
+            coefficient = result.term_pass_coefficients[term][p]
+            if coefficient and result.weights[term] and result.counts[term]:
+                components.append((p, term, coefficient * result.weights[term]
+                                   * loss.sums[term] / result.counts[term]))
+    return components
 
 
 @torch.no_grad()
@@ -114,7 +119,7 @@ def gradient_attribution(result, named_parameters):
                     raise AssertionError("Component gradient missing from full objective")
                 destination.add_(value)
         rows.append({"pass": p, "term": term, "weighted_objective": float(objective.detach()),
-                     "coefficient": result.pass_coefficients[p], "groups": summary})
+                     "coefficient": result.term_pass_coefficients[term][p], "groups": summary})
         del values
     closure = [None if ref is None else got-ref for got, ref in zip(aggregate, full)]
     error = gradient_summary(names, closure)
@@ -136,10 +141,15 @@ def finite_observations(value):
 
 
 def scalar_losses(result):
-    return {"objective": float(result.total.detach()), "counts": result.counts,
+    record = {"objective": float(result.total.detach()), "counts": result.counts,
         "weights": result.weights, "pass_coefficients": list(result.pass_coefficients),
         "pass_means": [{key: float(value.detach()) for key, value in loss.means.items()}
                        for loss in result.pass_losses]}
+    if result.pass_loss_policy != "legacy":
+        record.update(pass_loss_policy=result.pass_loss_policy,
+                      term_pass_coefficients={term: list(coefficients)
+                          for term, coefficients in result.term_pass_coefficients.items()})
+    return record
 
 
 def health_case(state, tokenizer, case):

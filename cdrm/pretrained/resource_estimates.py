@@ -198,7 +198,8 @@ def estimate_training_resources(config: OLMoConfig, *, batch_size: int,
     b, t, d, m = batch_size, sequence_length, config.model_dim, config.mlp_intermediate_size
     n = b*t
     passes = mode.num_passes if mode.enabled else 1
-    rt_calls = len(mode.rt_mode.selected_layers) * (passes-1 if mode.enabled else 1)
+    rt_calls = (len(mode.initial_rt_mode.selected_layers)
+                + len(mode.rt_mode.selected_layers) * (passes-1))
     ordinary_calls = passes*config.num_layers - rt_calls
     fusion_calls = passes-1 if mode.enabled and mode.beta > 0 else 0
     components = []

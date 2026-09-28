@@ -6,9 +6,10 @@ import torch
 
 from cdrm.pretrained.olmo import OLMoConfig, OLMoForCausalLM
 from cdrm.pretrained.nextlat import NextLatBatch
+from cdrm.pretrained.fbt_training import FBTNextLatLM
 from scripts.olmo_f1_common import build_model
 from scripts.olmo_f2_health_capacity import (case_for, component_objectives,
-    gradient_attribution, gradient_summary)
+    gradient_attribution, gradient_summary, scalar_losses)
 
 
 @pytest.mark.parametrize("name", ["ordinary", "rt", "fbt", "nextlat", "combined", "combined-k3"])
@@ -54,3 +55,37 @@ def test_gradient_summary_reports_scale_missing_groups_and_direction():
 def test_invalid_case_rejected():
     with pytest.raises(ValueError):
         case_for("typo")
+
+
+def test_campaign_attribution_uses_distinct_ce_and_auxiliary_pass_weights():
+    torch.set_num_threads(1); torch.manual_seed(212)
+    config = replace(OLMoConfig.tiny(), model_dim=64, mlp_intermediate_size=128)
+    source = OLMoForCausalLM(config, attention_backend="math")
+    case = case_for("combined", batch=1, length=8)
+    legacy = build_model(source.state_dict(), case, device="cpu", model_config=config,
+                         chunk_size=3, backend="math")
+    model = FBTNextLatLM(legacy.backbone, legacy.config, pass_loss_policy="campaign_v1")
+    ids = torch.tensor([[3, 4, 5, 6, 7, 8, 9, 60]])
+    valid = torch.ones_like(ids, dtype=torch.bool)
+    ce = valid.clone(); ce[:, :4] = False
+    kl = valid.clone(); kl[:, :6] = False
+    batch = NextLatBatch(ids, valid, torch.zeros_like(ids), ce, valid, kl)
+    mode = replace(case.mode(), num_passes=4, first_pass_policy="configured-rt-v1")
+    result = model.loss_sums(batch, backbone_kwargs={"mode": mode})
+    components = component_objectives(result)
+    torch.testing.assert_close(sum(value for _, _, value in components), result.total)
+    for p, term, objective in components:
+        coefficient = (.5 if p == 0 else 1/6) if term == "ce" else .25
+        expected = coefficient*result.weights[term]*result.pass_losses[p].means[term]
+        torch.testing.assert_close(objective, expected)
+    summary = scalar_losses(result)
+    assert summary["term_pass_coefficients"]["latent"] == [.25]*4
+    assert summary["pass_loss_policy"] == "campaign_v1"
+    report = gradient_attribution(result,
+        [(name, parameter) for name, parameter in model.named_parameters() if parameter.requires_grad])
+    assert report["passed"]
+    assert report["component_sum_relative_l2"] < 2e-6
+    for component in report["components"]:
+        expected = ((.5 if component["pass"] == 0 else 1/6)
+                    if component["term"] == "ce" else .25)
+        assert component["coefficient"] == expected

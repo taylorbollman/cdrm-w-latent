@@ -65,6 +65,9 @@ class StaticFBTTraining:
             raise ValueError("Prepare static training in grad-enabled train mode")
         if model.config.dropout:
             raise ValueError("Static training currently requires zero predictor dropout")
+        if mode.feedback_jitter:
+            raise ValueError("Static training does not yet support feedback jitter; use eager execution "
+                             "with explicit noise until replay noise-buffer loading is qualified")
         self.model, self.mode, self.config = model, mode, config
         device = next(model.parameters()).device
         if config.precision == "bf16_mixed" and device.type != "cuda":
@@ -77,7 +80,8 @@ class StaticFBTTraining:
         self.weights = dict(model.objective_weights())
         if not any(self.counts[t] and self.weights[t] for t in TERMS):
             raise ValueError("Update has no valid positively weighted objective")
-        self._objective_contract = (model.config, model.enabled, model.gamma, self.config)
+        self._objective_contract = (model.config, model.enabled, model.gamma,
+                                    model.pass_loss_policy, self.config)
         self._forward_signature = self.forward_layout.validate_execution(self.mode)
         self._parameter_contract = self._parameter_signature()
         self._module_contract = self._module_signature()
@@ -112,7 +116,8 @@ class StaticFBTTraining:
             raise ValueError("Static model parameter storage/ownership changed; prepare again")
         if self._module_contract != self._module_signature() or self._math_contract != self._math_signature():
             raise ValueError("Static module/runtime settings changed; prepare again")
-        if self._objective_contract != (self.model.config, self.model.enabled, self.model.gamma, self.config):
+        if self._objective_contract != (self.model.config, self.model.enabled, self.model.gamma,
+                                        self.model.pass_loss_policy, self.config):
             raise ValueError("Static objective configuration changed; prepare again")
         if self.batch.input_ids.data_ptr() != self._input_pointer:
             raise ValueError("Static token buffer was replaced")
@@ -140,7 +145,8 @@ class StaticFBTTraining:
             self.model.backbone.readout_weight, self.batch.input_ids, self.model.predictor,
             self.model.config, self.loss_layout, enabled=self.model.enabled)
             for hidden in output.pass_hidden_states)
-        return aggregate_pass_losses(losses, gamma=self.model.gamma)
+        return aggregate_pass_losses(losses, gamma=self.model.gamma,
+                                     pass_loss_policy=self.model.pass_loss_policy)
 
     def _tensor_backward(self):
         for _, parameter in self.model.named_parameters():

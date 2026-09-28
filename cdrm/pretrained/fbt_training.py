@@ -1,9 +1,10 @@
 """Pass-weighted FBT language-model objectives with independent NextLat switch.
 
-The FBT source uses L0 + mean(extra-pass losses), rather than a mean over all
-passes. We preserve that policy separately for CE, latent regression and KL;
-each term retains its existing valid-position denominator and NextLat weight.
-One shared predictor processes every pass. It is never a recurrent rollout.
+The historical default preserves L0 + gamma * mean(extra-pass losses). The
+opt-in campaign_v1 policy normalizes CE across passes with half its mass on the
+first pass and averages auxiliary terms uniformly over all passes. Each term
+retains its existing valid-position denominator and NextLat weight. One shared
+predictor processes every pass. It is never a recurrent rollout.
 """
 from __future__ import annotations
 
@@ -25,13 +26,30 @@ class FBTNextLatLosses(NextLatLosses):
     inspect ``pass_losses[p].means`` for a particular pass's CE/NLL.
     """
     pass_losses: tuple[NextLatLosses, ...]
+    # Historical public field: the CE coefficients. Use term_pass_coefficients
+    # when inspecting a policy with distinct CE and auxiliary pass weights.
     pass_coefficients: tuple[float, ...]
+    term_pass_coefficients: dict[str, tuple[float, ...]]
+    pass_loss_policy: str
 
 
-def aggregate_pass_losses(pass_losses: Sequence[NextLatLosses], *, gamma: float = 1.0) -> FBTNextLatLosses:
-    """Return S0 + gamma * mean(extra sums); K1 has no additional term."""
+def _validate_pass_loss_policy(pass_loss_policy: str, gamma: float) -> None:
+    if pass_loss_policy not in ("legacy", "campaign_v1"):
+        raise ValueError("FBT pass_loss_policy must be legacy or campaign_v1")
     if isinstance(gamma, bool) or not isinstance(gamma, (int, float)) or not math.isfinite(gamma) or gamma < 0:
         raise ValueError("FBT extra-pass gamma must be finite and nonnegative")
+    if pass_loss_policy != "legacy" and gamma != 1.0:
+        raise ValueError("campaign_v1 defines fixed pass weights and requires gamma=1")
+
+
+def aggregate_pass_losses(pass_losses: Sequence[NextLatLosses], *, gamma: float = 1.0,
+                          pass_loss_policy: str = "legacy") -> FBTNextLatLosses:
+    """Weight raw sums per term, retaining one-pass position denominators.
+
+    For campaign_v1, CE coefficients are (.5, .5/(K-1), ...) and latent/KL
+    coefficients are (1/K, ...). K1 is the unchanged single-pass objective.
+    """
+    _validate_pass_loss_policy(pass_loss_policy, gamma)
     passes = tuple(pass_losses)
     if not passes or any(not isinstance(loss, NextLatLosses) for loss in passes):
         raise ValueError("FBT aggregation needs at least one NextLatLosses record")
@@ -42,10 +60,19 @@ def aggregate_pass_losses(pass_losses: Sequence[NextLatLosses], *, gamma: float 
     for loss in passes:
         if loss.counts != first.counts or loss.weights != first.weights or set(loss.sums) != names:
             raise ValueError("FBT passes must have identical masks/counts and objective weights")
-    coefficients = (1.0,) if len(passes) == 1 else (1.0,) + (float(gamma)/(len(passes)-1),) * (len(passes)-1)
-    sums = {name: sum(coefficient * loss.sums[name] for coefficient, loss in zip(coefficients, passes))
+    count = len(passes)
+    if pass_loss_policy == "legacy" or count == 1:
+        coefficients = (1.0,) if count == 1 else (1.0,) + (float(gamma)/(count-1),) * (count-1)
+        term_coefficients = {name: coefficients for name in first.sums}
+    else:
+        coefficients = (.5,) + (.5/(count-1),) * (count-1)
+        term_coefficients = {"ce": coefficients, "latent": (1.0/count,) * count,
+                             "kl": (1.0/count,) * count}
+    sums = {name: sum(coefficient * loss.sums[name]
+                      for coefficient, loss in zip(term_coefficients[name], passes))
             for name in first.sums}
-    return FBTNextLatLosses(sums, dict(first.counts), dict(first.weights), passes, coefficients)
+    return FBTNextLatLosses(sums, dict(first.counts), dict(first.weights), passes,
+                           coefficients, term_coefficients, pass_loss_policy)
 
 
 class FBTNextLatLM(NextLatLM):
@@ -53,14 +80,20 @@ class FBTNextLatLM(NextLatLM):
 
     FBT/RT execution is selected by the core's immutable runtime mode passed
     through ``backbone_kwargs``. ``enabled`` independently selects NextLat.
-    Preserve gamma alongside the NextLat/core/mode configuration in checkpoints;
-    it is not a learned parameter and does not change valid-position counts.
+    Preserve pass_loss_policy and gamma alongside the NextLat/core/mode
+    configuration in checkpoints; neither is a learned parameter or changes
+    valid-position counts. The policy is read-only after construction.
     """
-    def __init__(self, backbone, config: NextLatConfig, *, enabled: bool = True, gamma: float = 1.0):
-        if isinstance(gamma, bool) or not isinstance(gamma, (int, float)) or not math.isfinite(gamma) or gamma < 0:
-            raise ValueError("FBT extra-pass gamma must be finite and nonnegative")
+    def __init__(self, backbone, config: NextLatConfig, *, enabled: bool = True,
+                 gamma: float = 1.0, pass_loss_policy: str = "legacy"):
+        _validate_pass_loss_policy(pass_loss_policy, gamma)
         super().__init__(backbone, config, enabled=enabled)
         self._gamma = float(gamma)
+        self._pass_loss_policy = pass_loss_policy
+
+    @property
+    def pass_loss_policy(self) -> str:
+        return self._pass_loss_policy
 
     @property
     def gamma(self) -> float:
@@ -81,4 +114,4 @@ class FBTNextLatLM(NextLatLM):
             raise ValueError("FBT core must return a nonempty tuple of per-pass final-normalized states")
         losses = tuple(compute_nextlat_loss_sums(hidden, embeddings, self.backbone.readout_weight,
                        batch, self.predictor, self.config, enabled=self.enabled) for hidden in states)
-        return aggregate_pass_losses(losses, gamma=self.gamma)
+        return aggregate_pass_losses(losses, gamma=self.gamma, pass_loss_policy=self.pass_loss_policy)
