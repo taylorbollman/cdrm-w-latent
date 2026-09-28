@@ -92,6 +92,11 @@ def performance_protocols(args):
             if not long_protocol.is_file():
                 raise FileNotFoundError(f'Long-context benchmark requires frozen protocol: {long_protocol}')
             paths.append(long_protocol)
+    if args.case == 'combined' and getattr(args, 'length', None) == 2048:
+        long_protocol=ROOT/'docs/reports/olmo-combined-long-context/protocol.md'
+        if not long_protocol.is_file():
+            raise FileNotFoundError(f'Combined long-context benchmark requires frozen protocol: {long_protocol}')
+        paths.append(long_protocol)
     return [path for path in paths if path.exists()]
 
 
