@@ -35,4 +35,13 @@ final passing suite; raw logs remain local. H100 verified idle inside container.
 Runtime sources are frozen for source-pinned GPU probe launch. The probe compares
 one captured graph under changing padding/noise/counts, empty-slot zero behavior,
 and two complete eager versus replay Adam updates. See protocol.md for budgets.
-Launcher limit15minutes; each stage saves independently. No GPU run started yet.
+Launcher limit15minutes; each stage saves independently.
+
+GPU `gpu-01` at runtime `0a074ea`: all11 stages passed in55.8s. Both layouts'
+losses/raw gradients match eager exactly; two complete Adam updates, parameters,
+moments, schedule and counters also match exactly. One graph,13replays, zero
+dummy contribution,63unchanged source hashes. W&B `g3sqgfc0` synced.
+An eager-after-capture stream warning exposed retention of a completed Python
+autograd graph in diagnostic objective output. Detach that scalar after backward
+(preserving graph output storage); targeted test added. A second bounded probe
+will qualify this lifecycle fix and retain the first passing attempt too.

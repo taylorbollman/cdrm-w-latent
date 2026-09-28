@@ -191,3 +191,14 @@ def test_bad_counters_fail_before_optimizer_or_schedule_mutation():
         runner.optimizer_step(optimizer, data, counters={})
     assert not optimizer.state
     assert all(p.grad is None for p in model.parameters())
+
+
+def test_backward_metrics_do_not_retain_completed_autograd_graph():
+    recipe, model = setup("NFR")
+    data, noise = batches(), noises(recipe, model)
+    adapter = CampaignObjective(model, data[0], mode=recipe.mode(),
+        global_counts=model.counts(data[0]), feedback_noise=noise[0])
+    result = CampaignGraphTraining(adapter)._tensor_backward()
+    assert not result["objective"].requires_grad and result["objective"].grad_fn is None
+    assert all(not value.requires_grad for value in result["loss_sums"].values())
+    assert all(p.grad is not None for p in model.parameters() if p.requires_grad)

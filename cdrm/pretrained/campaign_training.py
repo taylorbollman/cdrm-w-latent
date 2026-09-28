@@ -262,7 +262,10 @@ class CampaignGraphTraining:
                             enabled=self.adapter.config.precision == "bf16_mixed", cache_enabled=False):
             result = self.adapter(self.adapter.batch.input_ids)
         result["objective"].backward()
-        return result
+        # Replay needs scalar storage, not the completed Python autograd graph.
+        # Keeping its grad_fn alive also keeps AccumulateGrad's capture-stream
+        # association alive during a later eager diagnostic on another stream.
+        return {**result, "objective": result["objective"].detach()}
 
     def initialize_gradients(self):
         self.validate_execution()
