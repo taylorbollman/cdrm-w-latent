@@ -65,9 +65,9 @@ def parse_args(argv=None):
         parser.error('Evidence must remain under the persistent project checkout')
     if args.batch_size<2 or args.batch_size%2:
         parser.error('The paired fixture requires a positive even physical batch')
-    if not 8<=args.length<=2048 or (not args.tiny and
-            args.length not in ((512,2048) if args.case in ('ordinary','combined') else (512,))):
-        parser.error('Full ordinary/combined uses T512/T2048; full RT-only uses T512; tiny uses T8..2048')
+    full_lengths={'ordinary':(512,2048),'combined':(512,1024,2048),'rt':(512,)}
+    if not 8<=args.length<=2048 or (not args.tiny and args.length not in full_lengths[args.case]):
+        parser.error('Full ordinary uses T512/T2048; combined uses T512/T1024/T2048; full RT-only uses T512; tiny uses T8..2048')
     try: performance_options(args)
     except ValueError as error: parser.error(str(error))
     if args.ordinary_attention_backend=='fa4' and args.length!=2048:
@@ -85,14 +85,21 @@ def long_context_ordinary(args):
 
 
 def long_context_combined(args):
-    return not args.tiny and args.case=='combined' and args.length==2048
+    return not args.tiny and args.case=='combined' and args.length in (1024,2048)
+
+
+def experiment_group(args):
+    if long_context_combined(args):
+        return 'olmo-combined-t1024' if args.length==1024 else 'olmo-combined-long-context'
+    return 'olmo-ordinary-long-context' if long_context_ordinary(args) else 'olmo-two-gpu'
 
 
 def combined_dispatch_probe(plan,arm):
     """Observe ordinary dispatch and native RT tiles in the same untimed backward.
 
-    Forward fusion supports tiles up to256; T2048 also uses the pre-existing
-    eager512/1024 tiles. Recomputed backward fusion supports the full context.
+    Forward fusion supports tiles up to256; T1024 adds the pre-existing
+    eager512 tiles, and T2048 also uses eager1024 tiles. Recomputed backward
+    fusion supports the full context.
     Report both paths rather than describing the whole RT operation as FA4.
     """
     from cdrm.pretrained import olmo_tiled,olmo_rt_kernels
@@ -301,8 +308,7 @@ def main(argv=None):
             target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
         write_json(args.output_dir/'report.json',report)
         tracker=OnlineTracker(project='pretrained-fbt-rt-nextlat',
-            group=('olmo-combined-long-context' if long_context_combined(args) else
-                   'olmo-ordinary-long-context' if long_context_ordinary(args) else 'olmo-two-gpu'),
+            group=experiment_group(args),
             name=args.output_dir.name,output_dir=args.output_dir,preserve_state=preserve_local_rng)
         tracker.start(report['configuration']);report['wandb']=tracker.record
         write_json(args.output_dir/'report.json',report)
