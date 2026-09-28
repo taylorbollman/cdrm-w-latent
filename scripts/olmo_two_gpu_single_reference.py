@@ -34,7 +34,9 @@ from scripts.olmo_rt_efficiency import resource_card
 from scripts.olmo_rt_large_batch import (optimizer_for,compiler_configuration,
     configure_determinism,require_container_gpu,backend_context,load_native_tokenizer,
     validate_prepared_manifest,OnlineTracker,MemoryPhases,finish_tracking,
-    detailed_memory_snapshot)
+    detailed_memory_snapshot,dispatch_probe,check_dependencies)
+from scripts.olmo_ordinary_efficiency import (compare_arms,can_continue_after_failure,
+    final_check_summary)
 
 PROTOCOL=ROOT/'docs/reports/olmo-two-gpu/protocol.md'
 
@@ -44,6 +46,11 @@ def parse_args(argv=None):
     parser.add_argument('--tiny',action='store_true')
     parser.add_argument('--case',choices=('ordinary','rt','combined'),required=True)
     parser.add_argument('--ordinary-rope-backend',choices=('native','dao'),default='native')
+    parser.add_argument('--ordinary-attention-backend',choices=('sdpa','fa4'),default='sdpa')
+    parser.add_argument('--check-attention-parity',action='store_true',
+        help='Bounded B2/T2048 ordinary FA4 vs Flash SDPA same-state numerical screen')
+    parser.add_argument('--continue-after-compatibility-miss',action='store_true',
+        help='Retain finite numerical-screen failure and finish operational checks; still exits unsuccessfully')
     parser.add_argument('--batch-size',type=int,default=128,
                         help='One-GPU physical/global batch; paired DDP uses half on each rank')
     parser.add_argument('--length',type=int,default=512)
@@ -55,11 +62,31 @@ def parse_args(argv=None):
         parser.error('Evidence must remain under the persistent project checkout')
     if args.batch_size<2 or args.batch_size%2:
         parser.error('The paired fixture requires a positive even physical batch')
-    if not 8<=args.length<=2048 or (not args.tiny and args.length!=512):
-        parser.error('Initial full-model scaling uses T512; tiny checks allow T8..2048')
+    if not 8<=args.length<=2048 or (not args.tiny and
+            args.length not in ((512,2048) if args.case=='ordinary' else (512,))):
+        parser.error('Full ordinary uses T512/T2048; full RT/combined uses T512; tiny uses T8..2048')
     try: performance_options(args)
     except ValueError as error: parser.error(str(error))
+    if args.ordinary_attention_backend=='fa4' and args.length!=2048:
+        parser.error('This FA4 comparison is limited to T2048; use retained T512 evidence')
+    if args.check_attention_parity and (args.tiny or args.case!='ordinary' or
+            args.length!=2048 or args.batch_size!=2 or args.ordinary_attention_backend!='fa4'):
+        parser.error('Attention compatibility check requires non-tiny ordinary FA4 B2/T2048')
+    if args.continue_after_compatibility_miss and not args.check_attention_parity:
+        parser.error('Compatibility-miss continuation requires --check-attention-parity')
     return args
+
+
+def long_context_ordinary(args):
+    return not args.tiny and args.case=='ordinary' and args.length==2048
+
+
+def publish_check(report,check,persist,*,allow_numerical_miss=False):
+    """Persist every gate; only the existing finite numerical gate can defer failure."""
+    report['checks'].append(check)
+    persist()
+    if not check['passed'] and not can_continue_after_failure(check,enabled=allow_numerical_miss):
+        raise AssertionError(check['name'])
 
 
 def paired_batch(case,tokenizer,update,*,tiny):
@@ -105,9 +132,21 @@ def run(args,report,tracker):
         report['execution_options']=configure_performance_model(model,args)
         tokenizer=None if args.tiny else load_native_tokenizer(args.artifacts)
         batch=paired_batch(case,tokenizer,0,tiny=args.tiny)
-        plan=StaticFBTTraining(model,batch,mode=case.mode(),config=config)
+        if args.check_attention_parity:
+            plan,check=compare_arms(model,batch,case.mode(),'compiled','fa4-compiled')
+            publish_check(report,check,persist,
+                allow_numerical_miss=args.continue_after_compatibility_miss)
+        else:
+            plan=StaticFBTTraining(model,batch,mode=case.mode(),config=config)
         optimizer,scheduler=optimizer_for(model,performance_options(args)['optimizer_arm'])
         counters=TrainingCounters()
+    if long_context_ordinary(args):
+        with phases.phase('ordinary_dispatch_validation'):
+            arm=('fa4' if args.ordinary_attention_backend=='fa4' else
+                 performance_options(args)['optimizer_arm'])
+            check=dispatch_probe(plan,arm)
+            check['scope']='Actual ordinary-only 16-layer eager backward before timing/capture; no RT, FBT or NextLat.'
+            publish_check(report,check,persist)
     with phases.phase('eager_adam_preparation'):
         for index in range(3):
             batch=paired_batch(case,tokenizer,index,tiny=args.tiny)
@@ -156,11 +195,18 @@ def run(args,report,tracker):
         report['checks'].append(check);persist()
         if not check['passed']: raise AssertionError(check['name'])
         del reference
-    report.update(status='passed',stage='complete',counters=asdict(counters),
+    if long_context_ordinary(args):
+        publish_check(report,{'name':'dependencies_unchanged',
+            'passed':check_dependencies(report['dependencies'])},persist)
+        publish_check(report,{'name':'sources_unchanged',
+            'passed':all(sha256_file(ROOT/path)==digest for path,digest in report['sources'].items())},persist)
+    report.update(**final_check_summary(report['checks']),stage='complete',counters=asdict(counters),
         graph_counters=dict(warmup_backward_calls=plan.warmup_backward_calls,
             capture_backward_calls=plan.capture_backward_calls,replay_calls=plan.replay_calls),
         optimizer_state_bytes=optimizer_state_bytes(optimizer))
     persist()
+    if report['status']!='passed':
+        raise AssertionError('Retained attention numerical compatibility failure; operational checks completed')
 
 
 def main(argv=None):
@@ -187,7 +233,8 @@ def main(argv=None):
             target=args.output_dir/'source-snapshot'/path.relative_to(ROOT)
             target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target)
         write_json(args.output_dir/'report.json',report)
-        tracker=OnlineTracker(project='pretrained-fbt-rt-nextlat',group='olmo-two-gpu',
+        tracker=OnlineTracker(project='pretrained-fbt-rt-nextlat',
+            group='olmo-ordinary-long-context' if long_context_ordinary(args) else 'olmo-two-gpu',
             name=args.output_dir.name,output_dir=args.output_dir,preserve_state=preserve_local_rng)
         tracker.start(report['configuration']);report['wandb']=tracker.record
         write_json(args.output_dir/'report.json',report)

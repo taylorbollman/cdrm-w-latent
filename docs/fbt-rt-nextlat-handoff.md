@@ -1,8 +1,22 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-25. **Read this first after compaction or interruption.**
+Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Ordinary T2048 benchmark complete,2026-09-28:** read
+[results and plots](reports/olmo-ordinary-long-context/results.md),
+[current handoff](reports/olmo-ordinary-long-context/progress.md) and
+[storage receipt](reports/olmo-ordinary-long-context/storage-receipt.md).
+One H100, no RT/FBT/NextLat. B32/T2048: SDPA41.48k/s, FA443.13k/s,
+37.52GiBreserved/40.90GiBfree; FA4gains3.99% without meaningfulmemorysaving.
+Saved T512B12844.04k/s reused as requested, giving5.82%/2.06% throughputcost.
+B16nearlysameTPS with9.36GiBmoreheadroom; optionallargerbatch notneeded.
+Runtimeedf3d0b/111CPUtests; sixcapacitypasses plusone retainedloss-onlyfailure,
+35operationalchecks pass/56updates. All7stages andcloseout retained; sourceaudit
+1,148pins+214dependencypairs matches. Older precisionqualifications remain.
+No new independent Adam-trajectory or long-training-equivalence claim. FA4 stays
+opt-in. GPUidle; no nextGPUjob queued. Real-data/training choice comes next.
 
 **Ordinary-only throughput follow-up complete, 2026-09-25:** the user requested
 base-model batch/memory/throughput before moving on. Read the [results](reports/olmo-ordinary-two-gpu/results.md),
