@@ -4,6 +4,14 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Combined T2048 benchmark authorized,2026-09-28:** read
+[prospective protocol](reports/olmo-combined-long-context/protocol.md) and
+[current progress](reports/olmo-combined-long-context/progress.md). Latest user
+clarification: test Flash SDPA only, then review before FA4. Preserve K2 FBT,
+native RT0/15, NextLat SmoothL1+KL and native ordinary RoPE. Reuse historical
+T512B12812.362k/s; do not rerun T512 or start quality training.
+
+
 **Ordinary T2048 benchmark complete,2026-09-28:** read
 [results and plots](reports/olmo-ordinary-long-context/results.md),
 [current handoff](reports/olmo-ordinary-long-context/progress.md) and
