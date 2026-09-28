@@ -46,11 +46,16 @@ PROTOCOL = ROOT / 'docs/reports/olmo-two-gpu/protocol.md'
 def performance_options(args):
     """Shared opt-in backend selection for the three performance harnesses."""
     rope = args.ordinary_rope_backend
+    attention = getattr(args, 'ordinary_attention_backend', 'sdpa')
     if args.case not in ('ordinary', 'rt', 'combined') or rope not in ('native', 'dao'):
         raise ValueError('Unsupported performance case or ordinary RoPE backend')
     if rope == 'dao' and (args.case != 'ordinary' or args.tiny):
         raise ValueError('Dao RoPE is limited to the non-tiny ordinary performance case')
-    return dict(ordinary_rope_backend=rope,
+    if attention not in ('sdpa', 'fa4'):
+        raise ValueError('Unsupported ordinary attention backend')
+    if attention == 'fa4' and (args.case != 'ordinary' or args.tiny or rope != 'dao'):
+        raise ValueError('FA4 performance selection requires non-tiny ordinary with Dao RoPE')
+    return dict(ordinary_rope_backend=rope, ordinary_attention_backend=attention,
                 optimizer_arm='optimized' if rope == 'dao' else 'compiled-native',
                 fused_adam=True)
 
@@ -65,21 +70,28 @@ def performance_case(args):
 def configure_performance_model(model, args):
     options = performance_options(args)
     # construct() keeps its established compiled-native preparation. This is
-    # the only model flag changed by this opt-in, before static preparation.
+    # backend flags changed by these opt-ins, before static preparation.
     model.backbone.backbone.ordinary_rope_backend = options['ordinary_rope_backend']
+    model.backbone.backbone.ordinary_attention_backend = options['ordinary_attention_backend']
     return options
 
 
 def performance_dependencies(args):
     options = performance_options(args)
     return dependency_record(args.output_dir,
-        include_dao=options['ordinary_rope_backend'] == 'dao', include_fa4=False)
+        include_dao=options['ordinary_rope_backend'] == 'dao',
+        include_fa4=options['ordinary_attention_backend'] == 'fa4')
 
 
 def performance_protocols(args):
     paths = [PROTOCOL]
     if args.case == 'ordinary':
         paths.append(ROOT/'docs/reports/olmo-ordinary-two-gpu/protocol.md')
+        if getattr(args, 'length', None) == 2048:
+            long_protocol=ROOT/'docs/reports/olmo-ordinary-long-context/protocol.md'
+            if not long_protocol.is_file():
+                raise FileNotFoundError(f'Long-context benchmark requires frozen protocol: {long_protocol}')
+            paths.append(long_protocol)
     return [path for path in paths if path.exists()]
 
 

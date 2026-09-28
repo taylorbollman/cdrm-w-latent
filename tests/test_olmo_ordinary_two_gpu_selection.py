@@ -61,7 +61,8 @@ def test_existing_rt_case_and_native_defaults_are_preserved(harness, case, tiny)
     assert selected.rt_layers == (0, 1 if tiny else 15)
     assert selected.fbt == selected.nextlat == (case == 'combined')
     assert graph.performance_options(args) == {
-        'ordinary_rope_backend': 'native', 'optimizer_arm': 'compiled-native', 'fused_adam': True}
+        'ordinary_rope_backend': 'native', 'ordinary_attention_backend': 'sdpa',
+        'optimizer_arm': 'compiled-native', 'fused_adam': True}
 
 
 @pytest.mark.parametrize('harness', HARNESSES)
