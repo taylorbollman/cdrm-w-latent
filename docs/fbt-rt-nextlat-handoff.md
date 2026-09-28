@@ -4,15 +4,22 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Combined T1024 benchmark in preparation, 2026-09-28:** read the
-[protocol](reports/olmo-combined-t1024/protocol.md) and
-[progress](reports/olmo-combined-t1024/progress.md). User is considering T1024
-as a compromise for an early RT value screen (~500M tokens plus SFT), with
-FA4 set aside. Current scope is B32/B64 T1024 SDPA throughput and memory,
-reusing saved T512/T2048 references; no quality-training launch. Same K2,
-native RT0/15, both NextLat losses and native ordinary RoPE. After benchmarking,
-review context choice and future matched FBT+NextLat with/without RT controls.
-
+**Combined T1024 benchmark complete, 2026-09-28:** read
+[results and plots](reports/olmo-combined-t1024/results.md),
+[progress](reports/olmo-combined-t1024/progress.md),
+[screening intent](reports/olmo-combined-t1024/screening-notes.md) and
+[storage receipt](reports/olmo-combined-t1024/storage-receipt.md).
+Same K2 FBT/native RT0,15/both NextLat losses/native RoPE/Flash SDPA.
+Repeated B64/T1024:11,092.06inputtok/s,68.445GiBreserved,9.195GiBsampledfree.
+Throughput deficit versus savedT512 is10.27%, versus25.70%atT2048; no old-context
+rerun. B32/T1024 reaches9,823.08/s with36.545GiBfree.3stages/15gates/24updates
+pass;160CPUtests;489newsourcepairs verify; all evidence retained. GPUidle.
+Recommend1024 for initial RT value screen, subject to task/context fit and final
+real-data/objective benchmark. About12.52compute-only hours for500Minputtokens
+under present fullCE/latent and response-halfKL masks; SFT and otheroverheads
+excluded. User's500M+SFT idea is planning context, not a launchedqualityrun.
+Next review: matched FBT+NextLat with/withoutRT, data, evaluation and budget.
+Priorprecisionqualificationsremain; no FA4 or optimization queued.
 
 **Combined T2048 SDPA benchmark complete, 2026-09-28:** read
 [results and plots](reports/olmo-combined-long-context/results.md),
