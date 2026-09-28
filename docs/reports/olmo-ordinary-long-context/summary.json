@@ -1,0 +1,2200 @@
+{
+  "generated_utc": "2026-09-28T16:41:32.388747+00:00",
+  "notes": [
+    "Historical T512 is included by explicit path and excluded from new-run/update totals.",
+    "Only completed passed ordinary full-model capacity reports enter figures; correctness and numerical screens never enter timing curves.",
+    "Retention is saved-receipt verification plus local archive hashes, not a new cloud request.",
+    "Missing pending retention does not invalidate a passed measurement; source/dependency integrity failures do.",
+    "Memory free samples are not continuous minima; setup reservation includes cache and steady allocation omits graph-pool reservation.",
+    "Long contexts have more attention work per input token. Equal tokens/update is a systems comparison, not equal model quality or equal optimization."
+  ],
+  "rows": [
+    {
+      "attention_backend": "fa4",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "fa4"
+          ],
+          [
+            "execution_options",
+            "fa4"
+          ]
+        ],
+        "value": "fa4",
+        "verified": true
+      },
+      "batch_size": 16,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 52,
+        "verified_pairs": 52
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "6e697f0d4e0b5349aa6c83bbd776b0d780f62b88",
+      "gpu_microseconds_per_input_token": 23.220571453856643,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 32768,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/fa4-b16-01/report.json",
+      "report_sha256": "386c6359e72ac81a8c92fbb7ea84039b902ec96c6d564241c0001474520c0af3",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 218,
+        "objects": [
+          {
+            "generation": "1790613296034603",
+            "local_bytes_match_receipt": true,
+            "sha256": "aec4a144d98a3b0c5068e91c31c1f0d109eaff225a9b94169f20613cf0c7be63",
+            "size_bytes": 1026838,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b16-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613296316610",
+            "local_bytes_match_receipt": true,
+            "sha256": "644b73061ea73be7cdb18a5da5a6f8c98526f9503c8abdf7f0b677ca388de74a",
+            "size_bytes": 54021,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b16-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b16-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 50.25994873046875,
+      "seconds_per_update": 0.7608916853999744,
+      "series": "FA4 T2048",
+      "setup_peak_allocated_gib": 26.222387313842773,
+      "setup_peak_reserved_gib": 28.40625,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "fa4-b16-01",
+      "status": "passed",
+      "steady_allocated_gib": 17.742405891418457,
+      "steady_device_used_gib": 28.91876220703125,
+      "steady_peak_allocated_gib": 17.74243974685669,
+      "steady_peak_reserved_gib": 28.15625,
+      "steady_reserved_gib": 28.15625,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 43065.262282075004,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ccfmxpid"
+    },
+    {
+      "attention_backend": "fa4",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "fa4"
+          ],
+          [
+            "execution_options",
+            "fa4"
+          ]
+        ],
+        "value": "fa4",
+        "verified": true
+      },
+      "batch_size": 32,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 52,
+        "verified_pairs": 52
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "6e697f0d4e0b5349aa6c83bbd776b0d780f62b88",
+      "gpu_microseconds_per_input_token": 23.168411868286498,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 65536,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/fa4-b32-01/report.json",
+      "report_sha256": "e9864f2d5e3c13264efbb41c7c50e5a46f6c009d6b909ef6b042c31d07aa5a87",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 218,
+        "objects": [
+          {
+            "generation": "1790613452557608",
+            "local_bytes_match_receipt": true,
+            "sha256": "708152cce9562c0c91663e7af685b6a79909df615405d256c94d06c274bf0566",
+            "size_bytes": 1026862,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613452821843",
+            "local_bytes_match_receipt": true,
+            "sha256": "b9ddf59d0f1162046e4600e4632b7055ebe42d7e44eea2e8e83176e2fb067cbb",
+            "size_bytes": 54021,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 40.89862060546875,
+      "seconds_per_update": 1.518365040200024,
+      "series": "FA4 T2048",
+      "setup_peak_allocated_gib": 34.27091026306152,
+      "setup_peak_reserved_gib": 37.517578125,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "fa4-b32-01",
+      "status": "passed",
+      "steady_allocated_gib": 17.788487434387207,
+      "steady_device_used_gib": 38.28009033203125,
+      "steady_peak_allocated_gib": 17.78852128982544,
+      "steady_peak_reserved_gib": 37.517578125,
+      "steady_reserved_gib": 37.517578125,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 43162.21611067028,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/048i3z9m"
+    },
+    {
+      "attention_backend": "fa4",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "fa4"
+          ],
+          [
+            "execution_options",
+            "fa4"
+          ]
+        ],
+        "value": "fa4",
+        "verified": true
+      },
+      "batch_size": 32,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 52,
+        "verified_pairs": 52
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "6e697f0d4e0b5349aa6c83bbd776b0d780f62b88",
+      "gpu_microseconds_per_input_token": 23.19798444213872,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 65536,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/fa4-b32-02/report.json",
+      "report_sha256": "7046fd929d8c06dcdb6de39fe97a4af05b162194889b7a6f73b04ebe2f9ac938",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 218,
+        "objects": [
+          {
+            "generation": "1790613588649905",
+            "local_bytes_match_receipt": true,
+            "sha256": "9da39a8b6dcf3b5b064110f75c0849c596e397ac2d35c6dcf5d1ce34a8ee6957",
+            "size_bytes": 1026839,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-02/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613588942557",
+            "local_bytes_match_receipt": true,
+            "sha256": "afc6b9e16dff0504fe3289201e4b5f2e3bbd344016a47a1e1a9c66e923d1547b",
+            "size_bytes": 54021,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-02/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-b32-02",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 40.89862060546875,
+      "seconds_per_update": 1.5203031084000032,
+      "series": "FA4 T2048",
+      "setup_peak_allocated_gib": 34.27091026306152,
+      "setup_peak_reserved_gib": 37.517578125,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "fa4-b32-02",
+      "status": "passed",
+      "steady_allocated_gib": 17.788487434387207,
+      "steady_device_used_gib": 38.28009033203125,
+      "steady_peak_allocated_gib": 17.78852128982544,
+      "steady_peak_reserved_gib": 37.517578125,
+      "steady_reserved_gib": 37.517578125,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 43107.193320792045,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/suooim6i"
+    },
+    {
+      "attention_backend": "fa4",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "fa4"
+          ],
+          [
+            "execution_options",
+            "fa4"
+          ]
+        ],
+        "value": "fa4",
+        "verified": true
+      },
+      "batch_size": 2,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 1,
+        "passed": 5,
+        "recorded": 6,
+        "unknown": 0
+      },
+      "comparison_checks": [
+        {
+          "all_bitwise_equal": false,
+          "budgets": {
+            "global_gradient_relative_l2": 0.015625,
+            "loss_relative_l2": 1e-05,
+            "output_max_relative": 0.0625,
+            "output_relative_l2": 0.015625,
+            "tensor_gradient_max_relative": 0.0625,
+            "tensor_gradient_relative_l2": 0.03125
+          },
+          "candidate_arm": "fa4-compiled",
+          "counts_equal": true,
+          "exact_required": false,
+          "finite": true,
+          "global_gradient_relative_l2": 0.010833052594807137,
+          "gradients": {
+            "backbone.backbone.transformer.blocks.0.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 4.943622662142045e-06,
+              "max_relative": 0.014285714285714285,
+              "reference_sq": 0.03021860328246565,
+              "relative_l2": 0.012790439377309644
+            },
+            "backbone.backbone.transformer.blocks.0.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.730642736619764e-06,
+              "max_relative": 0.013020833333333334,
+              "reference_sq": 0.0245052302263485,
+              "relative_l2": 0.012338502032774729
+            },
+            "backbone.backbone.transformer.blocks.0.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.13881097985233e-06,
+              "max_relative": 0.014492753623188406,
+              "reference_sq": 0.013250923756720562,
+              "relative_l2": 0.012704662278130153
+            },
+            "backbone.backbone.transformer.blocks.0.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 4.872871087256448e-06,
+              "max_relative": 0.010220125786163521,
+              "reference_sq": 0.03162701161996749,
+              "relative_l2": 0.012412617768477578
+            },
+            "backbone.backbone.transformer.blocks.1.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.072392733716995e-05,
+              "max_relative": 0.012987012987012988,
+              "reference_sq": 0.08812388269535512,
+              "relative_l2": 0.01103138696996413
+            },
+            "backbone.backbone.transformer.blocks.1.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.4384747889965075e-06,
+              "max_relative": 0.012145748987854251,
+              "reference_sq": 0.011176254679947789,
+              "relative_l2": 0.011344960353090407
+            },
+            "backbone.backbone.transformer.blocks.1.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 4.738555426241703e-06,
+              "max_relative": 0.008771929824561403,
+              "reference_sq": 0.05104561855956992,
+              "relative_l2": 0.009634823139811668
+            },
+            "backbone.backbone.transformer.blocks.1.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 5.173753547216157e-06,
+              "max_relative": 0.015957446808510637,
+              "reference_sq": 0.04245097538847789,
+              "relative_l2": 0.011039744742364495
+            },
+            "backbone.backbone.transformer.blocks.10.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.4825874620425145e-06,
+              "max_relative": 0.010810810810810811,
+              "reference_sq": 0.013153150183428965,
+              "relative_l2": 0.010616839991219743
+            },
+            "backbone.backbone.transformer.blocks.10.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 5.801438261515472e-07,
+              "max_relative": 0.01639344262295082,
+              "reference_sq": 0.0046354673908541874,
+              "relative_l2": 0.011187191499634626
+            },
+            "backbone.backbone.transformer.blocks.10.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.6498206879800752e-06,
+              "max_relative": 0.004975124378109453,
+              "reference_sq": 0.021192498037157205,
+              "relative_l2": 0.00882322383210148
+            },
+            "backbone.backbone.transformer.blocks.10.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.9223095831244013e-06,
+              "max_relative": 0.00510204081632653,
+              "reference_sq": 0.021511408286784682,
+              "relative_l2": 0.011655440441316478
+            },
+            "backbone.backbone.transformer.blocks.11.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.6762666705627468e-06,
+              "max_relative": 0.015037593984962405,
+              "reference_sq": 0.017025000212943172,
+              "relative_l2": 0.009922657291754379
+            },
+            "backbone.backbone.transformer.blocks.11.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 6.273075390045177e-07,
+              "max_relative": 0.007535460992907801,
+              "reference_sq": 0.00496961634890457,
+              "relative_l2": 0.01123514862984638
+            },
+            "backbone.backbone.transformer.blocks.11.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.382567316772786e-06,
+              "max_relative": 0.00641025641025641,
+              "reference_sq": 0.010194250748715342,
+              "relative_l2": 0.011645697022473667
+            },
+            "backbone.backbone.transformer.blocks.11.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.7605298772403726e-06,
+              "max_relative": 0.00546448087431694,
+              "reference_sq": 0.020954989620060142,
+              "relative_l2": 0.011477637412188916
+            },
+            "backbone.backbone.transformer.blocks.12.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.934175865527454e-06,
+              "max_relative": 0.005401234567901234,
+              "reference_sq": 0.01728634919695619,
+              "relative_l2": 0.010577824057027223
+            },
+            "backbone.backbone.transformer.blocks.12.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 7.069965307216791e-07,
+              "max_relative": 0.013944223107569721,
+              "reference_sq": 0.005613194661012048,
+              "relative_l2": 0.011222861144455039
+            },
+            "backbone.backbone.transformer.blocks.12.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.641600723273166e-06,
+              "max_relative": 0.010901162790697675,
+              "reference_sq": 0.010595174597518223,
+              "relative_l2": 0.012447430453999278
+            },
+            "backbone.backbone.transformer.blocks.12.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.300440543053784e-06,
+              "max_relative": 0.012422360248447204,
+              "reference_sq": 0.02031765662109071,
+              "relative_l2": 0.012745273182371867
+            },
+            "backbone.backbone.transformer.blocks.13.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.8878424249866565e-06,
+              "max_relative": 0.00980392156862745,
+              "reference_sq": 0.01619713009869726,
+              "relative_l2": 0.010796023856086742
+            },
+            "backbone.backbone.transformer.blocks.13.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 6.019070917499789e-07,
+              "max_relative": 0.013358778625954198,
+              "reference_sq": 0.004724551759600185,
+              "relative_l2": 0.01128715332397396
+            },
+            "backbone.backbone.transformer.blocks.13.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.239444562357263e-06,
+              "max_relative": 0.013452914798206279,
+              "reference_sq": 0.009888002246021349,
+              "relative_l2": 0.011195906813259084
+            },
+            "backbone.backbone.transformer.blocks.13.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.050190823942391e-06,
+              "max_relative": 0.006889763779527559,
+              "reference_sq": 0.015038021120081077,
+              "relative_l2": 0.011676207316601015
+            },
+            "backbone.backbone.transformer.blocks.14.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.152198733006935e-06,
+              "max_relative": 0.006211180124223602,
+              "reference_sq": 0.00715616705409898,
+              "relative_l2": 0.01268888500547463
+            },
+            "backbone.backbone.transformer.blocks.14.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.5112178560188304e-07,
+              "max_relative": 0.009433962264150943,
+              "reference_sq": 0.0021164278262216325,
+              "relative_l2": 0.010892823431324583
+            },
+            "backbone.backbone.transformer.blocks.14.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 8.578762817194565e-07,
+              "max_relative": 0.007462686567164179,
+              "reference_sq": 0.008903683701626416,
+              "relative_l2": 0.00981583995294132
+            },
+            "backbone.backbone.transformer.blocks.14.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.5465411291604398e-06,
+              "max_relative": 0.01092896174863388,
+              "reference_sq": 0.013108497869964207,
+              "relative_l2": 0.010861861810608915
+            },
+            "backbone.backbone.transformer.blocks.15.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 7.613214872701489e-07,
+              "max_relative": 0.013546798029556651,
+              "reference_sq": 0.00671824663629897,
+              "relative_l2": 0.010645255070005286
+            },
+            "backbone.backbone.transformer.blocks.15.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.2330012008230048e-07,
+              "max_relative": 0.009389671361502348,
+              "reference_sq": 0.002473554364380266,
+              "relative_l2": 0.009501315694915911
+            },
+            "backbone.backbone.transformer.blocks.15.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.3932387524165096e-06,
+              "max_relative": 0.005263157894736842,
+              "reference_sq": 0.044235786293078144,
+              "relative_l2": 0.005612106412631033
+            },
+            "backbone.backbone.transformer.blocks.15.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.964586811944233e-06,
+              "max_relative": 0.004734848484848485,
+              "reference_sq": 0.02763297747029738,
+              "relative_l2": 0.008431828618895737
+            },
+            "backbone.backbone.transformer.blocks.2.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 6.920168813429241e-06,
+              "max_relative": 0.008689839572192513,
+              "reference_sq": 0.07030242363098399,
+              "relative_l2": 0.009921405401241703
+            },
+            "backbone.backbone.transformer.blocks.2.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.4192612968451618e-06,
+              "max_relative": 0.007514880952380953,
+              "reference_sq": 0.009275005207913195,
+              "relative_l2": 0.012370125302214345
+            },
+            "backbone.backbone.transformer.blocks.2.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.5450714654367899e-06,
+              "max_relative": 0.011513157894736841,
+              "reference_sq": 0.010910102323361485,
+              "relative_l2": 0.011900353823868528
+            },
+            "backbone.backbone.transformer.blocks.2.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 4.2539901906760336e-06,
+              "max_relative": 0.013686131386861315,
+              "reference_sq": 0.030445819581408518,
+              "relative_l2": 0.011820460806549193
+            },
+            "backbone.backbone.transformer.blocks.3.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 7.957214748237822e-06,
+              "max_relative": 0.006944444444444444,
+              "reference_sq": 0.05921123528313645,
+              "relative_l2": 0.011592536678546391
+            },
+            "backbone.backbone.transformer.blocks.3.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.3622513633604014e-06,
+              "max_relative": 0.008888888888888889,
+              "reference_sq": 0.010510191078966623,
+              "relative_l2": 0.011384745319493201
+            },
+            "backbone.backbone.transformer.blocks.3.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.8028373287176925e-06,
+              "max_relative": 0.007853403141361256,
+              "reference_sq": 0.014673891324244945,
+              "relative_l2": 0.011084232369135638
+            },
+            "backbone.backbone.transformer.blocks.3.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.806832729322525e-06,
+              "max_relative": 0.017094017094017096,
+              "reference_sq": 0.030163562785254283,
+              "relative_l2": 0.011234159321086469
+            },
+            "backbone.backbone.transformer.blocks.4.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.65538238585155e-06,
+              "max_relative": 0.007633587786259542,
+              "reference_sq": 0.03617444764831906,
+              "relative_l2": 0.010052300276615037
+            },
+            "backbone.backbone.transformer.blocks.4.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 9.968799928092076e-07,
+              "max_relative": 0.010869565217391304,
+              "reference_sq": 0.007764882260123105,
+              "relative_l2": 0.011330628553435664
+            },
+            "backbone.backbone.transformer.blocks.4.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.970982262465701e-06,
+              "max_relative": 0.011824324324324325,
+              "reference_sq": 0.014678591830686927,
+              "relative_l2": 0.011587751172368155
+            },
+            "backbone.backbone.transformer.blocks.4.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.932492029678865e-06,
+              "max_relative": 0.029342723004694836,
+              "reference_sq": 0.0278827042627499,
+              "relative_l2": 0.011875898559470178
+            },
+            "backbone.backbone.transformer.blocks.5.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.6812458931258236e-06,
+              "max_relative": 0.008561643835616438,
+              "reference_sq": 0.025523431764202086,
+              "relative_l2": 0.010249408165944506
+            },
+            "backbone.backbone.transformer.blocks.5.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.3970930877933784e-06,
+              "max_relative": 0.010727611940298507,
+              "reference_sq": 0.01144177814444271,
+              "relative_l2": 0.011050092428652528
+            },
+            "backbone.backbone.transformer.blocks.5.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.7501804894142068e-06,
+              "max_relative": 0.010063559322033898,
+              "reference_sq": 0.013312253398411786,
+              "relative_l2": 0.011466097519891045
+            },
+            "backbone.backbone.transformer.blocks.5.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.998268942157367e-06,
+              "max_relative": 0.006622516556291391,
+              "reference_sq": 0.023583194050898135,
+              "relative_l2": 0.011275452526602224
+            },
+            "backbone.backbone.transformer.blocks.6.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.4809083355758754e-06,
+              "max_relative": 0.01048951048951049,
+              "reference_sq": 0.014688199152289135,
+              "relative_l2": 0.010041065790487124
+            },
+            "backbone.backbone.transformer.blocks.6.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 5.433573850564151e-07,
+              "max_relative": 0.008035714285714285,
+              "reference_sq": 0.004696956227113745,
+              "relative_l2": 0.010755597231061011
+            },
+            "backbone.backbone.transformer.blocks.6.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.485147769224822e-06,
+              "max_relative": 0.009433962264150943,
+              "reference_sq": 0.011048041188228268,
+              "relative_l2": 0.011594237471495598
+            },
+            "backbone.backbone.transformer.blocks.6.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.9466387093187012e-06,
+              "max_relative": 0.005681818181818182,
+              "reference_sq": 0.023327861189568547,
+              "relative_l2": 0.011238956328863108
+            },
+            "backbone.backbone.transformer.blocks.7.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.1022447082420788e-06,
+              "max_relative": 0.01059322033898305,
+              "reference_sq": 0.010434669125809665,
+              "relative_l2": 0.01027778834890254
+            },
+            "backbone.backbone.transformer.blocks.7.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 4.6174045293349267e-07,
+              "max_relative": 0.008968609865470852,
+              "reference_sq": 0.003482405005079894,
+              "relative_l2": 0.01151487752700136
+            },
+            "backbone.backbone.transformer.blocks.7.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.397456699074983e-06,
+              "max_relative": 0.015625,
+              "reference_sq": 0.009933055856218941,
+              "relative_l2": 0.011861175753910273
+            },
+            "backbone.backbone.transformer.blocks.7.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.9119875570371283e-06,
+              "max_relative": 0.010471204188481676,
+              "reference_sq": 0.022483348782045137,
+              "relative_l2": 0.01138057639914588
+            },
+            "backbone.backbone.transformer.blocks.8.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.0301679811416253e-06,
+              "max_relative": 0.008733624454148471,
+              "reference_sq": 0.008821417528771523,
+              "relative_l2": 0.010806494444794383
+            },
+            "backbone.backbone.transformer.blocks.8.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.4315893027843264e-07,
+              "max_relative": 0.009672619047619048,
+              "reference_sq": 0.0029099767931013475,
+              "relative_l2": 0.010859326473632042
+            },
+            "backbone.backbone.transformer.blocks.8.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.2947632749906637e-06,
+              "max_relative": 0.010121457489878543,
+              "reference_sq": 0.009294744961339089,
+              "relative_l2": 0.011802566264017574
+            },
+            "backbone.backbone.transformer.blocks.8.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.7672064808363317e-06,
+              "max_relative": 0.018072289156626505,
+              "reference_sq": 0.020448636993212428,
+              "relative_l2": 0.011632916221771305
+            },
+            "backbone.backbone.transformer.blocks.9.att_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 9.080417171572369e-07,
+              "max_relative": 0.012396694214876033,
+              "reference_sq": 0.00856062860747412,
+              "relative_l2": 0.010299118914765249
+            },
+            "backbone.backbone.transformer.blocks.9.attn_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 3.665597266539697e-07,
+              "max_relative": 0.009174311926605505,
+              "reference_sq": 0.003391569327245004,
+              "relative_l2": 0.010396137731150822
+            },
+            "backbone.backbone.transformer.blocks.9.ff_out.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 1.7272048796734075e-06,
+              "max_relative": 0.004739336492890996,
+              "reference_sq": 0.02367014304049883,
+              "relative_l2": 0.008542234450920847
+            },
+            "backbone.backbone.transformer.blocks.9.ff_proj.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.946148363788025e-06,
+              "max_relative": 0.016769089958158997,
+              "reference_sq": 0.021435865402161577,
+              "relative_l2": 0.011723486726284215
+            },
+            "backbone.backbone.transformer.wte.weight": {
+              "bitwise_equal": false,
+              "delta_sq": 2.0714175774672207e-06,
+              "max_relative": 0.0058169638481243395,
+              "reference_sq": 0.036588144632854855,
+              "relative_l2": 0.007524257243307581
+            }
+          },
+          "losses": {
+            "pass0/ce": {
+              "bitwise_equal": false,
+              "delta_sq": 0.08762814104557037,
+              "max_relative": 0.0007752283686909397,
+              "reference_sq": 145808.98434237018,
+              "relative_l2": 0.0007752283686909399
+            },
+            "pass0/kl": {
+              "bitwise_equal": true,
+              "delta_sq": 0.0,
+              "max_relative": 0.0,
+              "reference_sq": 0.0,
+              "relative_l2": 0.0
+            },
+            "pass0/latent": {
+              "bitwise_equal": true,
+              "delta_sq": 0.0,
+              "max_relative": 0.0,
+              "reference_sq": 0.0,
+              "relative_l2": 0.0
+            }
+          },
+          "name": "same_state_candidate_vs_reference",
+          "outputs": {
+            "pass0": {
+              "bitwise_equal": false,
+              "delta_sq": 351.95686505566863,
+              "max_relative": 0.01027134487493392,
+              "reference_sq": 8388545.557437454,
+              "relative_l2": 0.006477409987899779
+            }
+          },
+          "ownership_matches": true,
+          "passed": false,
+          "reference_arm": "compiled",
+          "scope": "Same pretrained state and all-valid CE; unscaled raw gradients before clipping or optimization."
+        }
+      ],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 52,
+        "verified_pairs": 52
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": true,
+      "error": {
+        "message": "Retained attention numerical compatibility failure; operational checks completed",
+        "traceback": "Traceback (most recent call last):\n  File \"/workspace/cdrm-w-latent/scripts/olmo_two_gpu_single_reference.py\", line 243, in main\n    run(args,report,tracker)\n  File \"/workspace/cdrm-w-latent/scripts/olmo_two_gpu_single_reference.py\", line 209, in run\n    raise AssertionError('Retained attention numerical compatibility failure; operational checks completed')\nAssertionError: Retained attention numerical compatibility failure; operational checks completed\n",
+        "type": "AssertionError"
+      },
+      "git_head": "edf3d0b040d69129dab10155c9ec462678159666",
+      "gpu_microseconds_per_input_token": 31.454646240214323,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 4096,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": false,
+      "plot_exclusion_reasons": [
+        "experiment status is not passed",
+        "numerical/correctness diagnostic, excluded from performance"
+      ],
+      "report": ".runtime/olmo-ordinary-long-context/fa4-check-b2-01/report.json",
+      "report_sha256": "3ced392bf6808ec169e8fad1cd2cf7d3be8c0a85fb2e84b6f43cfa269043ec28",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 218,
+        "objects": [
+          {
+            "generation": "1790613182060231",
+            "local_bytes_match_receipt": true,
+            "sha256": "19ae1499003d17a6a7402100280a38fb94b220cc672337996aa2b90d02a91922",
+            "size_bytes": 1030804,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-check-b2-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613182427103",
+            "local_bytes_match_receipt": true,
+            "sha256": "c2940a5d42f4169ca4aeddf185336c02aaf225b75ae5f48b756ca9a39f109a15",
+            "size_bytes": 54027,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-check-b2-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/fa4-check-b2-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 57.06268310546875,
+      "seconds_per_update": 0.12883823099991787,
+      "series": "FA4 T2048",
+      "setup_peak_allocated_gib": 20.033934116363525,
+      "setup_peak_reserved_gib": 21.357421875,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "fa4-check-b2-01",
+      "status": "failed",
+      "steady_allocated_gib": 17.7013521194458,
+      "steady_device_used_gib": 22.11602783203125,
+      "steady_peak_allocated_gib": 17.701385974884033,
+      "steady_peak_reserved_gib": 21.357421875,
+      "steady_reserved_gib": 21.357421875,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 31791.805648143454,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/eqoy6u9l"
+    },
+    {
+      "attention_backend": "sdpa",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "sdpa"
+          ],
+          [
+            "execution_options",
+            "sdpa"
+          ]
+        ],
+        "value": "sdpa",
+        "verified": true
+      },
+      "batch_size": 16,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 2,
+        "verified_pairs": 2
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "52089303592286e43fe2273e02995cbca7c34841",
+      "gpu_microseconds_per_input_token": 24.169942358398533,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 32768,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/sdpa-b16-01/report.json",
+      "report_sha256": "841c848194b95c6cf2f582b7e6d116261fcec2e72e0c4cd8458b94634cbb08f0",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 168,
+        "objects": [
+          {
+            "generation": "1790613237714309",
+            "local_bytes_match_receipt": true,
+            "sha256": "0c70e453b76f54de26119a147e69915b76c5d590b252c3681a1dcb66c84cdfb5",
+            "size_bytes": 673995,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b16-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613238040605",
+            "local_bytes_match_receipt": true,
+            "sha256": "2042012270726af352cdef3b2987d252f78bf3164ef88f11b5c1a01103c39e3f",
+            "size_bytes": 41427,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b16-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b16-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 50.25994873046875,
+      "seconds_per_update": 0.7920006712000032,
+      "series": "Flash SDPA T2048",
+      "setup_peak_allocated_gib": 26.22238826751709,
+      "setup_peak_reserved_gib": 28.40625,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "sdpa-b16-01",
+      "status": "passed",
+      "steady_allocated_gib": 17.742405891418457,
+      "steady_device_used_gib": 28.91876220703125,
+      "steady_peak_allocated_gib": 17.74243974685669,
+      "steady_peak_reserved_gib": 28.15625,
+      "steady_reserved_gib": 28.15625,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 41373.70231056929,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/7a9kppet"
+    },
+    {
+      "attention_backend": "sdpa",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "sdpa"
+          ],
+          [
+            "execution_options",
+            "sdpa"
+          ]
+        ],
+        "value": "sdpa",
+        "verified": true
+      },
+      "batch_size": 32,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 2,
+        "verified_pairs": 2
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "6e697f0d4e0b5349aa6c83bbd776b0d780f62b88",
+      "gpu_microseconds_per_input_token": 24.106650363159982,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 65536,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/sdpa-b32-01/report.json",
+      "report_sha256": "27198f5a58839273623cc67ab3a58ee833b6acca584e2a796e52fce220f84f9f",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 168,
+        "objects": [
+          {
+            "generation": "1790613373350700",
+            "local_bytes_match_receipt": true,
+            "sha256": "cc933d2c5653a1b221a2842860cb6ee94fb7a67a889da3f9758e558e246e55e1",
+            "size_bytes": 673999,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613373629003",
+            "local_bytes_match_receipt": true,
+            "sha256": "27a51eb72ee5e55172b8dca2ac12a135dd3d907b992c84f7a4e58254b3a7f521",
+            "size_bytes": 41427,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 40.89862060546875,
+      "seconds_per_update": 1.5798534382000526,
+      "series": "Flash SDPA T2048",
+      "setup_peak_allocated_gib": 34.27091121673584,
+      "setup_peak_reserved_gib": 37.517578125,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "sdpa-b32-01",
+      "status": "passed",
+      "steady_allocated_gib": 17.788487434387207,
+      "steady_device_used_gib": 38.28009033203125,
+      "steady_peak_allocated_gib": 17.78852128982544,
+      "steady_peak_reserved_gib": 37.517578125,
+      "steady_reserved_gib": 37.517578125,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 41482.32893974394,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/c533vnqc"
+    },
+    {
+      "attention_backend": "sdpa",
+      "attention_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "sdpa"
+          ],
+          [
+            "execution_options",
+            "sdpa"
+          ]
+        ],
+        "value": "sdpa",
+        "verified": true
+      },
+      "batch_size": 32,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 5,
+        "recorded": 5,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 2,
+        "verified_pairs": 2
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "f852cc28a18cb5795da2c36ede7678ff05ec41b8",
+      "gpu_microseconds_per_input_token": 24.109693212890498,
+      "historical_comparison": {
+        "added_sources": [],
+        "all_pretrained_runtime_sources_equal": true,
+        "changed_sources": [],
+        "missing_sources": [],
+        "package_changes": {},
+        "runtime_source_count": 37,
+        "scope": "Compare frozen cdrm/pretrained source bytes, package versions and GPU/PyTorch/CUDA identity. Harness sources and selected backend/context intentionally differ; equality is not numerical equivalence.",
+        "torch_cuda_gpu_equal": true,
+        "unchanged_pairs": 37
+      },
+      "input_tokens_per_update": 65536,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 2048,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "new_T2048_experiment",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-long-context/sdpa-b32-02/report.json",
+      "report_sha256": "cdc26e14d8f0830b6713282511f85d5cb744b85a22b52af937b0b12dc8d88c6a",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 168,
+        "objects": [
+          {
+            "generation": "1790613663802137",
+            "local_bytes_match_receipt": true,
+            "sha256": "5d268bf529446ed9caed550cdc950c57c911969d780217027c32fbbb7237c51a",
+            "size_bytes": 673953,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-02/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790613664084674",
+            "local_bytes_match_receipt": true,
+            "sha256": "032c73ef794649207ba23c7dfe9fbcb8e15ad8a361604d8b4be942d252bdc06f",
+            "size_bytes": 41427,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-02/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/sdpa-b32-02",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 40.89862060546875,
+      "seconds_per_update": 1.5800528543999917,
+      "series": "Flash SDPA T2048",
+      "setup_peak_allocated_gib": 34.27091121673584,
+      "setup_peak_reserved_gib": 37.517578125,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 164,
+        "verified_pairs": 164
+      },
+      "stage": "sdpa-b32-02",
+      "status": "passed",
+      "steady_allocated_gib": 17.788487434387207,
+      "steady_device_used_gib": 38.28009033203125,
+      "steady_peak_allocated_gib": 17.78852128982544,
+      "steady_peak_reserved_gib": 37.517578125,
+      "steady_reserved_gib": 37.517578125,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 41477.09351462588,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/rzre1e3z"
+    },
+    {
+      "attention_backend": "sdpa",
+      "attention_evidence": {
+        "basis": "historical frozen construct selects compiled-native SDPA; configuration does not override attention",
+        "records": [],
+        "value": "sdpa",
+        "verified": true
+      },
+      "batch_size": 128,
+      "checkpoint": {
+        "hash_basis": "Hub LFS SHA256",
+        "path": "native/model.safetensors",
+        "sha256": "ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c",
+        "size_bytes": 4707065440,
+        "url": "https://huggingface.co/allenai/OLMo-1B/resolve/81b71efbce6f4dada57c94860301af4298bcd351/model.safetensors"
+      },
+      "checks": {
+        "failed": 0,
+        "passed": 2,
+        "recorded": 2,
+        "unknown": 0
+      },
+      "comparison_checks": [],
+      "dependency_check": {
+        "issues": [],
+        "pairs": 2,
+        "verified_pairs": 2
+      },
+      "dependency_packages": {
+        "flash-attn": "2.7.4.post1+git5231d95fe1.54157505",
+        "flash-attn-4": "4.0.0b20",
+        "nvidia-cutlass-dsl": "4.6.0.dev0",
+        "torch": "2.13.0a0+8145d630e8.nv26.6.54250401",
+        "transformer-engine": "2.16.0+4220403e",
+        "triton": "3.7.0+gitb7fa781f.nv26.6"
+      },
+      "diagnostic": false,
+      "error": {},
+      "git_head": "a69fe1ba1376419aa9d17389bdccdc1f3acf8fb0",
+      "gpu_microseconds_per_input_token": 22.705967184444287,
+      "input_tokens_per_update": 65536,
+      "is_oom": false,
+      "last_stage": "complete",
+      "length": 512,
+      "ordinary_contract": {
+        "checks": {
+          "fbt_disabled": true,
+          "nextlat_disabled": true,
+          "no_accumulation": true,
+          "no_active_auxiliary_parameters": true,
+          "no_rt_layers": true,
+          "no_rt_mode_layers": true,
+          "one_executed_pass": true,
+          "one_gpu": true,
+          "ordinary_case": true,
+          "positive_ce_zero_latent_kl": true,
+          "sixteen_ordinary_blocks": true,
+          "zero_rt_blocks": true
+        },
+        "passed": true
+      },
+      "origin": "historical_T512_reference",
+      "physical_updates": 8,
+      "plot_eligible": true,
+      "plot_exclusion_reasons": [],
+      "report": ".runtime/olmo-ordinary-two-gpu/ordinary-dao-single-b128-01/report.json",
+      "report_sha256": "b8786b87c93c20d9e3c8364c76bf20d3397009c2392f5751c24fb1898eb04c3d",
+      "retention": {
+        "checkpoint_uploaded": false,
+        "current_report_matches_retained_manifest": true,
+        "issues": [],
+        "members": 167,
+        "objects": [
+          {
+            "generation": "1790367274870143",
+            "local_bytes_match_receipt": true,
+            "sha256": "7e085aa78a21197be2ed66c787ac15de6a814f8313d248aff8a6d5010fbfae02",
+            "size_bytes": 671043,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T195200Z/ordinary-dao-single-b128-01/evidence.tar.gz",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          },
+          {
+            "generation": "1790367275123826",
+            "local_bytes_match_receipt": true,
+            "sha256": "d93bc718461e0d3b6ed9ab04482e95a2eb54c433c0c72e4ff55fca564eff7a91",
+            "size_bytes": 41179,
+            "uri": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T195200Z/ordinary-dao-single-b128-01/retention-manifest.json",
+            "verification": {
+              "download_sha256": true,
+              "server_md5": true,
+              "server_size": true,
+              "sha256_metadata": true
+            }
+          }
+        ],
+        "prefix": "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260925T195200Z/ordinary-dao-single-b128-01",
+        "status": "verified",
+        "verification_scope": "Saved remote verification receipt plus local archive hashes; no live cloud request.",
+        "verified": true
+      },
+      "retention_verified": true,
+      "rope_backend": "dao",
+      "rope_evidence": {
+        "basis": "explicit report configuration",
+        "records": [
+          [
+            "configuration",
+            "dao"
+          ],
+          [
+            "execution_options",
+            "dao"
+          ]
+        ],
+        "value": "dao",
+        "verified": true
+      },
+      "runtime": {
+        "cuda": "13.3",
+        "gpu": "NVIDIA H100 80GB HBM3",
+        "nvidia_smi": "NVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04\nNVIDIA H100 80GB HBM3, 81559 MiB, 580.178.04",
+        "torch": "2.13.0a0+8145d630e8.nv26.06"
+      },
+      "runtime_sources": {
+        "cdrm/pretrained/__init__.py": "951f638d592bc305691086b3f1b174303cd06379ee20d1a99e141b4f86a1400b",
+        "cdrm/pretrained/artifacts.py": "8682d7df034e37d3469b5281dc7d3940300df18e57fce0b858ad6ddf7606f98a",
+        "cdrm/pretrained/ddp_graph_training.py": "1a168efd72b375bfce40ddfba887ee2a1ae53c0c9924cbf13dd8b3961aba07b6",
+        "cdrm/pretrained/ddp_training.py": "8206732d4343ba9c8fc5805fe8a6d61e829a4a48e01f67b0e5d7efe3cff8abe3",
+        "cdrm/pretrained/distributed_checkpoint.py": "cc790c83b6be22ce858e89912e59270a541e1c778f8ced241b9310cb5424f1a7",
+        "cdrm/pretrained/distributed_training.py": "eb32b0f5091db26f58153fbe155c144bece96626eaccbb87f4030f2e973cb9f3",
+        "cdrm/pretrained/fbt_evaluation.py": "655a98940ee4c482f2362954324449f4953025cab12e5c8f14bf0b29693397b6",
+        "cdrm/pretrained/fbt_training.py": "622ce7e14c02736543829a54685a3050f9b412e2401bc862e3a0d75c10f08586",
+        "cdrm/pretrained/lm_data.py": "e104904265472b725fec999424760987bba42a00214fb48c6157ac3d25c809cf",
+        "cdrm/pretrained/lm_evaluation.py": "e25bad6aba2ceb3849ee177796a65311dc2f76c4508263ad1cceb2cee120f6db",
+        "cdrm/pretrained/lm_schedule.py": "3580e87f6b1041982afbc51fb3d5b57c84a6e5a241f486d49b91537535edcf77",
+        "cdrm/pretrained/lm_training.py": "592f2073fbab976b9d5a3af5bc983b16132413f447a517691a82d69a95ca362a",
+        "cdrm/pretrained/nextlat.py": "aabe7936771038a3178e0d558e78813c85a54c091a4543a3727ee2edb3c972c4",
+        "cdrm/pretrained/olmo.py": "3eef88dee4853be6d0c4901dfd1cc1962dd5458defcfba0a5223a7fb1993c8a0",
+        "cdrm/pretrained/olmo_artifacts.py": "1b43544b284fe1be9f28c515bf120d64eab34f724a65cacac5a378d8f8ea12d5",
+        "cdrm/pretrained/olmo_author.py": "5a1a00232b2c4439aacdfd906ef658c248c47aa439dbdec8d6e665fb496cbe26",
+        "cdrm/pretrained/olmo_fbt.py": "e6f61e1410698cff8ba81f82be9f9f6963077a6f757cdcffe0b694cd4206b941",
+        "cdrm/pretrained/olmo_ordinary.py": "7a818b8cdf157c677642d67c9739921e0222561f809a10bd01f21443c47ec7f1",
+        "cdrm/pretrained/olmo_recurrent.py": "c613f7ca2f8d99297bfbd3aac41bf94d7b7da816b3d4f8c9c2b94f26b6290097",
+        "cdrm/pretrained/olmo_recurrent_oracle.py": "08a929ddb7ff6eab120025c2fdb90e63d8fbd158b70d539083345902828266b3",
+        "cdrm/pretrained/olmo_reference.py": "273211673bc631755055e77298b4eac26e1815e213caf8883c7fdae1eac24069",
+        "cdrm/pretrained/olmo_rope.py": "c509239252e286d0fbd18679f9c35560dbe8985ff685dae04c30509553807a47",
+        "cdrm/pretrained/olmo_rt_backward_kernels.py": "f415ffe778bf16ad9b0ce6e1cc0eb0b452ea2ea508b8ed20a7178ef9071a1f60",
+        "cdrm/pretrained/olmo_rt_kernels.py": "89aa6801261b4cbd29b992c56272c70cfda6d0e25df538e48e01d9f0e058c10b",
+        "cdrm/pretrained/olmo_rt_memory.py": "bc6e750f2c396c44b4ab2bd0416e9feafe2b0b23a172cac62ac0f7e67cfad72f",
+        "cdrm/pretrained/olmo_rt_recompute_kernels.py": "971701d274099864bfc085f5864d10962caf7ceb7e6abea1db598fb8129b4ed2",
+        "cdrm/pretrained/olmo_static.py": "def3a0f1a97dfac59db41c34ec491f01a419800aa3532b2dcc45533b755abb84",
+        "cdrm/pretrained/olmo_tiled.py": "a1be9790293d0be2f16af734a6081610121977bb35acb76fa1e60219d7cca68e",
+        "cdrm/pretrained/openelm.py": "33235be85c25fa883b2ea9e266c3ac2c9c5a2465adbd28fc1241a7294e6c8f8f",
+        "cdrm/pretrained/recurrent.py": "ecc091be2b2c4456cad5f6f464e563c480fd2bb639a960c81c24c820e05970bb",
+        "cdrm/pretrained/recurrent_oracle.py": "38fdc5bdbf1528f124555aff920126da478d32260ba6353310d0b5ef38730f8d",
+        "cdrm/pretrained/reference.py": "278efc3f54d15466b8c3c92d9eef2a6407c90ddd964a0ffc15bab737fdb44893",
+        "cdrm/pretrained/resource_estimates.py": "0b55eef2c16d218ab7e0a2dec6d809d57b0a09417c5530669b9997df0cbfa020",
+        "cdrm/pretrained/rt_block_resources.py": "aae28153d07595c6f8291f1d33934566b79649209a18588e581fdae42b382b82",
+        "cdrm/pretrained/static_nextlat.py": "99d86ae1eee208a3095362e09666ed31ecfe1886c85977931c4142d393d83d5a",
+        "cdrm/pretrained/static_training.py": "07cee5b0dfe47937fccbe18838125c5de13e2b7c43bf1e61ddfb4c45030475e8",
+        "cdrm/pretrained/zero1_training.py": "f5a8447930831176ba484484b3db4e2f8985a2128a5e512d405bbf1f9706c668"
+      },
+      "sampled_free_gib": 40.91229248046875,
+      "seconds_per_update": 1.4880582653997407,
+      "series": "Historical SDPA T512",
+      "setup_peak_allocated_gib": 34.27091073989868,
+      "setup_peak_reserved_gib": 37.517578125,
+      "source_check": {
+        "issues": [],
+        "no_report_source_pin": false,
+        "report_pinned_pairs": 163,
+        "verified_pairs": 163
+      },
+      "stage": "ordinary-dao-single-b128-01",
+      "status": "passed",
+      "steady_allocated_gib": 17.78848695755005,
+      "steady_device_used_gib": 38.26641845703125,
+      "steady_peak_allocated_gib": 17.78852081298828,
+      "steady_peak_reserved_gib": 37.517578125,
+      "steady_reserved_gib": 37.517578125,
+      "timing_scope": "batch validation/copy + captured forward/loss/backward + finite checks/clipping/Adam/scheduler; excluding fixture construction, reporting, digests; no distributed communication",
+      "tokens_per_second": 44041.286234443854,
+      "wandb": "https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/yqfpvlue"
+    }
+  ],
+  "schema": "olmo-ordinary-long-context-audit-v1",
+  "summary": {
+    "historical_reference_reports": 1,
+    "new_final_dependency_pairs": 214,
+    "new_final_reports": 7,
+    "new_final_source_pairs": 1148,
+    "new_oom_reports": 0,
+    "new_physical_updates": 56,
+    "new_plot_eligible": 6,
+    "new_reports": 7,
+    "new_retained_verified": 7,
+    "new_statuses": {
+      "failed": 1,
+      "passed": 6
+    }
+  },
+  "unreadable_reports": []
+}

@@ -1,38 +1,55 @@
-# Ordinary OLMo T2048: active work / interruption handoff
+# Ordinary OLMo T2048: completed work and interruption handoff
 
-2026-09-28. User authorized one-H100 ordinary T2048 throughput/memory versus
-savedT512, with and without FA4 atT2048. User explicitly says T512 need not be
-rerun. Frozen protocol in this directory; branchfeat/olmo-ordinary-long-context
-based on mergedPR31 (739080c). No qualitytraining, RT, FBT or NextLat scope.
+2026-09-28. The authorized one-H100 ordinary-model benchmark is complete.
+Read results.md, usage.md, protocol.md and storage-receipt.md in this folder.
+No GPU or quality-training job is queued; the H100 was verified idle.
 
-Preflight confirms one idle H10080HBM3 (81559MiB), driver580.178.04,
-PyTorch2.13.0a0+8145d630e8.nv26.06/CUDA13.3, FA4 4.0.0b20,
-CuTE DSL4.6.0.dev0 and installed Dao2.7.4.post1. These match the saved single-GPU
-T512B128 reference44,041.286tokens/s. Native model checkpoint manifest verified.
-Use CDRM_FLASH_ATTENTION_SOURCE=installed to avoid vendor shadowing. No install.
-Host persistent disk~19GiBfree; disposable throughput runs need nofullcheckpoint.
+The user explicitly requested reuse of the saved T512 reference. No new T512
+run, including FA4 at T512, was performed. Historical B128/T512 gives44,041.286
+input tokens/s; new B32/T2048 uses the same65,536input tokens/update.
+Repeated B32 rates: Flash SDPA41,479.711/s; FA443,134.687/s. FA4 gains3.99%,
+with no meaningful memory saving. Compared with historical T512, rates are
+5.82%/2.06% lower. Both T2048 backends reserve37.518GiB and leave40.899GiB
+sampled free atB32. B16 gives41.374k/43.065k with50.260GiB free; scaling
+B16→B32 adds only0.2–0.3%, so optionalB48/B64 were not needed.
 
-Root owns all GPU work. Runtimeedf3d0b is frozen/committed and pushed;111focused
-CPUtests pass in3.23s (67installedJITwarnings). FirstGPUstagefa4-check-b2-01 finished8updates: strictloss-only failure retained,
-all5operationalchecks pass; globalgradientL2.010833/outputL2.006477.
-AbsoluteCEdifference7.2306e-5nats/target. Primaryqueue58032 is complete and all5stages retained.
-SDPAB16/B32=41.374k/41.482k;FA4B16/B32=43.065k/43.162k.
-B32both37.518GiBreserved/40.899GiBfree; B16both28.158GiBreserved/50.258GiBfree.
-Only0.2–0.3%gain fromB16toB32, so skipoptionalB48/B64.
-Rootexec70777 now runs reverseB32repeats FA4thenSDPA withretentionaftereach.
-Inspect reports/processes/launcher logs before restarting.
-Agentordinary_long_context_audit is preparing new.runtime audittools.
-No T512runqueued. Source changes require a new revision/directory.
+Recommend ordinary B32/T2048 as a comfortable operating point; B16 is useful
+when another feature needs headroom. This is not a maximum-capacity result or
+an optimal learning batch. FA4 remains explicit opt-in; defaults are unchanged.
 
-Queue: B2T2048 FA4-versusSDPA bounded numerical check (sameDao/compiled/fused
-settings), then SDPA/FA4B16andB32. OptionalB48/B64onlyifmeasurementjustifies;
-repeatselectedpairreverseorder. Preservefinite-onlynumericalfailures while
-completingoperationaldiagnosis; stopforstructural/nonfinite/ownparityfailures.
-Use existing11warmups,3prep+5timedupdates, CPUreferencesbeforecapture,
-releasegraphbeforeterminaleagerchecks. No broadnumericcampaign.
+Runtimeedf3d0b extends only benchmark selectors/reporting and frozen protocol
+requirements.111focusedCPUtests pass (3.23s,67installedJITwarnings). The seven
+new GPU reports comprise six passing capacity runs plus one retained loss-only
+numerical failure,56physical optimizer updates. All35operational checks pass.
+The diagnostic's globalgradientL2.010833/outputL2.006477 and allper-tensor
+budgets pass; strictrelativeCE.000775228 fails1e-5, absolute7.2306e-5nats/target.
+Do not relabel this stage passed or insert its timing into performance figures.
+Owninitial/changedweightgraphchecks are exact; no new independent Adam-trajectory
+comparison was claimed. Older precision qualifications remain open.
 
-Evidence `.runtime/olmo-ordinary-long-context/`; logs/preflight.log confirms
-containerandinstalleddependencies. GCSexistingper-stagehelperprefix must begin
-`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/`; use a fresh timestamp
-for this milestone:20260928T163200Z. CPUretentioncontainer with env-uGOOGLE_APPLICATION_CREDENTIALS
-selectsworkingmountedADC. W&Bpretrained-fbt-rt-nextlat/newlongcontextgroup.
+Active model is originalstep60000 OLMo:16layers,D2048,16heads,1,176,764,416active
+parameters. Frozen unused32MiB fusion storage is recorded separately. No RT,
+FBT or NextLat executes. Both arms use DaoFP32RoPE, compiledroundedSwiGLU,
+fusedAdam, all-layercheckpointing, BF16mixed/FP32trainingstate and CUDAgraphs.
+One microbatch/update, noaccumulation; full-valid independent document rows.
+The saved T512 environment/package versions and37pretrained runtime sources
+match, but it is a historical comparison rather than same-day interleaving.
+
+Local evidence: `.runtime/olmo-ordinary-long-context/`.
+Verified GCS prefix:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T163200Z/`.
+All7stage receipts plus a separate closeout bundle retained. Audit checks
+1,148new source pairs and214dependency pairs without mismatch. Original O1
+weights remain retained; disposable capacity updates need nofullcheckpoint.
+The closeout also copies the explicitly labeled historical reference report,
+sources/dependencies and its originalreceipt. Prior evidence was not modified.
+
+Container-only GPU execution remains required. Use installed Flash-Attention
+namespace; FA4 4.0.0b20/CuTE DSL4.6.0.dev0 are already installed. CPUretention uses
+GPUdisabled container and env-uGOOGLE_APPLICATION_CREDENTIALS for mounted ADC.
+Persistent disk remains about19GiBfree. Existing logs/queue scripts preserve
+execution commands; all former sessions33439/58032/70777 have finished.
+
+Next: choose the real data/training workload. This benchmark does not validate
+packed/padded data, T2048 RT/FBT/NextLat, accumulated graph replay or long-run
+training equivalence. No additional experiment is automatically queued.
