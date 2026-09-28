@@ -1,0 +1,52 @@
+{
+  "hf_repo": "allenai/dolma",
+  "hf_revision": "7f48140530a023e9ea4c5cfb141160922727d4d3",
+  "inventory_sha256": "0b660ad1cd93a840d759a4efa82f800a0580fd693de6da64dba484aa55d21efc",
+  "schema": "olmo-dolma-coverage-extraction-plan-v1",
+  "selection": "minimum SHA256(seed NUL URL) within each of seven broad sources; not production weighted sampling",
+  "selection_seed": "cdrm-dolma-v1_5-coverage-20260928",
+  "sources": [
+    {
+      "etag": "\"844c2fa94e122845cba7de715c454306-386\"",
+      "name": "books",
+      "upstream_size_bytes": 3230166910,
+      "url": "https://olmo-data.org/dolma-v1_5r1/books/books-0001.json.gz"
+    },
+    {
+      "etag": "\"7fdc8703d06074a469a3dc45884008b3-483\"",
+      "name": "c4",
+      "upstream_size_bytes": 4047664975,
+      "url": "https://olmo-data.org/dolma-v1_5r1/c4/c4-0021.json.gz"
+    },
+    {
+      "etag": "\"5a9beb3c7df342c4bc1d88fe0cd2b40f-116\"",
+      "name": "common_crawl",
+      "upstream_size_bytes": 966791278,
+      "url": "https://olmo-data.org/dolma-v1_5r1/cc_en_tail/cc_en_tail-1458.json.gz"
+    },
+    {
+      "etag": "\"07c20928f238fc25f9ccd655e251b1a4-57\"",
+      "name": "pes2o",
+      "upstream_size_bytes": 477949183,
+      "url": "https://olmo-data.org/dolma-v1_5r1/pes2o/pes2o_v2-0025.json.gz"
+    },
+    {
+      "etag": "\"1777b299275966dd7c42d7d5439310dc-254\"",
+      "name": "reddit",
+      "upstream_size_bytes": 2127043706,
+      "url": "https://olmo-data.org/dolma-v1_5r1/reddit/reddit-v5-dedupe-pii-nsfw-toxic-0044.json.gz"
+    },
+    {
+      "etag": "\"3188cf9bb7fe70d68ca0cca81821612f-207\"",
+      "name": "stack",
+      "upstream_size_bytes": 1733168813,
+      "url": "https://olmo-data.org/dolma-v1_5r1/stack/stack-v4-train-0021.json.gz"
+    },
+    {
+      "etag": "\"c32f9a64e05306e1b70a9e25f0c49e97-263\"",
+      "name": "wiki",
+      "upstream_size_bytes": 2204313187,
+      "url": "https://olmo-data.org/dolma-v1_5r1/wiki/en_simple_wiki_v0-0001.json.gz"
+    }
+  ]
+}

@@ -137,6 +137,15 @@ version. Do not use a silent edit to reinterpret historical K2 results.
 
 ## 4. Data and batch policy
 
+**2026-09-28 clarification:** reusable complete-document tokenization and cloud
+recovery now pass on a bounded seven-source v1_5 coverage fixture; see
+[results](reports/olmo-document-shards/results.md). The user agrees packing needs
+model-specific checks. OLMo-style concatenate-and-chunk at1024 is the recommended
+production direction, pending explicit CE/NextLat/FBT/RT boundary qualification.
+The initial isolated-row policy below describes the current tested trainer;
+the new storage format does not activate packing or settle the production mix.
+Original OLMo shifts targets within each fixed chunk, without EOS-aware offsets.
+
 Use a pinned bounded **Dolma v1_5** sample with an explicit source mixture; that
 is the release associated with original OLMo-1B, while the current dataset default
 is v1_7. Pin source revisions/URLs/hashes, tokenizer, sampling, EOS handling,
