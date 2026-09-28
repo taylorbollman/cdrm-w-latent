@@ -31,6 +31,13 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 ordinary T2048 follow-up is active on one H100. Read
+docs/reports/olmo-ordinary-long-context/progress.md and frozen protocol first.
+User says reuse saved T512 reference; do not rerun T512 or FA4T512.
+Runtimeedf3d0b/111CPUtests; rootowns GPU, firstfa4-check-b2-01 exec33439.
+No RT/FBT/NextLat/qualitytraining. Preserve older T2048 numerical qualifications.
+
+
 2026-09-25 ordinary-only two-GPU throughput follow-up is complete. Read
 docs/reports/olmo-ordinary-two-gpu/results.md and progress.md before the RT
 milestone below. Recommend Dao RoPE DDP B64/rank at T512:85.2k tokens/s,

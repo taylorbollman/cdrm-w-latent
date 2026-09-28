@@ -1,8 +1,16 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-25. **Read this first after compaction or interruption.**
+Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Ordinary T2048 follow-up active,2026-09-28:** user is on one H100 and requests
+T2048 SDPA/FA4 speed and memory versus saved T512; explicitly reuse T512 evidence.
+Read [current progress](reports/olmo-ordinary-long-context/progress.md) and
+[frozen protocol](reports/olmo-ordinary-long-context/protocol.md). Runtimeedf3d0b
+adds benchmark selectors only,111CPUtests pass. Root GPUstagefa4-check-b2-01
+is active; inspect report/process before resuming. No qualitytraining or RT scope.
+
 
 **Ordinary-only throughput follow-up complete, 2026-09-25:** the user requested
 base-model batch/memory/throughput before moving on. Read the [results](reports/olmo-ordinary-two-gpu/results.md),
