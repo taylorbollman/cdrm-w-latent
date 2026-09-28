@@ -6,6 +6,18 @@ Save source/progress every 20–30 minutes. No long training or allocation.
 
 Branch: `feat/olmo-campaign-graph-integration`, based on PR35/main `50aa1fe`.
 
+**Complete:** final runtime `be11ac1`, both bounded H100 probes pass all11 stages.
+The second probe finishes in54.97s without the autograd stream warning. Raw
+losses/gradients, two-update parameters and Adam moments match eager exactly;
+schedule/counters, storage and RNG checks pass. CPU867pass plus28focused after
+the lifecycle fix (overlap). See [results](results.md) and
+[storage receipt](storage-receipt.md). GPU verified idle. No further one-GPU
+probe is queued. Move to two GPUs for real NCCL accumulation and fresh-process
+restart; [usage](usage.md) records the implementation/acceptance sequence.
+
+The entries below record implementation history; their pending actions are
+superseded by this completion status.
+
 Implementation completed at `e2fba4c`; bounded GPU acceptance is next:
 
 - Model agent: opt-in valid-prefix padding fast path; native RT keeps true key

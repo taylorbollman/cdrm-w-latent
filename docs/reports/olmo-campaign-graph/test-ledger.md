@@ -39,3 +39,10 @@ They are not failed GPU numerical qualifications.
 The GPU protocol is in [protocol.md](protocol.md); numerical results and retained
 attempts belong in [results.md](results.md) and [storage-receipt.md](storage-receipt.md).
 CPU/Gloo tests do not certify NCCL, distributed CUDA graphs or distributed restart.
+
+Final lifecycle change `be11ac1`: **28 passed in5.14s** from
+`tests/test_campaign_training.py tests/test_campaign_graph_probe.py`. These
+overlap the broad suite. The new assertion verifies returned diagnostic scalar
+and term sums retain no completed autograd graph. GPU attempts `gpu-01` and
+`gpu-02` each pass all11 frozen stages; second attempt also removes the
+eager-after-capture stream warning. Both source snapshots are retained.

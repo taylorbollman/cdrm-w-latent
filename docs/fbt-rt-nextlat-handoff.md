@@ -4,6 +4,26 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Campaign graph integration complete, 2026-09-28:** read
+[results](reports/olmo-campaign-graph/results.md),
+[usage/next two-GPU milestone](reports/olmo-campaign-graph/usage.md),
+[progress](reports/olmo-campaign-graph/progress.md) and
+[storage receipt](reports/olmo-campaign-graph/storage-receipt.md).
+Runtime `be11ac1` supports changing valid-prefix padding, masks, jitter and
+per-term counts in one local CUDA graph with accumulated microbatches. Eager DDP
+accepts rank-local jitter. CPU867pass plus28focused after lifecyclefix(overlap).
+Actual pretrained NFR K4/RT0,15 B2/T16: both attempts pass all11 stages, raw
+gradients/losses and two-update Adam trajectory exactly match same-BF16 eager.
+Final repeat removes autograd stream warning; W&B7fumon57 synced; evidence
+retained. Existing precision qualifications and initial-clipping caveat remain.
+**Ready to move to two GPUs now** for real NCCL/captured accumulation and
+fresh-process restart, then K4/T1024 capacity/throughput. Local graph runner
+rejects world_size>1; do not infer distributed qualification from CPU/Gloo tests.
+No quality training, production corpus or hardware allocation launched. GPUidle.
+User authorizes these readiness milestones and will provide two GPUs; preserve
+progress every20–30min and warn before longer unsaveable work. Do not rerun
+completed one-GPU probes merely after interruption.
+
 **Portable campaign readiness complete, 2026-09-28:** read
 [results](reports/olmo-campaign-readiness/results.md),
 [usage/next integration](reports/olmo-campaign-readiness/usage.md) and

@@ -81,6 +81,16 @@ never enter object collectives. Existing independent global denominators,
    captured DDP collectives from local graphs plus explicit communication. Validate
    synchronized parameter participation, bucket storage and all-rank failures.
    The local graph runner must not be mislabeled distributed-ready.
+   The intended implementation is a separate `CampaignDDPGraphTraining` with
+   real DDP constructed on its dedicated stream: `static_graph=True`,
+   `find_unused_parameters=False`, `broadcast_buffers=False`, initially no
+   bucket views. Warm up synchronized and accumulated execution until addresses
+   stabilize. Capture two bodies: forward+backward inside `ddp.no_sync()`, and
+   the final synchronized forward+backward. Neither body zeros gradients.
+   Zero once outside the graphs, replay local work M-1 times, then synchronized
+   work once. Wrapping replay in `no_sync()` cannot remove already captured
+   collectives. Begin with separate memory pools and qualify accumulation
+   lengths1/2/3, wholly empty ranks and an empty final synchronized microbatch.
 4. Save a completed distributed update to ephemeral SSD, verify durable GCS
    retention, stop processes, relaunch and reconstruct DDP/graphs. Compare next
    update and data cursor with uninterrupted continuation. No changed-world-size
