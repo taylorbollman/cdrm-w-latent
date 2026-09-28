@@ -4,6 +4,16 @@
 turn, before moving to two GPUs. Branch `feat/olmo-document-shards`, based on
 main `3b26007`. No GPU/model execution or quality training in this milestone.
 
+**Acceptance complete:**124CPUtests pass. Seven source families yield28 shards,
+12,512 unique documents and7,054,230 tokens. GCS-restored partial preparation and
+uninterrupted preparation match all86 committed files. Independent retokenization
+of12,514 raw rows matches all hashes/token bytes. W&B `abscmr9h` synced. See
+[results](results.md) and [storage receipt](storage-receipt.md) for exact retained
+paths/hashes. No production mixture or packed-model support was activated.
+Data can be recovered from GCS after SSD loss; local copies are disposable once
+cloud verification is complete. Ready for the planned two-GPU hardware milestone.
+The entries below are historical work notes, superseded by this status.
+
 Implementation saved/pushed at `253f5ac`. All seven official source extracts
 complete (v2 explicit empty-string skip with line audit), raw files uploaded and
 verified. CPU124pass. First two token shards/config uploaded and restored from

@@ -4,6 +4,24 @@ Updated 2026-09-28. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Reusable document preparation complete, 2026-09-28:** read
+[results](reports/olmo-document-shards/results.md),
+[usage](reports/olmo-document-shards/usage.md),
+[OLMo/source clarification](reports/olmo-document-shards/olmo-source-audit.md),
+and [storage receipt](reports/olmo-document-shards/storage-receipt.md).
+User authorized reusable CPU data preparation while arranging two GPUs. Actual
+Dolma v1_5 seven-source prefix fixture:28shards,12,512uniquedocs,7,054,230tokens.
+124CPUtests pass; restored partial fromGCS resumes in newprocess to all86files
+exactly matching uninterrupted prep. Independent raw retokenization exact;
+W&Babscmr9h synced. NoGPU/modeltraining. Complete documents retained, no
+contexttruncation/packing. Equal-source prefix coverage is NOT the finalmixture.
+Ordinary OLMo withinchunk labels shift does not force EOSnearend. Currentmodel
+adapters stillrejectmultidocrows; beforeproductionpacking, explicitlyqualify
+CE/NextLat/FBT/RT boundarysemantics. ActualtwoGPUupdates/modelrestart remains
+nexthardwaremilestone. Data/code/evidence durable; no largerbootdiskrequired
+for thissmallprep (1TB still sensiblegeneralheadroom). Do not reruncompleted
+preparation afterVMloss; recover verifiedartifacts and read recordedcursors.
+
 **Campaign graph integration complete, 2026-09-28:** read
 [results](reports/olmo-campaign-graph/results.md),
 [usage/next two-GPU milestone](reports/olmo-campaign-graph/usage.md),

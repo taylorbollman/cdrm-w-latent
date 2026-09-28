@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 reusable Dolma document preparation complete. Read
+docs/reports/olmo-document-shards/results.md, usage.md and storage-receipt.md.
+CPU-only seven-source v1_5 coverage fixture:28shards/12,512docs/7,054,230tokens.
+124tests pass; GCS-restored partial resume matches all86 files of uninterrupted
+prep;12,514rawrows independentlyretokenizeexact. W&Babscmr9h. Raw/token/evidence
+artifacts retained under gs://fast-chunks/cdrm-w-latent/data/olmo-dolma-v1_5/.
+Not productionmixture or packed-modelqualification. No contexttruncation; true
+docoffsets preserved. User's cited OLMo shift is withinchunk, not EOSawareoffset.
+Actual twoGPUupdate/restart checks remain next; final concatstream boundary
+policy needs explicitmodeltests. Largerbootdisk notneeded forthis boundedprep.
+
 2026-09-28 campaign graph integration complete. Read
 docs/reports/olmo-campaign-graph/results.md, usage.md and progress.md first.
 Runtimebe11ac1: changing right-padding/masks/jitter/counts with local CUDA graph
