@@ -13,8 +13,11 @@ Use CDRM_FLASH_ATTENTION_SOURCE=installed to avoid vendor shadowing. No install.
 Host persistent disk~19GiBfree; disposable throughput runs need nofullcheckpoint.
 
 Root owns all GPU work. Runtimeedf3d0b is frozen/committed and pushed;111focused
-CPUtests pass in3.23s (67installedJITwarnings). FirstGPUstagefa4-check-b2-01
-is active in rootexec33439. Inspect its report and launcher log before restarting.
+CPUtests pass in3.23s (67installedJITwarnings). FirstGPUstagefa4-check-b2-01 finished8updates: strictloss-only failure retained,
+all5operationalchecks pass; globalgradientL2.010833/outputL2.006477.
+AbsoluteCEdifference7.2306e-5nats/target. Primaryqueue rootexec58032 runs
+SDPAB16,FA4B16,SDPAB32,FA4B32 sequentially and retains each stage in GCS.
+Inspect reports/processes/launcher logs before restarting.
 Agentordinary_long_context_audit is preparing new.runtime audittools.
 No T512runqueued. Source changes require a new revision/directory.
 
