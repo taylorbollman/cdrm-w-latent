@@ -30,7 +30,8 @@ Input throughput counts B×T once, although K2 executes two passes. Do not compa
 it to a rate counting pass-tokens twice.
 
 Each process loads the same pretrained checkpoint, performs three preparation
-updates, eleven backward warmups and five timed complete updates. Forward,
+updates, eleven requested capture warmups plus one gradient-preparation backward,
+and five timed complete updates. Forward,
 loss and backward are graphed; validation/copy, finite checks, clipping, fused
 Adam and scheduler are included in timing. Compilation, fixture generation,
 logging, reference copies and evidence retention are excluded. Setup/capture

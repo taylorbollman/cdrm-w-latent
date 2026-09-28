@@ -31,12 +31,14 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-28 combined T2048 benchmark is authorized and in preparation. Read
- docs/reports/olmo-combined-long-context/protocol.md and progress.md first.
-Latest user instruction: Flash SDPA only, then review; no FA4 or T512 rerun.
-K2 FBT, nativeRT0/15, NextLat SmoothL1+KL, native ordinary RoPE; no math changes.
-Historical T512B128 combined reference12.362k/s. Root owns GPU execution.
-
+2026-09-28 combined T2048 benchmark complete: read
+ docs/reports/olmo-combined-long-context/results.md and progress.md first.
+SDPA-only, K2 FBT, nativeRT0/15, NextLat bothlosses, nativeRoPE. RepeatedB32
+9.185k/s versus savedT512B12812.362k/s:25.70%less throughput;69.014GiBreserved,
+7.914GiBsampledfree. B16:7.502k/s,40.986GiBreserved,35.977GiBfree.
+4stages/20checks/32updates pass;137CPUtests;652sourcepairs; all4stages retained.
+No FA4 or newT512run. GPUidle; pauseforreview. Runtime79e850a, audit5f6c6ac.
+PriorBF16qualificationsremain; largerRTforwardtilesstill eager.
 
 2026-09-28 ordinary T2048 benchmark is complete on one H100. Read
  docs/reports/olmo-ordinary-long-context/results.md and progress.md first.
