@@ -1,4 +1,4 @@
-"""Combined T2048 benchmark guards and actual backend dispatch evidence."""
+"""Combined T1024/T2048 benchmark guards and actual backend dispatch evidence."""
 from types import SimpleNamespace
 
 import pytest
@@ -13,8 +13,9 @@ def argv(*extra,length=2048,batch=2):
         '--output-dir',str(single.ROOT/'.runtime/combined-long-context-unit'),*extra]
 
 
-def test_combined_long_context_keeps_actual_native_rt_nextlat_k2_contract():
-    args=single.parse_args(argv())
+@pytest.mark.parametrize('length',[1024,2048])
+def test_combined_long_context_keeps_actual_native_rt_nextlat_k2_contract(length):
+    args=single.parse_args(argv(length=length))
     case=graph.performance_case(args)
     mode=case.mode()
     assert single.long_context_combined(args) and not single.long_context_ordinary(args)
@@ -32,13 +33,18 @@ def test_combined_long_context_keeps_actual_native_rt_nextlat_k2_contract():
     (['--check-attention-parity'],2048,2),
     (['--ordinary-attention-backend','fa4','--check-attention-parity'],2048,4),
     (['--tiny','--ordinary-attention-backend','fa4'],2048,2),
+    (['--ordinary-rope-backend','dao'],1024,2),
+    (['--ordinary-attention-backend','fa4'],1024,2),
+    (['--check-attention-parity'],1024,2),
+    (['--continue-after-compatibility-miss'],1024,2),
 ])
 def test_combined_rejects_new_unmatched_or_unbounded_scope(extra,length,batch):
     with pytest.raises(SystemExit): single.parse_args(argv(*extra,length=length,batch=batch))
 
 
-def test_combined_preserves_all_runtime_flags_and_pins_no_new_backend(monkeypatch):
-    args=single.parse_args(argv())
+@pytest.mark.parametrize('length',[1024,2048])
+def test_combined_preserves_all_runtime_flags_and_pins_no_new_backend(monkeypatch,length):
+    args=single.parse_args(argv(length=length))
     base=SimpleNamespace(ordinary_rope_backend='native',ordinary_attention_backend='sdpa',
         tile_backend='triton',backward_tile_backend='triton',backward_memory='recompute',
         cast_weights_once=True,reuse_rope=True,kv_only_writes=True)
@@ -52,23 +58,41 @@ def test_combined_preserves_all_runtime_flags_and_pins_no_new_backend(monkeypatc
     assert observed==[{'include_dao':False,'include_fa4':False}]
 
 
-def test_combined_protocol_required_only_for_new_context(tmp_path,monkeypatch):
+@pytest.mark.parametrize('length,directory',[
+    (1024,'olmo-combined-t1024'),(2048,'olmo-combined-long-context')])
+def test_combined_protocol_required_only_for_new_context(tmp_path,monkeypatch,length,directory):
     base=tmp_path/'base.md';base.write_text('base')
     monkeypatch.setattr(graph,'ROOT',tmp_path);monkeypatch.setattr(graph,'PROTOCOL',base)
     assert graph.performance_protocols(SimpleNamespace(case='combined',length=512))==[base]
     with pytest.raises(FileNotFoundError,match='Combined long-context'):
-        graph.performance_protocols(SimpleNamespace(case='combined',length=2048))
-    extra=tmp_path/'docs/reports/olmo-combined-long-context/protocol.md'
+        graph.performance_protocols(SimpleNamespace(case='combined',length=length))
+    extra=tmp_path/f'docs/reports/{directory}/protocol.md'
     extra.parent.mkdir(parents=True);extra.write_text('frozen')
-    assert graph.performance_protocols(SimpleNamespace(case='combined',length=2048))==[base,extra]
+    assert graph.performance_protocols(SimpleNamespace(case='combined',length=length))==[base,extra]
+
+
+@pytest.mark.parametrize('length,group',[
+    (512,'olmo-two-gpu'),(1024,'olmo-combined-t1024'),(2048,'olmo-combined-long-context')])
+def test_combined_tracking_groups_preserve_prior_milestones(length,group):
+    assert single.experiment_group(single.parse_args(argv(length=length)))==group
+
+
+@pytest.mark.parametrize('case',['ordinary','rt'])
+def test_t1024_does_not_expand_other_full_model_scopes(case):
+    args=argv(length=1024);args[1]=case
+    with pytest.raises(SystemExit): single.parse_args(args)
 
 
 @pytest.mark.parametrize('omit_backward,ordinary_passed',[(False,True),(True,True),(False,False)])
-def test_dispatch_requires_real_kernel_calls_and_ordinary_gate(monkeypatch,omit_backward,ordinary_passed):
+@pytest.mark.parametrize('length,total,fused,eager',[
+    (1024,2046,2044,{'512x512':2}),
+    (2048,4094,4088,{'512x512':4,'1024x1024':2})])
+def test_dispatch_requires_real_kernel_calls_and_ordinary_gate(monkeypatch,omit_backward,ordinary_passed,
+        length,total,fused,eager):
     from cdrm.pretrained import olmo_tiled,olmo_rt_kernels,olmo_rt_recompute_kernels
     initialized=[]
-    mode=IntegrationCase('combined',fbt=True,nextlat=True,rt_layers=(0,15),length=2048).mode()
-    plan=SimpleNamespace(batch=SimpleNamespace(input_ids=SimpleNamespace(shape=(2,2048))),
+    mode=IntegrationCase('combined',fbt=True,nextlat=True,rt_layers=(0,15),length=length).mode()
+    plan=SimpleNamespace(batch=SimpleNamespace(input_ids=SimpleNamespace(shape=(2,length))),
         mode=mode,initialize_gradients=lambda:initialized.append(True))
     monkeypatch.setattr(olmo_rt_kernels,'add_tile',lambda *args,**kwargs:None)
     monkeypatch.setattr(olmo_rt_recompute_kernels,'backward_recomputed_tile',lambda *args,**kwargs:None)
@@ -79,7 +103,7 @@ def test_dispatch_requires_real_kernel_calls_and_ordinary_gate(monkeypatch,omit_
     def simulated_dispatch(plan,arm):
         assert initialized==[True]
         for _ in range(2):
-            for boundary in range(1,2048):
+            for boundary in range(1,length):
                 width=boundary & -boundary
                 tensor=SimpleNamespace(shape=(2,16,width,128))
                 olmo_tiled._add_tile(tensor,tensor)
@@ -90,7 +114,7 @@ def test_dispatch_requires_real_kernel_calls_and_ordinary_gate(monkeypatch,omit_
     check=single.combined_dispatch_probe(plan,'compiled-native')
     assert check['passed'] is (ordinary_passed and not omit_backward)
     native=check['native_rt']
-    assert sum(native['forward_tiles_by_shape'].values())==4094
-    assert sum(native['forward_triton_tiles_by_shape'].values())==4088
-    assert native['forward_eager_tiles_by_shape']=={'512x512':4,'1024x1024':2}
-    assert native['backward_recomputed_triton_calls']==(0 if omit_backward else 4094)
+    assert sum(native['forward_tiles_by_shape'].values())==total
+    assert sum(native['forward_triton_tiles_by_shape'].values())==fused
+    assert native['forward_eager_tiles_by_shape']==eager
+    assert native['backward_recomputed_triton_calls']==(0 if omit_backward else total)

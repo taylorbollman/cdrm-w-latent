@@ -31,6 +31,15 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-28 combined T1024 benchmark complete. Read
+ docs/reports/olmo-combined-t1024/results.md and progress.md first.
+Same K2/nativeRT0,15/NextLat/nativeRoPE/SDPA. B64 repeated11,092.06tok/s,
+10.27% below savedT512 vs25.70%deficit atT2048;68.445GiBreserved/9.195GiBfree.
+B32:9,823.08/s with36.545GiBfree. 3stages/15gates/24updates pass;160CPUtests;
+489newsourcepairs; evidence retained. GPUidle. Runtime dcbde27/audit46c03f0.
+Recommend1024 for directional screen, pending data/control/budget review.
+The proposed500M-token+SFT experiment is not launched. PriorBF16qualsremain.
+
 2026-09-28 combined T2048 benchmark complete: read
  docs/reports/olmo-combined-long-context/results.md and progress.md first.
 SDPA-only, K2 FBT, nativeRT0/15, NextLat bothlosses, nativeRoPE. RepeatedB32
