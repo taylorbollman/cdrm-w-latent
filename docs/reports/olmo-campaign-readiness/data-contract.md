@@ -67,3 +67,40 @@ source/cursor integrity, EOS behavior, exact 1024-token tails, logical update
 boundaries/resume, and physical partitions including empty slots. Production
 disk-backed data, shuffled/repeated epochs, distributed collectives, graph
 accumulation, and whole-training checkpoint recovery are outside this module.
+
+## Bounded ingestion from actual local raw files
+
+`cdrm.pretrained.campaign_ingest.prepare_local_preflight` bridges pinned local
+JSONL or gzip JSONL to `CampaignData`. Pass ordered `LocalJSONLSource` entries
+(source pin, local path, explicit compression, configurable text/id fields), a
+`TokenizerPin`, and an explicit `SplitPolicy(seed, weights)`. There is no default
+train/dev/test allocation. Document splits depend only on the seeded raw-text
+SHA256, keeping identical text together independently of source order; duplicate
+text/tokens still fail under the existing data contract. Source order and JSONL
+record order define the resulting stream. Text is preserved without Unicode
+normalization, and nonempty string text/IDs are required. Invalid/empty records
+fail visibly instead of being skipped.
+
+Every supplied source artifact's SHA256 is checked before any document is
+tokenized, and the bounded verified byte snapshots are parsed directly. A local
+tokenizer JSON path is also verified against its pin, its native EOS ID is
+checked, and `encode(add_special_tokens=False)` leaves terminal-EOS handling to
+`CampaignData`. Alternatively, a supplied tokenization callable is explicitly
+recorded as **declared and unverified**, even though its raw source files were
+verified. Byte verification establishes artifact identity, not the remote
+publisher's authenticity or checkpoint-pretraining disjointness.
+
+The result exposes `.data`, `.manifest`, and `.manifest_sha256`. Pin **both** the
+ingest manifest hash and data manifest hash in the outer training/checkpoint
+configuration: changing selected JSON fields or preprocessing settings can
+leave resulting token bytes unchanged. The ingest manifest records settings,
+split allocation, row/source provenance, verification mode, and resource bounds.
+Default bounds are 1024 documents, 16 MiB total source bytes, 16 MiB total
+uncompressed bytes, and one million normalized tokens. Exceeding a bound rejects
+the preflight rather than silently selecting a prefix. Paths may relocate
+without changing the recorded artifact identity.
+
+This is a usable local preparation/verification exercise, **not** a Dolma
+download, corpus mixture decision, production disk-backed loader, or an attempt
+to materialize the full campaign in RAM. Large-corpus preparation, split audits,
+and restartable orchestration remain separate work.

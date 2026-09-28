@@ -190,6 +190,32 @@ class CampaignTokenSchedule(torch.optim.lr_scheduler.LRScheduler):
     def completed_tokens(self):
         return self.token_prefix[min(max(self.last_epoch, 0), len(self.token_prefix) - 1)]
 
+    def validate_next_update(self, valid_tokens: int):
+        """Call before backward/Adam; reject exhausted or different logical data."""
+        _positive_int("valid_tokens", valid_tokens)
+        if not 0 <= self.last_epoch < len(self.token_prefix) - 1:
+            raise ValueError("Campaign token schedule is exhausted")
+        expected = self.token_prefix[self.last_epoch + 1] - self.token_prefix[self.last_epoch]
+        if valid_tokens != expected:
+            raise ValueError("Valid tokens differ from the scheduled logical update")
+
+    def step(self, epoch=None):
+        if epoch is not None:
+            raise ValueError("Campaign schedules advance only at completed updates")
+        if getattr(self, "last_epoch", -1) >= len(self.token_prefix) - 1:
+            raise ValueError("Campaign token schedule is exhausted")
+        return super().step()
+
+    def checkpoint_contract(self):
+        """Include this in outer checkpoint configuration for pre-mutation checks.
+
+        Warm-run extension needs a deliberate prefix-preserving plan fork; an
+        arbitrary new horizon cannot silently resume under the original hash.
+        """
+        return {"schema": "campaign-token-schedule-v1", "plan_sha256": self.plan_sha256,
+                "warmup_tokens": self.warmup_tokens, "start_fraction": self.start_fraction,
+                "planned_updates": len(self.token_prefix) - 1, "planned_tokens": self.token_prefix[-1]}
+
     def get_lr(self):
         progress = min(1.0, self.completed_tokens / self.warmup_tokens) if self.warmup_tokens else 1.0
         factor = self.start_fraction + (1.0 - self.start_fraction) * progress
@@ -206,19 +232,25 @@ class CampaignTokenSchedule(torch.optim.lr_scheduler.LRScheduler):
 
 def feedback_noise_for_rows(recipe: CampaignRecipe, window_keys: Sequence[str], *,
                             logical_update: int, sequence_length: int, width: int,
-                            device="cpu", dtype=torch.float32):
+                            device="cpu", dtype=torch.float32, physical_batch_size: int | None = None):
     """Partition-invariant CPU-generated unit jitter; no global RNG consumption.
 
     Window keys identify row *occurrences* in the logical update (include a
     repetition identifier if necessary). Each row/pass has its own seed. Prefix
     noise is stable across padding lengths; GPU count/rank is deliberately absent.
-    CPU staging is a correctness reference, not a production throughput claim.
+    Optional physical_batch_size appends zero-noise dummy rows to match
+    CampaignData.batch, including an entirely empty local slot. CPU staging is
+    a correctness reference, not a production throughput claim.
     """
     _positive_int("logical_update", logical_update, zero=True)
     _positive_int("sequence_length", sequence_length)
     _positive_int("width", width)
-    if not window_keys or any(not isinstance(k, str) or not k for k in window_keys):
-        raise ValueError("Nonempty stable window keys are required")
+    size = len(window_keys) if physical_batch_size is None else physical_batch_size
+    _positive_int("physical_batch_size", size)
+    if size < len(window_keys):
+        raise ValueError("physical_batch_size cannot discard window keys")
+    if any(not isinstance(k, str) or not k for k in window_keys):
+        raise ValueError("Stable nonempty window keys are required for real rows")
     if len(set(window_keys)) != len(window_keys):
         raise ValueError("Window occurrence keys must be unique within the physical batch")
     if not dtype.is_floating_point:
@@ -233,5 +265,6 @@ def feedback_noise_for_rows(recipe: CampaignRecipe, window_keys: Sequence[str], 
                                 feedback_pass, key])[:16], 16) % (2**63)
             generator = torch.Generator(device="cpu").manual_seed(seed)
             rows.append(torch.rand((sequence_length - 1, width), generator=generator).mul_(2).sub_(1))
+        rows.extend(torch.zeros((sequence_length - 1, width)) for _ in range(size - len(rows)))
         noise.append(torch.stack(rows).to(device=device, dtype=dtype))
     return tuple(noise)

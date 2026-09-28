@@ -92,6 +92,10 @@ def test_schedule_uses_completed_valid_tokens_and_roundtrips():
         opt.step(); schedule.step()
     assert used == pytest.approx([2e-5, 2e-4 * .46, 2e-4, 2e-4])
     assert schedule.completed_tokens == 42
+    with pytest.raises(ValueError, match="exhausted"):
+        schedule.validate_next_update(1)
+    with pytest.raises(ValueError, match="exhausted"):
+        schedule.step()
     state = copy.deepcopy(schedule.state_dict())
     other_opt = torch.optim.AdamW([torch.nn.Parameter(torch.ones(1))], lr=2e-4)
     other = CampaignTokenSchedule(other_opt, [10, 20, 5, 7], warmup_tokens=25)
@@ -102,6 +106,7 @@ def test_schedule_uses_completed_valid_tokens_and_roundtrips():
                                   [10, 20, 6, 6], warmup_tokens=25)
     with pytest.raises(ValueError, match="token_prefix"):
         wrong.load_state_dict(state)
+    assert wrong.checkpoint_contract() != schedule.checkpoint_contract()
 
 
 def test_noise_same_for_repartitioned_rows_and_padding_no_global_rng_use():
@@ -135,3 +140,18 @@ def test_recipe_fingerprints_include_scientific_and_optimization_choices():
     assert r.sha256 != replace(r, arm="NF").sha256
     assert r.sha256 != replace(r, feedback_jitter=0).sha256
     assert r.sha256 == recipe().sha256
+
+
+def test_noise_padding_matches_data_dummy_slots_including_empty_rank():
+    r = recipe()
+    kwargs = dict(logical_update=2, sequence_length=8, width=32)
+    real = feedback_noise_for_rows(r, ["x"], **kwargs)
+    padded = feedback_noise_for_rows(r, ["x"], physical_batch_size=4, **kwargs)
+    empty = feedback_noise_for_rows(r, [], physical_batch_size=4, **kwargs)
+    for p in range(3):
+        assert padded[p].shape == empty[p].shape == (4, 7, 32)
+        assert torch.equal(real[p], padded[p][:1])
+        assert torch.count_nonzero(padded[p][1:]) == 0
+        assert torch.count_nonzero(empty[p]) == 0
+    with pytest.raises(ValueError, match="discard"):
+        feedback_noise_for_rows(r, ["a", "b"], physical_batch_size=1, **kwargs)

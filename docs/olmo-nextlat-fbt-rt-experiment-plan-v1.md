@@ -455,7 +455,7 @@ do not fill the persistent filesystem with full optimizer checkpoints. Recheck
 capacity during setup. Keep code/manifests/reports in the repo and retained data,
 source snapshots and checkpoints under `gs://fast-chunks/cdrm-w-latent/`.
 
-Checkpoint at safe optimizer boundaries approximately every 30-60 minutes,
+Checkpoint at safe optimizer boundaries approximately every 20-30 minutes,
 plus milestones and branch points. Save model, optimizer, schedule, counters,
 RNG including jitter, data cursor/order, config and source identity. Restore
 from a cloud-verified checkpoint in a fresh process before long runs. Keep a

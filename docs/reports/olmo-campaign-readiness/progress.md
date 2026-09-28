@@ -24,12 +24,13 @@ Work ownership while active:
 - `readiness_data`: campaign_data.py and its tests/data-contract note.
 - Root: campaign recipe/optimizer/schedule/noise, integration, documentation.
 
-Implementation checkpoint: portable model/loss/data/recipe APIs are in place.
-CPU suites pass: model+legacy129, loss/integration+legacy301, data+legacy49,
-recipe21, attribution38. These suites overlap; do not sum them as unique tests.
-No GPU probe started. H100 was verified idle inside the required container.
-Next: fresh-process CPU resume and a short actual-checkpoint GPU probe. No
-individual operation planned requires 20 minutes of uninterruptible execution.
+Implementation checkpoint: portable model/loss/data/recipe and bounded raw-input
+ingest APIs are in place. Broad CPU suite:706 passed in38.88s. Final Unicode
+JSONL fix:28 ingest tests passed (overlaps the broad suite; two new cases).
+Fresh-process CPU mid-warmup restore reproduces the exact next update, optimizer,
+schedule, counters, cursor and RNG output. Runtime sources are frozen for the
+actual-checkpoint GPU probe; see protocol.md. Launcher limit is15minutes.
+No individual operation planned requires20minutes of uninterruptible execution.
 
 New graph accumulation/dynamic layouts and distributed fresh-process recovery
 belong to the next multi-GPU integration. Graph trainers explicitly reject
