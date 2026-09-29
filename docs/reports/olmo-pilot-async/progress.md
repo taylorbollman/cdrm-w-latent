@@ -36,3 +36,23 @@ H100sverified0MiB/0% insidecontainerafterrestart. No rerunofcompletedfixture.
 ContinuingCPUcloudrestoreofasynccheckpoint2 thenfreshprocessupdate3. Allsources
 recheckedunchanged. Separate4updateNFR524288batchnative declarationCPUpreparation
 restartedaftercheckingitwasnotyetcreated. Nolearningcohortlaunched.
+
+
+21:19UTC: freshcloudrestore2/update3completedexactly (directallgradient/state
+comparison); W&Bp3r7luod synced. Tinytransportauditor preliminary2379checksPASS;
+mutationtests/pinnedCLIreportsforthcoming (separatefromfrozenruntime). Native
+NFRaccumulatedfixture declaration/preflightpassed, sourceinventoryunchanged.
+Launchednative-nfr12-accum-01:4updates,T1024,B12/rank,524288inputs/update,22slots,
+fusion128/freshAdam,checkpoint0/2/4 plus600sec,commonFP32dev65536at4. Timeout2700s.
+Report .runtime/olmo-pilot-async/native-nfr12-accum-01/report.json. RootownsGPU;
+do not launchanother untilcompleted. Expected~30min, checkpointsretainedbackground.
+Thisis2.097M-inputexecution/overlapfixture, notstartof32-updatecohort.
+
+
+Tiny independent final audits pass: transport2847checks
+(SHA4fbe5234396892fc9436cb5d1c43993a4b7a1ce25e5904f36a0ab52dcef5616f),
+resume2427checks (SHAbd14f9c5aa4451ef7452bd998af6cb0293d14a0b040a21f2b9fd525ae52ad7eb).
+Auditor60newCPUtests pass1.99s; separatefrom76runtime tests, total136distinct.
+Newauditorcommitae3b7c3; acceptedruntime200pinsunchanged. Bothauditstagesretained.
+NativefixtureW&Bosqidkgt; initialization/graphpreparation underway. Openadaptation
+issue separatelyrecorded inopen-issues.md andpilotreviewcriteria.

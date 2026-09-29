@@ -39,7 +39,8 @@ entrypoint; old192runtime sourcepins remainfrozen. Oneworker/exclusive storage
 owner, CPUchildforSDK-RNGisolation, drainbefore nextsave/terminal, noGPUinworker.
 Rootownsengine/executor/GPU; async_loop agentnewloop/tests; async_checkpoint_design
 agentworker/tests; pilot_declaration_plan agentCPUdeclarations/pilotplan.
-Tinyblocking/async complete (exactdirectJSONstate); cloudrestore2/resume3 next.
+Tinyblocking/async andcloudrestore2/resume3 completeexactly;native-nfr12-accum-01
+running4updates (checkreport/process beforelaunchanything).
 Runtime85e5f78/200pins frozen;76CPUtests pass. PR51draft. Mainnativeprovisionaltest actual524288inputs/update,
 NFRB12/rank; newtinyblockingvsasync/cloudresume first. Pilotlearningcohortnotyet
 launched; preserveclipping/laterCEconcerns asreviewcriteria. Newnamespace

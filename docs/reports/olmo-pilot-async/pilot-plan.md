@@ -22,7 +22,7 @@ BF16 mixed training, NextLat regression/KL weights and feedback jitter unchanged
 | Arm | Meaning | Initialization | Physical batch/GPU | Accumulation slots/GPU |
 | --- | --- | --- | ---: | ---: |
 | B | Ordinary continuation control | Original weights, fresh active-parameter Adam | 32 | 8 |
-| NF | NextLat plus K4 feedback | Original backbone/predictor initialization, imported fusion128 weights, fresh all-active Adam | 12 initially | 22 |
+| NF | NextLat plus K4 feedback | Original backbone, paired fresh predictor initialization, imported fusion128 weights, fresh all-active Adam | 12 initially | 22 |
 | NFR | Same as NF plus native temporal RT at layers 0 and 15 on every pass | Exactly the same fusion128 import and remaining initialization as NF | 12 | 22 |
 
 The immediate treatment comparison is **NFR minus NF**. Both receive identical
