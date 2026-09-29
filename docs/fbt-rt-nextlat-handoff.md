@@ -4,19 +4,41 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Fixed-boundary precision diagnostic active, 2026-09-29:** user approved the
-PR41 continuation. Branch `feat/olmo-boundary-precision`; read
-[protocol](reports/olmo-boundary-precision/protocol.md) and
-[progress](reports/olmo-boundary-precision/progress.md). Two exact NF CE anchors
-capture four sites (record 0, fusion and following ordinary stack entering
-passes 1 and 3). Twelve local VJPs separate inherited-input sensitivity from
-within-module precision/backend differences using common incoming gradients.
-Require original FP32/BF16 outputs to reproduce; preserve and retain actual
-inputs, masks, strides and cotangents. Root owns GPU launches, each under a
-900-second limit, with W&B/GCS retention. No core/default/architecture change,
-training, or new numerical acceptance budget. Stop after this diagnostic and
-assess before proposing a correction. Old sources stay frozen; save/push every
-20–30 minutes. No new GPU result yet.
+**Fixed-boundary precision diagnostic complete, 2026-09-29:** branch
+`feat/olmo-boundary-precision`; read [results](reports/olmo-boundary-precision/results.md),
+[next steps](reports/olmo-boundary-precision/next-steps.md),
+[test ledger](reports/olmo-boundary-precision/test-ledger.md),
+[storage receipt](reports/olmo-boundary-precision/storage-receipt.md) and
+[progress](reports/olmo-boundary-precision/progress.md) for final PR/retention state.
+
+Runtime `1023d7e`: two aggregate NF CE anchors/four physical backwards exactly
+reproduce the previous summaries and geometry, including **60.8698% backbone
+gradient discrepancy**. Twelve local VJPs at record 0, passes 1 and 3 show
+**0.387/0.390%** fusion and **7.678/8.188%** ordinary-stack parameter differences
+at common inputs and incoming gradients. Changing only the inherited stack input
+under FP32 arithmetic gives **11.428/29.136%**. These are sensitivity measurements,
+not additive causal fractions; whole-stack replays include internal forward
+rounding. The BF16 qualification remains open.
+
+CPU 31 tests passed. GPU diagnostic took 147.87 seconds, no optimizer updates.
+Eight local endpoint identities, 104 local health checks and ten final integrity
+checks pass. W&B `d43pjmvw` synced. Both GPUs are idle. Reports, 89 source snapshots
+and 44 actual boundary tensor payloads are retained with independent cloud
+readback; final closeout is recorded in progress. No production precision,
+Q/K normalization, architecture or numerical-budget change was made.
+
+**Next recommendation, not launched:** run the matched current NF FP32/BF16
+fixture at the saved adapted O5c mixed update512 checkpoint, without training.
+The complete local checkpoint hash and report are verified. Actual model-schema
+import is still untested. Six old source pins differ, so add a new explicit
+weights-only import with architecture/key/shape/dtype/tie/buffer tests; do not
+weaken the old validator or claim historical-runtime reproduction. Preserve
+saved fusion output_scale. O5c inherited the already-adapted O5b backbone, so
+this is not a causal fusion-only comparison. It was trained K2/no jitter;
+current K4/jitter is intentionally a new numerical diagnostic. If agreement
+improves, investigate feedback startup; otherwise localize selected ordinary
+layers before another precision change. No GPU run or training is queued.
+Old helpers/tests/protocols remain frozen; save/push every 20–30 minutes.
 
 **Recurrence/precision separation complete, 2026-09-29:**
 [PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41), source branch
@@ -39,8 +61,8 @@ improves to 56.16%, but final hidden-state agreement worsens on both records;
 fusion's own gradient relative L2 increases too. It is not a joint correction and is
 **not adopted**. No production model or default has changed. Stop precision
 changes at this milestone; do not automatically promote additional modules.
-The proposed continuation separates local module precision effects from
-propagated input perturbations using shared inputs/cotangents. It has not run.
+That proposed shared-input/shared-cotangent continuation is now complete;
+read the fixed-boundary entry above rather than relaunching it.
 
 Matrix runtime source `6ed920a`; fusion source `a5e9540`. All completed helpers,
 tests and protocols stay frozen. CPU scopes 66 and 27 pass, with overlap;

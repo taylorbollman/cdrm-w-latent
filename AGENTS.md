@@ -31,16 +31,25 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 fixed-boundary precision diagnostic ACTIVE, feat/olmo-boundary-precision.
-User approved PR41 continuation. Read docs/reports/olmo-boundary-precision/
-protocol.md and progress.md. Two exact NF CE anchors plus12 local VJPs:
-record0/pass1,3, fusion+ordinary stack; compare FP32 at FP32-origin input,
-FP32 at BF16-origin input, BF16 at same BF16-origin input, all at common actual
-BF16-origin output cotangent. Preserve real masks/positions/strides and require
-both local precision endpoints to reproduce captured outputs exactly. Retain
-small boundary tensors. Root alone launches GPU0, 900s stages, W&B/GCS. No core,
-precision-policy, Q/K or training change. Old helpers/tests/protocols frozen.
-Stop after diagnostic and assess; save/push every20–30min.
+2026-09-29 fixed-boundary precision diagnostic COMPLETE, feat/olmo-boundary-precision.
+Read docs/reports/olmo-boundary-precision/results.md, next-steps.md, test-ledger.md
+and progress.md for final PR/retention state. Runtime1023d7e; both NF CE anchors
+reproduce exactly, including 60.8698% backbone discrepancy. Record0/pass1,3:
+common-input fusion parameter-VJP errors0.387/0.390%, ordinary stack7.678/8.188%;
+changing only stack inputs under FP32 yields11.428/29.136%. Whole-stack VJPs
+include internal forward rounding; these norms are not additive causal fractions.
+Eight exact local endpoints,104 local health checks,10 final integrity checks pass;
+CPU31pass, GPU147.87s, no updates. W&Bd43pjmvw synced. Evidence/source snapshots
+and44small boundary tensors retained with independent cloud readback.
+Next proposed step: matched FP32/BF16 current NF fixture at saved adapted O5c
+mixed update512 checkpoint, no training. Local4.81GB checkpoint hash verified;
+actual schema import NOT tested. Preserve saved fusion output_scale and full
+backbone state; old source validator correctly rejects six changed core files.
+Use a NEW explicit weights-only import with tests, never weaken old source pins.
+O5c inherited an adapted O5b backbone: not a causal fusion-only comparison.
+K2/no-jitter checkpoint tested under K4/jitter would be a new diagnostic, not
+historical resume. No further GPU run queued; both GPUs idle. BF16 qualification
+remains open. Old sources frozen, no policy/QK change; save every20–30min.
 
 2026-09-29 recurrence/precision separation COMPLETE, PR41.
 Source branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
@@ -55,8 +64,8 @@ adopt this as a fix or broaden precision changes automatically. No core/default,
 Q/K-normalization or architecture change, no optimizer updates. Matrix runtime
 6ed920a, fusion a5e9540. CPU scopes 66 and 27 pass (overlap). W&B lt54objk and
 wih59gy7. Numerical qualifications remain; T16 is not packed T1024 clearance.
-All completed helpers/tests/protocols stay frozen. Next recommendation is a
-bounded shared-input/shared-cotangent sensitivity diagnostic, not launched.
+All completed helpers/tests/protocols stay frozen. The proposed bounded
+shared-input/shared-cotangent diagnostic is now complete; see the entry above.
 GPU runs finished and idle. All stages and closeout retained with independent
 readback: 4 receipts, 8 listed objects, 218 inventory members. No next GPU run
 is queued. Preserve work every 20–30 minutes and retain in GCS.
