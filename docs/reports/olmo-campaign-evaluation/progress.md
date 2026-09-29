@@ -31,6 +31,17 @@ with explicit changed evaluation/source identities and unchanged recipe/data/
 startup/runtime. Native fullstate snapshots guarded, graph-owned inputs checked.
 Checkpoint/GCS timing separated; no throughput claim. Need retain all evidence.
 
-No GPU job started yet. Last verified both H10080GB idle; bootfree110GiB.
-Save/push20–30minutes. Use progress here and latest runtime reports before any
-launch after interruption.
+16:13UTC: fixed-state GPU probe COMPLETE, all11integritychecks true, no training
+updates. Runtime~164s; W&B yezbu1wv synced; GCS receipt exists at
+.runtime/olmo-optimizer-history/receipts/probe-01.json. Global rawgradient error
+1.369%, actualAdam delta error inherited0.969% versusreset1.942%; complete
+interpretation forthcoming in optimizer-history/results.md. Probe/evaluator
+core committed/pushed3bbef58. Their sources remain frozen.
+
+Dev indexes built at .runtime/olmo-campaign-evaluation/index-dev-t16-01/index
+and index-dev-t1024-01/index. New rootengine/controller/CLI are still prefreeze;
+CPUintegrationtests+independentaudit inprogress. W&Bsame-step duplicate avoided
+by merging fresh-evaluation and trainingmetrics into one log; eligible resumed
+boundary publishes separately before nextupdate. No evaluationGPUjob yet.
+Bootfree~110GiB before newstates. Save/push20–30minutes; use latest runtime
+reports before any launch after interruption.
