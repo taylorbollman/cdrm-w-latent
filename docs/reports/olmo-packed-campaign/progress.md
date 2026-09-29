@@ -32,3 +32,31 @@ eager and CUDA graph probes both pass all eight arms under stream semantics,
 including independent gradients and three-update Adam parity. Their reports
 are retained (eager verified, graph upload pending at this entry). Actual
 pretrained short graph probe is running; source hashes must stay unchanged.
+
+Actual pretrained packed B/NFR graph probe passes operationally; independent
+BF16 NFR sparse/dense qualification remains failed and is retained separately.
+Actual index audit passes all 6,947,277 train tokens / 6,785 chunks against an
+independent document iterator. Manifest hash
+`372a7e05f5164198bdeb1531fc45bd761f5d33222d424c6804b54f19fd75288d`.
+Train selected docs: 12,283; CE 6,940,492; latent 6,928,229; KL 6,909,206.
+Finite schedule is 13 full logical updates plus 131,533 tokens (14th update),
+no cycling. First two updates each end with rank1 entirely empty and rank0
+eight real rows; actual-mask accounting passes. Index cloud retention verified;
+restoration to a different path underway. Bounded per-loss precision diagnostic
+running before the full-length checkpoint probe.
+
+Bounded component diagnostic completed operationally: 13/13 health/state gates,
+12 backwards, no optimizer. It reproduces the isolated 3.40224% BF16 layout
+difference, with CE-only layout gradients exact and auxiliary-only discrepancies
+~2.17% latent / ~2.28% KL. More significant: common BF16/full-FP32 combined
+gradient error is ~85.96–86.13%, cosine ~0.51, BF16 norm ~0.495x FP32 on the
+short initial NFR fixture. This is a new material qualification, not numerical
+clearance. No root cause or harmlessness claim. Finish authorized recovery
+mechanics; recommend numerical localization before longer training.
+
+Actual T1024 write is running in `.runtime/olmo-packed-campaign/pretrained-write-01`;
+checkpoint target `/mnt/localssd/cdrm-checkpoints/packed-campaign/pretrained-write-01`.
+W&B `8c13f3ne`. Initial preparation starts without Adam; fresh-process resume
+will load real Adam first. Index cloud restore passed at
+`.runtime/olmo-packed-campaign/index-cloud-restore-01/evidence/index`; exact
+generations, downloaded SHA/bytes and all 14 archive members verified.
