@@ -40,7 +40,9 @@ fresh all-active Adam, NF/NFR only. Generic same-lineage resume must not require
 a completed reference report, and completed-plan resume must skip graph setup.
 No numerical sweep/quality campaign, QK or core changes. Frozen prior scripts,
 tests, protocols and cdrm/pretrained files stay unchanged. Root schedules GPUs;
-currently coding/CPU checks, both H100s idle. Save/push20–30minutes.
+training candidate frozen febc312; tiny reference/lean/stop/cloud-resume/terminal
+checks pass. Native NFR stop1 acceptance is active; read progress.md and runtime
+report before launching anything. Root schedules GPUs. Save/push20–30minutes.
 
 
 

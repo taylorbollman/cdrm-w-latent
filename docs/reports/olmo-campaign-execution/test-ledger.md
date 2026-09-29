@@ -38,3 +38,22 @@ RawDownload retry oracle; it does not change helper behavior or training identit
 Both byte-download modes pass. Earlier logs/snapshots remain retained.
 
 GPU acceptance stages and independent audit will be recorded after completion.
+
+Independent stdlib JSON auditor:44 CPU tests pass in
+`.runtime/olmo-campaign-execution-cpu-audit-03.log`. Frozen auditor checks both
+training source snapshots, enabled loss/global/physical accounting, all raw
+active gradients and rank equality where observed, complete state and per-rank
+RNG boundaries, data cursors, startup/final clocks and exact overlapping updates.
+It is evidence consistency, not a fresh tensor reload or FP32/BF16 comparison.
+
+| Tiny GPU pair against reference | Independent audit |
+| --- | --- |
+| Lean stop after update1 | 1,101 checks pass |
+| Lean full three updates | 1,249 checks pass |
+| Cloud-restored update1, acceptance resume2/3 | 1,236 checks pass |
+| Completed update3 resume with no graph preparation | 1,030 checks pass |
+
+Each comparison verified155 source pins for each report. Counts include routine
+metadata/identity checks; they are not independent numerical experiments. The
+same-precision scientific evidence is exact, without a tolerance or omitted
+comparison field. Native acceptance remains in progress.
