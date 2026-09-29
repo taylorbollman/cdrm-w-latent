@@ -78,3 +78,11 @@ NextboundedT1024capacity changesordering to prepareDDP→3eagerAdamupdates→
 capturewithresidentAdam→untimedreplay/discard→5timedupdates. This includes
 actualmomentmemory (~9.45GiB/rank) duringcapture; coldDDPconstructatT1024 remains
 futurequalification. No core math/runner changes required.
+
+2026-09-29 00:44 UTC: T1024 capacity B8/rank, two microbatches, passed all
+stages in 524.64 s. Five measured complete updates: 3,428.23 global valid input
+tokens/s, median 9.564 s/update, peak reserved 50.35 GiB and final sampled free
+22.97 GiB per GPU. W&B kkmsgtfg. Launcher log copied after process exit;
+verified retention receipt is `retention/capacity-b8-m2-01.json`.
+B16/rank is running in a fresh process, bounded to 900 s; session evidence is
+`capacity-b16-m2-01/` plus its external launcher log. No other GPU jobs.

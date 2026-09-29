@@ -1,20 +1,41 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-28. **Read this first after compaction or interruption.**
+Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Campaign two-H100 integration active, 2026-09-28:** user supplied two H10080GB
-GPUs and a1TB boot disk. Branch `feat/olmo-campaign-two-gpu`, from `dde3240`.
-Read [frozen protocol](reports/olmo-campaign-two-gpu/protocol.md) and
-[live progress](reports/olmo-campaign-two-gpu/progress.md). Root alone launches
-GPU stages. NCCL five-size sanity passed; W&Bci14andb. All86 retained tokenized
-files restored to SSD with generation-pinned SHA256 checks;7,054,230tokens and
-12,512unique documents verify. Do not retokenize. Next gates: real campaign
-DDP accumulation/local+sync graphs, actual pretrained checks, fresh-process
-checkpoint restart with GCS retention, then representative K4/T1024 capacity.
-Preserve progress every20–30min. No quality campaign or production mixture
-approved by this readiness milestone. Existing precision qualifications remain.
+**Campaign two-H100 execution/restart complete; capacity closeout active,
+2026-09-29:** branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
+[results](reports/olmo-campaign-two-gpu/results.md),
+[test ledger](reports/olmo-campaign-two-gpu/test-ledger.md),
+[usage](reports/olmo-campaign-two-gpu/usage.md),
+[storage receipt](reports/olmo-campaign-two-gpu/storage-receipt.md) and
+[live progress](reports/olmo-campaign-two-gpu/progress.md). Real NCCL local/final
+sync graph accumulation passes all eight tiny arms and actual pretrained B/NFR
+prepared-path checks. Full NFR checkpoint (15,214,756,865 state bytes) uploaded,
+downloaded and SHA-verified; fresh-process next update is bitwise identical on
+both ranks to original live-graph continuation. Metadata subclass fix retains
+safe loading. CPU regression 445 pass, plus 19 focused capacity checks (overlap).
+
+Independent NFR BF16 sparse/dense loss-layout gradient discrepancy **3.40224%**
+remains FAILED. It reproduces locally before DDP; prepared distributed raw
+gradient error <=4.96e-9, full-FP32 loss-layout check 7.38e-7. This localizes but
+does not clear BF16 numerical concerns. No model math or Q/K normalization change.
+
+T1024 NFR K4, RT0/15 every pass, both NextLat losses: B8/rank with two accumulated
+microbatches passes, 3,428 input tokens/s global, 50.35 GiB peak reserved and
+22.97 GiB sampled free/GPU. B16 currently running under a 900-second limit;
+root alone launches GPUs. Separate graph pools and actual resident Adam moments
+are included; initial cold DDP construction with restored Adam at T1024 remains
+unqualified. Restart acceptance is B2/T16 on the same two-H100 runtime.
+
+All 86 retained tokenized files restored and verified (7,054,230 tokens,
+12,512 documents); do not retokenize. Next after resource closeout: explicit
+packed-boundary semantics, real-data cursor integration/restart and final
+batch/schedule calibration. Current adapters reject multidocument rows. No
+quality campaign or production mixture is authorized by this readiness slice.
+Preserve progress every 20–30 min; completed evidence and full checkpoint are
+durable in GCS, with exact references in the storage receipt.
 
 **Reusable document preparation complete, 2026-09-28:** read
 [results](reports/olmo-document-shards/results.md),
