@@ -6,9 +6,14 @@ Persistent receipts are under `.runtime/olmo-pilot-execution/retention/`.
 
 Small-stage prefix:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T190649Z/pilot-execution-<stage>/`.
-Each stage archive preserves its declarations, source snapshots, reports and
-individual checkpoint publication receipts. Large checkpoint states are stored
-separately, not duplicated in those archives.
+Each stage archive preserves its declarations, source snapshots and reports.
+The reports embed the complete checkpoint publication records. The generic
+retainer excludes paths beginning `checkpoint-`, including the individual
+`checkpoint-publications` directory. The final inventory therefore snapshots
+those receipt bytes under neutral filenames with explicit original-path/hash
+mappings. Closeout likewise renames checkpoint-prefixed metadata paths and
+records the mapping. Large checkpoint states are stored separately, not
+duplicated in these archives.
 
 Checkpoint prefix:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/20260929T190649Z/pilot-execution/`.

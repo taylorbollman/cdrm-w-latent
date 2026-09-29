@@ -80,6 +80,20 @@ previously saw 1,073,565 inputs and 1,048,576 CE targets; it is separate from
 new capacity exposure. Different effective batches and startup histories make
 these capacity runs unsuitable for a learning-quality comparison.
 
+Eight combined updates are finite, with substantial clipping throughout: raw
+gradient norm falls from 222.53 to 24.14. The base's norms range from 1.01 to
+1.48, also exceeding the configured limit of 1.0. These observations neither
+establish long-run stability nor identify a new precision defect. No additional
+per-loss gradient attribution was performed in this capacity milestone.
+
+The small common-FP32 dev-main prefix has combined per-pass CE of approximately
+2.993, 7.654, 7.652 and 7.631 nats/target after update 8. Books gives 3.480,
+7.411, 7.323 and 7.337. Later passes are currently worse than the first pass;
+successful execution is not successful refinement. The base dev-main/books CE
+is 2.424/2.518 after its different exposure and original startup. Do not treat
+these tiny prefixes and unmatched runs as an architectural comparison. The
+next matched adaptation pilot should monitor per-pass CE and clipping explicitly.
+
 ## Next decision
 
 Use completed physical-capacity measurements to prepare a costed, matched short
