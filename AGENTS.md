@@ -32,15 +32,17 @@ W&B tracking.
 # Pretrained model handoff
 
 2026-09-29 ordered pilot execution IN PROGRESS, draft PR50, feat/olmo-pilot-execution.
-Read docs/reports/olmo-pilot-execution/progress.md. Runtime frozen be74dde/192pins;
-149newCPUtests pass. Tiny reference/eval insertion pass2063checks exact gradients
-and boundaries. Tiny stop2 complete; cloudrestore2 then resume3/terminal checks
-are current queue. Native B32/NFR12 (+conditionalB64/NFR8) declarations resolved
-but not launched yet. Root owns all GPU jobs; inspect current stage reports and
-launch-result JSON before continuing, never blindly restart. No source edits
-through resume. Evidence .runtime/olmo-pilot-execution, SSD checkpointnamespace
-pilot-execution, cloud smallstages olmo-two-gpu/20260929T190649Z. New storage/restore
-adapters validate orderedidentity; shared engine/model/vendor/oldtests unchanged.
+Read docs/reports/olmo-pilot-execution/progress.md and results.md. Runtime frozen
+be74dde/192 pins;149 new CPU tests pass. Separate auditorv2 adds27 passing tests;
+original false failures are retained. Tiny insertion/cloudresume/terminal
+acceptance passed2063/2136/1914 checks exactly. Native B32 is currently running
+(eight updates, checkpoint0/4/8) under native-b32-01; then NFR12 and conditional
+B64. Root owns all GPU jobs; inspect reports/launch-result JSON before continuing.
+No source edits through acceptance or capacity. Evidence is in
+.runtime/olmo-pilot-execution; SSD checkpoint namespace pilot-execution; cloud
+small stages olmo-two-gpu/20260929T190649Z. Historical engine/model/vendor/tests
+unchanged. Current native work measures operational capacity, not a matched
+learning cohort. Next-steps/readiness-map document the later pilot decisions.
 BF16 qualifications unchanged; no quality campaign. Save/retain every20–30min.
 
 2026-09-29 pilot data COMPLETE, PR49 merged c433406; final retention metadata is in
