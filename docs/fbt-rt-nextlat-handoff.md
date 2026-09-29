@@ -4,8 +4,9 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Recurrence/precision separation complete, closeout active, 2026-09-29:**
-branch `feat/olmo-recurrence-precision`, from PR40. Read
+**Recurrence/precision separation complete, 2026-09-29:**
+[PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41), source branch
+`feat/olmo-recurrence-precision`, from PR40. Read
 [results](reports/olmo-recurrence-precision/results.md),
 [test ledger](reports/olmo-recurrence-precision/test-ledger.md),
 [next steps](reports/olmo-recurrence-precision/next-steps.md) and
@@ -32,7 +33,11 @@ tests and protocols stay frozen. CPU scopes 66 and 27 pass, with overlap;
 11 aggregate cases / 22 physical backwards total, no optimizer updates.
 W&B runs `lt54objk` and `wih59gy7`. Prior numerical qualifications remain:
 neither exact repeatability nor these T16 probes clear packed T1024 training.
-No quality-training run is queued. Save progress every 20–30 minutes.
+All evidence and closeout are retained with independent cloud readback:
+four receipts, eight listed objects and 218 inventory members. Read the
+[storage receipt](reports/olmo-recurrence-precision/storage-receipt.md) for
+exact pins and snapshot scope. Both GPUs are idle; no next diagnostic or
+quality-training run is queued. Save progress every 20–30 minutes.
 
 **Bounded numerical localization complete, 2026-09-29:**
 [PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40), branch

@@ -1,8 +1,8 @@
 # Recurrence/precision storage receipt
 
-2026-09-29. The CPU baseline audit and both GPU diagnostics are retained:
-**3 verified receipts, 6 listed objects, 748,652 downloaded bytes and 168
-inventory members**. Independent CPU-only readback verified every pinned
+2026-09-29. The CPU baseline audit, both GPU diagnostics and final closeout are
+retained: **4 verified receipts, 8 listed objects, 1,052,208 downloaded bytes
+and 218 inventory members**. Independent CPU-only readback verified every pinned
 object generation, full-object hash/size, inventory member and source
 snapshot. No local files were deleted and no trained checkpoint was created.
 
@@ -31,27 +31,31 @@ Use its pinned generation and SHA when restoring.
 | `recurrence-matrix-01/retention-manifest.json` | `1790660177923547` | 20,719 | `94278f7287c3324cd959994186cf25bea659387444d57a3a64c58790244f010f` |
 | `recurrence-fusion-01/evidence.tar.gz` | `1790660767040519` | 344,758 | `c5bbf1a5e6bd3bd77f4c5355c4e6e0edfee540e054f67e866b571713b50dde78` |
 | `recurrence-fusion-01/retention-manifest.json` | `1790660767308954` | 21,497 | `7d9c40a4471f0fd7be357152811ff97f6b6f27e94319dfd58efaf8ab0b00d743` |
+| `recurrence-closeout-01/evidence.tar.gz` | `1790661193141468` | 289,525 | `2f231d57536fd66ba22113050451642d35faa9db78b385a6b7dd4e429724f4d6` |
+| `recurrence-closeout-01/retention-manifest.json` | `1790661193388497` | 14,031 | `2fa06a97d769fbf48058b2ab653b0f8054edfb456787fcf030b1961505cabb38` |
 
-| Stage | Inventory members | Archived source snapshots | Final report SHA-256 |
+| Stage | Inventory members | Archived source snapshots | Final report or closeout-inventory SHA-256 |
 | --- | ---: | ---: | --- |
 | `baseline-audit-01` | 3 | 1 | `917c5b59376f87ca409da3de7044969c27322d3dcda7ddc5592733d9234beb51` |
 | `matrix-01` | 81 | 79 | `bfaff91aae8e2625e5f2572cfaf4f33d449b560d5cefbef7ff563c6d820ac412` |
 | `fusion-01` | 84 | 82 | `4f98763c43d5e94fc6c5f783712151a2f648f74ea4147b1cf2f6424bba6446a6` |
+| `closeout-01` | 50 | 4 | `addee1493b3885c0e6d19386790c5dc018217a63533ff89efb327d04bf502841` |
 
-There are **162 archived source snapshots**: 161 across the two GPU stages
-and the baseline audit's own source. This count is separate from the 308 older
-PR40 source pairs rechecked inside the baseline audit. Each archive additionally
-contains `RESTORE.md` and `evidence-members.json`, giving 174 regular archive
-files including those six control files. Separately uploaded
-`storage-receipt.json` control objects are outside the six listed-object count.
+There are **166 source-snapshot occurrences**: 161 across the two GPU stages,
+the baseline audit's own source, and four audit snapshots in closeout. This
+includes repeated sources; it is separate from the 308 older PR40 pairs
+rechecked inside the baseline audit. Each archive additionally contains
+`RESTORE.md` and `evidence-members.json`, giving 226 regular archive files
+including those eight control files. Separately uploaded `storage-receipt.json`
+control objects are outside the eight listed-object count.
 
 Local receipts are
-`.runtime/olmo-recurrence-precision/retention/{baseline-audit-01,matrix-01,fusion-01}.json`,
+`.runtime/olmo-recurrence-precision/retention/{baseline-audit-01,matrix-01,fusion-01,closeout-01}.json`,
 with adjacent `.artifacts/` directories containing the uploaded bytes.
 Every receipt records `checkpoint_uploaded=false` and
 `local_files_deleted=false`.
 
-## Independent readback and remaining closeout
+## Independent readback and completed closeout
 
 The reusable script and atomic report are
 `.runtime/olmo-recurrence-precision/storage-audit-01/{audit.py,report.json}`.
@@ -78,7 +82,30 @@ reference reproduction, source integrity and the candidate's bounded scope;
 their evidence lives in `matrix-audit-01/` and `fusion-audit-01/` under the same
 runtime root. See [test ledger](test-ledger.md) for their report/script pins.
 
-Final milestone closeout and retention of the matrix/fusion/storage audit
-evidence are pending. The three stage receipts above are complete; no pending
-closeout artifact is included in their totals. This milestone does not create
-new model weights, validate checkpoint continuation or adopt a precision fix.
+Final closeout is verified and includes the baseline, matrix, fusion and
+storage audit reports/scripts/source snapshots, the three stage receipts,
+runtime helpers/tests, CPU and execution logs, and documentation/handoff.
+Independent readback checked both closeout object generations and every one of
+its **50 inventory members / 52 archive files**, including its two archive
+control files. The original immutable archive and staging directory were not
+changed.
+
+The staged `closeout-inventory.json` intentionally differs from the archive
+inventory: it lists **52 files excluding itself**, making 53 staged files.
+The retainer's suffix filter excludes exactly three duplicate downloaded
+`evidence.tar.gz` copies under
+`storage-audit-01/downloads/{baseline-audit-01,matrix-01,fusion-01}/`.
+Those original stage archives are already separately retained and independently
+download-verified under the generation pins above. Their staged sizes/hashes
+also match those receipts. The remaining 49 staged entries plus
+`closeout-inventory.json` account for all 50 retained members; no audit, report,
+code, test, log or documentation file is missing.
+
+Closeout captures Git commit `aca880ccbab353a3a002472481549d6bf42f0579` and a
+fixed pre-retention documentation snapshot. The final receipt and PR status
+are recorded in Git outside that immutable bundle. The final CPU readback
+summary is `.runtime/olmo-recurrence-precision/closeout-readback-01/report.json`,
+SHA-256 `f46021bb0295fd95674e46e5f113e77a6cf431f645460f518a704cb2966386bb`.
+This completes storage verification; no further retention cycle is needed.
+No new model weights, checkpoint-continuation acceptance or precision fix is
+implied.

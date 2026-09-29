@@ -109,3 +109,26 @@ blocker; the proposed fixed-boundary VJP diagnostic remains unlaunched.
 Final closeout will retain the CPU logs, audit scripts/reports, source files,
 documentation and prior receipts. That separate archive is not yet counted in
 the three verified stage receipts. Root is preparing it and the PR now.
+
+## Milestone complete
+
+[PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41) contains the
+completed diagnostic and compaction handoff. Final source inventories were
+rechecked after documentation work: all 79 matrix and 82 fusion pins match.
+The PR has no production-model changes. Focused tests, independent scientific
+review and all measured execution/control guards are complete; numerical
+qualifications remain open as recorded in the results.
+
+The separate `recurrence-closeout-01` receipt is verified. Independent readback
+checks both exact cloud generations and all 50 inventory members. It retains
+the audit evidence, CPU logs, source files, documentation and prior receipts.
+Its staging inventory also lists three duplicate downloaded archives that
+the standard retention suffix filter excludes; each already exists in its
+separately verified stage object. No required evidence is missing.
+
+Totals are four receipts, eight listed cloud objects and 218 inventory members.
+The closeout archive freezes documentation at `aca880c`, before its own receipt;
+the final receipt summary and PR/control state live in Git to avoid a circular
+self-retention dependency. No completed source or archive was rewritten.
+Both GPUs are idle. The next recommended fixed-boundary VJP diagnostic has not
+been launched, and no quality training is queued.

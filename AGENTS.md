@@ -31,8 +31,8 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 recurrence/precision separation GPU work COMPLETE, closeout active.
-Branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
+2026-09-29 recurrence/precision separation COMPLETE, PR41.
+Source branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
 results.md, test-ledger.md, next-steps.md and progress.md for final PR/retention.
 Eight CE cases N/NR/NF/NFR x FP32/BF16 on original isolated T16/two-B2 fixture:
 shared-backbone gradient errors 0.98%/25.46%/60.87%/95.85%. Shared state/noise,
@@ -46,7 +46,9 @@ Q/K-normalization or architecture change, no optimizer updates. Matrix runtime
 wih59gy7. Numerical qualifications remain; T16 is not packed T1024 clearance.
 All completed helpers/tests/protocols stay frozen. Next recommendation is a
 bounded shared-input/shared-cotangent sensitivity diagnostic, not launched.
-GPU runs finished; preserve work every 20–30 minutes and retain in GCS.
+GPU runs finished and idle. All stages and closeout retained with independent
+readback: 4 receipts, 8 listed objects, 218 inventory members. No next GPU run
+is queued. Preserve work every 20–30 minutes and retain in GCS.
 
 2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
 Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
