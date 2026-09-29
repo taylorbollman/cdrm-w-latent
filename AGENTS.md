@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 crossed-state NF precision ACTIVE, feat/olmo-crossed-precision.
+User approved PR43 nextsteps. Read docs/reports/olmo-crossed-precision/protocol.md
+and progress.md. Coldbackbone/adapted COMPLETEfusion and reverse, eachFP32/BF16:
+fouraggregate/eightphysicalbackwards only, no training/diagonal reruns. Preserve
+fullfusion output_scale, current trainability/predictor and fixedK4beta1jitter.02
+B2/T16fixture. Verify firstpassbytes against samebackbonediagonal. Addposition
+CEprediction/feedbacksrc,dst/unioncotangentsupport summaries; cannotretrospectively
+clear oldadaptedspike. Root onlyGPU0,900s,W&B/GCS. Freezeallcode/testsbeforeGPU;
+oldruntimeunchanged, no newprecisionbudget. Save/push every20–30min.
+
+
 2026-09-29 adapted-state precision COMPLETE, PR43, feat/olmo-adapted-precision.
 Read docs/reports/olmo-adapted-precision/results.md,next-steps.md,test-ledger.md,
 progress.md for finalPR/retention. Runtime9f4693e: saved O5c mixed update512

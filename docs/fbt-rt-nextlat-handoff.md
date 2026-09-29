@@ -4,6 +4,21 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Crossed-state NF precision active, 2026-09-29:** user approved the PR43
+continuation. Branch `feat/olmo-crossed-precision`; read
+[protocol](reports/olmo-crossed-precision/protocol.md) and
+[progress](reports/olmo-crossed-precision/progress.md). Two hybrids (original
+backbone/adapted complete fusion, and reverse), each with a matched FP32/BF16
+pair: four aggregate/eight physical backwards, no training or diagonal reruns.
+Strict state assembly preserves buffers, parameter identity, current trainability
+and predictor. First-pass bytes must match the same-backbone diagonal. Record
+per-position hidden/cotangent geometry, shifted CE masks and both feedback
+orientations, with common union-cotangent support. The new observations cannot
+retrospectively clear the old adapted/adapted spike. Root GPU0 only,900s limit,
+W&B/GCS and20–30minute persistence. No GPU model execution yet. Freeze prior
+helpers/protocols; no new numerical budget or precision change.
+
+
 **Adapted-state precision comparison complete, 2026-09-29:**
 [PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43), branch
 `feat/olmo-adapted-precision`; read [results](reports/olmo-adapted-precision/results.md),
