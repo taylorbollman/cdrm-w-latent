@@ -131,3 +131,15 @@ launcher session12644. Oncecheckpointcommits, retain separatelyas
 `checkpoint-boundary-02` whilecontinuationruns, then cloudrestoreinnew
 `cloud-restored-02` andfreshresume02 withnewreference/manifestpins. Original
 failedpair01remainsretained. FourFlashstagesretentionunderway.
+
+Resumed after interruption: the writer remained active and completed normally.
+Deterministic write02 passes 13/13 gates and two actual updates in 965.54s.
+Report SHA `a3c1b48913ecc95f087cc1a79ddc3c70e6ac0642e0f0e5ee0f3883b42b230754`;
+checkpoint manifest SHA
+`c1cdb79fc58b767160bf6466777b434665f4271f731e03698549b28d85e74ed1`.
+W&B `k5ynlpin`. Completed small write evidence retained. Full boundary02 upload
+is active (root session37366); after its receipt verifies, use prepared
+`checkpoint-restore-evidence-02/restore_checkpoint.py` to download into
+`/mnt/localssd/cdrm-checkpoints/packed-campaign/cloud-restored-02`, then launch
+resume02 with the completed report/manifest hashes above and restored index.
+All four Flash stage receipts verified. No new-process acceptance yet.

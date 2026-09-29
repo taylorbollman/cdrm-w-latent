@@ -6,8 +6,9 @@ independent numerical qualification. Index cloud recovery and the bounded
 precision-component diagnostic and T1024 actual-data write/continuation are
 complete. The first T1024 fresh-process restart **failed bitwise continuation**;
 isolated Flash tests identify missing deterministic-backward controls as a
-plausible cause. A new deterministic write/resume pair is in progress, with no
-full restart pass yet. The original failure remains retained.
+plausible cause. The corrected deterministic write/continuation now passes;
+its fresh-process resume remains pending, with no full restart pass yet. The
+original failure remains retained.
 See [protocol](protocol.md), [usage](usage.md) and [progress](progress.md).
 
 ## CPU checks
@@ -316,17 +317,67 @@ the original failed comparison is not retested against incompatible pins.
 See [restart-repeatability.md](restart-repeatability.md) for diagnosis and
 scope. The isolated probes support this correction, but do not by themselves
 prove a full-model restart fix or resolve the distinct BF16/FP32 discrepancy.
-`pretrained-write-02` is running in this ledger version; no full deterministic
-restart success is claimed.
+The completed deterministic write below does not by itself qualify recovery;
+no full deterministic restart success is claimed in this ledger version.
+
+## Corrected deterministic write and continuation
+
+[pretrained-write-02](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/k5ynlpin)
+passes **13/13 gates on both ranks** in 965.5435 s; W&B is synced. It repeats
+the same actual first two packed updates, B12/rank, T1024, K4/RT0,15/NextLat
+and 524,288 valid inputs per logical update with explicit deterministic
+controls. Report, execution configuration and saved checkpoint metadata all
+record `deterministic_algorithms=true`, `cudnn_deterministic=true`,
+`cudnn_benchmark=false` and `CUBLAS_WORKSPACE_CONFIG=:4096:8`.
+
+Independent audit verifies all 77 source snapshots and repeats the first
+attempt's count/cursor/state audit: both updates exactly match the independent
+index oracle, rank counts sum to the global counts, raw gradients/model/Adam
+and metrics match between replicas, saved boundaries equal the first update,
+and the recorded reference continuation equals the second live-graph update.
+The cursor advances to chunk 512/update 1 and then chunk 1,024/update 2, with
+524,288 and 1,048,576 cumulative valid inputs respectively. Each update uses
+22 physical microbatches per rank, with the same last-slot dummy rows and
+523,776 CE targets. Latent/KL counts remain 523,768/523,248 for update one and
+523,770/523,252 for update two.
+
+| Quantity | First update | Original live-graph continuation |
+| --- | ---: | ---: |
+| Total timed segments, slower rank | 149.8208 s | 149.7915 s |
+| Loader and keyed-jitter time, slower rank | 9.0142 s | 9.0451 s |
+| Backward/NCCL time, slower rank | 140.1072 s | 140.0872 s |
+| Adam/scheduler/cursor-commit time, slower rank | 0.6994 s | 0.6592 s |
+| Global valid input throughput | **3,499.43 tokens/s** | **3,500.12 tokens/s** |
+| Gradient norm before clipping | 229.0050 | 197.3801 |
+
+Across the two updates, 1,048,576 valid inputs over 299.6123 timed seconds give
+**3,499.78 tokens/s**. The timing scope retains the preceding table's diagnostic,
+W&B and checkpoint exclusions; this is not steady-state throughput over many
+updates. The observed rate is lower than the first nondeterministic pair, so
+the old rate should not be presented as the corrected recovery path's rate.
+
+Peak allocated/reserved memory remains 33.35183/58.89844 GiB on each rank,
+with 12.94739 GiB sampled free after either update. After capture, reserved
+memory is 48.89648 GiB and sampled free is 22.94934 GiB. As in write01, Adam
+was not resident before DDP preparation; cold deterministic resume is still
+required. Saving again preserves the original live-graph boundary exactly.
+
+The new first-update checkpoint reports 15,214,758,081 state bytes, state SHA256
+`c27186bb4847d4325821ef96916e85e69e3c9246a73eb4886d343941467e1199`
+and manifest SHA256
+`c1cdb79fc58b767160bf6466777b434665f4271f731e03698549b28d85e74ed1`.
+Its separate `checkpoint-boundary-02` upload, cloud download verification and
+fresh-process resume have not yet been accepted in this ledger version.
 
 ## Evidence audit and remaining stages
 
 The independent review verified all declared source-snapshot bytes for the
 three distributed GPU reports (70 files each), index report (eight files),
 component diagnostic (72 files), index-cloud-restore report (two files),
-actual-data write and failed resume reports (76 each), four Flash probes
+original actual-data write and failed resume reports (76 each), four Flash probes
 (six each), checkpoint-boundary report (76) and checkpoint-restore report
-(two): **546 source/snapshot pairs**. Report hashes at review time are:
+(two), plus the corrected deterministic write (77): **623 source/snapshot
+pairs**. Report hashes at review time are:
 
 | Stage | Completed report SHA256 |
 | --- | --- |
@@ -344,16 +395,18 @@ actual-data write and failed resume reports (76 each), four Flash probes
 | flash-t16-d1-01 | `878c93f4379fdcb29c5bba75aa3ee65a3fcbb06fe44db300cc7c0d9db8757ea5` |
 | flash-t1024-d0-01 | `40c16536338c371ef1f875344d8fe9db6d4fc0eee2662f20360dd1aa0825e2e1` |
 | flash-t1024-d1-01 | `6931327b49cacf6f9db3692eb5b880f5fe1b59d743ac6fc8b67a1051bd676937` |
+| pretrained-write-02 | `a3c1b48913ecc95f087cc1a79ddc3c70e6ac0642e0f0e5ee0f3883b42b230754` |
 
-The listed completed stages have local `status: verified` retention receipts,
+The listed stages preceding `pretrained-write-02` have local
+`status: verified` retention receipts,
 including the failed resume and separately published checkpoint boundary.
 Cloud publication is not numerical or restart acceptance. The original model
 checkpoint has separately verified downloaded bytes, while its full next-update
 comparison failed as recorded above.
 
-Pending in this ledger version: the corrected deterministic real-corpus T1024
-write/resume pair, its cloud-restored next-update comparison, and corresponding
-cold-setup memory/timing evidence.
+Pending in this ledger version: corrected-write/checkpoint retention and
+full-download verification, the deterministic real-corpus T1024 cloud-restored
+next-update comparison, and corresponding cold-setup memory/timing evidence.
 These need their own completed reports. Production mixture/shuffling, long
 quality training, H200, changed world size, sharding and interrupted in-flight
 collective recovery are outside this milestone's current evidence.

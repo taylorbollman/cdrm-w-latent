@@ -119,6 +119,17 @@ and both NextLat auxiliary losses. The default batch is 12; batch 8 is a
 fallback requiring its own write/resume pair. This path uses BF16 mixed
 precision with FP32 master parameters/Adam and forced ordinary Flash SDPA.
 
+The runner enables deterministic algorithms and sets
+`CUBLAS_WORKSPACE_CONFIG=:4096:8` **before CUDA initialization**, using the
+existing shared helper. It also enables cuDNN determinism and disables its
+benchmarking. These controls are automatic, recorded in the report/W&B and
+pinned in checkpoint configuration; an already-initialized CUDA context is
+rejected. TF32 remains disabled, but that alone does not select deterministic
+Flash backward. Write and resume must use the same controls and implementation;
+changing the controls requires a new pair. See the
+[repeatability investigation](restart-repeatability.md) for the original
+failed attempt and the status of the corrected full-model recovery check.
+
 ```bash
 CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc '
   set -euo pipefail
