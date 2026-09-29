@@ -62,3 +62,19 @@ sparse/dense diagnostic passes at7.38198e-7 gradientL2; W&B5gv7m5wl. Runtime
 `28d6a93`. Fullpretrained NFR writephase is underway in `pretrained-write-01`;
 checkpoint SSDpath `/mnt/localssd/cdrm-checkpoints/campaign-two-gpu/pretrained-01`.
 Aftercompletion retain+restorefromGCS beforefreshresume. No qualitytraining.
+
+Fullpretrained write01 passed in187.75s. Canonicalstate15,214,756,865bytes;
+SHA256 `bd06a69aa9d53bf5da074afd86b8167083f69c142ee7b89935fc50b6384fef08`.
+Uploaded under `campaign-pretrained-write-01/checkpoint/`, then generation-pinned
+downloaded to `pretrained-01-restored` and bothfiles SHAverified/manifestinspected.
+Freshprocess `pretrained-resume-01` is running against this actualcloudcopy.
+FinalCPUregression445tests pass60.03s; includeshistoricalDDPgraphscopes.
+
+Fullpretrained freshresume01 PASS in129.57s (W&Bu3pnp0xi).
+Bothranks match original-livegraph nextupdate bitwise: inputs/rawgradients,
+metrics/model/Adam/counters/cursor, RNGstates and actualRNGdraws. Fullrestart
+qualification is B2/T16, sameworldsize/hardware/runtime; notT1024coldcapacity.
+NextboundedT1024capacity changesordering to prepareDDP→3eagerAdamupdates→
+capturewithresidentAdam→untimedreplay/discard→5timedupdates. This includes
+actualmomentmemory (~9.45GiB/rank) duringcapture; coldDDPconstructatT1024 remains
+futurequalification. No core math/runner changes required.

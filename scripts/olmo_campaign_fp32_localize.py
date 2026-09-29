@@ -149,6 +149,9 @@ def main(argv=None):
             persist("prepared_dense_backward")
             prepared = prepared_backward(model, recipe, fixtures, precision="fp32")
             gradients, _ = gradient_record(model, reference)
+            gradients["comparison"]["scope"] = (
+                "Same full-FP32 execution and actual pretrained weights; sparse versus prepared "
+                "dense objective paths only, not FP32-versus-BF16 qualification")
             metrics = compare_metrics(prepared, canonical)
         state_exact = tree_digests(dict(model.named_parameters())) == weights
         result = acceptance(metrics, gradients, weights_unchanged=state_exact, rng_preserved=rng_unchanged(before))
