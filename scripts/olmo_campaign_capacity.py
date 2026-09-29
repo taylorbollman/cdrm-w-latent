@@ -9,6 +9,7 @@ script never selects another batch size automatically or saves a full model.
 from __future__ import annotations
 
 import argparse
+import copy
 from dataclasses import asdict
 from datetime import datetime, timedelta, timezone
 import gc
@@ -32,7 +33,7 @@ from cdrm.pretrained.artifacts import sha256_file, write_json
 from cdrm.pretrained.campaign_ddp_training import CampaignDDPGraphTraining
 from cdrm.pretrained.campaign_recipe import CampaignTokenSchedule, build_campaign_adamw, feedback_noise_for_rows
 from cdrm.pretrained.campaign_training import CampaignObjective
-from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters
+from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters, optimizer_state_bytes
 from cdrm.pretrained.nextlat import NextLatBatch
 from scripts.experiment_tracking import OnlineTracker, scalar_metrics
 from scripts.olmo_campaign_ddp_probe import construct, gather, source_hashes as probe_sources
@@ -108,6 +109,37 @@ def timing_card(rows, input_tokens):
             "denominator": "Global valid input tokens once, not K4 pass tokens or target/padding tokens"}
 
 
+def adam_residency(model, optimizer, *, expected_steps):
+    """Verify real initialized moments, without manufacturing optimizer state."""
+    moment_bytes = 0
+    rows = {}
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
+        state = optimizer.state.get(parameter, {})
+        step = state.get("step")
+        value = float(step) if isinstance(step, torch.Tensor) and step.numel() == 1 else None
+        valid = value == expected_steps
+        for key in ("exp_avg", "exp_avg_sq"):
+            tensor = state.get(key)
+            valid &= (isinstance(tensor, torch.Tensor) and tensor.shape == parameter.shape
+                      and tensor.dtype == torch.float32 and tensor.device == parameter.device)
+            if isinstance(tensor, torch.Tensor):
+                moment_bytes += tensor.numel()*tensor.element_size()
+        rows[name] = {"step": value, "ready": bool(valid)}
+    return {"passed": bool(rows) and all(r["ready"] for r in rows.values()),
+            "expected_steps": expected_steps, "parameter_states": rows,
+            "actual_state_bytes_by_device": optimizer_state_bytes(optimizer),
+            "actual_moment_bytes": moment_bytes, "actual_moment_gib": moment_bytes / 2**30}
+
+
+def clock_snapshot(optimizer, scheduler, counters):
+    """Small independent clocks; capture/replay priming must not advance them."""
+    return {"counters": asdict(counters), "scheduler": copy.deepcopy(scheduler.state_dict()),
+            "adam_steps": [float(state["step"]) for state in optimizer.state.values()],
+            "learning_rates": [group["lr"] for group in optimizer.param_groups]}
+
+
 def source_hashes():
     result = probe_sources()
     result[str(Path(__file__).relative_to(ROOT))] = sha256_file(Path(__file__))
@@ -138,6 +170,12 @@ def main(argv=None):
         "started_utc": datetime.now(timezone.utc).isoformat(), "runtime": runtime, "sources": source_hashes(),
         "arm": "NFR", "length": 1024, "physical_batch_per_rank": args.batch_size,
         "microbatches_per_rank": args.microbatches, "logical_update": counts,
+        "capture_after_warmup_adam": True,
+        "setup_order": ["DDP construction and 20 backward warmups without Adam state",
+            "3 eager complete Adam updates using the same DDP wrapper",
+            "capture local and synchronized graphs with all initialized Adam moments resident",
+            "one graph backward and discard, without any optimizer or data-clock advance",
+            "5 measured graph complete updates"],
         "execution": {"precision": "BF16 mixed with FP32 master parameters, gradients and Adam state; TF32 off",
             "fbt_passes": 4, "rt_layers": [0, 15], "rt_on_every_pass": True,
             "attention": "ordinary forced Flash SDPA; native Triton RT forward/backward recomputation",
@@ -146,7 +184,7 @@ def main(argv=None):
             "pointwise": "eager", "compile": False, "optimizer": "replicated fused AdamW",
             "graphs": "separate local no_sync and synchronized final-backward CUDA graphs",
             "ddp": "static_graph=True, broadcast_buffers=False, gradient_as_bucket_view=False, bucket25MiB"},
-        "scope": "Directional capacity/throughput of this complete campaign path on two H100s. Fixed operational prose is full-valid single-document rows, not production packing/data loader or quality/numerical equivalence qualification.",
+        "scope": "Directional capacity/throughput of this complete campaign path on two H100s. Graph capture includes real resident Adam state, but cold DDP construction with resident Adam at T1024 remains unqualified. Fixed operational prose is full-valid single-document rows, not production packing/data loader or quality/numerical equivalence qualification.",
         "checkpoints": "Disposable eight-update diagnostic; no full checkpoint. Reconstruct from retained pinned source after interruption.",
         "rows": [], "phases": []}
     try:
@@ -209,10 +247,10 @@ def main(argv=None):
                 config=LMTrainingConfig(precision="bf16_mixed", max_grad_norm=recipe.max_grad_norm))
             runner = CampaignDDPGraphTraining(adapter)
             before = rng_snapshot()
-            runner.capture(warmup=11, release_transient_cache=True, phase_observer=phase_observer)
+            runner.prepare(warmup=11, phase_observer=phase_observer)
             pointers = pointer_snapshot(runner)
-            capture_memory = memory()
-            publish("capture", {"metadata": runner.metadata, "memory": capture_memory,
+            publish("prepare-ddp-before-adam", {"metadata": runner.metadata, "memory": memory(),
+                "optimizer_updates": 0,
                 "gradients_zero": gradients_are_zero(model), "rng_unchanged": rng_unchanged(before),
                 "passed": gradients_are_zero(model) and rng_unchanged(before)})
             optimizer = build_campaign_adamw(model, recipe, fused=True)
@@ -220,7 +258,9 @@ def main(argv=None):
             schedule = CampaignTokenSchedule(optimizer, [counts["input_tokens"]]*total_updates,
                 warmup_tokens=recipe.warmup_tokens, start_fraction=recipe.warmup_start_fraction)
             counters, timed_rows = TrainingCounters(), []
-            for update in range(total_updates):
+
+            def execute_update(update, *, replay):
+                nonlocal batches, noises
                 # New keyed noise/data, created outside the complete-update timer.
                 del batches, noises
                 batches, noises = capacity_fixture(recipe, model.config.model_dim, update=update, **fixture_kwargs)
@@ -228,13 +268,13 @@ def main(argv=None):
                 dist.barrier()
                 torch.cuda.synchronize()
                 begin = time.perf_counter()
-                metrics = runner.optimizer_step(optimizer, batches, feedback_noises=noises, replay=True,
+                metrics = runner.optimizer_step(optimizer, batches, feedback_noises=noises, replay=replay,
                                                 scheduler=schedule, counters=counters)
                 torch.cuda.synchronize()
                 seconds = time.perf_counter()-begin
                 max_seconds = torch.tensor(seconds, device="cuda", dtype=torch.float64)
                 dist.all_reduce(max_seconds, op=dist.ReduceOp.MAX)
-                row = {"measured": update >= args.warmup_updates, "update": update+1,
+                row = {"measured": replay, "replay": replay, "update": update+1,
                        "local_seconds": seconds, "max_rank_seconds": float(max_seconds),
                        "input_tokens_per_second": counts["input_tokens"]/float(max_seconds),
                        "metrics": metrics, "memory": memory(), "rng_unchanged": rng_unchanged(before),
@@ -247,7 +287,41 @@ def main(argv=None):
                     and all(metrics[key] == value for key, value in counts.items()))
                 if row["measured"]:
                     timed_rows.append(row)
-                publish(("measured" if row["measured"] else "warmup")+f"-update-{update+1}", row)
+                publish(("measured-graph" if replay else "warmup-eager")+f"-update-{update+1}", row)
+
+            for update in range(args.warmup_updates):
+                execute_update(update, replay=False)
+            residency = adam_residency(model, optimizer, expected_steps=args.warmup_updates)
+            publish("adam-resident-before-capture", {"adam": residency, "memory": memory(),
+                "counters": asdict(counters), "pointers_stable": pointers == pointer_snapshot(runner),
+                "passed": residency["passed"] and pointers == pointer_snapshot(runner)})
+            boundary = clock_snapshot(optimizer, schedule, counters)
+            before = rng_snapshot()
+            runner.capture(warmup=11, release_transient_cache=True, phase_observer=phase_observer)
+            capture_memory = memory()
+            unchanged = boundary == clock_snapshot(optimizer, schedule, counters)
+            publish("capture-after-warmup-adam", {"metadata": runner.metadata, "memory": capture_memory,
+                "capture_after_warmup_adam": True, "actual_adam_moment_gib": residency["actual_moment_gib"],
+                "clocks": boundary, "clocks_unchanged": unchanged,
+                "pointers_stable": pointers == pointer_snapshot(runner),
+                "gradients_zero": gradients_are_zero(model), "rng_unchanged": rng_unchanged(before),
+                "passed": unchanged and gradients_are_zero(model) and rng_unchanged(before)
+                          and pointers == pointer_snapshot(runner)})
+            del batches, noises
+            batches, noises = capacity_fixture(recipe, model.config.model_dim,
+                update=args.warmup_updates, **fixture_kwargs)
+            before = rng_snapshot()
+            prime = runner.backward(batches, feedback_noises=noises, replay=True)
+            runner.discard_backward()
+            unchanged = boundary == clock_snapshot(optimizer, schedule, counters)
+            publish("graph-prime-backward-discard", {"metrics": prime, "clocks": boundary,
+                "clocks_unchanged": unchanged, "optimizer_updates_added": 0,
+                "pointers_stable": pointers == pointer_snapshot(runner),
+                "rng_unchanged": rng_unchanged(before), "gradients_zero": gradients_are_zero(model),
+                "passed": unchanged and rng_unchanged(before) and gradients_are_zero(model)
+                          and pointers == pointer_snapshot(runner)})
+            for update in range(args.warmup_updates, total_updates):
+                execute_update(update, replay=True)
             report["timing"] = timing_card(timed_rows, counts["input_tokens"])
             report["final_counters"] = asdict(counters)
             report["memory_by_rank"] = gather({"rank": rank, "capture": capture_memory, "final": memory()})

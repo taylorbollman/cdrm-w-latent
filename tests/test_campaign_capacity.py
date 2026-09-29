@@ -4,9 +4,11 @@ import math
 import pytest
 import torch
 
-from cdrm.pretrained.campaign_recipe import CampaignRecipe
+from cdrm.pretrained.campaign_recipe import CampaignRecipe, CampaignTokenSchedule
+from cdrm.pretrained.lm_training import TrainingCounters
 from cdrm.pretrained.nextlat import build_nextlat_masks
-from scripts.olmo_campaign_capacity import (ROOT, capacity_fixture, logical_counts, parse_args, timing_card)
+from scripts.olmo_campaign_capacity import (ROOT, adam_residency, capacity_fixture, clock_snapshot,
+                                          logical_counts, parse_args, timing_card)
 
 
 @pytest.mark.parametrize("microbatches", [1, 2])
@@ -83,3 +85,49 @@ def test_counts_reject_invalid_dimensions(dimensions):
     batch_size, microbatches, length = dimensions
     with pytest.raises(ValueError):
         logical_counts(batch_size, microbatches, length=length)
+
+
+def test_real_adam_residency_requires_complete_initialized_moments_and_exact_step():
+    model = torch.nn.Linear(3, 2)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=.001, foreach=False)
+    assert not adam_residency(model, optimizer, expected_steps=3)["passed"]
+    for _ in range(3):
+        model(torch.ones(2, 3)).square().mean().backward()
+        optimizer.step()
+        optimizer.zero_grad(set_to_none=False)
+    actual = adam_residency(model, optimizer, expected_steps=3)
+    assert actual["passed"]
+    assert actual["actual_moment_bytes"] == 2*4*sum(p.numel() for p in model.parameters())
+    assert actual["actual_state_bytes_by_device"]["cpu"] >= actual["actual_moment_bytes"]
+    first = next(iter(optimizer.state.values()))
+    first["step"].add_(1)
+    assert not adam_residency(model, optimizer, expected_steps=3)["passed"]
+    first["step"].sub_(1)
+    del first["exp_avg_sq"]
+    assert not adam_residency(model, optimizer, expected_steps=3)["passed"]
+
+
+def test_clock_snapshot_does_not_alias_scheduler_and_detects_optimizer_or_token_advance():
+    model = torch.nn.Linear(3, 2)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=.001, foreach=False)
+    schedule = CampaignTokenSchedule(optimizer, [8]*8, warmup_tokens=80)
+    counters = TrainingCounters()
+    model(torch.ones(2, 3)).square().mean().backward()
+    optimizer.step()
+    optimizer.zero_grad(set_to_none=False)
+    schedule.step()
+    counters.optimizer_updates = 1
+    counters.input_tokens = 8
+    before = clock_snapshot(optimizer, schedule, counters)
+    model(torch.ones(2, 3)).square().mean().backward()
+    optimizer.zero_grad(set_to_none=False)
+    assert before == clock_snapshot(optimizer, schedule, counters)
+    optimizer.step()
+    assert before != clock_snapshot(optimizer, schedule, counters)
+    after_optimizer = clock_snapshot(optimizer, schedule, counters)
+    schedule.step()
+    assert after_optimizer != clock_snapshot(optimizer, schedule, counters)
+    assert after_optimizer["scheduler"]["last_epoch"] == 1
+    after_schedule = clock_snapshot(optimizer, schedule, counters)
+    counters.input_tokens += 8
+    assert after_schedule != clock_snapshot(optimizer, schedule, counters)

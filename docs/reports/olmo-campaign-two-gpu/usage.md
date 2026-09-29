@@ -84,7 +84,10 @@ Model, optimizer, RNG, cursor and next-update comparisons are recorded per rank.
 After correctness/restart gates pass, `scripts/olmo_campaign_capacity.py`
 accepts one `--batch-size 8|16|32` and `--microbatches 1|2` candidate per launch.
 It uses NFR K4/T1024, RT0/15 every pass, full-valid isolated document rows,
-three warmup Adam updates and five timed updates. Rates count global valid
+three eager warmup Adam updates before graph capture, one untimed replay
+backward/discard and five timed graph updates. Actual Adam moments are resident
+during capture; initial DDP construction with resident Adam still needs its own
+T1024 check. Rates count global valid
 input tokens once. CPU validation/refills, graph/NCCL work, clipping, Adam and
 schedule are included; fixture generation, reporting and extra health scans
 are outside timing. This is a directional resource check, not production

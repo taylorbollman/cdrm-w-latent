@@ -62,3 +62,20 @@ Initial environment: PyTorch2.13.0a0+8145d630e8.nv26.06, CUDA13.3,
 NCCL2.30.5, two H10080GB with NV18 peer topology. Boot disk has about400GiB
 free; local SSD is empty after migration. Existing retained document shards
 can be restored and hash-verified without retokenization.
+
+## T1024 calibration setup, frozen before first timing run
+
+Prepare DDP/backward storage, run3untimed eager Adam updates, then capture both
+graphs on the same DDP wrapper with actual Adam moments resident. Prime one
+replay backward and discard it without advancing optimizer/schedule/data clocks;
+measure5complete graph updates. Verify storage and clocks across these stages.
+This includes ~9.45GiB/rank of real moments during capture, but initial cold DDP
+construction with resident Adam at T1024 remains a separate future check.
+
+Start B8/rank with2accumulated microbatches. Test B16 if headroom permits; B32 is
+conditional on the measured memory trend supporting comfortable space. Do not
+chase the last GiB. Each candidate is a fresh bounded process; retain any OOM.
+Rates count global valid input tokens once and include runner validation,
+refill, NCCL, clipping and Adam. Fixture generation/logging/extra health scans
+are excluded. Full-valid isolated documents and full CE/auxiliary masks; this
+does not qualify packed corpus semantics or a production data loader.
