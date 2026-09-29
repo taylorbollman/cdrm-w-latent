@@ -4,7 +4,8 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Bounded numerical localization complete, 2026-09-29:** branch
+**Bounded numerical localization complete, 2026-09-29:**
+[PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40), branch
 `feat/olmo-precision-localization`, from PR39. Read
 [results](reports/olmo-precision-localization/results.md),
 [test ledger](reports/olmo-precision-localization/test-ledger.md),

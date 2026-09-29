@@ -1,7 +1,8 @@
 # Numerical localization progress
 
-2026-09-29. Branch `feat/olmo-precision-localization`, from PR39/main `536458d`.
-**All four GPU stages completed. Final documentation and PR closeout are in progress.**
+2026-09-29. Completed milestone in [PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40),
+branch `feat/olmo-precision-localization`, from PR39/main `536458d`.
+**All four GPU stages, documentation and evidence retention are complete.**
 No GPU work or quality training is queued. Read [results](results.md),
 [test ledger](test-ledger.md), [storage receipt](storage-receipt.md) and
 [next steps](next-steps.md) before resuming.
@@ -61,10 +62,13 @@ layout qualifications and broader BF16/FP32 qualification remain open.
 Runtime evidence: `.runtime/olmo-precision-localization/`.
 Cloud namespace:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T043105Z/`.
-The namespace is historical; these probes used one device/process. All four diagnostic stages are retained and independently read back:8 objects,
-318 inventory members and308 source pairs. Both independent audit records and
+The namespace is historical; these probes used one device/process. All four
+diagnostic stages are retained and independently read back: 8 objects,
+318 inventory members and 308 source pairs. Both independent audit records and
 final code/test/report evidence are also retained in verified
-`precision-closeout-01`; see the storage receipt for generation/hash pins. No new trained checkpoint is created or required.
+`precision-closeout-01`; see the storage receipt for generation/hash pins.
+No new trained checkpoint is created or required.
 The retained anchors are 3.52 MB auxiliary tensors and 7.02 MB attention tensors.
-Runtime code is committed and pushed through7082225; final documentation and
-PR closeout are the remaining publication steps. The numerical work is complete.
+Runtime code is committed and pushed through `7082225`; final reports and
+cross-compaction records are included in PR40. The next proposed experiment
+has not been launched, and all prior numerical qualifications remain visible.

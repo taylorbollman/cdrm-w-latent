@@ -94,7 +94,8 @@ VJP cases. It preserves the qualification that eight fixed-input sites do not
 clear the full-model discrepancy or globally exclude a Flash bug.
 
 Each audit preserves its own source snapshot, copies of its input receipts and
-downloaded objects in its separate directory. Their source, reports and input receipts are also retained in the verified
+downloaded objects in its separate directory. Their source, reports and input
+receipts are also retained in the verified
 final closeout described below; duplicate downloaded stage archives were not
 uploaded a second time. Closeout is separate from the four-diagnostic total.
 
@@ -110,7 +111,6 @@ archive that tries to include its own final receipt hash.
 
 | Closeout object | Generation | Bytes | SHA-256 |
 | --- | --- | ---: | --- |
-
 | `evidence.tar.gz` | `1790658298937758` | 54,528 | `3b543562eb52d2cc35c58e326742a343555568fc38eb25df5e004e49b49d8b4f` |
 | `retention-manifest.json` | `1790658299199032` | 9,046 | `f25d7e41067c09fdfdf3805add4ca4ee26b8c735186f12cec7ead0641688ecb2` |
 

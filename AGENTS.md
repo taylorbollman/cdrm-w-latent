@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 bounded numerical localization complete on feat/olmo-precision-localization.
+2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
 Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
 next-steps.md, storage-receipt.md and progress.md first. Four single-process
 GPU stages: six precision/backend cases, eight fixed-hidden auxiliary cases,
@@ -47,7 +47,8 @@ backward defect or numerical clearance. Prior 3.40224%/1.6953% qualifications
 remain. Next proposed step is eight within-arm CE precision cases separating
 ordinary/RT/FBT/FBT+RT (N/NR/NF/NFR with zero auxiliary cotangents); not launched. Source 7082225,
 old protocols/helpers frozen. GPU idle. Stage evidence and small tensor anchors
-retained; final audit/PR state in progress.md. Save work every 20–30 min.
+retained with independent audits and verified closeout; see progress.md.
+Save work every 20–30 min.
 
 2026-09-29 packed campaign readiness complete on `feat/olmo-packed-campaign`,
 PR 39. Read docs/reports/olmo-packed-campaign/results.md, test-ledger.md,
