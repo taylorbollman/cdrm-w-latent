@@ -251,3 +251,26 @@ LivetwoGPUevaluation insertionhelperunderCPUtest, devfixtureReddit16+C4prefix9
 rightpaddedT16,25inputs/23CEtargets, no realintrarowboundary. Rootreview clarified
 installedW&Bexplicitstep defaultcommit=False, so same-stepeval/train accumulation
 is supported. No droppedmetricbugclaimed or unnecessary wrapper retained.
+
+## 10:12 UTC — recovery completeness and additional source freezes
+
+Both NFR update2 files retained: FP32 SHA702775fc35c3d36bafaad023da55d575fb5a2237dd451036132b5c1179d6e42f
+(generation1790675604243553); BF16 SHA43713b951f43bb13cafe85be51647911d52f1d0fd4870869bfa23fd071ae8a83
+(generation1790675970700132). Pair3 published2182.2s; raw backbone gradient
+difference34.6076%, actual delta23.5606%, includes trajectory divergence.
+Allfinite; changing-batch objectives notheldoutlearningevidence. Remainingonepair,
+finaltwofullretentions andevaluationprojectcomplete~57–59min of1h externalbound.
+
+Evaluation insertion frozenad77e15,38CPUtests passed12.41s. Rootorchestrator
+.runtime/olmo-campaign-lifecycle/run_eval_insertion.py ready, notlaunched.
+ConditionalfullNFR continuationfrozensourcea395641,54affectedCPUtests passed39.12s.
+Lastlogging-onlystandaloneupdateaxisadditioncompiled; codeSHA
+2e84270121b92c16612319d01f231329d8fb7a82eb5079fdddc86d9a83e994b5.
+Do notlaunchbeforeNFR4authorityandpackedbridgegatesreview.
+
+Corpusretentionaudit foundnogap: all86preparedfiles/21,016,338bytes matchcanonical
+receipt22a63e729d80fe953ec86470de8e69b34e807df1ccea840ffac267d9a9ec399c;
+earlierfullcloudrestoreverified. Newcorpus-recovery.md suppliesexistingrestore
+commandandexactgenerations; no redundantuploadorrestore. Q/Kinterpretationnote
+usesexistingF2/F4/local-attentionevidence only; no causalnormalizationfaultidentified,
+adapted/packedRTattention-scale scopesexplicitlyunmeasured. NoGPUaddedforit.

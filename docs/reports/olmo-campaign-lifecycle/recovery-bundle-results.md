@@ -36,6 +36,9 @@ working directory before GPU use. The prepared corpus remains at the existing
 local-SSD path and must be mounted there. This helper verifies those existing
 corpus bytes; it does not claim that downloading only a checkpoint and index
 recreates the corpus, container image or original VM.
+The corpus is already retained completely, with an earlier actual86-file cloud
+restore. [Corpus recovery instructions](corpus-recovery.md) give its canonical
+receipt/generations and the separate operator command to use after SSD loss.
 
 The required saved runtime remains two H100 80GB GPUs, Torch
 `2.13.0a0+8145d630e8.nv26.06`, CUDA 13.3 and the recorded driver/runtime settings.
