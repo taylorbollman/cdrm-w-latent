@@ -131,6 +131,18 @@ def test_resume_rejects_even_allowed_insertion_lineage_changes():
     assert not audit.compare(reference,actual,kind='resume')['passed']
 
 
+def test_terminal_resume_accepts_absent_update_fields_and_does_not_require_capture():
+    _,reference=make_pair();actual=resumed(reference)
+    actual['final_boundary_by_rank']=deepcopy(actual['origin_boundary_by_rank'])
+    actual['final_clocks']=deepcopy(actual['origin_clocks'])
+    actual['final_counters']=deepcopy(actual['origin_boundary_by_rank'][0]['state']['counters'])
+    actual['loop']['completed_update']=2;actual['plan_completed']=False;actual['status']='stopped_at_boundary'
+    actual['graph_prepared']=False;actual['runner_by_rank']=[None,None]
+    for key in ('updates','observations','preparation_boundary_exact'):actual.pop(key,None)
+    result=audit.compare(reference,actual,kind='resume')
+    assert result['passed'],result['failures']
+
+
 def test_cli_refuses_mutated_input_before_publication(tmp_path,monkeypatch):
     old,new=make_pair();paths={}
     for name,value in [('reference',old),('actual',new)]:

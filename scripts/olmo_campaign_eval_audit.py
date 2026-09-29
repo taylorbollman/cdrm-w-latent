@@ -323,7 +323,7 @@ def compare(reference,actual,*,kind,reference_source_root=None,actual_source_roo
         start=actual.get('resume',{}).get('completed_update',0);final=actual['final_counters']['optimizer_updates']
         audit.equal('training/origin',actual['origin_boundary_by_rank'],legacy.boundary_at(reference,start))
         audit.equal('training/final',actual['final_boundary_by_rank'],legacy.boundary_at(reference,final))
-        for step,rows in actual['updates'].items():
+        for step,rows in actual.get('updates',{}).items():
             audit.require('training/update'+step+'/reference_coverage',step in reference['updates'])
             audit.equal('training/update'+step+'/rank_accounting',actual['observations'][step]['rank_data'],reference['observations'][step]['rank_data'])
             for rank,row in enumerate(rows):
