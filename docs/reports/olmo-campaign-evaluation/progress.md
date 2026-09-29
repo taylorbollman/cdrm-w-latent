@@ -1,5 +1,23 @@
 # Optimizer-history and evaluation work
 
+## Current state, 2026-09-29 16:45 UTC
+
+Work is complete; PR47 is in final administrative closeout. Native insertion
+completed in 1,113.07 seconds, with exact post-evaluation training and final
+state against PR46. Independent audit passes 1,742 checks / 319 source snapshots.
+All 197 final CPU tests pass. Tiny live insertion, cloud restore/resume and
+evaluation-only resumed boundary also pass. Both GPUs are idle and no run is
+queued. W&B is synced; all checkpoints and small evidence are retained in GCS.
+
+Read results.md, test-ledger.md, operator-notes.md, storage-receipt.md and
+next-steps.md. The companion optimizer-history report separates model-state
+gradient sensitivity from Adam-history effects. No numerical default, Q/K,
+architecture or quality-campaign decision was silently changed. Boot free is
+about 91 GiB; no local pruning occurred. Runtime sources remain frozen at
+ecac9b9 / 164 files. Final merge and closeout receipt metadata follow below.
+
+## Execution history
+
 2026-09-29 15:55 UTC start; user authorizes roughly90minutes without review.
 Branch feat/olmo-optimizer-history-and-eval from PR46 main e3ae7e2.
 Root owns every GPU launch, runtime declaration and GCS retention. Prior

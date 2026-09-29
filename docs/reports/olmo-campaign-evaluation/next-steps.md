@@ -1,8 +1,8 @@
 # Readiness and precision disposition
 
 Continue with the selected original OLMo-1B step 60000 checkpoint and native RT.
-The next work should complete evaluation/recovery acceptance, then choose and
-validate an actual data/compute plan. It does not require another broad precision
+Evaluation/recovery acceptance is complete. Next, choose and validate an actual
+data/compute plan. This does not require another broad precision
 sweep, an epsilon change, Q/K normalization, a new architecture or a quality run.
 This updates the [PR46 next step](../olmo-campaign-execution/next-steps.md); the
 [broader experiment plan](../../olmo-nextlat-fbt-rt-experiment-plan-v1.md) remains
@@ -38,13 +38,13 @@ full-model updates. This supports lower sensitivity at that trained state on
 the same data, while predictor relative error increases; it still does not
 attribute the raw-gradient change to optimizer history or establish generality.
 
-## Close evaluation integration before expanding the experiment
+## Preserve the accepted evaluation contract
 
 The new [protocol](protocol.md) gives evaluation its own declared source and
-execution identity. Finish the bounded tiny reference/insertion and same-lineage
-stop/resume checks, then native insertion against the retained PR46 training
-reference. Report their terminal results before declaring this milestone ready;
-GPU status belongs in [progress](progress.md), not inferred from code completion.
+execution identity. The bounded tiny reference/insertion, same-lineage
+stop/cloud-resume, evaluation-only boundary and native insertion checks now pass.
+The [results](results.md) give exact evidence and the preserved PR46 training
+comparison; [progress](progress.md) records final PR and retention state.
 
 Require unchanged next-update inputs, losses, gradients and full committed
 boundaries. Compare native training across versions only with the explicitly
@@ -93,9 +93,8 @@ Original pretraining exposure to these documents also remains unknown.
    larger experiment. H100 results do not establish H200 capacity or changed-rank
    exact restart; new device/world-size behavior needs its own bounded check.
 
-The current boot-disk check shows approximately 110 GiB free on the 1 TB disk,
-before the new native checkpoint states of approximately 20 GB. Local pruning
-is not implemented. Before a long campaign, explicitly choose SSD checkpoint
+The closeout boot-disk check shows approximately 91 GiB free on the 1 TB disk.
+Local pruning is not implemented. Before a long campaign, explicitly choose SSD checkpoint
 staging, verified GCS retention and a local checkpoint retention policy. The
 current CLI confines evidence and checkpoint roots to the persistent project
 directory, so SSD staging may also require an explicit path-authority change.

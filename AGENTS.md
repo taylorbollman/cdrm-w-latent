@@ -31,14 +31,27 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 optimizer-history + per-pass evaluation ACTIVE. User authorized~90min
-autonomous work, starting15:55UTC. Branch feat/olmo-optimizer-history-and-eval.
-Read docs/reports/olmo-campaign-evaluation/progress.md before continuing. Root
-owns GPU schedule; no overlapping jobs. New source files only; old accepted
-scripts/tests/protocols/core stay frozen. Diagnostic is fixedstateupdate20 with
-inherited/reset Adam, not more training; evaluation must preserve live model/
-Adam/RNG/graph buffers and nextupdate. Retain evidence/checkpoints in GCS, W&B
-for graphable metrics, commit/push every20–30minutes.
+2026-09-29 optimizer-history + per-pass evaluation COMPLETE; PR47 final merge
+metadata is in docs/reports/olmo-campaign-evaluation/progress.md. Read results.md,
+next-steps.md, operator-notes.md, test-ledger.md and storage-receipt.md there, plus
+docs/reports/olmo-optimizer-history/results.md and original-checkpoint-notes.md.
+Same-data raw backbone gradient difference falls12.059% to1.289% at adapted
+NFR20 state. Fixed-state global actual Adam-update difference is0.969% with our
+20-step history versus1.942% reset; history-control adjusted1.640% versus1.942%.
+No epsilon/QK/core change, original pretraining Adam or universal BF16 clearance.
+Probe unchanged complete state; all11integritychecks pass, W&B yezbu1wv synced.
+
+New versioned shared runner executes pinned common-FP32/no-jitter per-pass dev
+evaluation. CPU197distinct tests pass. Tiny live insertion/cloud-resume and
+evaluation-only restored boundary pass; native NFR T1024 insertion preserves
+every update and final state exactly against PR46 (1742checks,319sources).
+Native W&B i0jnqdyy synced; checkpoints0/3 and all evidence retained in GCS.
+Runtime sources frozen ecac9b9/164files; old helpers/tests/protocols/model core
+unchanged. Latest numerical helper/audit source authorities are in reports.
+Both GPUs idle, no queued run. Boot free~91GiB; no local pruning performed.
+Next: actual representative mixture/dev membership, explicit startup exposure,
+target-hardware physical batch/accumulation, SSD staging and retention policy.
+No quality campaign or finite-plan extension launched. Save/push every20–30min.
 
 2026-09-29 manifest component execution COMPLETE, PR46; final merge/retention
 metadata in docs/reports/olmo-campaign-execution/progress.md. Read results.md,

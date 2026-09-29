@@ -19,12 +19,13 @@ with literal full multi-group Adam using actual clipping.
 GPU optimizer-history evidence is closed and retained: two aggregate/four
 physical backwards, six conceptual candidate updates, zero live training
 updates. All 11 final integrity checks pass. Evaluation-enabled GPU acceptance
-is tracked in progress.md until closed. Tiny insertion independently passes
+is complete; see results.md. Tiny insertion independently passes
 1,787 checks, including exact subsequent training updates. Same-lineage resume
 passes 1,558 checks. Evaluation-only resumed boundary passes 1,362 checks, with
 zero new updates and no graph capture. The first terminal audit exposed only an
 auditor assumption that the optional empty `updates` dictionary would exist;
 its failed evidence is preserved and a regression now covers that case.
 Execution sources and successful model reports did not change for this fix.
-These four final CPU scopes total 197 distinct tests; repeated runs are not
-added to that total.
+Native insertion independently passes 1,742 checks, including all 319 old/new
+source snapshots and exact training after evaluation. These four final CPU
+scopes total 197 distinct tests; repeated runs are not added to that total.
