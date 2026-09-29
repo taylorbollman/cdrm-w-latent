@@ -32,9 +32,26 @@ work or training is part of the current stage.
   retained with readback at
   `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z/pilot-data-declaration`.
   Receipt: `.runtime/olmo-pilot-data/retention/declaration.json`.
-- A separate streaming ordered-index retainer is being implemented because
-  individual catalog/train SQLite files may exceed old128MiB evidence limits.
-  Do not alter old retention helpers or pretend SQLite has another extension.
+- Separate streaming ordered-index retainer is complete/frozen at `db33a31`.
+  It handles the exact44-file suite up to8GiB without changing old128MiB evidence
+  limits or disguising SQLite file types. Its affected54CPUtests passed.
+
+At18:30UTC, all37sources are acquired/retained/restored. Actual totals:
+584,894rawdocuments,310,670,964candidate tokens,637,272,434compressed bytes and
+2,007,717,910rawJSONLbytes. Raw recovery verified111objects/2,086,379,363bytes;
+summed transfer time96.71s, excluding waiting/orchestration. Evidence retained
+under stages `pilot-data-acquisition` and `pilot-data-raw-recovery` in the same
+small-evidence root; receipts are in `.runtime/olmo-pilot-data/retention/`.
+
+The final combined new-code suite passed161distinctCPUtests in57.64s. See
+[test-ledger.md](test-ledger.md); prior scoped counts overlap.
+Cloud-restored first4token shards followed by fresh-process next4 matches the
+original8-shard preparation exactly:25files and complete summary.
+`.runtime/olmo-pilot-data/partial-recovery-comparison.json` is the comparison.
+Current original preparation has12shards/~100.9Mtokens; remaining bounded calls
+are active. All current code is saved/pushed. Queued follow-ons wait for complete
+preparation: raw/token audit, ordered build and restoration of remaining shards.
+Complete ordered-suite quota/audit/retention acceptance is still pending.
 
 Evidence: `.runtime/olmo-pilot-data/`. Proposed SSD root:
 `/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929`.

@@ -31,6 +31,24 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 pilot data IN PROGRESS on feat/olmo-pilot-data; read
+docs/reports/olmo-pilot-data/progress.md, protocol.md and operator-notes.md.
+All37selected Dolma sources acquired/retained/restored:584894docs/310670964candidate
+tokens,111rawobjects/2086379363recoveredbytes. No GPU/model/training work.
+New helpers frozen at db33a31; final161distinctnewCPUtests pass. First4token
+shards cloud-restored, freshprocess next4 exactly equal original:25files+summary.
+Original preparation continues in4-shard retained batches (~101Mtokens at18:30UTC).
+Look at .runtime/olmo-pilot-data/*queue-01.log and preparation-remainder-01.log;
+do not restart completed or still-active jobs blindly. Ordered build,592-document
+retokenization, remaining-token recovery and full ordered audit are still pending.
+GCSdata root .../data/olmo-dolma-v1_5/pilot-20260929-v1; evidence root
+.../fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z/. Persistentreceipts in project;
+largefiles on /mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929 and -recovery.
+Oldhelpers/core/vendor/test sources unchanged. Current sourceplan SHA5954f448...e2a9707
+is in progress.md; preserve acquisition/helperpins. No qualitybudget authorized
+by data capacity. Next ordered executor/evaluation adapters and twoGPUrecovery/
+capacity are described in next-steps.md. Save/push and retain every20–30minutes.
+
 2026-09-29 SSD checkpoint readiness COMPLETE, PR48 merged5d901bab; read docs/reports/olmo-campaign-storage/
 results.md, next-steps.md, operator-notes.md, storage-receipt.md and progress.md.
 Runtime54ae688/172pins frozen; new versioned SSD executor/engine/storage/restore,
