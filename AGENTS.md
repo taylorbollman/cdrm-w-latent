@@ -31,16 +31,22 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 crossed-state NF precision ACTIVE, feat/olmo-crossed-precision.
-User approved PR43 nextsteps. Read docs/reports/olmo-crossed-precision/protocol.md
-and progress.md. Coldbackbone/adapted COMPLETEfusion and reverse, eachFP32/BF16:
-fouraggregate/eightphysicalbackwards only, no training/diagonal reruns. Preserve
-fullfusion output_scale, current trainability/predictor and fixedK4beta1jitter.02
-B2/T16fixture. Verify firstpassbytes against samebackbonediagonal. Addposition
-CEprediction/feedbacksrc,dst/unioncotangentsupport summaries; cannotretrospectively
-clear oldadaptedspike. Root onlyGPU0,900s,W&B/GCS. Freezeallcode/testsbeforeGPU;
-oldruntimeunchanged, no newprecisionbudget. Save/push every20–30min.
-
+2026-09-29 crossed-state NF precision COMPLETE, feat/olmo-crossed-precision.
+Read docs/reports/olmo-crossed-precision/results.md, next-steps.md, test-ledger.md,
+storage-receipt.md and progress.md. Runtime3364376; four aggregate/eight physical
+backwards,177.394s, no training. Cold backbone/adapted complete fusion gives
+backbone8.7328%/fusion13.2529% BF16-vs-FP32 gradient error; adapted backbone/cold
+fusion53.8216%/54.4150%. Reverse hybrid absolute errors worsen versus cold/cold,
+despite smaller relative errors. Adapted fusion transfers much but not all of
+AA benefit. CA incoming cotangent error still reaches16.57%; AC supported hidden
+error9.323%; old AA12.44% spike remains unlocalized. No BF16 clearance.
+CPU58passed finalscope; four first-pass controls and109source pairs verified;
+W&Bcwxjdnwe synced, stage evidence independently read back from GCS. Both GPUs
+idle. No extra GPU job queued. Recommend bounded FP32 fusion-only warmup from
+original backbone/fresh fusion, fixedK4/beta1/jitter.02, then saved-state checks;
+next-steps has provisional budget/optimizer, not adopted training protocol.
+Prior runtime/test/protocol sources stay frozen. No core/QK/precision changes.
+Save/push every20–30minutes; final PR/closeout state in progress.md.
 
 2026-09-29 adapted-state precision COMPLETE, PR43, feat/olmo-adapted-precision.
 Read docs/reports/olmo-adapted-precision/results.md,next-steps.md,test-ledger.md,
@@ -53,10 +59,8 @@ alsofall; no denominator-only explanation. Record0/pass1hidden12.4366% worsens
 versuscold4.0913%, laterfinal1.9277/2.2201%; do notclaimallforwardimproved or
 spikeharmless. CEonly/noRT/T16, noBF16productionclearance. No optimizerupdates.
 CPU43pass(one test-onlyscalarwarning);104sourcepairsverified,W&B8ymbic44 synced.
-Next proposed: two hybrids coldbackbone/adaptedfusion and reverse, eachFP32/BF16,
-completefusionbuffers, samefixture/trainability; fouraggregate/eightphysical
-backwards withposition-levelobservations. Guidesstartup, notcausaltrainingproof;
-notlaunched. BothGPUsidle. No core/precision/QK change. Preserveoldruntime
+The proposed two hybrids are now complete; read the current crossed-state entry
+above rather than relaunching them. BothGPUsidle. No core/precision/QK change. Preserveoldruntime
 sources; save/push every20–30min andretainGCS.
 
 2026-09-29 fixed-boundary precision diagnostic COMPLETE, PR42, feat/olmo-boundary-precision.
