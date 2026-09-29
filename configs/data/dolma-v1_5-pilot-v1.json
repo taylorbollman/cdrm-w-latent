@@ -1,0 +1,24 @@
+{
+  "schema": "olmo-dolma-pilot-recipe-v1",
+  "release": "v1_5",
+  "hf_repo": "allenai/dolma",
+  "hf_revision": "7f48140530a023e9ea4c5cfb141160922727d4d3",
+  "inventory": {
+    "sha256": "0b660ad1cd93a840d759a4efa82f800a0580fd693de6da64dba484aa55d21efc",
+    "url_count": 3221,
+    "directory_counts": {"books":3,"c4":86,"cc_en_head":611,"cc_en_middle":773,"cc_en_tail":1493,"pes2o":26,"reddit":78,"stack":149,"wiki":2}
+  },
+  "tokenizer": {"repo":"allenai/OLMo-1B","revision":"81b71efbce6f4dada57c94860301af4298bcd351","sha256":"9ad33b4b39a9f83973c3f8c42a01948dd5b877a28ac9a5356956c4ff4ed0b714","eos_id":50279,"pad_id":1,"vocab_size":50280,"token_dtype":"uint16_le"},
+  "mixture": {
+    "family_weights": {"books":52,"c4":1740,"common_crawl":20060,"pes2o":570,"reddit":800,"stack":3420,"wiki":37},
+    "cc_stratum_weights": {"cc_en_head":611,"cc_en_middle":773,"cc_en_tail":1493}
+  },
+  "selection": {"objects_per_stratum":{"books":3,"c4":4,"cc_en_head":4,"cc_en_middle":4,"cc_en_tail":8,"pes2o":4,"reddit":4,"stack":4,"wiki":2},"url_namespace":"cdrm-dolma-pilot-v1-url","candidate_tokens_per_object":8388608,"policy":"hash_rank_urls_then_complete_record_prefix"},
+  "split": {"seed":20260929,"weights":[["train",90],["dev",5],["confirmation",5]],"identity":"content_token_sha256_without_one_terminal_eos"},
+  "exclusions": {"corpus_manifest_sha256":"f5135df838cb44241284fe807991d6a76d5a8be663256bc53d86d8ac9ab4ab76","content_ids_sha256":"007f0785150e5863d0a53dad4a64e08fb4ac22c2956650df625966a7a2ad8864","unique_documents":12512,"encoding":"sorted_unique_lowercase_sha256_ascii_newline"},
+  "panels": {"length":1024,"train_tokens":134217728,"heldout_main_tokens":1048576,"heldout_source_tokens":65536,"minimum_reserve_tokens_per_stratum":131072,"minimum_documents_per_stratum":{"books":8,"c4":32,"cc_en_head":32,"cc_en_middle":32,"cc_en_tail":32,"pes2o":32,"reddit":32,"stack":32,"wiki":32}},
+  "bounds": {"candidate_tokens":402653184,"compressed_bytes":4294967296,"retained_raw_bytes":8589934592,"max_line_bytes":67108864,"max_documents_per_object":1000000},
+  "object_limits": {"tokens":10485760,"compressed_bytes":115343360,"retained_raw_bytes":231735296,"timeout_seconds":900},
+  "ordering": {"document_namespace":"cdrm-dolma-pilot-v1-document","chunk_namespace":"cdrm-dolma-pilot-v1-chunk","interleave":"integer_deficit_lexical_tie_v1","round_policy":"append_frozen_rounds_without_resorting","document_policy":"continuous-stream-v1"},
+  "qualifications": {"near_duplicate_policy":"not_run","original_pretraining_exposure":"unknown","sampling":"conditional_on_selected_object_prefixes","cc_weights":"object_count_proxy_not_token_mass"}
+}
