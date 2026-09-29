@@ -115,6 +115,16 @@ The resolver's current 49,152-token readiness example covers only two books
 documents. It is appropriate for checking data/clock plumbing, not a selected
 pretraining mixture or a representative learning pilot.
 
+The later training entrypoint also needs a clear separation between ordinary
+training and expensive acceptance observations. Current recovery drivers hash
+all gradients and complete model/Adam state repeatedly to prove exact replay;
+those checks must not silently become per-update production overhead. Preserve
+checkpoint integrity and bounded health observations, and explicitly time
+preparation, compute, diagnostic hashing, serialization, transfer and evaluation
+before reporting throughput. See the [checkpoint cost assessment](../olmo-campaign-lifecycle/checkpoint-cost-assessment.md).
+Its streaming-readback comparison is an isolated CPU memory check; it does not
+change the frozen retention policy or establish end-to-end checkpoint speed.
+
 For an initial adapted BF16 pilot, keep finite-value/participation checks,
 gradient norms and clipping, separate CE/latent/KL and per-pass held-out losses,
 and verified completed-boundary checkpoints at most ten minutes apart. A small

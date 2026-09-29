@@ -420,3 +420,27 @@ bounded independent cloud readback and receiptinventory, to run after the new
 stagesfinish. Data reviewer owns newexecutionaudit/results, runnerreviewer
 owns completedbaseaudit/results. Do not modify frozenhelpers/tests/protocols
 or cdrm/pretrained. No further numericalGPU variant is queued.
+
+## 11:58 UTC — final ordinary reference and checkpoint-cost follow-up
+
+Manifest-driven B reference passed, process901.28s, reportSHA
+ db2e7ebf82ccb8197b2930e8d176c30a4f871817c74b6147e2585474835bc85f.
+Root orchestration now performs its exact-generation cloud restore and fresh
+resume. Stage evidence retention started; external launchlogs will be retained
+with the closed orchestration. No source or acceptance-budget changes.
+
+A concrete independent efficiency gap was identified: full checkpoint verification
+currently returns an entire14.155GB payload as Pythonbytes beforeSHAchecking.
+The base-loop timed update regions total22.82s/15.53s versus900.19s/568.57s report
+intervals. The remaining time is not fully attributed; don't assign all of it
+to checkpoints or interpret diagnostic rates as production throughput.
+Read-only SDK/object metadata assessment is complete, with no payload transfer.
+
+Runner reviewer implements one bounded CPU readback comparison, byte-returning
+versus streaming SHA/MD5/count sink, fresh child processes and one fixed already
+retained checkpointgeneration. No GPU, upload, model execution or frozenretainer
+change. Focused integrity/sink tests and independent review precede rootlaunch;
+wait until current GPU/checkpointtransfers finish. This targets transienthostRAM;
+one ordered pair cannot establish speedup. Finalstorageaudit/inventory will
+wait for its smallreport as well. No additional numericalGPU sweep orquality
+training is planned.

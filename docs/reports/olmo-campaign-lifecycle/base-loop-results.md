@@ -15,8 +15,10 @@ model/Adam/scheduler/counters, committed cursor and rank-local RNG.
 
 Every stage exited normally with status 0, within its 1,200-second limit. Both
 W&B runs synced. The combined host orchestration took approximately 26.1 minutes.
-Large checkpoint writes, immutable uploads/readbacks and diagnostic hashes
-dominate these times. Root also ran CPU-only endpoint analysis concurrently;
+Measured update regions total 22.82 s and 15.53 s respectively, including
+gradient hashing; the remaining time is not fully attributed. The
+[checkpoint-cost assessment](checkpoint-cost-assessment.md) identifies measured
+retention subintervals and the missing timing breakdown. Root also ran CPU-only endpoint analysis concurrently;
 this is not a throughput measurement.
 
 The model uses the original pinned **OLMo-1B step 60000** checkpoint: 16 layers,
