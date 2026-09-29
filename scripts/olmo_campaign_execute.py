@@ -54,6 +54,7 @@ def source_hashes():
     for name in ('scripts/olmo_campaign_execution.py','scripts/olmo_campaign_execute.py',
                  'scripts/olmo_campaign_execution_observer.py','tests/test_campaign_execution_engine.py',
                  'tests/test_campaign_execution_observer.py','tests/test_campaign_execute.py',
+                 'tests/test_campaign_execution_clocks.py',
                  'docs/reports/olmo-campaign-execution/observation.md',str(PROTOCOL.relative_to(ROOT))):
         sources[name]=sha256_file(ROOT/name)
     return dict(sorted(sources.items()))

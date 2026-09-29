@@ -23,3 +23,12 @@ operational condition. Reference, stop/checkpoint, exact-generation restore
 and fresh recovery are bounded. Terminal-plan resume must avoid graph setup.
 Routine lean updates must not perform full model/Adam/gradient hashing. All
 initial/final/checkpoint integrity checks remain, and timings distinguish them.
+
+14:26 UTC: contract/observer/constructor reviews completed. CPU suites:43 new
+contract+27 frozen manifest,29engine,20observer,20CLI pass. Review fixed missing
+checkpoint fingerprint and tiny declared-vs-constructed flags. A further guard
+checks Adam/scheduler clocks at origin/save/final (including terminal resume);
+focused mutation tests pending. New engine/CLI source revision requires a new
+CPU declaration resolution: declarations-01 was preflight only, never launched.
+CPU-only streaming generic GCS restore helper under development separately.
+No GPU acceptance has started yet. Commits eeecd64/34addf7 pushed.

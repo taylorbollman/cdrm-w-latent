@@ -149,6 +149,32 @@ def materialize(data, plan, recipe, *, rank, batch_size, width):
     return packed, noises
 
 
+def validate_clocks(optimizer, scheduler, counters):
+    """Check saved optimizer/schedule clocks at boundaries, including terminal resume."""
+    updates=counters.optimizer_updates
+    rates=scheduler.get_lr()
+    if (scheduler.last_epoch!=updates or scheduler.completed_tokens!=counters.input_tokens
+            or scheduler._step_count!=updates+1 or scheduler.get_last_lr()!=rates
+            or [group['lr'] for group in optimizer.param_groups]!=rates):
+        raise ValueError('Scheduler/learning-rate clocks differ from committed counters')
+    owned=[parameter for group in optimizer.param_groups for parameter in group['params']]
+    if updates==0:
+        if optimizer.state:raise ValueError('Origin Adam must have no inherited moments')
+    else:
+        if set(optimizer.state)!=set(owned):raise ValueError('Completed Adam state must cover all owned parameters')
+        for parameter in owned:
+            state=optimizer.state[parameter]
+            step=state.get('step')
+            if not isinstance(step,torch.Tensor) or step.numel()!=1 or step.item()!=updates:
+                raise ValueError('Adam update clock differs from committed counters')
+            for name in ('exp_avg','exp_avg_sq'):
+                value=state.get(name)
+                if not isinstance(value,torch.Tensor) or value.shape!=parameter.shape or value.dtype!=torch.float32:
+                    raise ValueError('Completed Adam moments differ from FP32 master geometry')
+    return {'optimizer_updates':updates,'input_tokens':counters.input_tokens,
+        'scheduler_epoch':scheduler.last_epoch,'adam_parameters':len(optimizer.state)}
+
+
 def transition_imported_model(model, historical_recipe, target_recipe):
     """State-preserving activation of declared packed/RT execution after strict NF import."""
     if (historical_recipe.arm != 'NF' or historical_recipe.document_policy != 'isolated-v1'
@@ -221,6 +247,7 @@ def run_segment(*, options, coordinator, model, recipe, data, plans, optimizer, 
         report['timing']['restore_seconds_by_rank']=coordinator.gather(time.perf_counter()-started)
     if counters.optimizer_updates > options.max_updates:
         raise ValueError('Segment limit precedes restored completed boundary')
+    report['origin_clocks']=coordinator.call('origin optimizer/schedule clocks',lambda:validate_clocks(optimizer,scheduler,counters))
     report['origin_boundary_by_rank']=coordinator.gather(current_boundary())
     report['adam_resident_before_ddp']=bool(optimizer.state)
     observer=ExecutionObserver(options.observation,model=model,optimizer=optimizer,scheduler=scheduler,
@@ -229,6 +256,7 @@ def run_segment(*, options, coordinator, model, recipe, data, plans, optimizer, 
 
     def save(number,reason):
         destination=options.checkpoint_root/f'update-{number:06d}'
+        coordinator.call('checkpoint optimizer/schedule clocks',lambda:validate_clocks(optimizer,scheduler,counters))
         coordinator.call('checkpoint disk preflight',lambda:checkpoint_disk_preflight(destination,model))
         started=time.perf_counter();before=current_boundary()
         state=coordinator.gather(before['state'])
@@ -296,13 +324,14 @@ def run_segment(*, options, coordinator, model, recipe, data, plans, optimizer, 
             rank=rank,batch_size=batch_size,width=model.config.model_dim))
         materialization=time.perf_counter()-started
         started=time.perf_counter()
-        inputs=tree_digests({'batches':[vars(b) for b in packed.batches],'noise':noises,
-                            'keys':packed.keys,'cursor':asdict(data.cursor())}) if options.observation=='acceptance' else None
+        inputs=coordinator.call('acceptance input observation',lambda:tree_digests(
+            {'batches':[vars(b) for b in packed.batches],'noise':noises,'keys':packed.keys,
+             'cursor':asdict(data.cursor())})) if options.observation=='acceptance' else None
         input_observation=time.perf_counter()-started
         torch.cuda.synchronize(device);started=time.perf_counter()
         result=runner.backward(packed.batches,feedback_noises=noises,replay=True)
         torch.cuda.synchronize(device);backward_seconds=time.perf_counter()-started
-        gradients=observer.after_backward()
+        gradients=coordinator.call('acceptance gradient observation',observer.after_backward) if options.observation=='acceptance' else observer.after_backward()
         started=time.perf_counter()
         metrics=runner.step(result,optimizer,scheduler=scheduler,counters=counters)
         coordinator.call('commit completed cursor',lambda:data.commit(plans[index].start_cursor,plans[index]))
@@ -328,6 +357,7 @@ def run_segment(*, options, coordinator, model, recipe, data, plans, optimizer, 
         report['loop']=run_loop(coordinator=coordinator,policy=policy,completed=lambda:counters.optimizer_updates,
             update=update,log=log,save=save,publish_checkpoint=publish,stop=stop,retain=retain,
             restored=options.resume is not None)
+    report['final_clocks']=coordinator.call('final optimizer/schedule clocks',lambda:validate_clocks(optimizer,scheduler,counters))
     report['final_boundary_by_rank']=coordinator.gather(current_boundary())
     report['final_counters']=asdict(counters)
     report['runner_by_rank']=coordinator.gather(None if runner is None else runner.metadata)

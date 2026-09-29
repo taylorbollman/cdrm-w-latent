@@ -47,6 +47,11 @@ cursor and enabled-loss clocks must match the immutable prefix. Reconstruct DDP
 and graphs only after restoration. A fully completed checkpoint validates and
 exits without preparing another update. The constructor's original/adaptation
 authorities remain required for this initial recovery implementation.
+At origin, save and final boundaries, require Adam steps and moment ownership,
+scheduler epoch/token exposure and current learning rates to agree with the
+committed counters. This check also runs for a terminal checkpoint that takes
+no further optimizer step. Acceptance-only host hashing failures are coordinated;
+unknown CUDA/backward/update failures remain externally torn down.
 
 ## Bounded acceptance stages
 
