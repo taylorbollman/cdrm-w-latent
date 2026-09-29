@@ -35,9 +35,9 @@ W&B tracking.
 Read docs/reports/olmo-pilot-execution/progress.md and results.md. Runtime frozen
 be74dde/192 pins;149 new CPU tests pass. Separate auditorv2 adds27 passing tests;
 original false failures are retained. Tiny insertion/cloudresume/terminal
-acceptance passed2063/2136/1914 checks exactly. Native B32 is currently running
-(eight updates, checkpoint0/4/8) under native-b32-01; then NFR12 and conditional
-B64. Root owns all GPU jobs; inspect reports/launch-result JSON before continuing.
+acceptance passed2063/2136/1914 checks exactly. Native B32 completed
+(eight updates, checkpoint0/4/8),69.5k compute-region inputs/s and35.2GiBfree.
+Native-nfr12-01 is current GPUrun; B64 is planned bounded followup. Root owns all GPU jobs; inspect reports/launch-result JSON before continuing.
 No source edits through acceptance or capacity. Evidence is in
 .runtime/olmo-pilot-execution; SSD checkpoint namespace pilot-execution; cloud
 small stages olmo-two-gpu/20260929T190649Z. Historical engine/model/vendor/tests

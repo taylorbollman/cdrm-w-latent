@@ -60,3 +60,14 @@ checkpoint0/4/8 retained automatically. Next NFR12; conditional largerbase orNFR
 only after capacity review. No concurrent GPU job. Analysis helper
 summarize_capacity.py validates original192sourcepins independently; its timing
 regions exclude logging/health/checkpoint/eval costs and must be labeled so.
+
+
+19:49 UTC: native-b32-01 completed all8updates, final namedFP32 evaluation and
+verified GCScheckpoint0/4/8; W&Boh4sdigb synced. Independentcapacity-b32-01
+summary passed, SHA14e8a1fa9a4c3ea2a8b8d09f8ab118a2f4adbf98ab91df47c2cd6773cf47fb0b.
+Updates4–8:69,494.1validinputs/s in compute regions,67,278.9 includingrecorded
+materialization;42.402GiBreserved/35.215GiBsamplefree. Fullsegment1049.27s is
+checkpoint-dominated, not a production throughput estimate. Native-nfr12-01
+started (session99090), W&Bx8u0vz4c, no concurrentGPUjob. B64 remains planned
+bounded followup; NFR8 onlyif12 lackscomfortablemargin. Runtime192pins unchanged.
+CPUauditorv2 evidence retained; nativeB32 andsummary retention queue running.
