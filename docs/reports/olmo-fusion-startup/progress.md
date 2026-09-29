@@ -301,3 +301,30 @@ conditional 16-update continuations if the bridge gates pass. A small ordinary
 pretrained common-loop adapter is being tested independently; no core source
 or completed diagnostic helper changes. Preserve the approximately14:00UTC
 closeout target and allow time for checkpoint verification.
+
+## 10:46 UTC — packed execution bridge passes
+
+`packed-bridge-01` completed in617.7s, exit0, report SHA256
+`efee951a140bd13c7e27909e6de1f093439c7fa679bcbd19be4a2930d17537b6`.
+Strict BF16 update4 import, policy-only packed transition and all eight final
+integrity checks pass. All five measured cases are complete, with exactly23
+physical backwards including setup/capture and zero optimizer calls. FP32
+sparse/prepared passes, and BF16 prepared/captured metrics agree exactly and
+the unchanged gradient gate passes. Cross-precision prepared gradients differ
+about1.0955% globally on this adapted state and packed T1024 fixture.
+
+BF16 sparse/prepared losses pass, but50/71 tensors miss the unchanged elementwise
+atol3e-5/rtol3e-4 budget. Global relative L2 is0.08792%, cosine0.999999614. This
+small same-precision layout discrepancy remains qualified, separately from the
+larger cross-precision problem. Do not call a legacy elementwise budget a
+universal BF16-versus-FP32 acceptance rule.
+
+Abrupt-rank recovery completed all three stages. Torchrun forced peer SIGKILL
+after its30s grace; no external timeout. Fresh updates2/3 match exactly. The
+independent audit passes43 checks; reports and orchestration are retained.
+Root now runs live-evaluation reference/insertion (session90591) on both GPUs.
+Next is conditional full-NFR16-update comparison; root-only orchestration is
+`.runtime/olmo-fusion-startup/run_nfr_continuations.py`, not yet launched.
+It uses one independent GPU per precision and the same BF16 update4 origin.
+The new ordinary pretrained host-loop acceptance is frozen and reviewed;
+root orchestration `run_base_loop.py` is ready for the subsequent slot.
