@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 adapted-state precision ACTIVE, feat/olmo-adapted-precision from PR42.
+User approved matched NF FP32/BF16 at saved O5c mixed update512. Read
+ docs/reports/olmo-adapted-precision/protocol.md and progress.md. Two aggregate
+cases/four physical backwards, no updates. Current K4/jitter.02 recipe at
+historically K2/no-jitter adapted backbone+fusion; not causal fusion-only or
+historical resume. New weights-only import validates full state/config/ties,
+preserves saved output_scale, current trainability and fresh zero-cotangent
+predictor. Keep old source guards untouched. Root only GPU0,900s,W&B/GCS;
+freeze sources before GPU, save/push every20–30min. No model execution yet.
+
+
 2026-09-29 fixed-boundary precision diagnostic COMPLETE, PR42, feat/olmo-boundary-precision.
 Read docs/reports/olmo-boundary-precision/results.md, next-steps.md, test-ledger.md
 and progress.md for final PR/retention state. Runtime1023d7e; both NF CE anchors

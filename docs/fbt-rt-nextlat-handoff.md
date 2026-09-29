@@ -4,6 +4,19 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Adapted-state precision comparison active, 2026-09-29:** user approved the
+PR42 recommendation. Branch `feat/olmo-adapted-precision`; read
+[protocol](reports/olmo-adapted-precision/protocol.md) and
+[progress](reports/olmo-adapted-precision/progress.md). Import pinned saved O5c
+mixed update512 backbone/fusion into today's NF implementation, preserving all
+saved buffers and current gradient participation. Do not weaken historical
+source guards. Fresh predictor remains unchanged with zero auxiliary cotangents.
+Two matched FP32/BF16 cases on the original K4 B2/T16/jitter fixture; no training.
+This is not historical resume or a causal fusion-only comparison. Root owns GPU0
+under900s stage limits, W&B/GCS; no model execution yet. Stop after the pair and
+assess. Freeze old sources and save/push every20–30minutes.
+
+
 **Fixed-boundary precision diagnostic complete, 2026-09-29:**
 [PR42](https://github.com/taylorbollman/cdrm-w-latent/pull/42), branch
 `feat/olmo-boundary-precision`; read [results](reports/olmo-boundary-precision/results.md),
