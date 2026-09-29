@@ -88,9 +88,13 @@ exact as well. A separate failure-lifetime guard lets the deliberate failure
 exit promptly while preserving its text traceback and completed checkpoint.
 The original failure is retained, not overwritten.
 
-These are tiny-model operational tests. The earlier pretrained packed T1024
-restart evidence remains separately scoped. Neither substitutes for BF16
-gradient agreement or H200 testing.
+The tiny model additionally passes [abrupt worker-loss recovery](../olmo-campaign-lifecycle/rank-failure-results.md)
+and [evaluation insertion with live graphs](../olmo-campaign-lifecycle/eval-insertion-results.md).
+The [actual ordinary pretrained model](../olmo-campaign-lifecycle/base-loop-results.md)
+also passes reference, exact-generation cloud restore and fresh two-GPU
+continuation. Updates 2/3, all 65 native gradients and complete final boundaries
+match bitwise; an independent audit passes 460 checks. These operational checks
+do not substitute for BF16 gradient agreement or H200 qualification.
 
 ## Short training trajectories and saved work
 
@@ -162,12 +166,14 @@ qualification and make the next test answer a practical training question.
 The original model math, native Q/K behavior and accepted kernel choices stay
 unchanged.
 
-The ordinary pretrained base model is now undergoing the same host-loop
-reference, exact-generation cloud restore and fresh two-GPU continuation.
-A separate CPU manifest resolver has passed 27 focused tests and is resolving
-one actual readiness example for all eight component combinations. It creates
-an auditable data/schedule/partition/resource plan; it does not launch training,
-choose a production recipe or confer numerical clearance.
+The [CPU manifest resolver](../olmo-campaign-manifest/results.md) passes 27
+focused tests and an actual all-eight-arm readiness resolution, with 51
+independent checks. It creates an auditable data/schedule/partition/resource
+plan. The example's first 49,152 tokens span two books documents and are not a
+production mixture. A new, separately invoked ordinary-B adapter connects that
+plan to bounded execution and recovery; its 19 CPU tests and both independent
+reviews pass, and GPU reference/restart acceptance is active. General all-arm
+launching and adapted-startup support remain later work.
 
 Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).

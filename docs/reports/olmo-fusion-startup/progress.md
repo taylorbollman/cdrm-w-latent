@@ -391,3 +391,32 @@ Precision reviewer implements, data/runner reviewers audit, root owns GPU
 launches after final CPU scope/review. Candidate target12:25UTC. All-arm/adapted
 startup support and production data/quality choices remain later milestones.
 This is standard readiness work independent of the recurrence precision decision.
+
+## 11:46 UTC — ordinary base accepted, manifest execution active
+
+The ordinary pretrained host-loop reference/cloud-restore/resume all finished
+with process exit0. Reports: reference6e945cf271c1791a3dcb4e71f2f481e8389bb59477dad1f78097db2a23563d25,
+restore733b9cbdd6a6c4475f0908860db990c7f189e7194843fc7e9bcb3580fa186fd6,
+resumefadc76f4636ce06b5bd9bb2ab48eaaf761f26b87bef9e041d2bc1fdac069814c.
+Independent audit passes460checks, including complete updates2/3 and final
+boundaries,65nativegradienttensors,182sourcepairs and retainedobject identities.
+Reference process910.11s, restore75.56s; resume report568.57s. This is operational
+acceptance with diagnostic/retention overhead, not throughput evidence.
+
+Final narrow manifest adapter frozen atc11cb05:19CPUtests pass3.35s, both
+independent reviews pass; real CPU re-resolution/preflight8.06s with100sourcepins.
+OriginalB-only draftSHAa4476b4b7dcfff231bc07d8ccbcd39b56efc2a57624686529c1e330fa8718d78,
+resolvedSHAf6fba00a640e3aa153e0e30887208f6f2146eda6757be69bb5f4c4ca0a20d5b9.
+Root session42400 launched new reference/restore/resume orchestration at11:43,
+.runtime/olmo-campaign-manifest/run_b_execution.py. SourceSHA
+948dae5073a1063077afc50cecf8b3626af65dd1a18554c59f024d74004bd2c6,
+explicit101sourcepins inb-execution-approval.json. Firstupdate completed and
+both graph-preparation boundaries exact. W&Breferencey8sfg1bc. Bound1800s/GPU
+stage; checkpoint1extra forreplay, declaredfinal3, no localdeletion. Actual
+49,152-input plan spans onlytwo booksdocuments. No production/qualityclaim.
+
+Root retains remaining closedstage evidence; precision reviewer prepares a
+bounded independent cloud readback and receiptinventory, to run after the new
+stagesfinish. Data reviewer owns newexecutionaudit/results, runnerreviewer
+owns completedbaseaudit/results. Do not modify frozenhelpers/tests/protocols
+or cdrm/pretrained. No further numericalGPU variant is queued.

@@ -24,6 +24,7 @@ passing scope does not erase the separate GPU qualifications.
 | Live evaluation insertion | 38 passed | `olmo-campaign-lifecycle/cpu-eval-insertion-final-03.log` |
 | Ordinary pretrained host-loop adapter | 24 passed | `olmo-campaign-lifecycle/cpu-base-loop-final-03.log` |
 | CPU campaign manifest resolver | 27 passed | `olmo-campaign-manifest/cpu-tests-02.log` |
+| Manifest-driven ordinary B adapter | 19 passed | Frozen `c11cb05`; final focused log recorded in its execution results |
 
 The four-update NFR helper separately passed 17 focused tests, documented in
 [its results](nfr-updates-results.md). The recurrence-strength, adapted-position
@@ -50,7 +51,10 @@ GPU acceptance is separate from CPU tests:
   BF16 update4 origin. All four new full checkpoints are verified. A 131-check
   independent scalar/receipt audit and 105-check CPU endpoint comparison pass;
   these are evidence-integrity checks, not gradient-equivalence acceptance.
-- Ordinary pretrained host-loop acceptance is still active at this entry.
+- Ordinary pretrained host-loop reference, exact-generation cloud restore and
+  fresh continuation all pass; the independent audit passes 460 checks.
+- The narrow manifest-driven ordinary-B integration is now the final active
+  GPU acceptance, separate from the completed hardcoded base-loop test.
 
 Historical failures worth retaining include the initial warmup runner exiting
 its forced attention context before checkpoint recomputation, retention work

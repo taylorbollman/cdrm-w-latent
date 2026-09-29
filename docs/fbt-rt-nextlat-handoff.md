@@ -23,14 +23,14 @@ No new Q/K normalization, architecture, core math or numerical budgets adopted.
 
 The tiny captured two-GPU lifecycle checks cover stop/restart, coordinated
 logging failure, abrupt rank exit and live evaluation insertion. Ordinary
-pretrained reference and exact-generation cloud restore passed; both fresh
-continuation updates match exactly, final retention pending. The CPU manifest
+pretrained reference, exact-generation cloud restore and fresh continuation all
+passed; both updates and final boundaries match exactly, with 460 audit checks. The CPU manifest
 resolver has validated all-eight metadata accounting on actual pinned local
 artifacts and data. Its49,152-token readiness prefix contains only two books
 documents and is not a production mixture.
 
-A final narrow **ordinary-B-only manifest execution adapter** is being built
-and reviewed. It will connect declared recipe, data, schedule, partition and
+A final narrow **ordinary-B-only manifest execution adapter** has passed CPU tests and independent
+reviews and is undergoing GPU acceptance. It connects declared recipe, data, schedule, partition and
 checkpoint lineage to three bounded captured updates and exact fresh resume.
 General all-arm/adapted startup support remains later work. Root owns GPU
 launches. All completed helpers/tests/protocols and core sources stay frozen.
