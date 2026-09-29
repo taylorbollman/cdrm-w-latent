@@ -96,3 +96,31 @@ fusionupdate withzero-gradientmomentum/decaycontrol; packedT1024heldoutfixture;
 actualrepeatedcampaignlifecycleloop withtinyDDPgraphstop/recoverychecks. All new
 files stay underscripts/tests/docs because addinganycdrm/pretrained/*.py would
 change active source inventories. Rootalone launchesGPUstages.
+
+## Update128 saved and preliminary broader observations
+
+train-02 completed128 withallintegritychecks;669.61s segmentwall, totaltrainsegments
+922.0s(~15.4min).128uniqueupdates=1,048,576CEtargets, allfrozenstateunchanged.
+EndpointSHA892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc,
+GCSgeneration1790671431225622 verified. W&Btrain02=2v0bwsxf. Short128probe passed:
+originalbackbone/fusion.823%/1.365%; fresh1.983%/3.663%.
+
+long-128-01 FAILED beforebackward/import because livearm_contract rt_layers tuple
+comparedwithJSONlist. SavedJSONcontracts exact andallothercoldguards passed.
+Oldlonghelper remainsfrozen. Newsharedcontextprobe (runtime98fd9c2) canonicalizes
+JSONcontractrepresentation withoutdroppingfields; usesunchangedstrictoldlongcold
+loader andsourcepins. Focusedpackeddata/context26CPUtests3.79s. Corrected
+long-128-02 completed80.3s: backbone1.6269%,fusion2.7115% vs cold144.02%/167.45%;
+allcold/state/firstpass/source/RNGguards pass. ReportSHA
+1f387076f276a604e08530f72e0850980db4c72275f9a94afac98a3d8787f7b9.
+
+packed-data-01 frozenSHA4932410f9fd370d9dae20a1075bf2a191c642e1563eb8557a6fe02fd7e83a975:
+2xB1/T1024,C4/CommonCrawl,2048inputs2046CE2040latent2032KL,6trueboundaries,
+8uniquedocuments. Excludesall8priorprobe devdocs, alltrain/confirmation.
+packed-cold-01 completed80.6s, reportSHAc1cfb4a0af1524872033828e8a802d26fb534543331785d11f30b42e9726ae02;
+backbone19.970%/fusion25.406%. GPU1 nowpacked-128-01 startupmatch.
+GPU0 counterfactualupdate-128-01 (exact3Adamcalls,no realtrainingprogress).
+Newcomponentprobe readyforreview (62affectedCPUtests7.47s) andnewtiny2GPU
+lifecycleloop ready (25CPU/Glootests10.20s), bothfrozenpendingrootlaunch.
+No oldcore/sourcechanges; noBF16productionclearance. Longfixtureimprovement
+supports continuingtheseexplicitboundedfollowups, notextending128warmup.
