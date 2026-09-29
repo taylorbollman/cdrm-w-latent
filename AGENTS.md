@@ -31,6 +31,16 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 recurrence/precision separation ACTIVE, feat/olmo-recurrence-precision.
+User approved PR40 next milestone. Read docs/reports/olmo-recurrence-precision/
+protocol.md and progress.md. Eight aggregate CE cases N/NR/NF/NFR x FP32/BF16,
+original isolated T16/two-B2 fixture; preserve NextLat branches with zero
+auxiliary cotangents. Match weights/buffers/tokens and NF/NFR keyed noise;
+require NFR prior endpoints and paired first-pass states to reproduce. Root
+alone launches GPU, 900s stages, W&B/GCS, save/push every20–30min. Old PR40
+helpers/protocols stay frozen. No training, core model or Q/K change. Conditional
+precision-boundary follow-up requires a separate pre-run written scope.
+
 2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
 Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
 next-steps.md, storage-receipt.md and progress.md first. Four single-process

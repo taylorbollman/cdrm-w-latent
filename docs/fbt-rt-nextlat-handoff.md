@@ -4,6 +4,18 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Recurrence/precision separation active, 2026-09-29:** user approved the next
+bounded milestone after PR40. Branch `feat/olmo-recurrence-precision`; read
+[protocol](reports/olmo-recurrence-precision/protocol.md) and
+[progress](reports/olmo-recurrence-precision/progress.md). Eight CE-only aggregate
+cases compare N/NR/NF/NFR under full FP32 and production BF16 on the original
+T16 fixture, preserving active NextLat branches with zero auxiliary cotangents.
+Match shared weights/buffers/data and NF/NFR noise; require prior NFR endpoints
+and paired first-pass states to reproduce. No new GPU results at this entry.
+A conditional precision-boundary experiment may follow a localized result,
+with a separate protocol before launch. No quality training or architecture
+change; prior numerical qualifications remain. Save progress every20–30min.
+
 **Bounded numerical localization complete, 2026-09-29:**
 [PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40), branch
 `feat/olmo-precision-localization`, from PR39. Read
