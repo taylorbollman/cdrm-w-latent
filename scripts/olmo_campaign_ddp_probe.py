@@ -57,6 +57,8 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scale", choices=("tiny", "pretrained"), required=True)
     parser.add_argument("--case", choices=("eager", "graph"), required=True)
+    parser.add_argument("--document-policy", choices=("isolated-v1", "continuous-stream-v1"),
+                        default="isolated-v1")
     parser.add_argument("--reference", choices=("canonical", "prepared"), default="canonical",
                         help="Local reference arithmetic; prepared separately retains canonical-vs-dense qualification")
     parser.add_argument("--arms", help="Comma-separated campaign arms; tiny defaults to all eight, pretrained B,NFR")
@@ -110,6 +112,13 @@ def fixture_for_update(recipe, width, rank, update, *, length, token_ids, eos_id
             ids[row, :size] = torch.tensor(content)
             valid[row, :size] = True
             docs[row, :size] = update*100 + rank*20 + microbatch*2 + row
+            if getattr(recipe, "document_policy", "isolated-v1") == "continuous-stream-v1" and size >= 3:
+                # True metadata boundaries move between updates. EOS tokens do
+                # not themselves define boundaries in the model/loss policy.
+                boundary = 1 + (update + rank + microbatch + row) % (size - 1)
+                ids[row, boundary-1] = eos_id
+                docs[row, :size] *= 2
+                docs[row, boundary:size] += 1
             keys.append(f"ddp-u{update}-r{rank}-m{microbatch}-row{row}")
         ce, latent, kl = (valid.clone() for _ in TERMS)
         if update:
@@ -127,7 +136,8 @@ def construct(args, arm, device):
     torch.manual_seed(20260929)
     tiny = args.scale == "tiny"
     recipe = CampaignRecipe(arm, sequence_length=args.length if tiny else 1024,
-                            rt_layers=(0, 1) if tiny else (0, 15))
+                            rt_layers=(0, 1) if tiny else (0, 15),
+                            document_policy=getattr(args, "document_policy", "isolated-v1"))
     if tiny:
         base = OLMoTiledRTForCausalLM(OLMoConfig.tiny(), attention_backend="math",
             attention_precision="fp32", tile_backend="eager", backward_tile_backend="eager",
@@ -375,8 +385,9 @@ def main(argv=None):
         "independent_reference_status": "not_completed", "rank": rank,
         "started_utc": datetime.now(timezone.utc).isoformat(), "runtime": runtime,
         "scale": args.scale, "case": args.case, "reference": args.reference, "arms": args.arms, "length": args.length,
+        "document_policy": args.document_policy,
         "physical_batch_per_rank": args.batch_size, "sources": source_hashes(), "rows": [],
-        "scope": "Real NCCL campaign accumulation/graph and three Adam updates versus the explicitly named local reference; prepared reference retains canonical-versus-dense arithmetic as a separate unchanged-budget qualification. Not throughput, production packing, fresh-process restart or FP32 qualification of pretrained BF16",
+        "scope": "Real NCCL campaign accumulation/graph and three Adam updates versus the explicitly named local reference, using the explicit document policy and moving synthetic document boundaries when packed. Prepared reference retains canonical-versus-dense arithmetic as a separate unchanged-budget qualification. Not throughput, real-data loader recovery or FP32 qualification of pretrained BF16",
         "qualification_failures": [],
         "snapshots": "CPU RAM only; atomic small evidence every stage; bounded launcher required"}
     try:
@@ -388,7 +399,7 @@ def main(argv=None):
                 shutil.copy2(ROOT / relative, destination)
             tracker = OnlineTracker(project="pretrained-fbt-rt-nextlat", output_dir=args.output_dir,
                 group="olmo-campaign-two-gpu-readiness", name=args.output_dir.name, preserve_state=preserve_local_rng)
-            tracker.start({k: report[k] for k in ("scale", "case", "reference", "arms", "length", "physical_batch_per_rank", "scope")})
+            tracker.start({k: report[k] for k in ("scale", "case", "reference", "arms", "length", "physical_batch_per_rank", "document_policy", "scope")})
             report["wandb"] = tracker.record
             print({"wandb": tracker.record["run_url"]}, flush=True)
         dist.barrier()

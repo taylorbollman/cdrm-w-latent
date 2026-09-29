@@ -41,17 +41,20 @@ class CampaignObjective(nn.Module):
         if not model.training or not torch.is_grad_enabled() or model.config.dropout:
             raise ValueError("Campaign graphs require grad-enabled training with zero dropout")
         self.model, self.mode, self.config = model, mode, config
+        if mode.document_policy != model.config.document_policy:
+            raise ValueError("Campaign mode and NextLat document_policy must agree")
         self.training = model.training
         self.device = next(model.parameters()).device
         if any(p.device != self.device or p.dtype != torch.float32 for p in model.parameters()):
             raise ValueError("Campaign master parameters must be FP32 on one device")
         if config.precision == "bf16_mixed" and self.device.type != "cuda":
             raise ValueError("BF16 mixed campaign execution requires CUDA")
-        cpu = _cpu_batch(batch)
+        cpu = _cpu_batch(batch, document_policy=model.config.document_policy)
         if cpu.input_ids.shape[1] < 3:
             raise ValueError("Campaign graph storage length must be at least three")
         self.batch = self._explicit_masks(cpu).to(self.device)
-        self.forward_layout = PreparedFBTLayout(model.backbone, self.batch, right_padded_causal=True)
+        self.forward_layout = PreparedFBTLayout(model.backbone, self.batch, right_padded_causal=True,
+                                                document_policy=model.config.document_policy)
         self.loss_layout = DynamicNextLatLayout.from_batch(self.batch, model.config, enabled=model.enabled)
         self.weights = dict(model.objective_weights())
         self.world_size = world_size
@@ -147,7 +150,7 @@ class CampaignObjective(nn.Module):
     def validate_batch(self, batch, *, feedback_noise=None, global_counts=None):
         """Preflight without mutating any owned input buffer."""
         self.validate_execution()
-        cpu = _cpu_batch(batch)
+        cpu = _cpu_batch(batch, document_policy=self.model.config.document_policy)
         self.forward_layout.validate_replacement_batch(cpu)
         # A temporary CPU loss layout is also a complete structural preflight.
         layout = DynamicNextLatLayout.from_batch(cpu, self.model.config, enabled=self.model.enabled)

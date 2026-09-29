@@ -52,6 +52,8 @@ def validate_microbatch_inputs(model: FBTNextLatLM, batch: NextLatBatch, *,
     mode = kwargs.get("mode", FBTMode())
     if not isinstance(mode, FBTMode):
         raise TypeError("mode must be FBTMode")
+    if mode.document_policy != model.config.document_policy:
+        raise ValueError("Distributed mode and NextLat document_policy must agree")
     if training is None:
         training = model.backbone.training
     if type(training) is not bool:

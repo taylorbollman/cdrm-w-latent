@@ -20,6 +20,7 @@ from .lm_training import optimizer_ownership
 from .nextlat import NextLatConfig
 from .olmo_fbt import FBTConfig, FBTMode, OLMoFBT
 from .recurrent import RTMode
+from .document_policy import ISOLATED_DOCUMENTS, validate_document_policy
 
 ARMS = ("B", "N", "F", "R", "NF", "NR", "FR", "NFR")
 CHECKPOINT_REPO = "allenai/OLMo-1B"
@@ -53,8 +54,10 @@ class CampaignRecipe:
     fusion_seed: int = 20260922
     predictor_seed: int = 20260921
     jitter_seed: int = 20260928
+    document_policy: str = ISOLATED_DOCUMENTS
 
     def __post_init__(self):
+        validate_document_policy(self.document_policy)
         if self.arm not in ARMS:
             raise ValueError(f"Unknown campaign arm {self.arm!r}")
         for name in ("sequence_length", "effective_valid_tokens"):
@@ -92,11 +95,14 @@ class CampaignRecipe:
         return FBTMode(enabled=self.feedback, num_passes=4 if self.feedback else 1,
                        beta=1.0, rt_mode=RTMode(self.rt_layers if "R" in self.arm else ()),
                        first_pass_policy="configured-rt-v1",
-                       feedback_jitter=self.feedback_jitter if self.feedback else 0.0)
+                       feedback_jitter=self.feedback_jitter if self.feedback else 0.0,
+                       document_policy=self.document_policy)
 
     def to_dict(self):
         # JSON-native values make checkpoint equality independent of a JSON round trip.
         values = json.loads(json.dumps(asdict(self)))
+        if self.document_policy == ISOLATED_DOCUMENTS:
+            values.pop("document_policy")
         return {"schema": "olmo-campaign-recipe-v1", **values,
                 "source": {"repo": CHECKPOINT_REPO, "revision": CHECKPOINT_REVISION},
                 "pass_loss_policy": "campaign_v1", "fbt_passes": 4 if self.feedback else 1,
@@ -128,7 +134,7 @@ def build_campaign_model(backbone, recipe: CampaignRecipe):
         core.fusion.requires_grad_(False)
     return FBTNextLatLM(core, NextLatConfig(backbone.config.model_dim,
                         seed=recipe.predictor_seed, vocab_chunk_size=128,
-                        ce_chunk_size=2048), enabled=recipe.nextlat,
+                        ce_chunk_size=2048, document_policy=recipe.document_policy), enabled=recipe.nextlat,
                         pass_loss_policy="campaign_v1")
 
 

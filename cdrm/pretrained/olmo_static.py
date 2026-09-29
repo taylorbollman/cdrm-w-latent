@@ -18,6 +18,7 @@ from .olmo_fbt import FBTMode, FBTOutput, OLMoFBT
 from .olmo_rope import build_dao_rope_tables, build_rope_tables
 from .olmo_tiled import OLMoTiledRTForCausalLM, _validate_right_padded_mask
 from .recurrent import RTMode
+from .document_policy import ISOLATED_DOCUMENTS, validate_document_policy, feedback_eligibility
 
 
 @dataclass
@@ -35,7 +36,7 @@ def _digest(value):
 
 
 class PreparedFBTLayout:
-    """One independent document per row with fixed validity and RoPE positions.
+    """Explicit document policy with fixed validity and RoPE positions.
 
     ``forward`` is the capture body, not an alternative validation boundary.
     Call ``validate_batch`` and ``validate_execution`` outside capture before
@@ -51,9 +52,11 @@ class PreparedFBTLayout:
     ``right_padded_causal=True`` proves an index-causal valid-prefix layout.
     That opt-in permits `load_batch` to refill validity/eligibility in place;
     positions and RoPE storage remain fixed. Invalid outputs are zeroed.
+    continuous-stream-v1 permits packed document IDs while keeping causal
+    attention/RT/FBT continuous within a row; the default still rejects packing.
     """
     def __init__(self, core: OLMoFBT, batch: NextLatBatch, position_ids: Tensor | None = None,
-                 *, right_padded_causal: bool = False):
+                 *, right_padded_causal: bool = False, document_policy=ISOLATED_DOCUMENTS):
         if not isinstance(core, OLMoFBT) or not isinstance(core.backbone, OLMoTiledRTForCausalLM):
             raise TypeError("Prepared finite forwarding requires OLMoFBT over native OLMoTiledRTForCausalLM")
         if type(right_padded_causal) is not bool:
@@ -62,8 +65,9 @@ class PreparedFBTLayout:
             raise ValueError("Dynamic right-padded layouts own canonical arange positions; do not supply position_ids")
         self.core = core
         self.base = core.backbone
+        self.document_policy = validate_document_policy(document_policy)
         self.right_padded_causal = right_padded_causal
-        _validate_batch(batch, one_document_per_row=True)
+        _validate_batch(batch, one_document_per_row=self.document_policy == ISOLATED_DOCUMENTS)
         self._shape = tuple(batch.input_ids.shape)
         self._device = core.readout_weight.device
         if batch.input_ids.device != self._device:
@@ -74,7 +78,7 @@ class PreparedFBTLayout:
         if self.right_padded_causal:
             _validate_right_padded_mask(self._valid_cpu)
         docs = _cpu(batch.document_ids)
-        self._eligible_cpu = self._valid_cpu[:, 1:] & self._valid_cpu[:, :-1] & (docs[:, 1:] == docs[:, :-1])
+        self._eligible_cpu = feedback_eligibility(self._valid_cpu, docs, self.document_policy)
         self._explicit_positions = position_ids is not None
         if self.right_padded_causal:
             self._positions_cpu = torch.arange(self._shape[1], dtype=torch.long).expand(self._shape).clone()
@@ -127,7 +131,7 @@ class PreparedFBTLayout:
         return result
 
     def _structure_signature(self):
-        return (id(self.core), id(self.core.backbone), self.core.config, self.core.fusion_config,
+        return (id(self.core), id(self.core.backbone), self.document_policy, self.core.config, self.core.fusion_config,
             self.core.fusion.norm_eps, self.base.attention_backend, self.base.attention_precision,
             self.base.ordinary_activation_checkpointing, self.base.cast_weights_once,
             self.base.ordinary_attention_backend, self.base.ordinary_pointwise_backend,
@@ -169,7 +173,10 @@ class PreparedFBTLayout:
             "attention_representation": "causal_without_mask" if self.is_causal else "explicit_boolean_causal_padding_mask",
             "explicit_positions": self._explicit_positions, "valid_mask_sha256": _digest(self._valid_cpu),
             "position_ids_sha256": _digest(self._positions_cpu), "feedback_eligible_sha256": _digest(self._eligible_cpu),
-            "document_contract": "one independent document per row; no cache or packed documents",
+            "document_policy": self.document_policy,
+            "document_contract": ("one independent document per row; no cache or packed documents"
+                if self.document_policy == ISOLATED_DOCUMENTS else
+                "continuous causal attention/RT/FBT across documents within each row; no inter-row cache"),
             "loss_masks_owned_here": False, "reuse_rope": self.base.reuse_rope,
             "ordinary_attention_backend": self.base.ordinary_attention_backend,
             "ordinary_pointwise_backend": self.base.ordinary_pointwise_backend,
@@ -189,13 +196,13 @@ class PreparedFBTLayout:
 
     def validate_batch(self, batch: NextLatBatch, position_ids: Tensor | None = None):
         """Run on fresh batches before copying tokens/replay, never inside capture."""
-        _validate_batch(batch, one_document_per_row=True)
+        _validate_batch(batch, one_document_per_row=self.document_policy == ISOLATED_DOCUMENTS)
         if (tuple(batch.input_ids.shape) != self._shape
                 or (batch.input_ids.device != self._device and batch.input_ids.device.type != "cpu")):
             raise ValueError("Fresh batch shape/device differs from the prepared layout")
         self._check_tokens(_cpu(batch.input_ids))
         valid, docs = _cpu(batch.valid_mask), _cpu(batch.document_ids)
-        eligible = valid[:, 1:] & valid[:, :-1] & (docs[:, 1:] == docs[:, :-1])
+        eligible = feedback_eligibility(valid, docs, self.document_policy)
         if not torch.equal(valid, self._valid_cpu) or not torch.equal(eligible, self._eligible_cpu):
             raise ValueError("Fresh validity/document adjacency differs from the prepared layout")
         positions = self._positions_cpu if position_ids is None else self._validate_positions(position_ids, allow_cpu=True)
@@ -212,14 +219,14 @@ class PreparedFBTLayout:
         if not self.right_padded_causal:
             raise ValueError("Batch replacement requires an explicit dynamic right_padded_causal layout")
         self._validate_prepared_ownership()
-        _validate_batch(batch, one_document_per_row=True)
+        _validate_batch(batch, one_document_per_row=self.document_policy == ISOLATED_DOCUMENTS)
         if (tuple(batch.input_ids.shape) != self._shape
                 or (batch.input_ids.device != self._device and batch.input_ids.device.type != "cpu")):
             raise ValueError("Fresh batch shape/device differs from the prepared layout")
         self._check_tokens(_cpu(batch.input_ids))
         valid, docs = _cpu(batch.valid_mask), _cpu(batch.document_ids)
         _validate_right_padded_mask(valid)
-        eligible = valid[:, 1:] & valid[:, :-1] & (docs[:, 1:] == docs[:, :-1])
+        eligible = feedback_eligibility(valid, docs, self.document_policy)
         return valid, eligible
 
     def load_batch(self, batch: NextLatBatch):
@@ -256,6 +263,8 @@ class PreparedFBTLayout:
         """Verify ownership/layout/settings externally; optimizer value updates are allowed."""
         if not isinstance(mode, FBTMode):
             raise TypeError("Static mode must be an FBTMode")
+        if mode.document_policy != self.document_policy:
+            raise ValueError("Prepared forward and mode document_policy must agree")
         self.core._validate_rt_mode(mode.rt_mode)
         noise = self.core._validate_feedback_noise(feedback_noise, mode,
             (self._shape[0], self._shape[1] - 1, self.core.config.model_dim),
@@ -315,6 +324,8 @@ class PreparedFBTLayout:
             raise ValueError("Static token buffer shape/dtype/device differs")
         if not isinstance(mode, FBTMode):
             raise TypeError("Static mode must be an FBTMode")
+        if mode.document_policy != self.document_policy:
+            raise ValueError("Prepared forward and mode document_policy must agree")
         embeddings = self.core.token_embeddings(input_ids)
         noise = self.core._validate_feedback_noise(feedback_noise, mode,
             embeddings[:, 1:].shape, embeddings.device, embeddings.dtype, check_values=False)

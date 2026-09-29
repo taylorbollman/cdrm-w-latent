@@ -69,12 +69,15 @@ class StaticFBTTraining:
             raise ValueError("Static training does not yet support feedback jitter; use eager execution "
                              "with explicit noise until replay noise-buffer loading is qualified")
         self.model, self.mode, self.config = model, mode, config
+        if mode.document_policy != model.config.document_policy:
+            raise ValueError("Static mode and NextLat document_policy must agree")
         device = next(model.parameters()).device
         if config.precision == "bf16_mixed" and device.type != "cuda":
             raise ValueError("BF16 mixed static training requires CUDA")
         self.batch = batch.to(device)
         self.batch = replace(self.batch, input_ids=self.batch.input_ids.clone())
-        self.forward_layout = PreparedFBTLayout(model.backbone, self.batch)
+        self.forward_layout = PreparedFBTLayout(model.backbone, self.batch,
+                                                document_policy=model.config.document_policy)
         self.loss_layout = PreparedNextLatLayout.from_batch(self.batch, model.config, enabled=model.enabled)
         self.counts = dict(self.loss_layout.counts)
         self.weights = dict(model.objective_weights())

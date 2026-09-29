@@ -14,6 +14,8 @@ from typing import Any, Mapping, Sequence
 
 from .nextlat import (NextLatBatch, NextLatConfig, NextLatLM, NextLatLosses,
                       _validate_batch, compute_nextlat_loss_sums)
+from .document_policy import ISOLATED_DOCUMENTS
+from .olmo_fbt import FBTMode
 
 
 @dataclass
@@ -100,8 +102,13 @@ class FBTNextLatLM(NextLatLM):
         return self._gamma
 
     def loss_sums(self, batch: NextLatBatch, *, backbone_kwargs: Mapping[str, Any] | None = None) -> FBTNextLatLosses:
-        _validate_batch(batch, one_document_per_row=True)
+        _validate_batch(batch, one_document_per_row=self.config.document_policy == ISOLATED_DOCUMENTS)
         kwargs = {} if backbone_kwargs is None else dict(backbone_kwargs)
+        mode = kwargs.get("mode", FBTMode())
+        if not isinstance(mode, FBTMode):
+            raise TypeError("FBT NextLat requires an FBTMode")
+        if mode.document_policy != self.config.document_policy:
+            raise ValueError("FBT forward and NextLat loss document_policy must agree")
         forbidden = {"input_ids", "inputs_embeds", "attention_mask", "document_ids", "past_key_values",
                      "use_cache", "return_logits"} & kwargs.keys()
         if forbidden:
