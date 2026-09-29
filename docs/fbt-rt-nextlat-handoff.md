@@ -4,13 +4,38 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Overnight continuation active,2026-09-29 07:59–about14:00UTC:** user authorizes
-useful numerical/readiness work without another review. Read
-[overnight plan](reports/olmo-fusion-startup/overnight-plan.md) and
-[progress](reports/olmo-fusion-startup/progress.md). Start with boundedFP32
-fusion-only warmup fromoriginalbackbone/freshfusion; conditional follow-ups
-perthewrittenplan. No production-quality campaign. Preserve evidence and
-checkpoint regularly; root owns allGPU launches.
+**Overnight investigation active, 2026-09-29, target closeout about 14:00 UTC:**
+user authorized useful technical work without intermediate review. The numerical
+stages are complete; read [current results](reports/olmo-fusion-startup/results.md),
+[assessment and next steps](reports/olmo-fusion-startup/next-steps.md),
+[readiness map](reports/olmo-fusion-startup/readiness-map.md) and
+[progress](reports/olmo-fusion-startup/progress.md).
+
+FP32 fusion-only warmup128 substantially reduces measured NF precision
+sensitivity without changing the backbone. Full NFR retains significant
+same-state/update differences, but subsequent short conditional BF16/FP32
+training from a shared BF16 update4 checkpoint ends with close held-out losses.
+Cumulative backbone updates still differ16.27%. This supports a bounded,
+qualified adapted-start functionality pilot, not cold-start or long-run BF16
+clearance. The packed saved-state bridge has exact prepared/captured BF16
+losses and71gradients, with its separate sparse/prepared qualification retained.
+No new Q/K normalization, architecture, core math or numerical budgets adopted.
+
+The tiny captured two-GPU lifecycle checks cover stop/restart, coordinated
+logging failure, abrupt rank exit and live evaluation insertion. Ordinary
+pretrained reference and exact-generation cloud restore passed; both fresh
+continuation updates match exactly, final retention pending. The CPU manifest
+resolver has validated all-eight metadata accounting on actual pinned local
+artifacts and data. Its49,152-token readiness prefix contains only two books
+documents and is not a production mixture.
+
+A final narrow **ordinary-B-only manifest execution adapter** is being built
+and reviewed. It will connect declared recipe, data, schedule, partition and
+checkpoint lineage to three bounded captured updates and exact fresh resume.
+General all-arm/adapted startup support remains later work. Root owns GPU
+launches. All completed helpers/tests/protocols and core sources stay frozen.
+Preserve checkpoints to GCS and save/push every20–30minutes. No production
+quality campaign or extra numerical sweep is queued.
 
 **Crossed-state NF precision complete, 2026-09-29:**
 [PR44](https://github.com/taylorbollman/cdrm-w-latent/pull/44), branch
