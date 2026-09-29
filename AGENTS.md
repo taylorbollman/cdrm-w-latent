@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 crossed-state NF precision COMPLETE, feat/olmo-crossed-precision.
+2026-09-29 crossed-state NF precision COMPLETE, PR44, feat/olmo-crossed-precision.
 Read docs/reports/olmo-crossed-precision/results.md, next-steps.md, test-ledger.md,
 storage-receipt.md and progress.md. Runtime3364376; four aggregate/eight physical
 backwards,177.394s, no training. Cold backbone/adapted complete fusion gives

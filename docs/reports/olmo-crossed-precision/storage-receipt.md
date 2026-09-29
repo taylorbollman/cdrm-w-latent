@@ -39,6 +39,25 @@ Final report SHA:
 `ba7989f586e19937ff6c64d7f3c65306eae9f61440b4fedb3942bdd3ff18e298`.
 Cold/adapted weights remain under their existing pinned authority; this evidence
 archive does not duplicate either checkpoint. Final documentation/audit/CPU-log
-closeout is pending separately. Storage success does not change the diagnostic's
+closeout is recorded below. Storage success does not change the diagnostic's
 numerical qualifications, establish an additive causal decomposition or clear
 the earlier adapted/adapted intermediate hidden-state discrepancy.
+
+## Final closeout
+
+The existing retention helper verified upload metadata and exact-generation
+download SHA for two closeout objects containing24 inventory members. This is
+a separate scope from the independent stage readback above; no second audit
+framework or GPU run was added. Receipt:
+`.runtime/olmo-crossed-precision/retention/closeout-01.json`.
+
+| Object relative to namespace | Generation | Bytes | SHA-256 |
+| --- | --- | ---: | --- |
+| `crossed-closeout-01/evidence.tar.gz` | `1790667647053644` | 96,798 | `8bdf6b532b9597d49a9da4ac3d6781ae3142de0d167c0d9609c04a7536109aef` |
+| `crossed-closeout-01/retention-manifest.json` | `1790667647365654` | 6,338 | `0c11c71b6dab398e19b6e0f2dc69d42df2b1917a9eb719e8be42787c4e576d7d` |
+
+Closeout includes reviewed docs/handoff, new runner/helper/tests, final CPU and
+environment logs, stage receipt and the independent audit plus its source.
+It excludes downloaded archive duplicates and large weights. The immutable
+closeout predates its own receipt and final PR metadata, retained here in Git.
+No new trained checkpoint was produced and no local files were deleted.

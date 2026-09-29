@@ -31,4 +31,20 @@ Retention namespace:
 Recommended next step is a bounded FP32 fusion-only warmup from original
 backbone/fresh fusion. This remains a proposal, not a queued or launched run.
 Save/push every20–30minutes; retain checkpoints every10minutes during future
-training. Both GPUs idle. Final documentation closeout and PR pending below.
+training. Both GPUs idle. [PR44](https://github.com/taylorbollman/cdrm-w-latent/pull/44)
+is the closeout record; final retention is below. The GitHub merge record is
+authoritative for the resulting main-branch commit.
+
+Closeout freezes the reviewed results, handoff, source/test copies, final CPU
+and GPU environment logs, stage receipt and independent audit. Its verified
+retention uses the existing uploader with exact-generation download SHA checks;
+no second independent audit of the closeout is required. The archive necessarily
+predates its own receipt and final PR state; those are recorded afterward in Git.
+
+## Final retention
+
+Closeout receipt verified:24members/2objects,103,136bytes, with server
+size/MD5/SHA metadata and exact-generation download SHA checks. Exact pins are
+in storage-receipt.md. Independent diagnostic-stage readback remains the
+separate111member/109source audit; no claim of a second independent closeout
+audit. All work and evidence are saved; no training or GPU work remains queued.

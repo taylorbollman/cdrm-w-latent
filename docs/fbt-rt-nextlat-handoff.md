@@ -4,7 +4,8 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Crossed-state NF precision complete, 2026-09-29:** branch
+**Crossed-state NF precision complete, 2026-09-29:**
+[PR44](https://github.com/taylorbollman/cdrm-w-latent/pull/44), branch
 `feat/olmo-crossed-precision`; read [results](reports/olmo-crossed-precision/results.md),
 [next steps](reports/olmo-crossed-precision/next-steps.md),
 [test ledger](reports/olmo-crossed-precision/test-ledger.md),
