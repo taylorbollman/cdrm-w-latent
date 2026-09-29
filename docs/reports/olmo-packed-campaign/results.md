@@ -1,6 +1,7 @@
 # Packed campaign readiness
 
-2026-09-29. Operational checks and numerical qualification are separate.
+2026-09-29. Packed-data execution and cloud-restored continuation now pass.
+Numerical qualification remains open.
 Runtime/data implementation: `f0be95d`; deterministic runner fix: `e5a593b`.
 Model policy and precision probe: `b9985bc`; Flash repeatability probe: `2080c11`.
 This is readiness work on the retained Dolma coverage fixture, not a production
@@ -22,7 +23,8 @@ mixture or learning-quality comparison.
   same prepared local arithmetic. Packed NFR independently retains a 1.6953%
   BF16 sparse/dense gradient qualification failure.
 - Broad CPU regression: 971 passed; final focused data hardening: 20 passed
-  (overlapping scope). See [test ledger](test-ledger.md) for exact evidence.
+  (overlapping scope). Determinism/Flash diagnostic checks: 18 passed in their
+  combined focused scope. See [test ledger](test-ledger.md) for exact evidence.
 
 ## Material numerical finding
 
@@ -89,10 +91,24 @@ The fresh deterministic write02 passes 13/13 gates in 965.54 seconds. Its two
 full updates measure **3,499.43 and 3,500.12 valid input tokens/s**, or 3,499.78
 combined: about 11.7% below the original pair, with the same timing exclusions.
 Peak reserved memory is 58.90 GiB/GPU and sampled free memory is 12.95 GiB.
-The full new checkpoint is retained; its cloud download and fresh-process
-resume02 are pending. **Restart remains unqualified** until that comparison
-passes. Deterministic repeatability is separate from the unresolved BF16 layout
-and BF16/FP32 gradient comparisons above.
+The full new checkpoint was uploaded, downloaded into a fresh directory and
+SHA-verified over all 15,214,816,454 state/manifest bytes. Fresh-process resume02
+then passed **10/10 gates in 760.70 seconds**. On both ranks, the next inputs,
+raw gradients, metrics, full model/Adam state, RNG and committed cursor are
+**bitwise identical** to uninterrupted continuation. No acceptance tolerance
+was relaxed. Actual Adam was loaded before DDP construction and graph capture.
+
+| Deterministic phase | Global valid input tokens/s | Peak reserved/GPU | Sampled free/GPU |
+| --- | ---: | ---: | ---: |
+| Original two-update write, aggregate | 3,499.78 | 58.90 GiB | 12.95 GiB |
+| Cold capture with restored Adam | Setup only | 58.35 GiB | 13.50 GiB |
+| Fresh-process next update | 3,463.07 | 59.03 GiB | 12.82 GiB |
+
+This clears same-runtime, same-world-size recovery for this actual packed-data
+case, including cold resident-Adam capture. It does not qualify changed GPU
+hardware, changed rank count or a production data mixture. Deterministic
+repeatability is separate from the unresolved BF16 layout and BF16/FP32
+gradient comparisons above. The original failed attempt remains retained.
 The recovery checkpoint is a readiness fixture, not an approved production
 quality-training starting point.
 

@@ -151,3 +151,24 @@ Its launcher script is `.runtime/olmo-packed-campaign/resume02.sh`; log is
 `pretrained-resume-02-launcher.log`. Each phase still has the 1200s bound.
 Restore evidence retention session63007. The final18-stage closeout audit must
 wait until completed resume02 passes and its retention receipt verifies.
+
+Deterministic resume02 completed normally: 10/10 gates pass in760.70s. Both
+ranks have bitwise-identical input, raw gradients, metrics, model/Adam/RNG and
+committed cursor versus live write02 continuation. Report SHA
+`18666d8cfed2ef79bb5a20f0f569c81c25dcf8b08b6a20842a5983f42e821603`.
+W&B `p4xtd9as`. Cold capture free13.496GiB; next update3,463.07 valid tokens/s,
+59.027GiB peak reserved/12.818GiB free. All18stage receipts verified. Final
+independent archive/source/restore audit is running; remaining work is docs,
+closeout retention and PR39 completion. No further GPU work is queued.
+The separate BF16 qualifications remain open; next recommendation is bounded
+precision/backend localization, not quality training.
+
+Final independent evidence audit passed:18 completed stages/18 receipts,
+40 listed objects,840 archive member pins and779 source pairs. Final closeout
+archive additionally retained and download-verified with38 evidence members;
+all19 receipts now verified (42 listed objects, receipt objects counted
+separately). Frozen closeout report SHA
+`486025c051404a0a501409ed1497fd52224e4b689a2998bbc49cd900e32090fe`.
+Both GPUs verified idle,0MiB used/no compute processes. Final docs/handoff
+complete; PR39 ready for merge. No further job queued. Read next-steps.md
+before proposing the bounded numerical follow-up; prior qualifications stand.

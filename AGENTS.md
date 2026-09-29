@@ -31,24 +31,30 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 packed campaign milestone ACTIVE on `feat/olmo-packed-campaign`.
-Read docs/reports/olmo-packed-campaign/protocol.md and progress.md first.
+2026-09-29 packed campaign readiness complete on `feat/olmo-packed-campaign`,
+PR 39. Read docs/reports/olmo-packed-campaign/results.md, test-ledger.md,
+storage-receipt.md, precision-assessment.md and next-steps.md first.
 Opt-in continuous-stream-v1 carries attention/RT/FBT within chunks across true
-doc boundaries; CE crosses boundaries, NextLat latent/KL exclude them. Legacy
-isolated-v1 remains default. Index/real committed cursor and actual T1024
-524288-token update/cloud restart are being qualified on two H100s. Do not
-retokenize the retained Dolma fixture. No quality run or production mixture.
-Source freeze before GPU checks; preserve BF16 qualification separately.
-New bounded component diagnostic: BF16/FP32 combined gradients differ ~86%
-(cosine ~0.51) on initial isolated NFR T16. FP32 changes kernels too; cause not
-localized. Read precision-assessment.md; do not claim numerical clearance or
-launch quality training based on operational/restart passes. CE-only BF16
-layouts agree; auxiliary paths carry the prior 3.40224% layout discrepancy.
-First T1024 restart01 failed bitwise despite exact input/state/forwardlosses.
-Isolated Flash backward nondeterminism atT1024 is confirmed; deterministic mode
-passes bothlengths. Newrunner e5a593b pins deterministic controls preCUDA;
-write02/resume02 is the pending freshmatchedpair. Preserve failed01; do not
-claim recovery passes until02 actualcontinuation matches. Read progress.md.
+boundaries; CE crosses, NextLat latent/KL exclude boundaries. Isolated default
+unchanged. All 6,947,277 train tokens match independent packed-stream oracle;
+verified disk index and committed cursor restore at a new path. Do not retokenize.
+Tiny all-eight-arm two-H100 eager/graph and actual pretrained B/NFR operational
+checks pass. Deterministic T1024/B12/rank/K4/nativeRT0,15/both NextLat losses:
+524,288 valid tokens/update,22 slots/rank; fresh-process cloud-restored next update
+is bitwise exact on both ranks, actual Adam resident before DDP/capture. Write
+13 gates/resume 10 gates pass. About 3.50k input tokens/s,59.03 GiB peak reserved and
+12.82 GiB sampled free/GPU on resumed update. Both checkpoints/evidence retained.
+Original resume01 failed; isolated T1024 Flash backward nondeterminism confirmed.
+Runner e5a593b enables and pins deterministic controls before CUDA; new matched
+pair 02 passes. This resolves repeatability for the pinned execution contract.
+It does NOT resolve BF16 numerical qualification: isolated loss-layout 3.40224%,
+packed fixture 1.6953%; BF16/full-FP32 combined gradients differ ~86%,cosine ~0.51
+on initial isolated NFR T16. Kernels change too; cause unlocalized. CE-only
+layouts agree; auxiliary paths carry layout gap. No architecture/QKnorm change,
+quality training, production mixture or H200 qualification. Next recommendation:
+six-backward precision/backend bridge, then fixed-hidden auxiliary cotangents.
+CPU regression 971 passed plus overlapping 20 data/18 determinism checks. GPU tests
+finished. See progress.md for final retention/PR state; preserve prior failures.
 
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and

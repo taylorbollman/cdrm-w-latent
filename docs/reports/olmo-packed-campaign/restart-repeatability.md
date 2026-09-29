@@ -3,9 +3,10 @@
 2026-09-29. The first full-model packed restart failed bitwise continuation.
 A fixed-input diagnostic then isolated repeatability failure in ordinary
 Flash-SDPA backward at T1024 when deterministic execution was disabled. Enabling
-deterministic controls removed the isolated failure. The corrected full-model
-write/restore pair is a separate acceptance gate; it was still in progress when
-this note was written.
+deterministic controls removed the isolated failure, and the corrected
+full-model cloud-restored write/resume pair **passed exact continuation on both
+ranks**. Recovery is qualified under this pinned execution contract; the
+separate BF16 numerical comparisons remain unresolved.
 
 ## Original full-model failure
 
@@ -96,16 +97,34 @@ source fingerprint. Focused tests check initialization ordering, rejection of
 late configuration and helper-source pinning. Model architecture, loss policy,
 source weights, logical token budget and optimizer recipe are unchanged.
 
-The new pair must start and continue under this same corrected contract; the
-old failed pair remains evidence and is not relabeled as passed. Run
-`pretrained-write-02` was underway at this note's creation. Only its successful
-fresh-process, cloud-restored continuation can establish full-model bitwise
-recovery under the fix.
+The corrected pair started and continued under this same contract. The old
+failed pair remains evidence and is not relabeled as passed. New evidence:
 
-The isolated experiment gives a concrete explanation consistent with the
-length-dependent full-model failure, but does not prove this was its sole
-cause until that full acceptance test passes. It also does not resolve the
-separate 3.40224% BF16 sparse/prepared gradient discrepancy or the larger
+- `pretrained-write-02/report.json`: all 13 gates passed; checkpoint saved after
+  the first logical update and the next update executed on the original live
+  graphs. [W&B write run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/k5ynlpin).
+- `pretrained-resume-02/report.json`: all **10 gates passed** in 760.70455 seconds,
+  including the fresh-process continuation from the cloud-restored checkpoint.
+  Both ranks matched input/noise fingerprints, raw gradients, scalar metrics,
+  full model/Adam/scheduler/counter/cursor/RNG boundary state and actual RNG draws
+  bitwise. [W&B resume run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/p4xtd9as).
+
+The finalized resume-report SHA256 is
+`18666d8cfed2ef79bb5a20f0f569c81c25dcf8b08b6a20842a5983f42e821603`.
+The reader verified the restored checkpoint/index, and actual Adam state was
+resident before DDP preparation and CUDA-graph capture. This establishes
+full-model recovery for this same-world-size, same-runtime T1024/B12 case; it
+does not extend the guarantee to changed hardware, world size or execution
+settings.
+
+The isolated Flash experiment and successful full-model pair support the
+missing deterministic controls as a correctable cause of the observed recovery
+failure. The fix enables several backend controls together, so these results
+do not establish that one particular Flash kernel was the sole full-model
+source of nondeterminism.
+
+Neither repeatability result clears the separate 3.40224% isolated or 1.6953%
+packed BF16 sparse/prepared gradient discrepancy, nor the larger
 BF16-versus-FP32 differences described in
 [precision-assessment.md](precision-assessment.md). Repeatability, agreement
 between numerical implementations and training quality remain distinct claims.

@@ -38,11 +38,19 @@ Retention preserves failures and qualifications as well as operational passes.
 | `flash-t1024-d1-01.json` | `packed-flash-t1024-d1-01` | 8 | 2 |
 | `checkpoint-boundary-02.json` | `packed-checkpoint-boundary-02` | 79 | 4 |
 | `pretrained-write-02.json` | `packed-pretrained-write-02` | 81 | 2 |
+| `checkpoint-restore-02.json` | `packed-checkpoint-restore-02` | 6 | 2 |
+| `pretrained-resume-02.json` | `packed-pretrained-resume-02` | 81 | 2 |
+| `closeout-01.json` | `packed-closeout-01` | 38 | 2 |
 
-A local read-only audit checked all 16 verified receipts, their **36 listed
-objects**, each retained archive/manifest SHA256 and byte count, **753 archived
-member hash/size pairs**, and **700 declared source/snapshot pairs**. The
-separately uploaded receipt objects are not included in the 36-object count.
+A local read-only audit checked the 18 experiment-stage receipts, their **40 listed
+objects**, each retained archive/manifest SHA256 and byte count, **840 archived
+member hash/size pairs**, and **779 declared source/snapshot pairs**. All 840
+members also match their original local stage bytes; the 779 source pairs
+match both local and archived snapshots. The separately uploaded receipt
+objects are not included in the 40-object count.
+The separately verified final closeout brings the complete milestone to **19
+verified receipts, 42 listed objects, 878 archived member pins and 780 declared
+source/snapshot pairs**. Its exact object pins appear below.
 Archive and retention-manifest uploads had already been downloaded and SHA256
 verified by the retention tool. The local audit did not re-download every
 object; the index and checkpoint recovery exercises below independently did
@@ -136,12 +144,31 @@ archives/manifests, all their member pins and all declared source snapshots.
 
 Original checkpoint:
 `/mnt/localssd/cdrm-checkpoints/packed-campaign/pretrained-write-02`.
+Fresh restoration:
+`/mnt/localssd/cdrm-checkpoints/packed-campaign/cloud-restored-02`.
 The state and manifest upload receipt verifies server byte count, MD5 and
-SHA256 metadata. It does not itself establish complete checkpoint download
-verification. At this entry, the generation-pinned restoration of the second
-pair's **15,214,816,454 checkpoint bytes** is running, and its verification
-receipt is pending. **Exact continuation for pair 02 also remains pending.**
-The first checkpoint and its failure evidence remain intact.
+SHA256 metadata. A separate generation-pinned restoration then downloaded and
+verified all **15,214,816,454 checkpoint bytes**, including the committed
+manifest/state relationship. Its report is
+`.runtime/olmo-packed-campaign/checkpoint-restore-evidence-02/report.json`,
+SHA256 `d49ce991cd97862143c9412e917b2de24e3d92fdadcd8979d2dab9fe4960e814`.
+That byte-verification evidence is retained under `packed-checkpoint-restore-02`.
+
+**Fresh-process continuation for pair 02 passed all 10 gates.** The loaded
+model and Adam state were already resident before cold DDP warmup and graph
+capture at T1024/B12. Both ranks' next input/noise hashes, raw gradients,
+metrics, updated model/optimizer state, counters, cursor and RNG state/draws
+matched the original live-graph continuation exactly. The completed resume
+report is `.runtime/olmo-packed-campaign/pretrained-resume-02/report.json`,
+SHA256 `18666d8cfed2ef79bb5a20f0f569c81c25dcf8b08b6a20842a5983f42e821603`,
+retained under `packed-pretrained-resume-02`.
+
+This acceptance is limited to the recorded deterministic configuration, two
+H100s, same world size and runtime, the pinned packed fixture/index and this
+single next-update comparison. It does not qualify changed world size, H200s,
+arbitrary production mixtures or long training trajectories. The first
+checkpoint and its failed continuation remain intact; the successful second
+pair does not overwrite that result or clear the BF16 numerical qualifications.
 
 ## Packed index recovery
 
@@ -178,11 +205,40 @@ The original tokenized coverage fixture remains separately retained at
 The packed index references those verified bytes; no retokenization, production
 mixture selection or corpus cycling occurred.
 
-## Pending closeout
+## Final evidence audit and retained closeout archive
 
-Pair 02 still requires full checkpoint readback verification and completed
-fresh-process continuation, followed by retention of both reports and source
-evidence. Pair 01's failed continuation is retained and must remain part of
-the record. Final closeout retention and the final receipt/member/source audit
-remain pending. This entry does not clear the numerical qualifications described in
-[precision assessment](precision-assessment.md).
+The bounded stdlib audit at
+`.runtime/olmo-packed-campaign/closeout-01/audit.py` completed successfully in
+an explicitly CPU-only container. Its atomic report is
+`.runtime/olmo-packed-campaign/closeout-01/report.json`, SHA256
+`486025c051404a0a501409ed1497fd52224e4b689a2998bbc49cd900e32090fe`.
+It verifies the 18 stage reports and receipts, the artifact/source counts
+above, both checkpoint restoration pin sets, index recovery, and pair 02's
+exact continuation directly from both ranks' recorded values. It also requires
+pair 01's failed comparison to remain failed, validates the four isolated
+Flash diagnostics, and preserves the independent BF16 qualification failures
+and component comparison results. It did not re-read either 15 GB state file;
+the full cloud downloads are independently pinned by their completed
+restoration reports.
+
+The final closeout is retained under `packed-closeout-01/`:
+
+| Object | Exact GCS generation | Bytes | SHA256 |
+| --- | --- | ---: | --- |
+| `evidence.tar.gz` | `1790654319700429` | 123,441 | `103161b4f93876b906b367c376081139277af78306ff49174437be3dc6b6c667` |
+| `retention-manifest.json` | `1790654319947551` | 9,222 | `904e5f6af17ffa6fb631973f3a63eafe0fa1224bd7814204773b1fbc7c4a7136` |
+
+The upload receipt verifies server size/MD5/SHA metadata and full download
+SHA256 for both objects. Independent local inspection matched both objects
+against that receipt, all **38 archived member pins**, and the audit's source
+snapshot. The archive contains exact copies of all **18 experiment-stage
+receipts**, all **four CPU test logs**, the final GPU-status log, **11
+documentation files**, and the completed closeout report/script. Neither
+checkpoint was re-read or deleted for this final archive check.
+
+This completes storage verification for **19 receipts and 42 listed objects**;
+separately uploaded receipt objects remain excluded from the object total.
+The closeout directory/archive is frozen. Its documentation records the
+pre-upload snapshot; this final receipt addendum is recorded in the repository
+without changing the archived bytes. No numerical clearance follows from the
+evidence audit; see [precision assessment](precision-assessment.md).

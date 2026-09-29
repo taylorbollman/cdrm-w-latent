@@ -1,12 +1,17 @@
 # Recommended next milestone: bounded numerical localization
 
-The packed-data/update/recovery work is an operational milestone. First finish
-the current bounded deterministic-backward/restart follow-up: the initial
-T1024 bitwise continuation failed despite matching inputs and forward losses. The new
-~86% BF16/full-FP32 combined gradient difference on initial NFR T16 makes
-numerical localization the next priority before quality training. Do not
-interpret matching distributed execution or exact checkpoint continuation as
-precision clearance. Preserve existing failures and avoid a threshold change.
+The packed-data/update/recovery milestone now passes same-runtime, two-H100
+T1024/B12 recovery under explicit deterministic backend controls. The corrected
+cloud-restored continuation passed all 10 gates, with input/noise, raw gradients,
+metrics and model/Adam/cursor/RNG state bitwise equal on both ranks. The original
+failed attempt is retained; see [repeatability investigation](restart-repeatability.md).
+
+Numerical localization remains the next priority before quality training:
+~86% BF16/full-FP32 combined gradient difference on initial NFR T16 and the
+separate BF16 sparse/prepared discrepancies are unresolved. Exact checkpoint
+continuation establishes repeatability under the fixed execution contract,
+not agreement with a different precision/backend implementation. Preserve these
+qualifications and avoid a threshold change.
 
 1. Freeze the next bridge to **six backwards**: CE-only and combined objectives
    on each of three paths: full-FP32 math-SDPA/eager-native-RT, BF16
@@ -51,3 +56,10 @@ NCCL/capture/restart and memory checks. A production loader will additionally
 need the selected source mixture/order/shuffle/tail policy, held-out evaluation
 fixtures, and the agreed common token-clock calibration; the present finite
 coverage corpus and recovery checkpoint are not that campaign.
+
+Before turning this bounded readiness runner into a longer-lived campaign
+runner, coordinate rank-zero logging failures as well as data/optimizer
+failures. Its current `tracker.log()` is outside the coordinated error path:
+a logging exception can leave another rank waiting until torchrun tears the
+job down. This does not invalidate successful acceptance evidence; preserve
+the frozen tested runtime and address it with campaign-loop hardening.
