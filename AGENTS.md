@@ -31,6 +31,25 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 recurrence/precision separation COMPLETE, PR41.
+Source branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
+results.md, test-ledger.md, next-steps.md and progress.md for final PR/retention.
+Eight CE cases N/NR/NF/NFR x FP32/BF16 on original isolated T16/two-B2 fixture:
+shared-backbone gradient errors 0.98%/25.46%/60.87%/95.85%. Shared state/noise,
+first-pass identities and old NFR endpoints reproduce exactly. NextLat branches
+execute with zero auxiliary cotangents. Neither recurrence is an exclusive cause.
+One conditional NF-only FP32-fusion probe completed three cases: backbone error
+60.87% to 56.16%, but final hidden-state errors worsen on both records; do not
+adopt this as a fix or broaden precision changes automatically. No core/default,
+Q/K-normalization or architecture change, no optimizer updates. Matrix runtime
+6ed920a, fusion a5e9540. CPU scopes 66 and 27 pass (overlap). W&B lt54objk and
+wih59gy7. Numerical qualifications remain; T16 is not packed T1024 clearance.
+All completed helpers/tests/protocols stay frozen. Next recommendation is a
+bounded shared-input/shared-cotangent sensitivity diagnostic, not launched.
+GPU runs finished and idle. All stages and closeout retained with independent
+readback: 4 receipts, 8 listed objects, 218 inventory members. No next GPU run
+is queued. Preserve work every 20–30 minutes and retain in GCS.
+
 2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
 Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
 next-steps.md, storage-receipt.md and progress.md first. Four single-process
@@ -44,8 +63,8 @@ Fixed actual attention QKV/cotangent: Flash vsFP32 local gradient errors
 0.174–1.501%, output0.160–0.186%; local Flash outputs exact to captured values.
 This supports full-model sensitivity investigation, not a large local Flash
 backward defect or numerical clearance. Prior 3.40224%/1.6953% qualifications
-remain. Next proposed step is eight within-arm CE precision cases separating
-ordinary/RT/FBT/FBT+RT (N/NR/NF/NFR with zero auxiliary cotangents); not launched. Source 7082225,
+remain. The proposed eight within-arm CE precision cases separating
+ordinary/RT/FBT/FBT+RT are now complete in the current entry above. Source 7082225,
 old protocols/helpers frozen. GPU idle. Stage evidence and small tensor anchors
 retained with independent audits and verified closeout; see progress.md.
 Save work every 20–30 min.

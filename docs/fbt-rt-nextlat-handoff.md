@@ -4,6 +4,41 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Recurrence/precision separation complete, 2026-09-29:**
+[PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41), source branch
+`feat/olmo-recurrence-precision`, from PR40. Read
+[results](reports/olmo-recurrence-precision/results.md),
+[test ledger](reports/olmo-recurrence-precision/test-ledger.md),
+[next steps](reports/olmo-recurrence-precision/next-steps.md) and
+[progress](reports/olmo-recurrence-precision/progress.md) for final PR/retention.
+
+Eight CE-only aggregate cases compare N/NR/NF/NFR under full FP32/math and
+production BF16/Flash/Triton on the original T16 fixture. Shared-backbone
+gradient errors are **0.98%, 25.46%, 60.87% and 95.85%**, respectively.
+Shared parameter/buffer/input/noise controls, paired first-pass states and
+previous NFR endpoints reproduce exactly. NextLat branches execute with zero
+auxiliary cotangents. This identifies sensitivity in each recurrence mechanism,
+not an exclusive RT cause or an additive decomposition of errors.
+
+The one conditional NF-only FP32-fusion probe also completed. Backbone error
+improves to 56.16%, but final hidden-state agreement worsens on both records;
+fusion's own gradient relative L2 increases too. It is not a joint correction and is
+**not adopted**. No production model or default has changed. Stop precision
+changes at this milestone; do not automatically promote additional modules.
+The proposed continuation separates local module precision effects from
+propagated input perturbations using shared inputs/cotangents. It has not run.
+
+Matrix runtime source `6ed920a`; fusion source `a5e9540`. All completed helpers,
+tests and protocols stay frozen. CPU scopes 66 and 27 pass, with overlap;
+11 aggregate cases / 22 physical backwards total, no optimizer updates.
+W&B runs `lt54objk` and `wih59gy7`. Prior numerical qualifications remain:
+neither exact repeatability nor these T16 probes clear packed T1024 training.
+All evidence and closeout are retained with independent cloud readback:
+four receipts, eight listed objects and 218 inventory members. Read the
+[storage receipt](reports/olmo-recurrence-precision/storage-receipt.md) for
+exact pins and snapshot scope. Both GPUs are idle; no next diagnostic or
+quality-training run is queued. Save progress every 20–30 minutes.
+
 **Bounded numerical localization complete, 2026-09-29:**
 [PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40), branch
 `feat/olmo-precision-localization`, from PR39. Read
@@ -37,13 +72,12 @@ before propagation but do not clear the previous 3.40224% isolated/1.6953%
 packed full-gradient layout qualifications. T16 observations are not numerical
 qualification at the campaign's packed T1024 context.
 
-Recommend a separately frozen eight-case within-arm BF16/FP32 CE comparison
-of ordinary / RT / K4 FBT / K4 FBT+RT computation, preserving the NextLat
-branches with zero auxiliary cotangents (N/NR/NF/NFR). Use the original fixture
-first, shared weights and keyed noise, and compare shared backbone gradients.
-Only then choose one precision boundary and conditionally confirm on packed
-T1024. That follow-up is not launched. No Q/K-normalization, architecture or
-training policy change follows automatically from these diagnostic results.
+The eight-case N/NR/NF/NFR comparison recommended at this PR40 checkpoint is
+now complete, together with its one conditional precision boundary; read the
+current recurrence/precision entry above. Do not restart it from this historical
+section. No Q/K-normalization, architecture or training policy change follows
+automatically from these diagnostic results. Packed T1024 numerical confirmation
+remains conditional on identifying a correction worth adopting.
 
 **Packed campaign readiness complete, 2026-09-29:**
 [PR 39](https://github.com/taylorbollman/cdrm-w-latent/pull/39), branch
