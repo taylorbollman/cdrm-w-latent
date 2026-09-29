@@ -32,27 +32,33 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 10:34 UTC: overnight work ACTIVE until about14:00UTC.
-Branch feat/olmo-fusion-startup; root owns GPU scheduling. Read current
-olmo-fusion-startup results.md, progress.md and overnight-plan.md. Completed
-runtime helpers/tests/protocols are frozen; no cdrm/pretrained edits/additions.
-Warmup128 and fusion-only continuations are complete. Full NFR four paired
-updates completed in3512.8s, report SHA f24c6035f9035189bcb9fefd8ee12ceb42d3f249aca7c7221beb175d3f0da9dd.
-All endpoints verified in GCS. BF16 update4 checkpoint SHA
-6030c92f1c09d2c561ca173eee816316ae51de4bc66b368a34996577b8c1dd0a
-in .runtime/olmo-fusion-startup/nfr-updates-01/. Common-FP32 endpoint CE:
-FP32-trained5.67536, BF16-trained5.71905; KL2.74808/2.88192, latent.59827/.61607.
-Both improve, BF16 deficit remains; no production numerical clearance.
-Current GPU queue: abrupt rank-failure reference/fault/resume (session55745),
-then saved-NFR packedT1024 sparse/prepared/graph bridge, live-graph evaluation
-insertion, conditional16-update paired continuations after bridge gates.
-Precision agent owns actual endpoint authority preflight. New base pretrained
-ordinary host-loop helper is frozen9dd57fd,24CPUtests; independent review and
-root orchestration pending. Use it only for bounded reference/resume acceptance.
-Per-pass continuation reporting frozene7cc3d4,19focusedCPUtests, no extra forwards.
-Save/push every20–30minutes; checkpoint completed boundaries <=10min cadence.
-No quality campaign. Small NFR evidence retention verified. Corpus86 files
-already cloud retained and fully restored; no redundant upload needed.
+2026-09-29 11:05 UTC: overnight work ACTIVE, target closeout about14:00UTC.
+Branch feat/olmo-fusion-startup. Read current results.md/progress.md under
+olmo-fusion-startup; completed runtime helpers/tests/protocols remain frozen.
+Do not add/edit cdrm/pretrained files (active source inventories glob it).
+Full NFR4 paired updates and saved-state packedT1024 bridge are complete.
+Bridge report SHA efee951a140bd13c7e27909e6de1f093439c7fa679bcbd19be4a2930d17537b6:
+FP32 sparse/prepared passes; BF16 prepared/captured losses and71gradients exact.
+BF16 sparse/prepared retains strict elementwise miss, global0.08792%; cross-
+precision prepared global1.0955%. No general BF16 production clearance.
+Active root session48449 runs two independent NFR continuations4→20 from the
+same retained BF16 update4, GPUs0/1, W&B mfzy5brd/2v1ygap2. Both checkpoint12
+retained, now finishing last8 updates. Common-FP32 midpoint CE regresses modestly
+in both (5.78232/5.78958 vs5.71905) while KL/latent improve; final-pass CE nearly
+identical. Record this shared tradeoff, not combined-loss-only success.
+After both processes exit, root launches CPU endpoint analysis helper frozen
+b68aa14 (20tests) and both-GPU ordinary-B loop via
+.runtime/olmo-campaign-lifecycle/run_base_loop.py --stage all. This latter
+performs reference1/2/3, exact-generation cloud restore1, fresh resume2/3;
+source/index pins and1200s stage bounds are in the root orchestrator.
+Rank-failure and live-evaluation tiny2GPU acceptances completed, exact resumes/
+following updates. Forced rank peer teardown is documented, not graceful recovery.
+Precision agent implementing CPU-only manifest/resolved-plan draft for all8arms;
+no model construction/GPU/training launcher/production recipe selection authorized
+by that helper. Root owns all GPU scheduling. New core or frozen changes forbidden.
+Save/push20–30min, checkpoint completed boundaries<=10min cadence, GCS retention.
+No quality campaign, no automatic further numerical GPU sweep unless new evidence
+justifies one. All58 stage receipts verified before latest eval-audit retention.
 
 2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
 User authorizes~6hours useful technical work withoutreview; proceed beyond first
