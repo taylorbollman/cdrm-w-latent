@@ -68,11 +68,10 @@ It does not establish harmlessness or clear the complete BF16 model for a long
 campaign. We have not changed Q/K normalization, recurrence math, loss weights
 or numerical budgets to obtain these results.
 
-See [component results](component-results.md). A four-update matched optimizer
-test of the complete NFR model is running to measure the practical
-effect on gradients, Adam moments, parameter updates and common-FP32 held-out
-losses. It uses fresh training rows and a fresh all-component optimizer, not a
-claim that backbone moments existed in the fusion-only checkpoint.
+See [component results](component-results.md). The four-update matched optimizer
+test of the complete NFR model is now complete. It used fresh training rows and
+a fresh all-component optimizer; backbone moments did not exist in the earlier
+fusion-only checkpoint.
 
 ## Independent training-readiness work
 
@@ -109,19 +108,26 @@ the cumulative fusion update vectors differ **18.41%**. Close short-run losses
 and different optimization trajectories are both part of the result. See
 [continuation results](continuation-results.md).
 
-The complete-model paired optimizer diagnostic is active. Its first update
+The complete-model paired optimizer diagnostic is complete. Its first update
 starts from exactly matched state and data. Backbone raw gradients differ
 13.45%, clipped gradients13.42%, and actual master-weight updates17.47%; fusion
-updates differ26.58%. Both paths are finite. Later updates will include accumulated
-trajectory differences and must not be described as same-state precision checks.
-These preliminary figures are not new performance or numerical acceptance gates.
+updates differ26.58%. All four updates per path are finite. Later updates include
+accumulated trajectory differences and must not be described as same-state
+precision checks. The fourth backbone update differs30.31%, with a larger raw
+gradient discrepancy that cannot be explained only by a shrinking denominator.
+
+Both trained endpoints improve on the fixed held-out fixture when evaluated in
+FP32. FP32/BF16-trained endpoint losses are CE **5.67536/5.71905**, KL
+**2.74808/2.88192** and latent **0.59827/0.61607**. The BF16 deficit is visible;
+four updates and four dev documents neither establish failed training nor clear
+long-run precision. See [full-model update results](nfr-updates-results.md).
 
 The [operator recovery bundle](../olmo-campaign-lifecycle/recovery-bundle-results.md)
 has verified actual cloud-restored checkpoint/index/source/data authorities and
-emits an explicitly conditional launch command. An abrupt-rank-exit acceptance
-is queued after the active GPU job releases both devices. The next numerical
+emits an explicitly conditional launch command. Abrupt-rank termination and
+exact fresh-process continuation have also completed. The active numerical
 bridge uses the saved full-model endpoint on the fixed packedT1024 fixture to
-compare sparse, prepared and CUDA-graph backwards.
+compare sparse, prepared and CUDA-graph backwards, without further training.
 
 Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
