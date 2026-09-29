@@ -61,3 +61,15 @@ and stop0. Their cloud objects and persistent receipts remain. All historical
 boot-disk checkpoints and both restore sources were retained. Final closeout
 bundle receipt and PR state are recorded below/in progress.md after publication;
 the bundle cannot contain its own receipt or later administrative note.
+
+## Final closeout
+
+PR: https://github.com/taylorbollman/cdrm-w-latent/pull/48. Closeout contains 1,023 members and was fully verified in GCS.
+
+Closeout report SHA256: `43690247ab3fab5d1dc2a768c8a2ec251d59399e8d970ca0507f6d4db8c6e9e7`.
+
+Receipt SHA256: `25c926a73a873f22abf8acbb06b94a3d1061e8335dc8a7e964160bb57a1593f9`.
+
+- `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T172500Z/campaign-storage-closeout-01/evidence.tar.gz`: generation `1790703387157541`, 4,641,146 bytes, SHA256 `bf2010bd7f151e3f028d1e93dc241baa6a613116eea338ef6c147d18e9099a81`.
+
+- `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T172500Z/campaign-storage-closeout-01/retention-manifest.json`: generation `1790703387453254`, 279,624 bytes, SHA256 `e9850efb423bdc4f0903b5ef273cf1dc0ed6a93a933b9a27cd654cf10925e418`.

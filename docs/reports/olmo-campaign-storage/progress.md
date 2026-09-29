@@ -33,3 +33,7 @@ next-steps.md. Startupfairness, broadertrainingbudget/H200topology remainexplici
 No newdataacquisition, qualitycampaign, numerical/LRsweep orQKchange undertaken.
 OriginalBF16qualificationsremain. Preservefrozenimplementation andreceiptpins
 throughcompaction. PR/mergemetadata willbeappendedaftercloseoutpublication.
+
+PR48 opened; all tests, runtime/audit checks and closeout retention completed.
+Closeout contains1,031members; receipt SHA256 `25c926a73a873f22abf8acbb06b94a3d1061e8335dc8a7e964160bb57a1593f9`.
+BothGPUsidle; boot91GiBfree, SSD1.4TiBfree. Ready for authorized merge.
