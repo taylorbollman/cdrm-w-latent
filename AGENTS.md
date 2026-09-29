@@ -31,6 +31,21 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 background checkpoint retention IN PROGRESS, feat/olmo-pilot-async,
+startingmainfd21eca. User authorizes SSD-save thentrain whileupload/verification
+runbackground, withrollbacktolastverifiedcloud onVMloss. Read docs/reports/
+olmo-pilot-async/protocol.md, progress.md and pilot-plan.md. Newengine/loop/worker/
+entrypoint; old192runtime sourcepins remainfrozen. Oneworker/exclusive storage
+owner, CPUchildforSDK-RNGisolation, drainbefore nextsave/terminal, noGPUinworker.
+Rootownsengine/executor/GPU; async_loop agentnewloop/tests; async_checkpoint_design
+agentworker/tests; pilot_declaration_plan agentCPUdeclarations/pilotplan.
+NoGPUtraining launchedyet. Mainnativeprovisionaltest actual524288inputs/update,
+NFRB12/rank; newtinyblockingvsasync/cloudresume first. Pilotlearningcohortnotyet
+launched; preserveclipping/laterCEconcerns asreviewcriteria. Newnamespace
+.runtime/olmo-pilot-async; SSDpilot-async; cloudsmallolmo-two-gpu/20260929T204500Z.
+Save/push/retain every20–30min. Check reports/processesbeforelaunchafterinterruption.
+
+
 2026-09-29 ordered pilot execution COMPLETE, PR50 merged806c1be. Read
 docs/reports/olmo-pilot-execution/results.md, next-steps.md, checkpoint-cost.md,
 readiness-map.md and progress.md. Frozen runtime be74dde/192pins unchanged;
