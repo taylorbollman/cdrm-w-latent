@@ -79,3 +79,22 @@ one is safely retained. Any longer unsaveable span needs advance notice.
 The seven-source corpus is a coverage fixture, not the production mixture.
 Recovery remains same-world-size/same-runtime. H200 and changed rank count need
 their own short acceptance; no performance extrapolation is qualification.
+
+## 2026-09-29 recovery failure addendum
+
+The first T1024 fresh-process continuation failed the bitwise gate. Restored
+state/input/noise, forward losses, counters and RNG agree, but backbone/fusion
+raw gradients and resulting Adam/model state differ. Predictor gradients agree.
+The launcher omitted deterministic algorithm/cuBLAS setup used by earlier
+distributed harnesses. Retain the failed pair and its checkpoint; do not relax
+the exact recovery requirement or confuse a small gradient-norm change with
+a bound on gradient-vector error.
+
+Bounded adaptive diagnosis: fixed BF16 Q/K/V and incoming gradient, ordinary
+Flash-SDPA at T16/T1024, deterministic mode off/on in separate processes; repeat
+eager and captured backwards. No optimizer, architecture change or broad kernel
+sweep. If the expected nondeterminism is demonstrated and deterministic control
+passes, record those controls in the packed runner configuration before CUDA
+initialization, then run a fresh write/resume pair under new source pins. Each
+full phase remains bounded to20minutes, with the committed checkpoint retained
+between phases. Old numeric qualifications and old failed attempts remain.

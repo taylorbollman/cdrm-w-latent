@@ -44,6 +44,7 @@ from scripts.olmo_campaign_probe import memory
 from scripts.olmo_campaign_restart import boundary, checkpoint_disk_preflight, compare_continuation
 from scripts.olmo_distributed_prepare import disable_autocast_weight_cache
 from scripts.olmo_f1_common import state_health
+from scripts.olmo_f2_graph_backend_probe import configure_determinism
 from scripts.olmo_lm_common import tree_digests
 from scripts.olmo_two_gpu_recovery import coordinated, draw_rng, seed_local
 from scripts.olmo_two_gpu_validate import gather, preserve_local_rng
@@ -153,9 +154,24 @@ def source_hashes():
     result = probe_sources()
     names = (Path(__file__), ROOT / "scripts/olmo_campaign_restart.py",
              ROOT / "scripts/olmo_two_gpu_recovery.py", ROOT / "scripts/olmo_distributed_prepare.py",
-             ROOT / "scripts/olmo_f1_common.py", ROOT / "docs/reports/olmo-packed-campaign/protocol.md")
+             ROOT / "scripts/olmo_f1_common.py", ROOT / "scripts/olmo_f2_graph_backend_probe.py",
+             ROOT / "docs/reports/olmo-packed-campaign/protocol.md")
     result.update({str(p.relative_to(ROOT)): sha256_file(p) for p in names})
     return dict(sorted(result.items()))
+
+
+def configure_cuda_runtime(rank):
+    """Set deterministic cuBLAS/attention controls before CUDA can initialize.
+
+    Bitwise recovery requires explicit deterministic backwards, including
+    ordinary Flash SDPA. TF32 controls alone do not select that backward.
+    The shared helper rejects an already-initialized CUDA context.
+    """
+    determinism = configure_determinism(True)
+    device = torch.device("cuda", rank)
+    torch.cuda.set_device(device)
+    runtime = require_container_gpu()
+    return device, runtime, determinism
 
 
 def main(argv=None):
@@ -167,9 +183,7 @@ def main(argv=None):
     if any(os.environ.get(k) != "0" for k in ("NCCL_ASYNC_ERROR_HANDLING", "TORCH_NCCL_ASYNC_ERROR_HANDLING")):
         raise RuntimeError("Set both NCCL async-error flags=0 and bound the launcher to 1200 seconds")
     rank = int(os.environ["LOCAL_RANK"])
-    device = torch.device("cuda", rank)
-    torch.cuda.set_device(device)
-    runtime = require_container_gpu()
+    device, runtime, determinism = configure_cuda_runtime(rank)
     torch.set_num_threads(4)
     torch.backends.cuda.matmul.allow_tf32 = False
     torch.backends.cudnn.allow_tf32 = False
@@ -181,7 +195,8 @@ def main(argv=None):
     report = {"schema": SCHEMA, "phase": args.phase, "arm": args.arm,
         "physical_batch_per_rank": args.batch_size, "length": 1024,
         "document_policy": POLICY, "index_sha256": args.index_sha256,
-        "runtime": runtime, "sources": source_hashes(), "status": "running", "checks": [], "phases": [],
+        "runtime": runtime, "determinism": determinism, "sources": source_hashes(),
+        "status": "running", "checks": [], "phases": [],
         "started_utc": datetime.now(timezone.utc).isoformat(),
         "scope": "Actual packed coverage-fixture updates and same-world-size fresh-process recovery. BF16 numerical qualifications remain. Not a production mixture, quality result or changed-hardware recovery.",
         "counter_note": "Legacy counters.documents counts nonempty packed-row presentations, not unique documents"}
@@ -226,7 +241,7 @@ def main(argv=None):
                 shutil.copy2(ROOT/name, destination)
             tracker = OnlineTracker(project="pretrained-fbt-rt-nextlat", output_dir=args.output_dir,
                 group="olmo-packed-campaign", name=args.output_dir.name, preserve_state=preserve_local_rng)
-            tracker.start({k: report[k] for k in ("phase", "arm", "length", "physical_batch_per_rank", "document_policy", "scope")})
+            tracker.start({k: report[k] for k in ("phase", "arm", "length", "physical_batch_per_rank", "document_policy", "determinism", "scope")})
             print({"wandb": tracker.record["run_url"]}, flush=True)
         coordinated("setup", setup)
         coordinated("persist setup", lambda: persist("setup"))
@@ -273,6 +288,7 @@ def run(args, report, rank, device, tracker, persist, publish, phase_observer):
             "data_manifest": data.manifest, "data_manifest_sha256": data.manifest_sha256,
             "world_size": 2, "physical_batch_per_rank": args.batch_size, "training": asdict(config),
             "schedule": scheduler.checkpoint_contract(), "runtime": report["runtime"],
+            "determinism": report["determinism"],
             "ddp": {"static_graph": True, "broadcast_buffers": False, "gradient_as_bucket_view": False,
                     "bucket_cap_mb": 25}, "warmup": 11}
         fingerprint = {"checkpoint_sha256": source_checkpoint["sha256"],

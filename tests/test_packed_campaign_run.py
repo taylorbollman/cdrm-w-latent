@@ -6,6 +6,7 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts import olmo_packed_campaign_run as run_script
 from cdrm.pretrained.campaign_data import SourcePin
 from cdrm.pretrained.campaign_ingest import LocalJSONLSource, SplitPolicy
 from cdrm.pretrained import document_shards
@@ -91,3 +92,52 @@ def test_cli_requires_restore_pins_and_fixed_training_shape():
     resumed = parse_args(common+["--phase", "resume", "--reference-report", "reference.json",
         "--reference-sha256", "b"*64, "--expected-manifest-sha256", "c"*64])
     assert resumed.phase == "resume"
+
+
+def test_determinism_precedes_cuda_device_and_runtime_probes(monkeypatch):
+    events = []
+    controls = {"deterministic_algorithms": True, "cudnn_deterministic": True,
+                "cudnn_benchmark": False, "cublas_workspace_config": ":4096:8"}
+    hardware = {"torch": "test-build", "cuda": "test-runtime", "gpu": "test-device"}
+
+    def deterministic(enabled):
+        assert enabled is True
+        assert events == []
+        events.append("determinism")
+        return controls
+
+    def set_device(device):
+        assert events == ["determinism"]
+        assert device.type == "cuda" and device.index == 1
+        events.append("set_device")
+
+    def runtime():
+        assert events == ["determinism", "set_device"]
+        events.append("runtime")
+        return hardware
+
+    monkeypatch.setattr(run_script, "configure_determinism", deterministic)
+    monkeypatch.setattr(run_script.torch.cuda, "set_device", set_device)
+    monkeypatch.setattr(run_script, "require_container_gpu", runtime)
+    device, recorded_runtime, recorded_controls = run_script.configure_cuda_runtime(1)
+    assert device.type == "cuda" and device.index == 1
+    assert events == ["determinism", "set_device", "runtime"]
+    assert recorded_runtime == hardware
+    assert recorded_controls == controls
+
+
+def test_already_initialized_cuda_fails_before_device_or_runtime_probe(monkeypatch):
+    monkeypatch.setattr(run_script.torch.cuda, "is_initialized", lambda: True)
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Device selection/runtime probing must follow deterministic setup")
+
+    monkeypatch.setattr(run_script.torch.cuda, "set_device", forbidden)
+    monkeypatch.setattr(run_script, "require_container_gpu", forbidden)
+    with pytest.raises(RuntimeError, match="before CUDA initialization"):
+        run_script.configure_cuda_runtime(0)
+
+
+def test_deterministic_helper_is_pinned_in_recovery_sources():
+    helper = "scripts/olmo_f2_graph_backend_probe.py"
+    assert run_script.source_hashes()[helper] == hashlib.sha256((ROOT/helper).read_bytes()).hexdigest()

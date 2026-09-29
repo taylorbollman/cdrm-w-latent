@@ -1,6 +1,8 @@
 # Recommended next milestone: bounded numerical localization
 
-The packed-data/update/recovery work is an operational milestone. The new
+The packed-data/update/recovery work is an operational milestone. First finish
+the current bounded deterministic-backward/restart follow-up: the initial
+T1024 bitwise continuation failed despite matching inputs and forward losses. The new
 ~86% BF16/full-FP32 combined gradient difference on initial NFR T16 makes
 numerical localization the next priority before quality training. Do not
 interpret matching distributed execution or exact checkpoint continuation as

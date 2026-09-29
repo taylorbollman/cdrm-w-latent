@@ -96,3 +96,23 @@ restored boundary gates pass; actual Adam is resident before DDP construction.
 Cold warmup is running. Remaining: capture, restored next update and bitwise
 comparison, then retain final evidence/audit and close draft PR39. Main report
 and next-steps.md prioritize numerical localization rather than quality training.
+
+Cold Adam-resident setup/capture passes, preserving model/optimizer/RNG/clocks/
+cursor exactly. Peak allocated42.8022GiB, peak reserved58.3496GiB and
+14.9454GiB sampled free per GPU after capture. Resumed next update is running;
+bitwise continuation gate remains pending. No B8 fallback needed.
+
+IMPORTANT: original `pretrained-resume-01` FAILED final bitwise gate at663.64s;
+8/9 gates pass. Pre-update and postprepare state/input/noise exact, all scalar
+losses exact, counts/RNG/cursor exact. All4 predictor grads match; all65backbone
++2fusion rawgrad hashes differ; preclipnorm196.2971954 vs196.2953186 (does not
+bound vector error). Failedattempt cloudreceipt `pretrained-resume-01.json`
+verified/publishing. GPUprocess ended. No restart acceptance yet.
+
+Root authorized adaptive bounded test within this milestone: missing global
+deterministic setup is leading explanation; existing helperconfigure_determinism
+isused by older distributed harness. Runneragent patches onlynewpackedrunner+
+tests to setcontrols beforeCUDA andpinmetadata/helper. Precisionagent addsfixed
+QKV Flashrepeatability probe; rootwillrunT16/T1024 off/on. Ifpositive, new
+write02/resume02 withnewsourcepins/checkpointboundary02; preservefailed01.
+Protocoladdendumrecords this; no thresholdrelaxation. DraftPR39 remainsdraft.

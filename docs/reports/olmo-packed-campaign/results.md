@@ -68,10 +68,19 @@ NCCL, clipping, Adam/scheduler and cursor commit. Diagnostic hashing, state scan
 reporting, warmup/capture and checkpoint I/O are excluded. This is a directional
 complete-update rate over a small sample, not a long-run throughput estimate.
 
-**Still pending at this entry:** cloud-restored fresh-process continuation and
-cold DDP/capture with actual Adam already resident. Do not infer restart
-acceptance from the write phase. The checkpoint is a readiness fixture, not an
-approved starting point for a production quality campaign.
+The first fresh-process attempt passed configuration, restored-state and cold
+Adam-resident DDP/capture checks, but **failed exact next-update continuation**.
+Inputs, jitter, RNG, counts and all scalar losses agree. All four predictor
+gradients match; the 65 backbone and two fusion gradients do not. Preclip norm
+is 196.2971954 versus 196.2953186, which does not bound vector error. Cold capture
+left 14.95 GiB free/GPU. The failed attempt is retained separately.
+
+The runner omitted deterministic setup used by our earlier distributed harness.
+A bounded fixed-input Flash-backward test and a fresh deterministic write/resume
+pair are now planned under the protocol addendum. **Restart remains unqualified**
+at this entry; neither scalar-loss agreement nor a small norm change clears it.
+The recovery checkpoint is a readiness fixture, not an approved production
+quality-training starting point.
 
 See [usage](usage.md), [progress](progress.md), [frozen protocol](protocol.md)
 and the [W&B project](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
