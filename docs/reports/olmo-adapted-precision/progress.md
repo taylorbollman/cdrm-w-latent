@@ -26,3 +26,15 @@ Live NVIDIA catalog checked via the fallback URL because npx is unavailable;
 no strong match for this custom PyTorch numerical check, no installs made.
 Retention namespace reserved for this milestone:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T064900Z/`.
+
+## Ready for GPU
+
+Independent protocol/runner/import review passed. Focused CPU suite passed43
+checks in4.69s; one test-only scalar-conversion warning, no runtime failure.
+Log `.runtime/olmo-adapted-precision/cpu-final-01.log`, SHA256
+`3809e7d6fb42b8f5ac127d63f660f5eba99d263f4c1f86affcf441774da24594`.
+The suite includes23import,5runner and15prior recurrence tests.
+
+Importer SHA `ab5895e968dcecbf38a585a99e91828d3f7d8cdbbbdd063a26147dd41fca7ff5`;
+runner SHA `fe081faf4fbcb2caa1449209c28557f9314527e70dd83d50f2ff277c73a4e91f`.
+No previous source changed. Root will launch `adapted-01`, two cases only.

@@ -33,7 +33,7 @@ W&B tracking.
 
 2026-09-29 adapted-state precision ACTIVE, feat/olmo-adapted-precision from PR42.
 User approved matched NF FP32/BF16 at saved O5c mixed update512. Read
- docs/reports/olmo-adapted-precision/protocol.md and progress.md. Two aggregate
+docs/reports/olmo-adapted-precision/protocol.md and progress.md. Two aggregate
 cases/four physical backwards, no updates. Current K4/jitter.02 recipe at
 historically K2/no-jitter adapted backbone+fusion; not causal fusion-only or
 historical resume. New weights-only import validates full state/config/ties,
