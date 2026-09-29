@@ -34,7 +34,7 @@ from scripts.olmo_pilot_ordered_data import OrderedCampaignData
 from scripts import olmo_pilot_execution_contract as contract
 from scripts import olmo_campaign_manifest as legacy
 from scripts import olmo_campaign_ssd_engine as engine
-from scripts.olmo_campaign_ssd_storage import SSDCheckpointStorage, validate_storage_paths
+from scripts.olmo_pilot_execution_storage import SSDCheckpointStorage, validate_storage_paths
 from scripts.olmo_pilot_eval_control import resolve_evaluation, EvaluationController
 from scripts.experiment_tracking import OnlineTracker
 from scripts.olmo_campaign_loop import Coordinator,LifecycleError
@@ -61,6 +61,8 @@ def source_hashes():
     for name in ('scripts/olmo_pilot_execute.py','tests/test_pilot_execute.py',
                  'scripts/olmo_pilot_execution_fixture.py','tests/test_pilot_execution_fixture.py',
                  'scripts/olmo_pilot_execution_audit.py','tests/test_pilot_execution_audit.py',
+                 'scripts/olmo_pilot_execution_restore.py','tests/test_pilot_execution_restore.py',
+                 'scripts/olmo_pilot_execution_storage.py','tests/test_pilot_execution_storage.py',
                  str(PROTOCOL.relative_to(ROOT))):
         sources[name]=sha256_file(ROOT/name)
     return dict(sorted(sources.items()))
