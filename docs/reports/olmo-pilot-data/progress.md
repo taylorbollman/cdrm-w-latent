@@ -12,9 +12,29 @@ work or training is part of the current stage.
   `d826a3d005c3dfa56b8f1dbe882cd91f84d0d41922cac97563ec640cb5f93ba6`.
 - Streaming generation-pinned stage restore: 16 CPU tests passed. Actual cloud
   restore is pending.
-- Preparation and ordered-reader helpers are undergoing peer review and tests;
-  first acquisition has not started at this checkpoint. Freeze preparation code
-  and tests before first acquisition because their hashes are in the authority.
+- Preparation frozen at `3f26dac`: 94 tests in the affected CPU scope pass.
+  The actual plan passed preflight. Sources and tests are immutable because their
+  hashes are in each extraction authority. All acquisitions use the same plan.
+- Ordered reader frozen at `dff5d18`: 66 affected CPU tests pass. Independent
+  original-corpus interval/count auditor at `6641cea`; 24 combined audit/restore
+  tests pass. Raw/token auditor frozen at `129efdf`: 23 new tests pass (53 with
+  the overlapping planner tests). Scope counts overlap; do not sum them blindly.
+- Acquisition and a separate exact-generation raw recovery queue are running.
+  At 18:15 UTC, over20/37 sources are retained. Logs are
+  `acquisition-queue-01.log` and `raw-restore-queue-01.log`. Source receipts and
+  seals are in `acquisition-01/receipts`. First source actual cloud restore
+  passed33,864,700bytes/3objects in2.54seconds.
+- The first four-shard preparation call is queued behind complete acquisition;
+  see `preparation-first-01.log`. It stops after that bounded call. Continue with
+  a first-four-shard cloud restore and fresh-process partial preparation replay,
+  then full original preparation, ordered build and independent audits.
+- Source declaration, pins, recipe, exclusion list and source snapshots are
+  retained with readback at
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z/pilot-data-declaration`.
+  Receipt: `.runtime/olmo-pilot-data/retention/declaration.json`.
+- A separate streaming ordered-index retainer is being implemented because
+  individual catalog/train SQLite files may exceed old128MiB evidence limits.
+  Do not alter old retention helpers or pretend SQLite has another extension.
 
 Evidence: `.runtime/olmo-pilot-data/`. Proposed SSD root:
 `/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929`.
