@@ -31,23 +31,25 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 pilot data IN PROGRESS on feat/olmo-pilot-data; read
-docs/reports/olmo-pilot-data/progress.md, protocol.md and operator-notes.md.
-All37selected Dolma sources acquired/retained/restored:584894docs/310670964candidate
-tokens,111rawobjects/2086379363recoveredbytes. No GPU/model/training work.
-New helpers frozen at db33a31; final161distinctnewCPUtests pass. First4token
-shards cloud-restored, freshprocess next4 exactly equal original:25files+summary.
-Original preparation continues in4-shard retained batches (~101Mtokens at18:30UTC).
-Look at .runtime/olmo-pilot-data/*queue-01.log and preparation-remainder-01.log;
-do not restart completed or still-active jobs blindly. Ordered build,592-document
-retokenization, remaining-token recovery and full ordered audit are still pending.
-GCSdata root .../data/olmo-dolma-v1_5/pilot-20260929-v1; evidence root
-.../fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z/. Persistentreceipts in project;
-largefiles on /mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929 and -recovery.
-Oldhelpers/core/vendor/test sources unchanged. Current sourceplan SHA5954f448...e2a9707
-is in progress.md; preserve acquisition/helperpins. No qualitybudget authorized
-by data capacity. Next ordered executor/evaluation adapters and twoGPUrecovery/
-capacity are described in next-steps.md. Save/push and retain every20–30minutes.
+2026-09-29 pilot data COMPLETE, PR49; final merge/retention metadata is in
+docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
+protocol.md, storage-receipt.md, test-ledger.md and next-steps.md there.
+All 37 sources acquired: 584,851 unique documents / 310,669,141 stored tokens.
+Ordered T1024 train panel: 134,217,728 inputs; 21 panels total. CPU 161 distinct
+tests pass; independent 592-document retokenization and recovered ordered audit
+(134,272 panel row entries / 336 literal samples) pass. Raw 111-object recovery,
+first4 restored + next4 regenerated exact25files, remaining29 token recovery,
+full corpus verification and all44 ordered-index objects (792,408,198 bytes)
+pass. Books coverage is small; main/source overlap is explicit. See coverage.
+W&B qyp83axd synced. Data/evidence retained in gs://fast-chunks; persistent
+receipts under .runtime/olmo-pilot-data/. Large files are under
+/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929 and -recovery.
+No GPU/model training or confirmation outcomes; no active or queued data jobs.
+Old model/vendor/helper/test sources remain frozen. No BF16 clearance change.
+Next: new ordered execution/evaluation adapters to unchanged SSD engine; tiny
+two-GPU graph/eval/cloud-restart acceptance; then native B/NFR T1024 capacity
+and evaluation allocation. Data capacity is not a training budget. Keep prior
+startup/exposure qualifications and save/retain progress every20–30minutes.
 
 2026-09-29 SSD checkpoint readiness COMPLETE, PR48 merged5d901bab; read docs/reports/olmo-campaign-storage/
 results.md, next-steps.md, operator-notes.md, storage-receipt.md and progress.md.

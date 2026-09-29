@@ -1,6 +1,7 @@
 # Operator notes
 
-Work on the `feat/olmo-pilot-data` branch until its closeout records a merge.
+The milestone is complete; consult progress.md for the PR49 merge record.
+Do not rerun completed acquisition/preparation jobs.
 Large files are in `/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929`;
 recovery uses the separate `...-20260929-recovery` directory. Persistent small
 evidence is under `.runtime/olmo-pilot-data`. No old SSD or boot files are pruned.
@@ -47,3 +48,11 @@ SQLite indexes use their real extension and a separate authenticated schema.
 Existing small-evidence archives accept SQLite but cap uncompressed members at
 128MiB. Larger indexes require an explicit streaming index-retention helper,
 not changes to old helpers or an opaque file-extension workaround.
+
+Actual ordered-index retention and recovery passed with
+`olmo_pilot_index_retain.py`: all 44 objects / 792,408,198 bytes. Use the receipt
+`retention/index-suite.json` and its independent SHA seal. Authenticate the
+corpus and index manifests listed in storage-receipt.md before opening them.
+All current data queues are finished. A fresh execution adapter is still needed
+to train with this ordered stream; historical campaign checkpoints/readers do
+not acquire compatibility merely because the packed tensor shapes match.

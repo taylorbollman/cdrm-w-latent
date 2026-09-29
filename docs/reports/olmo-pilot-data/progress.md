@@ -1,61 +1,75 @@
 # Progress and interruption handoff
 
-2026-09-29: work in progress on `feat/olmo-pilot-data`, starting from `b9b0cb4`.
-The user authorized proceeding with the bounded pilot-data milestone. No GPU
-work or training is part of the current stage.
+2026-09-29: **pilot-data milestone complete**, PR49 on `feat/olmo-pilot-data`,
+starting from `b9b0cb4`. No GPU work or model training was performed. All bounded
+data jobs have finished; do not restart acquisition or preparation. The next
+milestone is runner integration, described in [next-steps.md](next-steps.md).
 
-- Plan/recipe: 30 CPU tests passed. All 37 selected upstream objects passed HEAD
-  inspection. The earlier readiness metadata yields exactly 12,512 exclusions.
-- Source plan: `.runtime/olmo-pilot-data/declaration-01/source-plan.json`, SHA256
-  `5954f4480268e50c9041ffc06651a6539efe93ec54f6eb36a2977a4d5e2a9707`.
-- Canonical recipe SHA256:
-  `d826a3d005c3dfa56b8f1dbe882cd91f84d0d41922cac97563ec640cb5f93ba6`.
-- Streaming generation-pinned stage restore: 16 CPU tests passed. Actual cloud
-  restore is pending.
-- Preparation frozen at `3f26dac`: 94 tests in the affected CPU scope pass.
-  The actual plan passed preflight. Sources and tests are immutable because their
-  hashes are in each extraction authority. All acquisitions use the same plan.
-- Ordered reader frozen at `dff5d18`: 66 affected CPU tests pass. Independent
-  original-corpus interval/count auditor at `6641cea`; 24 combined audit/restore
-  tests pass. Raw/token auditor frozen at `129efdf`: 23 new tests pass (53 with
-  the overlapping planner tests). Scope counts overlap; do not sum them blindly.
-- Acquisition and a separate exact-generation raw recovery queue are running.
-  At 18:15 UTC, over20/37 sources are retained. Logs are
-  `acquisition-queue-01.log` and `raw-restore-queue-01.log`. Source receipts and
-  seals are in `acquisition-01/receipts`. First source actual cloud restore
-  passed33,864,700bytes/3objects in2.54seconds.
-- The first four-shard preparation call is queued behind complete acquisition;
-  see `preparation-first-01.log`. It stops after that bounded call. Continue with
-  a first-four-shard cloud restore and fresh-process partial preparation replay,
-  then full original preparation, ordered build and independent audits.
-- Source declaration, pins, recipe, exclusion list and source snapshots are
-  retained with readback at
-  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z/pilot-data-declaration`.
-  Receipt: `.runtime/olmo-pilot-data/retention/declaration.json`.
-- Separate streaming ordered-index retainer is complete/frozen at `db33a31`.
-  It handles the exact44-file suite up to8GiB without changing old128MiB evidence
-  limits or disguising SQLite file types. Its affected54CPUtests passed.
+## Completed acceptance
 
-At18:30UTC, all37sources are acquired/retained/restored. Actual totals:
-584,894rawdocuments,310,670,964candidate tokens,637,272,434compressed bytes and
-2,007,717,910rawJSONLbytes. Raw recovery verified111objects/2,086,379,363bytes;
-summed transfer time96.71s, excluding waiting/orchestration. Evidence retained
-under stages `pilot-data-acquisition` and `pilot-data-raw-recovery` in the same
-small-evidence root; receipts are in `.runtime/olmo-pilot-data/retention/`.
+- All 37 declared sources acquired and retained without substitutions or quota
+  changes: 584,894 raw documents and 310,670,964 candidate tokens.
+- Global exact deduplication: 584,851 documents / 310,669,141 tokens, 43 duplicate
+  rows removed. Whole-document splits and readiness exclusions are frozen.
+- All 21 ordered T1024 panels built. Training contains 131,072 full chunks /
+  134,217,728 inputs; main and source held-out views overlap as documented.
+- Final integrated new-code CPU suite: **161 distinct tests passed**. Earlier
+  scoped runs overlap; see [test ledger](test-ledger.md).
+- All metadata and 592 sampled complete-document retokenizations pass.
+- All 111 raw objects restored from pinned GCS generations. Four token shards
+  restored and next four prepared in a fresh process equal the original eight
+  shards exactly (25 files plus summary). Remaining 29 shards restored and full
+  recovered corpus verification passes.
+- All 44 ordered-index objects restored exactly. Independent audit on the
+  recovered corpus/indexes passes: 134,272 row entries, 336 literal sampled
+  chunks, two-rank masks, cursor restoration, finite exhaustion and membership.
+- W&B data-audit run `qyp83axd` is synced. No model outcomes were evaluated.
 
-The final combined new-code suite passed161distinctCPUtests in57.64s. See
-[test-ledger.md](test-ledger.md); prior scoped counts overlap.
-Cloud-restored first4token shards followed by fresh-process next4 matches the
-original8-shard preparation exactly:25files and complete summary.
-`.runtime/olmo-pilot-data/partial-recovery-comparison.json` is the comparison.
-Current original preparation has12shards/~100.9Mtokens; remaining bounded calls
-are active. All current code is saved/pushed. Queued follow-ons wait for complete
-preparation: raw/token audit, ordered build and restoration of remaining shards.
-Complete ordered-suite quota/audit/retention acceptance is still pending.
+The immutable source plan is
+`.runtime/olmo-pilot-data/declaration-01/source-plan.json`, SHA256
+`5954f4480268e50c9041ffc06651a6539efe93ec54f6eb36a2977a4d5e2a9707`.
+The corpus manifest is
+`f3206c360dd412ccbaf08c65b30a7ba7f1b30b56db7ffbb9559522831c797e06`;
+ordered suite manifest is
+`080402225e24350cc377b720bdf39a55b87e71e4a6af5fea3cda7460eb169215`.
+All other authoritative hashes are in [storage-receipt.md](storage-receipt.md).
 
-Evidence: `.runtime/olmo-pilot-data/`. Proposed SSD root:
-`/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929`.
-Every source/shard must be retained before more work. Keep old sources frozen;
-new source files are versioned separately. Do not infer a quality campaign from
-this data-preparation work. See [protocol.md](protocol.md) and preceding
-[next steps](../olmo-campaign-storage/next-steps.md).
+## Locations and source freeze
+
+- Persistent evidence: `.runtime/olmo-pilot-data/`, including acquisition and
+  preparation receipts, audit reports, recovered-data records and test logs.
+- Original SSD root: `/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929`.
+  Separate recovered root appends `-recovery`.
+- Data GCS root:
+  `gs://fast-chunks/cdrm-w-latent/data/olmo-dolma-v1_5/pilot-20260929-v1`.
+- Evidence GCS root:
+  `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T174435Z`.
+  Every stage uses a distinct `pilot-data-` name; receipts are local under
+  `retention/` and the final closeout preserves their catalog.
+
+Runtime helpers reached their final version at `db33a31`; subsequent edits are
+only documentation. Individual source snapshots and helper pins are retained
+with each stage; do not equate the latest Git commit with every earlier stage's
+source identity. The original helpers, model/vendor sources and tests remain
+unchanged. Add new versioned adapters for ordered execution rather than changing
+historical acceptance contracts or migrating old cursors silently.
+
+## Interpretation and next action
+
+Read [results.md](results.md) and [coverage-assessment.md](coverage-assessment.md).
+Books have small selected-document counts and source/main panels overlap.
+This is a conditional sample of selected object prefixes, not original OLMo
+stream reconstruction; unknown pretraining exposure and near duplicates remain.
+Confirmation membership checks do not authorize outcome-driven selection.
+
+The ordered reader is accepted at the data/CPU level, not yet in the distributed
+executor. Next: new execution/evaluation adapters, tiny two-GPU graph/evaluation/
+cloud-restart acceptance, then native B/NFR T1024 physical batch and evaluation
+cost measurements. Startup exposure, BF16 qualifications and training-budget
+choices remain explicit. No quality campaign or next data round is queued.
+
+## Closeout metadata
+
+PR: https://github.com/taylorbollman/cdrm-w-latent/pull/49.
+Final commit, merge and closeout retention records are appended below after
+publication. Source code and data acceptance are complete.

@@ -71,25 +71,56 @@ There were no modifications or deletions of pre-existing files. In particular,
 pre-existing tests were unchanged. This ledger is a subsequent documentation
 addition; it does not change that runtime-source scope.
 
+The closeout recheck at `d1654eceaa2ac6b3a689d64e1f7b43c95983312e` also
+shows a documentation-only update to the existing `AGENTS.md` handoff. Existing
+runtime, core, vendor and test files remain unchanged from `b9b0cb4`.
+
 The new ordered reader has its own schema. Reusing established batching and
 cursor methods does not mean that historical campaign executors accept the new
 ordered index. That integration is a separate milestone.
 
-## Actual-data acceptance still to record
+## Completed actual-data acceptance
 
-The following are pending final closeout evidence in this ledger. Individual
-source operations may already have completed; their final totals and immutable
-receipts belong in the results and recovery reports, not in the unit-test count.
+The following stages completed on the actual declared corpus. These are
+separate results from the 161 unit tests. Report paths below are relative to
+`.runtime/olmo-pilot-data/`; this ledger update checked the local finalized
+reports and receipts without repeating downloads or tokenization.
 
-| Acceptance stage | Ledger status |
+| Acceptance stage | Completed result and evidence |
 | --- | --- |
-| All 37 actual source acquisitions, fixed bounds and verified raw retention | Pending final aggregate report/receipts. |
-| Actual incremental tokenization and complete global deduplication/split totals | Pending final corpus report. |
-| Cloud restoration of committed partial preparation followed by fresh-process continuation | Pending exact continuation comparison. |
-| Actual ordered suite, quotas, reserves, exclusions and panel overlap | Pending completed suite and independent interval/count audit. |
-| Sixteen independently retokenized unique documents per source | Pending actual raw/token audit; planned total is 592 documents. |
-| Sixteen literal sampled chunks per panel and CPU rank/cursor checks | Pending actual ordered audit; planned total is 336 chunks across 21 panels. |
-| Complete raw/token/index generation-pinned recovery and post-restore semantic checks | Pending final recovery report and receipts. |
+| Acquisition and raw retention | All 37 sources completed with verified receipts: 584,894 raw documents, 310,670,964 candidate tokens, 637,272,434 compressed bytes read and 2,007,717,910 retained raw JSONL bytes, within the declared successful-acquisition bounds. `acquisition-01/acquisition-progress.json`, its 37 raw receipts, and `raw-token-audit-01/report.json`. |
+| Incremental tokenization and global exact deduplication | Completed 37 token shards containing 584,851 unique documents and 310,669,141 tokens; 43 duplicate rows removed. `prepare-call-10-summary.json` and `preparation-01/preparation-progress.json`. |
+| Raw cloud recovery | All 37 sources restored from exact generations: 111 objects and 2,086,379,363 bytes, including raw JSONL, original-line maps and manifests. `raw-recovery-summary-01/report.json`. |
+| Partial preparation recovery and continuation | Cloud-restored configuration and first four token shards, then regenerated the next four in a fresh process. All 25 compared files and the preparation summaries matched the original eight-shard preparation exactly. `partial-recovery-comparison.json`. |
+| Whole-document retokenization | All 592 samples passed: 16 unique documents per source, including text/token/content hashes, complete token payloads, terminal/embedded EOS and original source-line mapping. Full metadata and per-source EOF counts also passed; exact-content split intersections were zero. `raw-token-audit-01/report.json`. |
+| Ordered suite and independent counts | All 21 panels built with the declared quotas/reserves and exclusion policy. The independent auditor counted all 134,272 selected chunk rows across panels and verified original-corpus intervals, selected document/source memberships and aggregate per-loss counts. `ordered-build-01/report.json` and `ordered-audit-01/report.json`. |
+| Literal ordered chunks, masks and cursors | All 336 literal samples passed: 16 chunks per panel. Two-rank CPU mask/count checks, committed-cursor restoration and finite exhaustion passed for all 21 panels. `ordered-audit-01/report.json`. |
+| Complete tokenized-corpus recovery | Restored the remaining 29 token shards after the four restored and four exactly regenerated shards. Full semantic corpus verification passed, with identical original/recovered root manifest SHA256. `complete-corpus-recovery.json`. |
+| Ordered-index recovery | All 44 index/manifest objects restored from exact generations, totaling 792,408,198 bytes, with the original suite identity and manifest hash. `index-recovery-01/report.json`. |
+
+The 134,272 counted rows include intentional main/source-panel overlap; they are
+not 134,272 independent observations. The audit records this overlap explicitly.
+Its literal token reads cover 336 chunks, while interval/count checks cover every
+selected row. Similarly, 592 documents were independently retokenized, not all
+584,851 unique documents. The candidate corpus contains 2,119 earlier-readiness
+identities; the ordered selection excludes them rather than rewriting the
+candidate corpus.
+
+The partial-continuation check establishes exact regeneration of four shards
+from the restored boundary, not a second complete retokenization of the corpus.
+The later full-corpus check validates the recovered tokenized artifacts and
+their semantic metadata. Index recovery establishes exact bytes and identity;
+it does not exercise a training executor or add a second full panel evaluation.
+
+Key finalized report SHA256 values:
+
+| Report | SHA256 |
+| --- | --- |
+| `raw-token-audit-01/report.json` | `b6053115ea9cf5101fc0cd29cd82f56af16bf6644dc64bd103c77b2505902484` |
+| `ordered-audit-01/report.json` | `414fd5ab28b852757eb63e973ed24757a8b8e50360c602ce858c7102673db990` |
+| `partial-recovery-comparison.json` | `939def46297ebedafbfb8acc040fc7fc954ea63815d8dabb3f220ab2388ed110` |
+| `complete-corpus-recovery.json` | `259d22548ff31c8a62361eba4fe66b2bc46b6bc80e512597825eb6bec5d6ee36` |
+| `index-recovery-01/report.json` | `70d4a2abc5aa141783bb0ef70d25dd639f2aa4a496497247d1bcaa6d9f31214c` |
 
 No model training, GPU execution, outcome-based confirmation-set use,
 near-duplicate filtering, reconstruction of the original OLMo training mixture,
