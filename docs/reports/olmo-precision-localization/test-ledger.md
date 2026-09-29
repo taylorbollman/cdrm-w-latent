@@ -3,7 +3,8 @@
 2026-09-29. Initial implementation source freeze: `c8575d7`; exact per-file
 source inventories in each report are authoritative. The initial
 [protocol](protocol.md), bridge and auxiliary source bytes remain frozen.
-Crossed-backend work has its own [adaptive protocol](adaptive-protocol.md).
+Crossed-backend work has its own [adaptive protocol](adaptive-protocol.md);
+the final local probe uses [attention-local-protocol.md](attention-local-protocol.md).
 
 ## CPU checks
 
@@ -15,14 +16,15 @@ suites overlap; their totals must not be summed as distinct tests.
 | `cpu-bridge-01.log` | 13 passed, 4.80 s | Bridge and existing component checks |
 | `cpu-diagnostics-01.log` | 33 passed, 5.14 s | Combined bridge and auxiliary scope |
 | `cpu-aux-final-01.log` | 20 passed, 3.07 s | Final auxiliary reporting/source-pin scope |
+| `cpu-local-final-01.log` | 44 passed, 3.84 s | Final bridge, auxiliary, crossed-backend and local-attention scope |
 
-The last two suites each record the same CPU warning: a BF16-input/FP32-weight
+The last three suites each record the same CPU warning: a BF16-input/FP32-weight
 RMSNorm fixture cannot use the fused CPU implementation. This is a dispatch
 warning in the test fixture, not a CUDA numerical failure or a GPU fallback.
 
 ## GPU cases and health gates
 
-All three probes ran as single processes on CUDA device 0 inside the project
+All four probes ran as single processes on CUDA device 0 inside the project
 container, with a 900-second external timeout. The second H100 was not used;
 two virtual input records do not imply DDP or two-GPU execution. No optimizer
 update, gradient clipping, scheduler advance or graph capture occurred.
@@ -32,8 +34,9 @@ update, gradient clipping, scheduler advance or graph capture occurred.
 | `bridge-01` | CE/combined × FP32 math/eager, BF16 math/eager, BF16 Flash/Triton: 6 aggregate cases | 12 model backwards | All six cases and final input/weight/RNG/source integrity checks pass | 51.88 s | [p6oooxmt](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/p6oooxmt) |
 | `auxiliary-01` | Latent/KL × FP32/BF16 × sparse/prepared: 8 aggregate cases | 16 loss-only backwards | All eight cases and final fixture/weight/RNG/source integrity check pass | 34.72 s | [mdo63etu](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/mdo63etu) |
 | `backend-cross-01` | CE-only math/eager and Flash/Triton references, plus new Flash/eager condition: 3 aggregate cases | 6 model backwards | All three cases, reference reproduction and final integrity checks pass | 39.70 s | [mrgqe7di](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/mrgqe7di) |
+| `attention-local-01` | 1 aggregate production CE anchor; 8 fixed-input sites × 3 paths | 2 model backwards + 24 local VJPs | Anchor reproduced, all 24 local cases finite, 8 Flash outputs exact, final integrity checks pass | 32.14 s | [s3jwgeks](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/s3jwgeks) |
 
-All three final statuses are `passed_operational_diagnostic`. Cross-precision and
+All four final statuses are `passed_operational_diagnostic`. Cross-precision and
 layout comparison flags are descriptive. An operational pass does not clear
 the original numerical qualifications or declare gradients equivalent.
 
@@ -47,9 +50,9 @@ the intended SDPA and RT tile forward/backward selection.
 
 ## Independently checked provenance
 
-A separate read-only inspection verified **228 source/snapshot pairs**:
+A separate read-only inspection verified **308 source/snapshot pairs**:
 76 in the bridge, 74 in the auxiliary report and 78 in the crossed-backend
-report. It also verified the complete
+report, plus 80 in the local-attention report. It also verified the complete
 exported fixture file SHA256/size and decoded all **22 base64 tensor payloads**
 against their reported dtype, shape and raw-byte SHA256. The shared checkpoint,
 recipe and bridge source inventories, readout/predictor hashes and fixture
@@ -76,6 +79,8 @@ therefore provide no T1024 numerical acceptance.
 | `bridge-01/report.json` | `39bf047c9908c852364ae5bc4e6f126bf2a3dc52bcc03cec561ebcb84727bb0b` |
 | `auxiliary-01/report.json` | `c4946da63c6275a4fcd926292b0296337f57d10553233c7184e94e38b617d5fc` |
 | `backend-cross-01/report.json` | `97ced83fd037c907bd6a8ad34c377b96a0c1bc04dc424c21950cbf2194da9a65` |
+| `attention-local-01/report.json` | `aa105ea3d1678f787840dc84d85997ed9e8ba60c33ae007f007aa3723717f51e` |
+| `attention-local-01/attention-fixture.json` | `c08fa685da76f211fb50132db44af98e1d0c747d26c96480a5c082ee6b4e147c` |
 | `bridge-01/auxiliary-fixture.json` | `aeab58a88c7eba15448a1b7630c9af747e492b3760b2364da5cd53380e063b27` |
 | Frozen `protocol.md` | `31647b30dac411c99d4ace0ca52f82d0c761f71684a20109546ab060473687b9` |
 | Recipe | `29409f66064a2ab2034cf549fe45ecc26f83841d0f9755d87954616e0cdd5da8` |
@@ -106,23 +111,42 @@ were necessary because the initial bridge did not retain full gradient vectors.
 These observations qualify the tested CE/T16 pairing, not combined objectives
 or longer contexts, and do not certify either BF16 path against FP32.
 
+The independent local-attention audit checked the 7,023,735-byte captured
+fixture and all **48 decoded payloads**: eight sites × Q/K/V/output/cotangent
+plus valid-query masks. Shapes, dtypes, raw-byte hashes and source/reference
+pins match. Captured Q/K/V/output/cotangents are BF16, shape
+`[2,16,16,128]` (batch, heads, sequence, head width). The local FP32 reference
+promotes those same values, rather than obtaining new values from a full-FP32
+model forward. All 24 local cases retain common input/cotangent values and
+finite outputs/gradients. The eight local Flash output hashes equal the actual
+captured production outputs.
+
+The observer recorded 112 original SDPA calls and excluded 112 checkpoint
+recomputation calls; selected sites are layers 1/14, passes 0/3, both records.
+Q/K/V and incoming-gradient strides are preserved on independent local leaves;
+their storage offsets are reset to zero and original Q/K/V aliasing is not
+preserved. Reported output/dQ/dK/dV geometry covers entire call tensors. A
+separate valid-query output calculation excludes padded query positions.
+The [results](results.md) report both scopes and the relative-L2 ranges.
+
 ## Retention and remaining scope
 
-Both `retention/bridge-01.json` and `retention/auxiliary-01.json` report verified
-retention under
+All four stage receipts report verified retention under
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T043105Z/`,
-using suffixes `precision-bridge-01` and `precision-auxiliary-01`. Their source
-snapshots and the bridge's small anchor export are retained. Final storage
-object auditing is tracked separately by root; this ledger does not claim a
-new checkpoint restoration exercise.
+using suffixes `precision-bridge-01`, `precision-auxiliary-01`,
+`precision-backend-cross-01` and `precision-attention-local-01`. Their source
+snapshots, reports and both small tensor-fixture exports are retained. Separate
+CPU-only readback audits `storage-audit-01` and `storage-audit-02` downloaded all
+eight listed object generations and checked 318 inventory members and 308
+source/snapshot pairs. See [storage receipt](storage-receipt.md) for full pins
+and closeout status; this is not a checkpoint restoration exercise.
 
-Root is handling crossed-backend cloud retention separately. Its completed
-source/fixture checks are recorded above; this ledger does not substitute for
-the storage-object audit. Across the three probes there were nine model
-gradient cases (18 physical model backwards, including the repeated reference
-cases) and eight auxiliary cases (16 loss-only backwards).
+Across all four probes there were **10 aggregate model-gradient cases**
+(20 physical model backwards, including repeated references/anchor), eight
+auxiliary cases (16 loss-only backwards) and 24 additional local attention VJPs.
 
-No fixed-QKV ordinary-attention result, common-cotangent backbone propagation,
-selective precision correction, changed-state/real-packed-fixture check or long
-training trajectory has yet been established by these three reports. A bounded
-local ordinary-attention check is under consideration; no fix is claimed.
+No common-cotangent backbone propagation, selective precision correction,
+changed-state/real-packed-fixture check or long training trajectory has yet
+been established by these four reports. The fixed-QKV local result does not
+globally exclude a Flash bug or prove that the larger model differences are
+harmless. No fix or new numerical acceptance is claimed.

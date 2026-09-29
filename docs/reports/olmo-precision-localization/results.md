@@ -5,7 +5,10 @@ checks separate some loss-layout rounding from backbone behavior. A subsequent
 crossed-backend case identifies ordinary SDPA dispatch as the switch producing
 the observed BF16 backend split in this fixture; replacing RT's Triton tiles
 with eager tiles under Flash changes nothing. Neither BF16 endpoint follows
-FP32 closely, and this does not establish that Flash is incorrect. All reported
+FP32 closely. A subsequent eight-site attention probe finds much smaller local
+output/gradient differences on common inputs than the full-model discrepancy.
+This supports investigating propagation sensitivity, but does not establish
+that the discrepancy is harmless or exclude a Flash bug globally. All reported
 passes below are operational passes, not numerical clearance.
 
 These are fixed-state diagnostics on the initial pretrained NFR model: K4,
@@ -115,12 +118,51 @@ conclusion follows from this crossed case.
 The cross completed operationally in 39.70 seconds:
 [W&B crossed-backend run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/mrgqe7di).
 
+## Fixed-input attention: local differences are much smaller
+
+The [local protocol](attention-local-protocol.md) captured actual ordinary
+attention at layers 1/14, passes 0/3, in both physical records: **eight sites**.
+One recomputed CE anchor required two physical model backwards and reproduced
+the prior production metrics, forward fingerprints and gradient-group summaries.
+The observer saw 112 original forward SDPA calls and excluded 112 checkpoint
+recomputation calls.
+
+At each site, FP32 math, BF16 math and BF16 Flash received identical Q/K/V
+values and the same incoming CE gradient: **24 local vector-Jacobian products
+(VJPs)**. The actual captured Q/K/V and incoming gradients were BF16. The FP32
+local reference promotes those same values; it is not a fresh full-FP32 model
+trajectory. All eight local Flash output hashes exactly matched their captured
+production outputs.
+
+| Quantity | BF16 Flash versus local FP32 math | BF16 math versus local FP32 math |
+| --- | ---: | ---: |
+| Attention output | 0.1599–0.1862% | 0.1526–0.1637% |
+| Query gradient, dQ | 0.2465–1.5006% | 0.1637–0.1808% |
+| Key gradient, dK | 0.2287–0.6841% | 0.1589–0.1666% |
+| Value gradient, dV | 0.1736–0.2222% | 0.1605–0.1705% |
+
+These are ranges of relative L2 across the eight sites, measured over every
+entry in each call tensor. Restricting outputs to actual valid queries gives
+Flash errors of 0.1287–0.1865%. Local inputs preserve native strides, but use
+independent leaves with offset zero; original Q/K/V storage aliasing is not
+preserved.
+
+The measurements do not show a local discrepancy approaching the full-model
+79.85% backend gradient split at these sampled sites. They are consistent with
+smaller local differences growing through the model, but do not establish
+where or how that happens. Eight T16 sites cannot clear every attention call,
+the RT/FBT composition, a different incoming gradient, or longer-context
+behavior. A local input-gradient error and a full parameter-gradient error are
+different measurements, so their ratio is not an amplification estimate.
+
+The local probe completed operationally in 32.14 seconds:
+[W&B local-attention run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/s3jwgeks).
+
 ## Remaining decision
 
-A bounded local ordinary-attention check with fixed inputs and a common incoming
-gradient is being considered. It can distinguish local attention arithmetic
-from subsequent model propagation; no result or correction is claimed yet.
-The original 3.40224% isolated and 1.6953% packed
+The next decision is where to test propagation and a narrowly scoped precision
+intervention; no correction has been established. The original 3.40224%
+isolated and 1.6953% packed
 BF16 layout qualifications remain open, as does the shared FP32 discrepancy.
 No architecture, Q/K-normalization policy or training configuration has been
 changed on the basis of these diagnostics.

@@ -1,108 +1,70 @@
 # Numerical localization progress
 
-2026-09-29. Active branch: `feat/olmo-precision-localization`.
+2026-09-29. Branch `feat/olmo-precision-localization`, from PR39/main `536458d`.
+**All four GPU stages completed. Final documentation and PR closeout are in progress.**
+No GPU work or quality training is queued. Read [results](results.md),
+[test ledger](test-ledger.md), [storage receipt](storage-receipt.md) and
+[next steps](next-steps.md) before resuming.
 
-The user authorized the next numerical milestone after packed-data/recovery
-readiness. The [protocol](protocol.md) is drafted before execution; root will
-freeze it with the diagnostic source inventory. At this entry, **no GPU result
-from this milestone is available**.
+## Authorization and scope
 
-## Starting evidence
+The user approved a bounded numerical milestone after packed campaign/restart
+readiness. This milestone uses the original isolated T16 NFR fixture, K4 FBT,
+native RT at layers 0/15, existing NextLat branches, and unchanged pretrained
+OLMo-1B step60000 weights. Two virtual B2 records run on GPU 0; there is no DDP,
+optimizer update, graph capture, training run, Q/K normalization or core model
+change. Deterministic controls precede CUDA, TF32 is off, and each stage has an
+external 900-second timeout. W&B is online under `taylorbollman`.
 
-- Packed T1024/B12, two-H100 deterministic recovery passed exact next-update
-  comparisons, including real data/noise, gradients, Adam/model, cursor and RNG.
-  Original nondeterministic resume failure and the isolated Flash repeatability
-  checks remain retained. This is operational acceptance, not precision
-  equivalence.
-- Original isolated NFR sparse/prepared BF16 gradient difference: 3.40224%
-  combined; CE alone agrees. Packed NFR separately retains a 1.6953% layout
-  failure.
-- Both BF16 layouts differ about 86% from the common FP32 combined gradient in
-  the initial T16 fixture. That comparison also changes math/Flash SDPA and
-  eager/Triton native RT. The responsible operation and practical consequence
-  remain unresolved.
+## Completed stages
 
-See the prior [next steps](../olmo-packed-campaign/next-steps.md),
-[precision assessment](../olmo-packed-campaign/precision-assessment.md) and
-[storage receipt](../olmo-packed-campaign/storage-receipt.md). Do not repeat or
-relabel those old runs as new acceptance evidence.
+| Stage | Scope | Result | W&B |
+| --- | --- | --- | --- |
+| `bridge-01` | 6 aggregate CE/combined gradient cases; 12 model backwards | Operational guards pass; large BF16/FP32 differences remain | `p6oooxmt` |
+| `auxiliary-01` | 8 fixed-hidden latent/KL cases; 16 loss-only backwards | Operational guards pass; small local BF16 layout differences measured | `mdo63etu` |
+| `backend-cross-01` | 3 CE aggregate cases; 6 model backwards, including repeated anchors | Ordinary Flash/eager RT equals Flash/Triton RT exactly | `mrgqe7di` |
+| `attention-local-01` | 1 repeated CE anchor / 2 model backwards; 8 sites × 3 local VJPs | Anchor exact; all 24 local VJPs and integrity guards pass | `s3jwgeks` |
 
-## Work in progress
+Initial source freeze `c8575d7`; crossed-backend source `5f1cb79`; local-attention
+source `7082225`. Each report's per-file hashes are authoritative. Original
+protocols and runtime helpers are frozen and must not be silently edited for
+follow-up experiments. New helpers can import them while recording new scope.
+Final focused CPU suite: 44 passed in 3.84s, with the known CPU RMSNorm dispatch
+warning. Earlier suites overlap; do not sum them as unique tests.
 
-| Work item | Owner | State |
-| --- | --- | --- |
-| Six-case CE/combined precision/backend bridge | Root | Implemented; 13 focused CPU checks pass; GPU validation pending |
-| Fixed-hidden-state latent/KL sparse/prepared cotangents | Runner agent | Preparing bounded loss-level probe |
-| Protocol and cross-compaction record | Data-review agent | Drafted; awaiting root source freeze |
-| GPU execution and artifact retention | Root | Not launched at this entry |
+## Interpretation and next decision
 
-The initial model bridge is FP32 math/eager, BF16 math/eager and BF16
-Flash/Triton, using the same initial NFR T16/B2/two-virtual-rank fixture. The
-BF16 bridge retains mixed RT attention and other runtime flags; only ordinary
-SDPA and RT tile forward/backward selection differ from the BF16 endpoint.
-Determinism is configured before CUDA, TF32 remains off, and no optimizer,
-DDP or CUDA graphs are part of these new probes.
+- Combined BF16 math/eager versus FP32 gradient L2: 81.50%; current BF16
+  Flash/Triton versus FP32: 85.96%. Same-state original endpoints reproduce exactly.
+- CE Flash/eager versus Flash/Triton:zero full-gradient difference. Both differ
+  79.85% from math/eager. This separates the ordinary attention backend change
+  from the RT tile change on this fixture; it does not clear longer contexts.
+- Fixed-hidden auxiliary BF16 prepared/sparse hidden-gradient errors: 0.1416%
+  latent and 0.2016% KL. FP32 layout errors below 8e-7. These are local quantities,
+  not directly comparable amplification factors for parameter gradients.
+- At identical actual Q/K/V and incoming cotangents, Flash versus FP32 math has
+  0.160–0.186% output error and 0.174–1.501% Q/K/V gradient error over eight sites.
+  All local Flash outputs reproduce captured output bytes. 112 original ordinary
+  calls were observed; 112 checkpoint replays were excluded. This supports
+  investigating sensitivity through the assembled model, not a large local
+  attention-backward error. It does not prove harmlessness in training.
 
-The bridge comprises six aggregate gradient cases, each with two physical
-fixture records: 12 model-backward calls in total. Root's focused bridge and
-existing-component CPU suite passed 13 tests. These tests support preparation;
-no new GPU result or numerical acceptance is available at this entry.
+Recommend a separately frozen eight-case within-arm BF16/FP32 CE comparison
+for ordinary / RT / K4 FBT / K4 FBT+RT computation (existing N/NR/NF/NFR arms,
+zero auxiliary cotangents). Preserve data/noise and compare shared backbone
+as well as total gradients. Only then select one precision boundary. This
+follow-up is **not launched**. The original 3.40224% isolated/1.6953% packed
+layout qualifications and broader BF16/FP32 qualification remain open.
 
-The auxiliary probe is fixed to eight aggregate loss-gradient cases, each with
-two physical records: 16 loss-only backward calls. It reuses the
-BF16 Flash/Triton forward anchor exported by the bridge, preserving actual
-hidden/embedding dtypes and payload/hash provenance. Readout/predictor values
-are reconstructed and hash-checked from the base checkpoint and existing seed;
-there is no large duplicate weight dump or additional backbone forward.
+## Persistence
 
-Keep each phase bounded by 900 seconds. Save atomic case progress and retain
-source/evidence in GCS at least every 20–30 minutes. Run IDs, immutable report
-paths and verified receipts will be added here as cases complete. A timeout or
-failure is retained rather than overwritten.
-
-## Decision record still pending
-
-After the initial evidence, choose at most one crossed-backend condition or a
-targeted cotangent/precision-boundary follow-up. Record its hypothesis and
-controls before launch. A real packed-data spot check follows a localized
-finding when needed; a broad sweep or Q/K-normalization transition is not
-authorized by numerical completion alone. Existing BF16 qualifications remain
-open until the results justify an explicitly documented resolution.
-
-Implementation/source freeze: bridge and auxiliary helpers independently reviewed,
-no blocking findings. Combined diagnostic CPU scope33 passed in5.14s; final
-auxiliary scope20 passed in3.07s (overlap, after reporting/source-pin polish).
-GPU queue begins with bridge-01, then auxiliary-01 using its pinned JSON anchor.
-Root alone launches. Evidence root `.runtime/olmo-precision-localization/`;
-cloud namespace
+Runtime evidence: `.runtime/olmo-precision-localization/`.
+Cloud namespace:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T043105Z/`.
-These are single-process numerical probes; the retention namespace does not
-imply actual DDP or two-GPU execution. Both H100s were verified idle before
-launch; only CUDA device0 is used. Protocol and helper source bytes now frozen.
-
-Initial bridge completed operationally:6aggregate cases/12physical backwards,
-51.88s, W&Bp6oooxmt. All76source snapshots verified; inputs/recipe/source and
-prior endpoints reproduce exactly. ReportSHA39bf047c9908c852364ae5bc4e6f126bf2a3dc52bcc03cec561ebcb84727bb0b.
-CombinedBF16math/eager vsFP32=81.4996%; production=85.96195%; production vs
-bridge=75.9402%. CEcounterparts=100.0289%,95.9337%,79.8459%. No numericalclearance.
-Bridge retained with exported3.52MB JSONanchor SHA
-`aeab58a88c7eba15448a1b7630c9af747e492b3760b2364da5cd53380e063b27`.
-Auxiliary01 completed8cases/16loss backwards in34.72s, W&Bmdo63etu; reportSHA
-`c4946da63c6275a4fcd926292b0296337f57d10553233c7184e94e38b617d5fc`.
-Fixedhidden BF16prepared/sparse differences:latent0.1416%,KL0.2016%; FP32below
-8e-7. Auxiliary retention running. Adaptiveprotocol freezes onecrossedbackend
-CEcondition Flash/eager plus2recomputed reference cases. Precisionagent owns
-newcrossscript/tests; oldruntime/protocolsources stayfrozen. Root alone launches.
-
-Crossed-backend01 completed and independently audited:3 CEaggregate cases/6physical
-backwards,39.70s,W&Bmrgqe7di. Flash/eager equalsFlash/Triton exactly for all
-71parametergradients and8validpass states/cotangents. Both vsMath/eager CE
-relativeL2=.798459023. All78sourcepairs verified. ReportSHA
-`97ced83fd037c907bd6a8ad34c377b96a0c1bc04dc424c21950cbf2194da9a65`.
-Allthree stage retentionreceipts verified. OrdinarySDPA dispatch accounts for
-this CEbackend pair; RTtile changes havezero measured effect here. Neither
-sharedBF16/FP32 sensitivity norcombined/longer-context behavior iscleared.
-Next boundedlocal check is recordedin attention-local-protocol.md: capture
-8actualordinaryattention sites (layers1/14,passes0/3,bothrecords), identical
-QKV/cotangent localFP32math/BF16math/BF16Flash VJPs. Runneragent implementstwo
-new files; root alone launches afterreview/sourcefreeze. Oldsources untouched.
+The namespace is historical; these probes used one device/process. All four diagnostic stages are retained and independently read back:8 objects,
+318 inventory members and308 source pairs. Both independent audit records and
+final code/test/report evidence are also retained in verified
+`precision-closeout-01`; see the storage receipt for generation/hash pins. No new trained checkpoint is created or required.
+The retained anchors are 3.52 MB auxiliary tensors and 7.02 MB attention tensors.
+Runtime code is committed and pushed through7082225; final documentation and
+PR closeout are the remaining publication steps. The numerical work is complete.
