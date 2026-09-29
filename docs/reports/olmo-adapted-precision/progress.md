@@ -52,3 +52,13 @@ Completed `adapted-01` report/log/source evidence is retained. Final independent
 cloud readback, closeout and PR details are recorded below when complete.
 No new checkpoint or gradient-vector dump; the original O5c checkpoint is reused
 without duplicating it in this stage. No local artifact was deleted.
+
+## PR and closeout
+
+Results/next-step handoff pushed at20f0063.
+[PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43) contains the new
+explicit importer, bounded runner, tests and documentation. No prior runtime
+file is changed. The GPU stage is verified in GCS:106inventory members,
+104source snapshots plus report/closed launcher log. Final documentation and
+audit closeout will be retained after independent readback completes; final
+receipt/PR state is tracked in Git outside its own immutable archive.

@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 adapted-state precision COMPLETE, feat/olmo-adapted-precision.
+2026-09-29 adapted-state precision COMPLETE, PR43, feat/olmo-adapted-precision.
 Read docs/reports/olmo-adapted-precision/results.md,next-steps.md,test-ledger.md,
 progress.md for finalPR/retention. Runtime9f4693e: saved O5c mixed update512
 backbone+fusion imported exactly (68state entries), fresh predictor4entries

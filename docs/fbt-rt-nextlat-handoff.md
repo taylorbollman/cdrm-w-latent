@@ -4,7 +4,8 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Adapted-state precision comparison complete, 2026-09-29:** branch
+**Adapted-state precision comparison complete, 2026-09-29:**
+[PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43), branch
 `feat/olmo-adapted-precision`; read [results](reports/olmo-adapted-precision/results.md),
 [next steps](reports/olmo-adapted-precision/next-steps.md),
 [test ledger](reports/olmo-adapted-precision/test-ledger.md),
