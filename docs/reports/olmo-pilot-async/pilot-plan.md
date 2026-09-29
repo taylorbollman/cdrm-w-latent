@@ -1,12 +1,10 @@
 # Bounded adaptation pilot after asynchronous checkpoint acceptance
 
-The immediate milestone is asynchronous checkpoint publication, its interruption
-acceptance, and concrete CPU-resolved learning declarations. Before a longer
-cohort, run a bounded native capacity/overlap check at the actual proposed
-effective batch. A separate four-update diagnostic can expose accumulated
-throughput, memory and background I/O contention without making its endpoint the
-start of the eventual comparison. The current milestone does not automatically
-start a 32- or 128-update learning cohort.
+Asynchronous checkpoint acceptance and the separate four-update native
+capacity/overlap check are complete; see [results](results.md). The measured
+fixture uses the proposed effective batch, but its endpoint is not the start
+of this comparison. The CPU-resolved 32-/128-update learning cohort below
+remains unlaunched.
 
 This proposal keeps the user's concern about heavy clipping and poor later-pass
 CE explicit. Those are adaptation questions for the bounded pilot, not reasons
@@ -42,8 +40,9 @@ See [startup evidence](../olmo-fusion-startup/results.md).
 
 NF physical batch 12 is a conservative initial allocation, not a measured NF
 capacity result. Observe its first actual updates and memory before committing
-to a longer segment. NFR12 and B32 have native one-slot acceptance; the proposed
-accumulated arrangement still needs the bounded observation below.
+to a longer segment. NFR12 now has native acceptance at all 22 accumulation
+slots. B32 has prior native one-slot acceptance; observe its first accumulated
+updates as well.
 
 The existing declaration contract accepts either original startup or the
 fusion128 route, and restricts that adapted route to NF/NFR. Consequently use
@@ -266,5 +265,7 @@ accepted allocator correctly produces 4/12 under contiguous slot ownership.
 The helper assertion was corrected and rerun into fresh `-02` output; no
 allocator, training code, corpus or historical evidence was changed. The two
 successful resolutions took about 21.88 and 29.43 seconds respectively, with
-no GPU, model construction, training or network use. The actual asynchronous
-executor source/policy binding remains separate pending runtime acceptance.
+no GPU, model construction, training or network use. These are CPU planning
+artifacts. The accepted asynchronous runtime was separately bound for the
+four-update diagnostic; the future cohort still needs its own declared
+execution identities and fresh segment directories.

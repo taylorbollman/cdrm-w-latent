@@ -68,3 +68,25 @@ preserved training state exactly, and returned CE3.18058/7.87717/7.71814/7.74559
 Norms211.12/76.50/73.80/52.42 remain heavily clipped. Open issue and pilot cost
 estimates updated; no useful-refinement or BF16-clearance claim. Native final
 summary/retention/inventory and PR closeout remain pending.
+
+Native run completed with exit0, reportstatus completed_plan, W&B synced and
+both GPUs verified idle. Final checkpoint4 is cloud-verified; no pending worker.
+Runtime200pins unchanged. Final reportSHA
+f2e4065c7167cad0cfa22f24d3803bcdd286f9792554b0bd9f126f0a7ed9e05d;
+independent summarySHA86142ab9f44b6cd70b6da61d378b4bdffd49980e0306d940c233fe0cde154667.
+Stage1886.27s; terminal background364.83s, loop blocking364.69s. Scope details
+are inresults.md. Native stage and summary retained with verified receipts.
+
+W&B charts1ofs0x3r synced. Optional immediate metadata readback of original
+runosqidkgt failed after the requested summary update. Later independent
+read-only confirmation found all four requested fields correct and verified
+the existing chart run. Consistent with delayed read visibility; no training
+or chart upload rerun. Firstfailure and recovery stages retained. RecoverySHA
+4c6866684312fcef54f973d4e44391dbf3530c14c53dac510113e61377ec7d92.
+
+Inventory passes:16small stage receipts/32objects plus12checkpoints/24objects,
+total35,674,627,872bytes. Original individual publication receipts are preserved
+under neutral snapshot names with mappings. InventorySHA
+2b8d949260f64df6a6691c55de9dc74df937b153fab954d600ae09a8bba1a1ee.
+Own/latercloseout receipts excluded fromcounts; no newcorpus. Documentation and
+pilot cost updated. PR ready/merge and final closeout receipt follow below.

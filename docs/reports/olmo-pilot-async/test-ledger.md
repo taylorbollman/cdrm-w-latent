@@ -36,7 +36,38 @@ finished; its completed report and W&B sync were recovered, and idle GPUs were
 verified. The outer launch-result file was absent, so no missing exit code was
 invented and no completed experiment was repeated.
 
-The native accumulated diagnostic is recorded separately in results.md when
-complete. Native byte retention is tested; exact new-runtime cloud continuation
-is scoped to the tiny fixture. Existing older native recovery evidence remains
-separately qualified. No new BF16 equivalence or H200/topology claim is made.
+The native NFR accumulated diagnostic completed all four updates and final
+FP32 evaluation on two H100s. Its independent JSON summary validated:
+
+- All 200 frozen runtime source pins against both current files and retained
+  source snapshots, plus pinned native declaration and resolved plan.
+- T1024, physical batch 12/GPU and 22 accumulation slots/GPU, with 524,288 valid
+  inputs per update. Actual rank allocation and loss counts match the plan:
+  512 real and 16 dummy rows globally per update, totaling 2,097,152 inputs,
+  2,095,104 CE targets, 2,091,185 latent pairs and 2,085,224 KL triples.
+- Exactly 1,267,879,936 resident, trainable and optimizer-owned parameters,
+  including the separate fusion and predictor components. Removing the
+  training-only predictor leaves 1,185,153,024 deployable parameters.
+- Preserved preparation state, finite update metrics and agreed replica
+  metrics. All four updates clipped heavily; finite execution does not
+  establish optimization stability or useful refinement.
+- Completed checkpoints at updates 0, 2 and 4, bound worker/job records,
+  CPU-only cloud workers, full verified cloud publication, and no pending
+  worker at normal termination. Checkpoint 2's publication interval overlaps
+  later update callbacks; this is wall-clock concurrency evidence, not a
+  matched-control throughput improvement.
+- A fixed 65,536-input common-FP32/no-jitter development evaluation after
+  update 4, all four pass results, and exact preservation of the training
+  boundary on both ranks. Later-pass CE remains worse than pass 1.
+
+The completed native report is
+`.runtime/olmo-pilot-async/native-nfr12-accum-01/report.json`; independent summary
+`native-summary-01/report.json` has SHA256
+`86142ab9f44b6cd70b6da61d378b4bdffd49980e0306d940c233fe0cde154667`.
+See [results](results.md) for the measurements and their timing scopes.
+
+Native byte retention is tested; exact new-runtime cloud continuation remains
+scoped to the tiny fixture. This native diagnostic did not perform a separate
+exact-resume comparison. Existing older native recovery evidence remains
+separately qualified. No new BF16 equivalence, learning-quality, H200 or other
+topology claim is made.
