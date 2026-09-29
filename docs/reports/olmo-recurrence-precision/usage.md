@@ -48,3 +48,30 @@ name/namespace does not imply DDP. No trained checkpoint is produced. Check
 the final receipt and preserve all declared source snapshots, case reports and
 local evidence. Cross-precision error measurements remain descriptive until a
 specific resolution is documented.
+
+## Conditional fusion diagnostic
+
+The separately frozen [fusion protocol](fusion-protocol.md) permits one
+NF-only candidate. This helper reproduces both NF anchors, then disables
+autocast only inside the existing feedback-fusion module. It does not change
+the production model or expose an arbitrary precision sweep.
+
+```bash
+CDRM_FLASH_ATTENTION_SOURCE=installed bash scripts/docker_shell.sh bash -lc '
+  set -euo pipefail
+  test -f /.dockerenv
+  test "$PWD" = /workspace/cdrm-w-latent
+  nvidia-smi --query-gpu=index,name,memory.used,utilization.gpu --format=csv
+  CUDA_VISIBLE_DEVICES=0 timeout 900s python scripts/olmo_campaign_fusion_precision.py \
+    --reference-report .runtime/olmo-recurrence-precision/matrix-01/report.json \
+    --reference-sha256 bfaff91aae8e2625e5f2572cfaf4f33d449b560d5cefbef7ff563c6d820ac412 \
+    --output-dir .runtime/olmo-recurrence-precision/fusion-NEW
+'
+```
+
+Use `tests/test_campaign_fusion_precision.py` for the focused CPU checks.
+The pinned matrix source inventory is part of this helper's contract; keep
+completed helpers, tests and protocols unchanged. A successful operational
+result means the candidate was measured under the intended controls, not that
+its numerical agreement was acceptable. This NF-only probe cannot qualify
+combined RT/FBT or the auxiliary loss layout.
