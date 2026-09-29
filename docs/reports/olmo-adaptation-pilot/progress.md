@@ -24,3 +24,21 @@ Root owns launch/monitoring. The `native_async_declaration` agent independently
 audited launch and is preparing a JSON-only result summarizer; no other GPU
 jobs are authorized. Inspect `queue-01/report.json`, individual reports and
 process state before recovery. Do not repeat completed work after interruption.
+
+23:31 UTC: B completed32 with exit0, final cloud checkpoint32 verified and
+W&B `nxm2prv9` synced. Queue automatically started NF. B reportSHA
+`203b8fd63448cd4da7a90f424d374d37417758a73c85ca9825d26129bb5035bb`;
+independent summary-b-01 passed, SHA
+`4712d55fe8963b934904705be9ec549cce4fe8188cbdc36c16be3d81fa04d504`.
+All B updates finite/unclipped, norm0.3797–0.4532. Dev16/32 CE2.631118/2.631794.
+Selected training+materialization71,006inputs/s; max sampled reservation42.50GiB,
+min sampled free35.11GiB. Executor757.34s includes terminal retention; not pure
+training throughput. B stage and summary retention have been started/completed
+as recorded in persistent receipt files. PR52 is draft. Runtime unchanged.
+
+23:34 UTC: NF W&B `uf1ojrgl` is active and graph warmup has begun. Its local
+checkpoint0 is saved; cloud retention runs in the background. B and summary-b-01
+evidence retention both completed successfully. Declarations, launch-time helper
+snapshots and standalone analysis helpers are also retained. Queue remains
+running in the original host process, with NFR pending; do not start another
+GPU run. Host session identifier7388 is a convenience, not recovery authority.

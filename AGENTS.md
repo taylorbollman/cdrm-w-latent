@@ -43,6 +43,10 @@ stopped_at_boundary, not completed_plan. Async checkpoint policy unchanged,
 600s trigger/32milestone/terminal drain, all useful states toGCS. EstimatedNFR2h.
 Per-pass FP32 dev16/32; clipping/later-CE concern remains explicit. No automatic
 extension to128 or broad numerical retest. Save/push progress every20–30min.
+B completed32/cloud-verified/synced (W&Bnxm2prv9); dev16/32 CE2.63112/2.63179,
+no clipping,71,006selected inputs/s. NFactive (W&Buf1ojrgl), NFRqueued in the
+same sequential host queue. No additional GPU launches. Completed B summary
+and evidence retained; current state is in newprogress/results and queue JSON.
 
 2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 merged039fa96b.
 Closeout metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
