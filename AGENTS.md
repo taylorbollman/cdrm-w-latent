@@ -32,7 +32,7 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 overnight numerical/readiness work COMPLETE; closeout/PR metadata
+2026-09-29 overnight numerical/readiness work COMPLETE, PR45; closeout/PR metadata
 is recorded in docs/reports/olmo-fusion-startup/progress.md. Branch was
 feat/olmo-fusion-startup. Read results.md, next-steps.md, implementation-map.md,
 readiness-map.md, test-ledger.md and storage-receipt.md in that report directory.

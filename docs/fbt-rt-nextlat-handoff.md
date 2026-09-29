@@ -4,7 +4,7 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Overnight investigation complete, 2026-09-29:**
+**Overnight investigation complete, 2026-09-29, [PR45](https://github.com/taylorbollman/cdrm-w-latent/pull/45):**
 user authorized useful technical work without intermediate review. The numerical,
 GPU readiness and final independent storage audits are complete; read [current results](reports/olmo-fusion-startup/results.md),
 [assessment and next steps](reports/olmo-fusion-startup/next-steps.md),

@@ -482,3 +482,34 @@ No further numerical sweep is justified by these results. We reached a useful
 stopping point before the full six-hour allowance; the remaining work changes
 the training entrypoint/startup contract and requires a separately bounded
 implementation milestone. Closeout bundle/PR links follow below.
+
+## 2026-09-29 12:26 UTC — PR45 and verified final bundle
+
+[PR45](https://github.com/taylorbollman/cdrm-w-latent/pull/45) contains this
+investigation. Final pre-metadata source/document snapshot commit is
+`be5dfa7bcac0901820163e3180ba7fe33927ca50`. Both H100s were independently checked
+at12:23:39UTC:0MiBallocated,0%utilization, no compute processes. No job is queued.
+
+Complete small closeout bundle:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T075900Z/overnight-closeout-02/`.
+It has274retainedmembers, including code/docs, focused CPU logs, source snapshots,
+audit authorities and verified receipts; no model payload or downloaded archive
+copies. Its receiptSHA is
+`9d1915f034a9189e57a97b8efb05bc0c30ba44f45a4918ce816533e20d93977a`.
+ArchiveSHA `5eca62e84003a70b5fc3ac07bb5e9853d4e799f8e5ad220118c394b2eec644d1`,
+generation1790684738630708,1,121,177bytes. ManifestSHA
+`7826f970f40b2ad7d026edc4964bd2a28d88d86a4426c95655bd9b44bfe21772`,
+generation1790684738899361,68,745bytes. Full readback verification passed.
+
+The first closeout package remains retained: the old retainer's filename filter
+excluded `checkpoint-cost-assessment.md` because it starts with `checkpoint-`.
+The complete02package uses `cost-assessment.md` inside the archive and records
+its original source path. An explicit pre-upload inventory equality check
+confirmed every intended02member was selected. No frozen retainer was changed.
+This PR/receipt metadata was added after the bounded closeout snapshot and is
+retained in Git; the fixed79receipt storage inventory excludes later artifacts.
+
+Final tracked diff whitespace checks pass. Focused tests and per-stage independent
+audits are listed separately, without summing overlapping suites. No core model,
+Q/K normalization, numerical threshold or production training default changed.
+Boot disk has~178GiBfree; retained local checkpoints were not pruned.
