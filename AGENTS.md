@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 SSD checkpoint readiness COMPLETE; read docs/reports/olmo-campaign-storage/
+2026-09-29 SSD checkpoint readiness COMPLETE, PR48 merged5d901bab; read docs/reports/olmo-campaign-storage/
 results.md, next-steps.md, operator-notes.md, storage-receipt.md and progress.md.
 Runtime54ae688/172pins frozen; new versioned SSD executor/engine/storage/restore,
 independent tiny auditor. CPU215distinct pass. Tiny two-H100 storage transition,

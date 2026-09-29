@@ -37,3 +37,11 @@ throughcompaction. PR/mergemetadata willbeappendedaftercloseoutpublication.
 PR48 opened; all tests, runtime/audit checks and closeout retention completed.
 Closeout contains1,031members; receipt SHA256 `25c926a73a873f22abf8acbb06b94a3d1061e8335dc8a7e964160bb57a1593f9`.
 BothGPUsidle; boot91GiBfree, SSD1.4TiBfree. Ready for authorized merge.
+
+## Final repository state
+
+PR48 merged as `5d901bab2d7e4cc8c343af28953125da87cbdc2c` on2026-09-29.
+Repository returned to main. The closeout bundle predates this administrative
+merge note; all execution sources, checks and retained authorities are unchanged.
+No GPU jobs or transfers remain active. Next milestone is the bounded data
+implementation described in data-plan.md, followed by target allocation checks.
