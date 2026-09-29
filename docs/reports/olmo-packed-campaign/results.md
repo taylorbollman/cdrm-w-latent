@@ -46,15 +46,32 @@ and no training-quality claim follows from operational acceptance.
 
 ## Full-length actual-data recovery
 
-In progress at this entry: NFR, K4 FBT, native RT at layers 0/15 on every pass,
-both NextLat losses, T1024, B12/rank on two H100s. Each logical update contains
-524,288 valid inputs in 512 real rows, spread over 22 slots/rank. The final
-synchronization slot has eight real rows on rank 0 and none on rank 1.
+NFR, K4 FBT, native RT at layers 0/15 on every pass, both NextLat losses, T1024,
+B12/rank on two H100s. Each logical update contains 524,288 valid inputs in 512
+real rows, spread over 22 slots/rank. The final synchronization slot has eight
+real rows on rank 0 and none on rank 1.
 
-Graph preparation passed with about 24.4 GiB sampled free/GPU before actual
-Adam state exists. Full update timing, retained checkpoint and fresh-process
-resident-Adam capture/replay acceptance remain pending. Do not infer restart
-acceptance from preparation alone.
+The write phase passed all 13 gates and two updates in 835.55 seconds, including
+setup, hashes and checkpoint I/O. Model/Adam replicas, real loss counts, cursor,
+RNG, graph preparation and source pins agree as required. Checkpoint after
+update one is retained in GCS; its bytes are being downloaded and verified for
+fresh-process recovery. The second update ran on the original live graph.
+
+| Update | Global valid input tokens/s | Loader and jitter | Captured backward | Adam and cursor commit | Peak reserved/GPU | Sampled free/GPU |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| First | 3,968.23 | 7.823 s | 123.702 s | 0.597 s | 58.90 GiB | 14.40 GiB |
+| Original live-graph continuation | 3,957.59 | 7.953 s | 123.947 s | 0.576 s | 58.90 GiB | 14.40 GiB |
+
+Rates count input tokens once across ranks, not K4 pass tokens, loss targets or
+padding. Timed segments include loader/jitter, refill/preflight, graph backward,
+NCCL, clipping, Adam/scheduler and cursor commit. Diagnostic hashing, state scans,
+reporting, warmup/capture and checkpoint I/O are excluded. This is a directional
+complete-update rate over a small sample, not a long-run throughput estimate.
+
+**Still pending at this entry:** cloud-restored fresh-process continuation and
+cold DDP/capture with actual Adam already resident. Do not infer restart
+acceptance from the write phase. The checkpoint is a readiness fixture, not an
+approved starting point for a production quality campaign.
 
 See [usage](usage.md), [progress](progress.md), [frozen protocol](protocol.md)
 and the [W&B project](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).

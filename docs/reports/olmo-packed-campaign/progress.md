@@ -77,3 +77,13 @@ be retained separately without uploading a duplicate 15GB state. Restore helper
 is prepared under `checkpoint-restore-evidence-01/restore_checkpoint.py`; use
 that boundary receipt once verified. Do not resume until the original writer
 finishes and its completed report hash is pinned.
+
+Write phase complete:13/13 gates pass, 835.55s; second-update rate3,957.59/s.
+Completed report SHA
+`960e65563ac4b66a51197546cb14e8eccd6d457bfdb32838c8136333d5c8ce38`.
+Checkpoint manifest SHA
+`9238b186a33c80be85aa18aec11cc2ea15f097e137be34eece4e978ca2886a50`.
+Boundary retention receipt verified; full checkpoint now in GCS. CPU restoration
+into `/mnt/localssd/cdrm-checkpoints/packed-campaign/cloud-restored-01` running.
+Only after downloaded bytes verify, launch new torchrun resume with the above
+report+manifest pins, cloud-restored index path and unchanged runtime sources.

@@ -3,8 +3,8 @@
 Recorded 2026-09-29 from completed local reports and CPU logs. This ledger
 separates model-boundary semantics, distributed operational correctness and
 independent numerical qualification. Index cloud recovery and the bounded
-precision-component diagnostic are complete; T1024 actual-data training
-recovery remains pending in this version of the ledger.
+precision-component diagnostic and T1024 actual-data write/continuation are
+complete; fresh-process model recovery remains pending in this ledger version.
 See [protocol](protocol.md), [usage](usage.md) and [progress](progress.md).
 
 ## CPU checks
@@ -181,12 +181,79 @@ threshold was introduced. Neither this diagnostic nor the operational packed
 checks establish harmlessness for learning. A matched-kernel precision bridge
 and fixed-input/cotangent localization remain follow-up work.
 
+## Actual-data T1024 write and live-graph continuation
+
+[pretrained-write-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8c13f3ne)
+passes **13/13 gates on both ranks** in 835.5506 s; W&B is synced. The actual
+NFR model has 1,267,879,936 resident/trainable parameters and uses B12 per rank,
+T1024, K4, RT0/15 and both NextLat losses. Each update consumes 524,288 valid
+input tokens through 22 accumulated physical slots per rank.
+
+The gates cover preparation preserving model/Adam/RNG/clocks/cursor; raw
+gradient replicas, model/Adam replicas, finite state, RNG/committed cursor and
+actual-data counts for each of two updates; checkpoint publication preserving
+the live-graph boundary; and unchanged source pins. Report-level independent
+audit additionally confirms both updates' complete counts against the separate
+index oracle, rank accounting summing to global counts, exact replica state
+and metrics, correct cursor/token clocks, changed actual inputs/model state
+between updates, and rate arithmetic.
+
+| Quantity | First update | Original live-graph continuation |
+| --- | ---: | ---: |
+| Valid input tokens | 524,288 | 524,288 |
+| CE / latent / KL targets | 523,776 / 523,768 / 523,248 | 523,776 / 523,770 / 523,252 |
+| Cross-document CE targets | 8 | 6 |
+| Committed next chunk / update | 512 / 1 | 1,024 / 2 |
+| Cumulative input tokens | 524,288 | 1,048,576 |
+| Global physical microbatch presentations | 44 | 44 |
+| Loader and keyed-jitter time, slower rank | 7.8228 s | 7.9527 s |
+| Backward/NCCL time, slower rank | 123.7015 s | 123.9474 s |
+| Adam/scheduler/cursor-commit time, slower rank | 0.5971 s | 0.5764 s |
+| Total timed segments, slower rank | 132.1213 s | 132.4765 s |
+| Global valid input throughput | **3,968.23 tokens/s** | **3,957.59 tokens/s** |
+| Gradient norm before clipping | 228.8580 | 196.2972 |
+| Learning rate used | `2.0e-5` | `2.18e-5` |
+
+Summing the slower rank's complete timed segments across both updates gives
+264.5978 s and **3,962.91 valid input tokens/s**. Component-wise maxima in the
+table need not sum exactly to the maximum rank's total. Timing includes CPU
+token reads/jitter, validation/refills, graph backward/NCCL, clipping, Adam,
+scheduler and cursor commit. It excludes diagnostic hashing/gates, extra
+health scans, W&B and checkpoint I/O. It is a two-update directional rate, not
+the whole 835.55-second launch amortized into steady training. Clip norm 1.0
+and the token-based warmup schedule are the recorded recipe, unchanged here.
+
+Both ranks report 33.35183 GiB peak allocated, 58.89844 GiB peak reserved and
+14.39661 GiB sampled free after the updates. Immediately after capture and
+before the first optimizer step, reserved memory is 48.89648 GiB and free
+memory is 24.39856 GiB. **Adam was not resident before DDP construction in this
+write phase**; these numbers do not qualify cold resume with resident moments.
+Runner metadata shows 20 warmup backwards, two captures, 42 local graph replays
+and two synchronized replays per rank. No recapture occurs between updates.
+
+The checkpoint is at the first update's exact boundary. Its saved model/Adam,
+scheduler/counter/RNG/cursor digests equal those recorded for that update; the
+reference continuation equals the second live-graph update. Reported state
+size is 15,214,757,825 bytes, state SHA256
+`7b5e948eea2f1102676b26b4d9b883df398fad06c4b0523f3b0c79d12584b830`,
+and manifest SHA256
+`9238b186a33c80be85aa18aec11cc2ea15f097e137be34eece4e978ca2886a50`.
+Checkpoint cloud publication/full-download verification and fresh-process
+resume are separate acceptance steps, pending in this ledger version.
+
+The first two real updates have only eight and six internal document
+boundaries, respectively. Boundary-rich tiny probes and the full-stream CPU
+oracle provide complementary coverage; these two updates alone do not measure
+representative production packing or short-document throughput. Neither finite
+updates nor falling scalar objectives resolve the retained BF16 qualifications.
+
 ## Evidence audit and remaining stages
 
 The independent review verified all declared source-snapshot bytes for the
 three distributed GPU reports (70 files each), index report (eight files),
-component diagnostic (72 files) and index-cloud-restore report (two files):
-**292 source/snapshot pairs**. Report hashes at review time are:
+component diagnostic (72 files), index-cloud-restore report (two files) and
+actual-data write report (76 files): **368 source/snapshot pairs**. Report
+hashes at review time are:
 
 | Stage | Completed report SHA256 |
 | --- | --- |
@@ -196,14 +263,16 @@ component diagnostic (72 files) and index-cloud-restore report (two files):
 | pretrained-graph-01 | `200efad282fa37c872434a550d4d868d025c3a78bc6272de17e2a484198b7655` |
 | precision-components-01 | `f6bf376ea511e9c853984f7290872cb24ae06bdb98b55130e9238b79261cf405` |
 | index-restore-evidence-01 | `625218c61f111799c33d2745bc3fec529e797689eaeaa2fc8920c45e9976cf8c` |
+| pretrained-write-01 | `960e65563ac4b66a51197546cb14e8eccd6d457bfdb32838c8136333d5c8ce38` |
 
-Each of these six stages has a local `status: verified` retention receipt
-with two cloud objects. That is recorded artifact-publication evidence; it is
-not the still-pending actual-data checkpoint download/restart acceptance.
+The six stages preceding `pretrained-write-01` each have a local
+`status: verified` retention receipt with two cloud objects. That is recorded
+artifact-publication evidence; it is not the still-pending actual-data
+checkpoint download/restart acceptance. The write evidence and its separately
+published checkpoint boundary need their final retention records.
 
-Pending in this ledger version: real-corpus T1024 write and
-cloud-restored next-update comparison, cold T1024 DDP/capture with resident
-Adam, and short real-loader rate.
+Pending in this ledger version: real-corpus T1024 cloud-restored next-update
+comparison and cold T1024 DDP/capture with resident Adam.
 These need their own completed reports. Production mixture/shuffling, long
 quality training, H200, changed world size, sharding and interrupted in-flight
 collective recovery are outside this milestone's current evidence.
