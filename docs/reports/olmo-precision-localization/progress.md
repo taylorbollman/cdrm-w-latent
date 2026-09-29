@@ -79,3 +79,17 @@ cloud namespace
 These are single-process numerical probes; the retention namespace does not
 imply actual DDP or two-GPU execution. Both H100s were verified idle before
 launch; only CUDA device0 is used. Protocol and helper source bytes now frozen.
+
+Initial bridge completed operationally:6aggregate cases/12physical backwards,
+51.88s, W&Bp6oooxmt. All76source snapshots verified; inputs/recipe/source and
+prior endpoints reproduce exactly. ReportSHA39bf047c9908c852364ae5bc4e6f126bf2a3dc52bcc03cec561ebcb84727bb0b.
+CombinedBF16math/eager vsFP32=81.4996%; production=85.96195%; production vs
+bridge=75.9402%. CEcounterparts=100.0289%,95.9337%,79.8459%. No numericalclearance.
+Bridge retained with exported3.52MB JSONanchor SHA
+`aeab58a88c7eba15448a1b7630c9af747e492b3760b2364da5cd53380e063b27`.
+Auxiliary01 completed8cases/16loss backwards in34.72s, W&Bmdo63etu; reportSHA
+`c4946da63c6275a4fcd926292b0296337f57d10553233c7184e94e38b617d5fc`.
+Fixedhidden BF16prepared/sparse differences:latent0.1416%,KL0.2016%; FP32below
+8e-7. Auxiliary retention running. Adaptiveprotocol freezes onecrossedbackend
+CEcondition Flash/eager plus2recomputed reference cases. Precisionagent owns
+newcrossscript/tests; oldruntime/protocolsources stayfrozen. Root alone launches.
