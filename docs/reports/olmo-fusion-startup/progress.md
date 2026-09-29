@@ -274,3 +274,30 @@ earlierfullcloudrestoreverified. Newcorpus-recovery.md suppliesexistingrestore
 commandandexactgenerations; no redundantuploadorrestore. Q/Kinterpretationnote
 usesexistingF2/F4/local-attentionevidence only; no causalnormalizationfaultidentified,
 adapted/packedRTattention-scale scopesexplicitlyunmeasured. NoGPUaddedforit.
+
+## 10:33 UTC — full-model outcome and next execution checks
+
+The four paired NFR updates finished successfully in 3,512.8 seconds; process
+exit 0 and all final integrity checks pass. Report SHA256:
+`f24c6035f9035189bcb9fefd8ee12ceb42d3f249aca7c7221beb175d3f0da9dd`.
+Both update2 and update4 full checkpoints are retained and verified. BF16
+update4 is SHA `6030c92f1c09d2c561ca173eee816316ae51de4bc66b368a34996577b8c1dd0a`,
+GCS generation `1790677664012201`. Final common-FP32 held-out losses are
+FP32/BF16: CE 5.67535857/5.71905397, KL 2.74808357/2.88192361, latent
+0.59827354/0.61606979. Both improve from the initial common state, with a
+visible BF16 deficit. Step4 raw backbone gradients differ 133.28%, but the
+actual update vectors differ 30.31%; these now include trajectory divergence.
+This is neither a same-state BF16 error nor numerical clearance.
+
+Root launched the bounded abrupt-rank reference/fault/resume orchestration on
+both GPUs (session55745, rank-failure-launcher.log). The packed bridge authority
+preflight is now possible; precision agent owns that CPU check. Small NFR
+evidence retention is running in a CPU container (session94937).
+
+Per-pass continuation reporting is frozen at commit e7cc3d4: 19 focused CPU
+tests pass, unchanged aggregate values and forward counts. Pending GPU order:
+rank recovery, saved-state packed bridge, live-graph evaluation insertion, then
+conditional 16-update continuations if the bridge gates pass. A small ordinary
+pretrained common-loop adapter is being tested independently; no core source
+or completed diagnostic helper changes. Preserve the approximately14:00UTC
+closeout target and allow time for checkpoint verification.
