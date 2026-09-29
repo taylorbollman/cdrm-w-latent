@@ -41,6 +41,26 @@ documented in [baseline and controls](baseline-and-controls.md). This small
 evidence archive does not duplicate its 4.8 GB weights. Independent review did
 not repeat that large checkpoint hash/read or download.
 
-Final documentation, audit and CPU-log closeout is pending separately. Storage
-integrity does not establish BF16 clearance: the adapted-state gradient result
+## Documentation and audit closeout
+
+`retention/closeout-01.json` verifies 27 additional inventory members: final
+reporting docs, importer/runner/tests, CPU/preflight/postflight logs, baseline and
+independent cloud audits with their source snapshots. Uncompressed selected
+files total307,574bytes. The retention helper verified server size/MD5/SHA
+metadata and downloaded SHA256 for both objects:
+
+| Object relative to namespace | Generation | Bytes | SHA-256 |
+| --- | --- | ---: | --- |
+
+| `adapted-closeout-01/evidence.tar.gz` | `1790665521273356` | 99,880 | `f44dd70f18126b2d27c8c141ef07fcaab5d09aa8477f26fc20f5d7e13370b476` |
+| `adapted-closeout-01/retention-manifest.json` | `1790665521531981` | 7,481 | `3a3af8bfb3af8a1fe38f65bcd9b6226e9516d18cb0f2618f1039fa6d2594746e` |
+
+Combined totals: **two receipts, four listed objects, 599,191 downloaded bytes
+and 133 inventory members**, plus four archive controls. Independent readback
+covers the diagnostic stage; closeout verification here is the retention
+helper's upload/download verification, not a second independent cloud audit.
+The immutable closeout freezes docs at7b53e2f before its own receipt; final
+receipt and PR control records are in Git. No further archive cycle is needed.
+
+Storage integrity does not establish BF16 clearance: the adapted-state result
 retains the intermediate forward-state qualification and adapted-backbone confound.

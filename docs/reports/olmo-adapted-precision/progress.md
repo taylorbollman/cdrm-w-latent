@@ -59,6 +59,9 @@ Results/next-step handoff pushed at20f0063.
 [PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43) contains the new
 explicit importer, bounded runner, tests and documentation. No prior runtime
 file is changed. The GPU stage is verified in GCS:106inventory members,
-104source snapshots plus report/closed launcher log. Final documentation and
-audit closeout will be retained after independent readback completes; final
-receipt/PR state is tracked in Git outside its own immutable archive.
+104source snapshots plus report/closed launcher log. Independent exact-generation readback verified the complete diagnostic stage.
+Documentation/audit closeout at7b53e2f is now retained and verified:27additional
+members, two listed objects,107,361bytes. Combined133members/fourobjects.
+See storage-receipt.md for pins and verification scope. The immutable closeout
+predates its own receipt; final receipt/PR state is tracked in Git outside it.
+All required work for this bounded milestone is complete; no GPU job queued.
