@@ -142,9 +142,11 @@ def ce_backward(model, recipe, batches, noises, *, ce_targets):
         with sdpa_kernel(SDPBackend.MATH), torch.autocast(device.type, enabled=False):
             result = ce_loss_sums(model, recipe, local, local_noise)
             objective = result.sums["ce"] / ce_targets
-        if not bool(torch.isfinite(objective)) or not objective.requires_grad:
-            raise FloatingPointError("CE warmup loss is nonfinite or detached from fusion")
-        objective.backward()
+            if not bool(torch.isfinite(objective)) or not objective.requires_grad:
+                raise FloatingPointError("CE warmup loss is nonfinite or detached from fusion")
+            # Non-reentrant activation/CE checkpoints replay their forwards
+            # here, so they must retain the original backend/autocast scope.
+            objective.backward()
         metrics["objective"] += float(objective.detach())
         metrics["ce_sum"] += float(result.sums["ce"].detach())
         for index, loss in enumerate(result.pass_losses):

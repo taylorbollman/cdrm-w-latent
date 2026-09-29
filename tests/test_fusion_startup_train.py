@@ -1,5 +1,6 @@
 """CPU oracles for fusion-only CE, compact state authority and exact recovery."""
 import copy
+from contextlib import contextmanager
 from dataclasses import asdict
 import json
 from types import SimpleNamespace
@@ -79,6 +80,43 @@ def test_ce_only_matches_full_zero_aux_gradient_and_preserves_feedback_autograd(
     assert train.frozen_state_pins(model) == frozen and tree_digests(_rng_state(None)) == rng
     with pytest.raises(ValueError, match="denominator"):
         train.ce_backward(model, recipe, batches, noise, ce_targets=24)
+
+
+def test_backward_and_checkpoint_replay_stay_inside_forced_math_and_disabled_autocast(monkeypatch):
+    model, recipe, _, _, batches, noise = tiny()
+    train.freeze_for_startup(model)
+    # Test the runtime context at real leaf-gradient callbacks, not only at
+    # forward dispatch; CPU defaults previously hid the CUDA replay mismatch.
+    original = train.sdpa_kernel
+    active, seen = [], []
+
+    @contextmanager
+    def observed_backend(backend):
+        assert backend == train.SDPBackend.MATH
+        with original(backend):
+            active.append(True)
+            try:
+                yield
+            finally:
+                active.pop()
+
+    def observe_gradient(gradient):
+        assert active == [True]
+        assert torch.backends.cuda.math_sdp_enabled()
+        assert not torch.backends.cuda.flash_sdp_enabled()
+        assert not torch.is_autocast_enabled("cpu")
+        seen.append(True)
+
+    monkeypatch.setattr(train, "sdpa_kernel", observed_backend)
+    handles = [p.register_hook(observe_gradient) for p in train.assert_fusion_only(model)]
+    try:
+        with torch.autocast("cpu", dtype=torch.bfloat16):
+            train.ce_backward(model, recipe, batches, noise, ce_targets=25)
+            assert torch.is_autocast_enabled("cpu")
+    finally:
+        for handle in handles:
+            handle.remove()
+    assert len(seen) == 4 and not active
 
 
 def test_adam_warmup_and_compact_checkpoint_exact_next_update(tmp_path):
