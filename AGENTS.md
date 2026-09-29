@@ -31,6 +31,19 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 bounded adaptation pilot IN PROGRESS, exp/olmo-adaptation-pilot32,
+starting main358ab65. User authorized actual B/NF/NFR first32 comparison.
+Read docs/reports/olmo-adaptation-pilot/protocol.md and progress.md. New namespace
+.runtime/olmo-adaptation-pilot, SSDadaptation-pilot. Reuse PR51 prepared
+declarations byte-for-byte;200-source runtime remains frozen. B32/GPU8slots,
+NF/NFR12/GPU22slots,T1024,524288inputs/update,stop32 inside128 finite plan.
+Queue runs B thenNF thenNFR; check queue-01/report.json and stage reports before
+any launch after interruption. Root alone owns GPUs. Expected stop status is
+stopped_at_boundary, not completed_plan. Async checkpoint policy unchanged,
+600s trigger/32milestone/terminal drain, all useful states toGCS. EstimatedNFR2h.
+Per-pass FP32 dev16/32; clipping/later-CE concern remains explicit. No automatic
+extension to128 or broad numerical retest. Save/push progress every20–30min.
+
 2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 merged039fa96b.
 Closeout metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
 pilot-plan.md, open-issues.md, test-ledger.md and storage-receipt.md there.
