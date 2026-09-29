@@ -60,6 +60,7 @@ def test_union_support_includes_reference_only_and_actual_only_and_uses_common_g
         b = ref["pass_hidden_states"][row["pass"]][mask].double()
         want = float((a-b).norm()/b.norm())
         assert groups["union_supported"]["hidden"]["relative_l2"] == pytest.approx(want)
+        assert result["plot_summaries"][f"record_0_pass_{row['pass']}"]["supported_hidden_relative_l2"] == pytest.approx(want)
         assert groups["all_valid"]["hidden"]["difference_norm"] > groups["union_supported"]["hidden"]["difference_norm"]
         pos = {(p["row"], p["position"]): p for p in row["positions"]}
         assert not pos[0, 2]["direct_ce"] and pos[0, 2]["union_cotangent_nonzero"]

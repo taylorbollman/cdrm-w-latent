@@ -106,8 +106,21 @@ loss influence and never removes positions from the underlying backward.
                 "union_nonzero_positions": int(union_support.sum()),
                 "aggregates": {name: _aggregate(mask, hidden, cotangent, rh, rc) for name, mask in selections.items()},
                 "positions": positions})
+    # Existing W&B scalar flattening deliberately skips lists. Keep a small
+    # mapping of graphable summaries; detailed positions stay in local evidence.
+    summaries = {}
+    for row in rows:
+        groups = row["aggregates"]
+        summaries[f"record_{row['record']}_pass_{row['pass']}"] = {
+            "valid_positions": groups["all_valid"]["positions"],
+            "union_supported_positions": groups["union_supported"]["positions"],
+            "all_hidden_relative_l2": (groups["all_valid"]["hidden"] or {}).get("relative_l2"),
+            "supported_hidden_relative_l2": (groups["union_supported"]["hidden"] or {}).get("relative_l2"),
+            "zero_support_hidden_relative_l2": (groups["zero_in_both"]["hidden"] or {}).get("relative_l2"),
+            "all_cotangent_relative_l2": (groups["all_valid"]["total_incoming_cotangent"] or {}).get("relative_l2"),
+        }
     return {"schema": "olmo-campaign-position-geometry-v1", "document_policy": document_policy,
         "reference_present": reference is not None,
         "support_definition": "valid and any exactly nonzero cotangent element in either precision; actual only when reference absent",
         "qualification": "Zero observed cotangent is not proof of harmlessness; direct CE masks are not total loss influence; active feedback flags assume beta1",
-        "records": rows}
+        "records": rows, "plot_summaries": summaries}
