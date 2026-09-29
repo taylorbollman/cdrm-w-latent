@@ -1,8 +1,46 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-28. **Read this first after compaction or interruption.**
+Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+**Campaign two-H100 execution/restart/capacity complete,
+2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),
+branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
+[results](reports/olmo-campaign-two-gpu/results.md),
+[test ledger](reports/olmo-campaign-two-gpu/test-ledger.md),
+[usage](reports/olmo-campaign-two-gpu/usage.md),
+[storage receipt](reports/olmo-campaign-two-gpu/storage-receipt.md) and
+[live progress](reports/olmo-campaign-two-gpu/progress.md). Real NCCL local/final
+sync graph accumulation passes all eight tiny arms and actual pretrained B/NFR
+prepared-path checks. Full NFR checkpoint (15,214,756,865 state bytes) uploaded,
+downloaded and SHA-verified; fresh-process next update is bitwise identical on
+both ranks to original live-graph continuation. Metadata subclass fix retains
+safe loading. CPU regression 445 pass, plus final 21 focused capacity checks (overlap).
+
+Independent NFR BF16 sparse/dense loss-layout gradient discrepancy **3.40224%**
+remains FAILED. It reproduces locally before DDP; prepared distributed raw
+gradient error <=4.96e-9, full-FP32 loss-layout check 7.38e-7. This localizes but
+does not clear BF16 numerical concerns. No model math or Q/K normalization change.
+
+T1024 NFR K4, RT0/15 every pass, both NextLat losses: recommend B12/rank with two
+accumulated microbatches for next integration checks: 4,311 input tokens/s global,
+59.06 GiB peak reserved and 14.23 GiB sampled free/GPU. B8 fallback is 3,428/s
+with 22.97 GiB free; B16 passes at 4,970/s but only 3.30 GiB free. B32 skipped.
+All GPU probes have stopped; 36 capacity stages and 24 updates pass. Separate
+graph pools and actual resident Adam moments
+are included; initial cold DDP construction with restored Adam at T1024 remains
+unqualified. Restart acceptance is B2/T16 on the same two-H100 runtime.
+
+All 86 retained tokenized files restored and verified (7,054,230 tokens,
+12,512 documents); do not retokenize. Next after resource closeout: explicit
+packed-boundary semantics, real-data cursor integration/restart and final
+batch/schedule calibration. Read the [proposed next milestone](reports/olmo-campaign-two-gpu/next-steps.md).
+Current adapters reject multidocument rows. No
+quality campaign or production mixture is authorized by this readiness slice.
+Preserve progress every 20–30 min; completed evidence and full checkpoint are
+durable in GCS, with exact references in the storage receipt. All 1,120 source
+pairs and 20 retention receipts (46 objects, including closeout) verify.
 
 **Reusable document preparation complete, 2026-09-28:** read
 [results](reports/olmo-document-shards/results.md),
