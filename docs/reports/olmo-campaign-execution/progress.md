@@ -43,3 +43,13 @@ W&B qjk60oku; first saving/retaining distributed origin before graph setup.
 Runtime commands/logs under .runtime/olmo-campaign-execution. Generic streaming
 restore helper41CPUtests accepted separately; initial tinyrestore used earlier
 40-test snapshot, behavior unchanged. Small stage GCS retention in progress.
+
+14:51 UTC: native-stop-01 closed success and synced; full checkpoint1 retained
+and exact-generation streamed restore native-restored-01 succeeded (manifest
+576d834696977f7c51e27a7e62c3a19bedd935264265cddd58721781b34fd686).
+Native independent single audit passes456checks. Native-reference-01 active
+https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/55lv1nww; origins/configuration match stopped run.
+After reference exits, root must launch native-resume-01 from restored checkpoint
+using same declarations-02/frozen155sources; compare updates2/3/final exactly.
+Do not launch other GPU jobs meanwhile. Earlier tiny/audit/CPU/native-stop/restore
+small evidence retained in receipts/. PR46 draft; native final comparison pending.
