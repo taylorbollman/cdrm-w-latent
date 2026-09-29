@@ -73,3 +73,26 @@ Independent CPU lifecycle helper completed eight actual two-rankGloo cases;
 3focusedtests,126casechecks plus5reportchecks. No productionrunner integration
 yet and noNCCL/dead-peer/hung-callback claims. NewT128devfixture probe and
 conditional same-Adam FP32/BF16 update comparison being prepared separately.
+
+## Update32 and longer cold fixture
+
+At08:33UTC train-01 completed32updates in252.4s wall, including initial loading
+and two checkpoint retentions. Its update32 SHA is
+4b7f82b5c4cf3c4d12566227c7a31845a0874fc8e19963544a69fa358af9dc82.
+GPU0 now runs train-02 via strictresume to128; GPU1 probe-32-01 completed96.6s.
+Original backbone/fusion relativegradienterror1.2156%/2.1943%; freshshort
+2.1168%/5.5207%. Absolute backboneerror falls to0.934/1.441; improvement is not
+only denominator growth. No schedule change.
+
+Newlong-data-01 exports four additionaldevprefixesT128 fromC4/CommonCrawl/Pes2o/
+Reddit, independent oftrain andfreshshort. SHA830920f60c687f667baee7f7d6f137b521b22a35604f02e2a2e3b038586e55f9.
+Longhelper36focusedCPUtests passed4.53s, preparation5.50s. ColdlongGPU1stage
+long-cold-01 passedoperationalchecks in57.3s, but numericalbackboneerror144.02%,
+fusion167.45%; cosine.3235/.2497. This reinforces need forlongpostwarm comparison.
+No acceptancebudget change; precise128comparison stillpending.
+
+New independent helpers underdevelopment: counterfactualsameAdam FP32/BF16
+fusionupdate withzero-gradientmomentum/decaycontrol; packedT1024heldoutfixture;
+actualrepeatedcampaignlifecycleloop withtinyDDPgraphstop/recoverychecks. All new
+files stay underscripts/tests/docs because addinganycdrm/pretrained/*.py would
+change active source inventories. Rootalone launchesGPUstages.
