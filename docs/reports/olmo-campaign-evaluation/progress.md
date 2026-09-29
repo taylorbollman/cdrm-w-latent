@@ -55,3 +55,13 @@ scheduledrestored evaluation succeeds. Terminal-boundaryresume from2withstop2
 currentlyrunning; thennativeNFRinsertion againstretainedPR46reference. Rootowns
 GPU schedule. All priorGPUstagesclosedandretained; sourceaudit helperfrozenafter
 71CPUtests. TotalcurrentCPUcoverage196distincttests. NativeGPUstillpending.
+
+16:25UTC: PR47 draft opened. Nativeinsertion active(twoH100s), initializedfrom
+samefusion128freshAdamstartup; initialcheckpoint retainedinGCS. Native authority
+setup matches193comparisonchecks; graphpreparation underway. Tinycloudresume
+passes1,558checks; evaluation-only resumedupdate2withstop2 passes1,362checks,
+zeroupdates/nocapture. Auditor-only absentemptyupdatesfield bug fixed withone
+regression; failed audit-terminal-boundary-01 preserved, corrected02passes.
+All164executionsources unchanged. FinalCPU197distincttests (72auditor scope),
+cpu-02 retains finalscope; cpu-01 immutableearlier196-testrecord. Audit/runtime
+evidence retained. Latestcommit e45dcc8; no launchotherGPUjobuntilnativecloses.
