@@ -40,4 +40,3 @@ class SSDCheckpointStorage(AcceptedStorage):
                for name in FILES for key in ('size_bytes','sha256','md5_base64')):
             raise ValueError('Retained object bytes do not match owned local checkpoint')
         return local
-

@@ -37,7 +37,7 @@ pruning; keep two completed checkpoints per owned segment. Preserve all old
 checkpoints. Source/input pins remain unchanged through each run and resume.
 
 After integration acceptance, measure native B and combined NFR at T1024 using
-the real pilot stream, BF16, CUDA graphs, accepted pointwise/RoPE optimizations
+the real pilot stream, BF16, CUDA graphs, the accepted runtime backend settings
 and activation checkpointing. Start combined physical batch near 12/rank with
 8/rank fallback. Select a comfortable base batch from bounded measurements.
 Separate useful update throughput from setup, data materialization, FP32 dev
@@ -51,3 +51,19 @@ remain distinct. Historical adaptation exposure must remain visible. No new LR
 sweep, numerical-clearance claim, Q/K normalization change, H200 acceptance or
 quality campaign is implied. Freeze startup, token budget, monitoring membership,
 batch/accumulation and cadence before conducting a learning comparison.
+
+
+The new checkpoint execution identity also requires narrow storage/restore
+metadata adapters. The SSD storage subclass overrides only local/retained
+metadata validation; registration, durable publication, journaling and pruning
+are inherited unchanged. Recovery streams bytes through the accepted download
+helpers but checks the new identity explicitly, without relabeling old reports.
+The shared outer cursor and checkpoint container schemas remain unchanged;
+ordered inner cursor hashes and the new execution identity bind this lineage.
+
+Native capacity fixtures use eight updates, discard the first three for timing,
+and report five subsequent updates. Checkpoint every four updates and evaluate
+at update eight with FP32 B1/rank on explicitly pinned dev-main and books prefixes.
+Start ordinary B32/rank; consider B64 only if the measured margin is comfortable.
+Start combined NFR B12/rank with B8 fallback. These configurations may differ in
+logical batch/exposure; they measure operational capacity, not comparative learning.
