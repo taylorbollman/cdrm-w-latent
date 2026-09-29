@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 fixed-boundary precision diagnostic COMPLETE, feat/olmo-boundary-precision.
+2026-09-29 fixed-boundary precision diagnostic COMPLETE, PR42, feat/olmo-boundary-precision.
 Read docs/reports/olmo-boundary-precision/results.md, next-steps.md, test-ledger.md
 and progress.md for final PR/retention state. Runtime1023d7e; both NF CE anchors
 reproduce exactly, including 60.8698% backbone discrepancy. Record0/pass1,3:

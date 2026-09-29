@@ -57,8 +57,39 @@ snapshot and the verified receipt.
 The separate local boundary audit verified tensor payloads, masks, strides,
 shared cotangents and exact A/C endpoints; its pins are in the
 [test ledger](test-ledger.md). Both audits are CPU-only and do not rerun a model.
-Their reports and documentation await the final closeout bundle; this receipt
-claims only the completed diagnostic stage above.
+Their reports and documentation are also retained in the final closeout below.
+
+## Final closeout
+
+The verified `retention/closeout-01.json` receipt adds these objects, again
+relative to the same namespace:
+
+| Object | Generation | Bytes | SHA-256 |
+| --- | --- | ---: | --- |
+| `boundary-closeout-01/evidence.tar.gz` | `1790663724342373` | 106,430 | `198ae46f6305ec34563dcb1294aff0bb80c88b5190208a0c418110af39dea94d` |
+| `boundary-closeout-01/retention-manifest.json` | `1790663724613074` | 7,561 | `fbe12f281433632212b1e5c7a456ee9528d8dc9319ffbcf641ad229b3ae78951` |
+
+Independent exact-generation readback passed for all **27 inventory members**
+and two archive control files. Every member matches the frozen local closeout:
+27 staged files totaling 362,620 uncompressed bytes, with no omitted files.
+The closeout includes both audit scripts/reports/source snapshots, the diagnostic
+receipt, CPU/runtime logs, helper/tests and documentation. The large tensor fixture
+and diagnostic report remain in the separately verified `boundary-01` archive.
+
+The CPU-only audit is
+`.runtime/olmo-boundary-precision/storage-audit-closeout-01/`. Its script SHA is
+`8662246ccacb753a6892a6b6f78c45c8a01fcf24e5e8209f8f1983b98c5d0ed7`;
+its atomic report SHA is
+`33e8edc9ade216e01de17c2af7bda7d4989b290c7aecbec9f2d3e13c18779bab`.
+It verified all member pins, both included audit source snapshots, local staged
+bytes and required documents/logs without model execution or a repeated sweep
+of the pretrained sources.
+
+Combined retention totals are **two receipts, four listed objects, 5,346,286
+downloaded bytes and 119 inventory members**, plus four archive control files.
+The immutable closeout freezes documentation before its own receipt existed;
+final receipt/audit summaries and PR state are tracked in Git outside that
+archive. No additional retention cycle is required for that control record.
 
 Storage integrity does not resolve the model's numerical qualification. The
 diagnostic passed operationally; the reproduced full-model BF16 discrepancy

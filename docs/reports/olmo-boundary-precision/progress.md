@@ -34,8 +34,8 @@ members. See [test ledger](test-ledger.md) and [storage receipt](storage-receipt
 
 Runtime root: `.runtime/olmo-boundary-precision/`. GCS namespace:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T061000Z/`.
-The completed `boundary-01` evidence is retained. Final closeout/PR records will
-be appended below. No checkpoint was created or local artifact deleted.
+The completed `boundary-01` evidence is retained. Final closeout/PR records
+are below. No checkpoint was created or local artifact deleted.
 
 ## Proposed continuation
 
@@ -44,3 +44,21 @@ comparison, no new training. Root verified its complete local file hash and
 report; actual tensor-schema import remains untested. Read next-steps for the
 required new explicit import, preserved saved buffers, old-source guard and
 adapted-backbone/K2-to-K4 limitations. No new GPU test has been launched.
+
+## Closeout
+
+Results and next-step assessment were independently reviewed and pushed at
+`b87bc65`. [PR42](https://github.com/taylorbollman/cdrm-w-latent/pull/42) contains
+only this bounded diagnostic, its tests and documentation. No prior helper,
+protocol or production implementation was changed.
+
+`boundary-closeout-01` is verified: 27 inventory members, two listed objects,
+113,991 downloaded bytes. The archive preserves the report/docs, helper/tests,
+CPU and GPU logs, the completed local/cloud audits and checkpoint-identity note.
+It freezes documentation before its own receipt and final PR record; final Git
+is the authority for those control-plane additions. The separate diagnostic
+stage retains all actual boundary tensors and source snapshots. Combined totals:
+two receipts, four listed objects, 119 inventory members. See storage-receipt.md
+for exact generations and independent readback. No large model weights were
+newly uploaded; no local artifact was deleted. All work is saved and GPU work
+is finished.

@@ -4,7 +4,8 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Fixed-boundary precision diagnostic complete, 2026-09-29:** branch
+**Fixed-boundary precision diagnostic complete, 2026-09-29:**
+[PR42](https://github.com/taylorbollman/cdrm-w-latent/pull/42), branch
 `feat/olmo-boundary-precision`; read [results](reports/olmo-boundary-precision/results.md),
 [next steps](reports/olmo-boundary-precision/next-steps.md),
 [test ledger](reports/olmo-boundary-precision/test-ledger.md),
