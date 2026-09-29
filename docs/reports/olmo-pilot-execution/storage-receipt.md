@@ -53,7 +53,26 @@ checkpoints and restore sources are not pruned. Large new states live under
 remain on the persistent project disk. Checkpoint states on the SSD are not
 the sole durable copy.
 
-Final inventory counts and closeout pins will be recorded after all selected
-native capacity runs and evidence publications finish. The inventory is a
-verified-receipt snapshot, not an additional full cloud download. Its own and
-later closeout/publication receipts are necessarily outside that snapshot.
+The completed `inventory-01/report.json` has SHA256
+`a31fec8d479ee31a930e84f2718c73c0ec8842e5befb2fa1b58ec51f85d9bdce`.
+It covers 8 completed execution stages, 24 small-stage receipts (48 objects),
+the 62-object synthetic corpus, and 21 newly published checkpoints (42 objects).
+Together these are **152 distinct objects / 101,826,528,826 bytes**. Checkpoint
+objects account for 101,806,801,319 bytes. Restored objects are not counted again.
+
+This is a validated local receipt/metadata snapshot of already verified
+publications, not an additional full cloud download. Each original producer
+performed exact-generation readback verification. The inventory's own and later
+closeout/publication receipts are necessarily outside its counts. PR49's real
+Dolma corpus is also outside this milestone's inventory. The neutral snapshots
+retain individual checkpoint publication receipt bytes and their original paths.
+Final closeout publication authorities are recorded in [progress.md](progress.md).
+
+
+The final `closeout-01` archive retains 2,501 members, including 22 explicit
+safe-name mappings, and passed server metadata plus exact-generation downloaded
+SHA256 verification. Its pre-manifest source bytes total 117,550,865. The
+closeout report SHA256 is
+`7ea9ddf64ad9140a53b739467ae028556e25529a95be1b990e2735f86de56bb4`.
+Persistent receipt SHA256:
+`345c84c75f6fc5cf24ff11ed803ad0793424c17b2fdd24e5bffc94fd8c1cf89e`.

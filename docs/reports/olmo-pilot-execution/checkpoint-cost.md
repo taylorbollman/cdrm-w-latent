@@ -30,8 +30,14 @@ steady-state checkpoint fraction or tokens/s.
 The sum excludes later publication, additional local retained-byte checks,
 durable journal/latest-receipt writes and any pruning. It also does not isolate
 network transfer from local hashing within the retention timer. The stage timer
-excludes earlier CPU resolution and external process/container startup. NFR and
-other hardware/storage environments require their own observed costs.
+excludes earlier CPU resolution and external process/container startup. Other future hardware/storage environments require their own observed costs.
+
+The completed NFR12 run subsequently measured **388.60 and 393.07 seconds**
+for these same selected regions at updates 4 and 8, before untimed publication.
+That is about 6.5 minutes per populated-state checkpoint, consistent with the
+same practical cadence estimate. Its complete stage took 1,613.63 seconds;
+the initial preparation alone took 442.81 seconds. These costs remain separate
+from graph replay and must not be interpreted as model-kernel throughput.
 
 ## Why 600 seconds is not publication every ten minutes
 
@@ -59,8 +65,10 @@ capacity fixture's every-four-update rule into training. No larger time limit
 is needed merely to target the user's 20–30 minute interruption window. The
 measured selected costs imply about 38–39% checkpoint time in the simple
 `checkpoint / (600 + checkpoint)` illustration. Budget approximately **40% or
-more** until the unmeasured publication and actual NFR costs are known. This
+more** to allow for unmeasured publication and variation in actual storage costs. This
 budget is deliberately an operational estimate, not a new measured result.
+The completed NFR selected checkpoint costs imply approximately 39–40% in that
+same simplified illustration; publication and other excluded work still add cost.
 
 ## A focused later efficiency follow-up
 
@@ -98,3 +106,8 @@ Underlying completed B32 report SHA256:
 The summary retains its input report, declaration, resolved plan and independent
 analysis source snapshot. Region sums in this note were recomputed directly
 from that summary. No GPU work, network transfer or timing rerun was needed.
+
+NFR12 costs use the completed `capacity-b32-nfr12-01/report.json` summary,
+SHA256 `41de9b41f88a5307068684a36a464f41e7bc3f5f0ed3df01d4ecdf2f88b8766b`.
+The final combined capacity summary supplies the same independently pinned
+NFR report alongside the additional B64 measurement.

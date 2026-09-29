@@ -2,9 +2,9 @@
 
 The representative ordered Dolma stream now runs through the shared two-GPU
 training engine, with named development evaluation and exact completed-boundary
-recovery in the tiny integration fixture. Native T1024 B32 and NFR12 capacity
-runs are complete; the larger base batch is the final pending check. This
-milestone does not start a matched learning comparison.
+recovery in the tiny integration fixture. Native T1024 B32, B64 and NFR12
+capacity runs are complete, including final FP32 evaluation and verified cloud
+checkpoints. This milestone does not start a matched learning comparison.
 
 ## What changed
 
@@ -77,6 +77,7 @@ These are functionality/cost prefixes, not representative quality evaluation.
 | Configuration | Physical batch/GPU | Global inputs/update | Compute-region inputs/s | Including recorded materialization | Maximum sampled reserved/GPU | Minimum sampled free/GPU |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | Ordinary base B32 | 32 | 65,536 | 69,494 | 67,279 | 42.40 GiB | 35.21 GiB |
+| Ordinary base B64 | 64 | 131,072 | 71,269 | 69,001 | 60.75 GiB | 16.87 GiB |
 | Combined NFR12 | 12 | 24,576 | 3,759 | 3,578 | 59.06 GiB | 12.78 GiB |
 
 Rates use the sum of inputs divided by the sum of each update's slowest-rank
@@ -87,13 +88,22 @@ checkpointing or evaluation; neither is complete training throughput. Memory
 is sampled during capture and updates. Peak counters are cumulative; no
 post-evaluation memory sample or continuous free-memory minimum is inferred.
 
+Recommend **B32 for ordinary-model development** and **B12 for NFR** on these
+two H100s. B64 is a comfortable tested base option, but gives only about 2.6%
+more throughput here while reserving 18.35 GiB more memory per GPU. These
+one-slot measurements do not establish the same speed difference under the
+future common effective batch and accumulation schedule.
+
 B32 preparation took 32.26 seconds and its final two-panel FP32 evaluation
 2.07 seconds. NFR12 took 442.81 seconds for preparation and 30.47 seconds for
 evaluation. Both finished eight finite updates and passed declared preparation
 and evaluation preservation checks. No smaller NFR fallback was needed.
+B64 preparation took 49.82 seconds and final evaluation 2.22 seconds, also
+with eight finite updates and both preservation checks passing.
 
 Checkpoint-heavy stage elapsed times were 17.49 minutes for B32 and 26.89 minutes
-for NFR12. Those short-stage averages are not production throughput estimates.
+for NFR12, and 17.53 minutes for B64. Those short-stage averages are not
+production throughput estimates.
 Full-state checkpointing is a substantial synchronous cost; see
 [checkpoint-cost.md](checkpoint-cost.md) before choosing pilot cadence.
 
@@ -108,6 +118,9 @@ gradient norm falls from 222.53 to 24.14. B32's norms range from 1.01 to
 1.48, also exceeding the configured limit of 1.0. These observations neither
 establish long-run stability nor identify a new precision defect. No additional
 per-loss gradient attribution was performed in this capacity milestone.
+B64's raw norms were 0.71–0.98, below the same clipping limit. Its doubled
+effective batch makes that a different optimization fixture, not evidence of a
+precision improvement.
 
 The small common-FP32 dev-main prefix has combined per-pass CE of approximately
 2.993, 7.654, 7.652 and 7.631 nats/target after update 8. Books gives 3.480,
@@ -116,6 +129,8 @@ successful execution is not successful refinement. The base dev-main/books CE
 is 2.424/2.518 after its different exposure and original startup. Do not treat
 these tiny prefixes and unmatched runs as an architectural comparison. The
 next matched adaptation pilot should monitor per-pass CE and clipping explicitly.
+B64's corresponding values are 2.422/2.517 after 1,048,576 input tokens;
+B32 consumed 524,288 and NFR12 consumed 196,608 in their eight updates.
 
 ## Parameters and analytic work
 
@@ -144,3 +159,20 @@ ceiling, initial stop point and fixed dev monitoring. The proposal and remaining
 qualifications are in [next-steps.md](next-steps.md) and
 [readiness-map.md](readiness-map.md). Existing BF16 trajectory qualifications,
 limited books coverage and untested H200/cross-topology behavior remain visible.
+
+
+## Evidence and tracking
+
+The independent final capacity summary is
+`.runtime/olmo-pilot-execution/capacity-final-01/report.json`, SHA256
+`507e43a97436ecaa667cb8dd0ab580bd65e85092c7ca00a986e5df7fc456e0ff`.
+It revalidates all 192 runtime source pins and each completed run's declaration,
+resolved allocation, parameter ownership, measured updates and evaluation.
+
+[W&B capacity comparison](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/48jhxju3)
+contains the aggregate table, timing and memory charts and updates 4–8.
+Original runs: [base B32](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/oh4sdigb),
+[base B64](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/72bvkgwm),
+[combined NFR12](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/x8u0vz4c).
+All have finished synchronizing. See [storage-receipt.md](storage-receipt.md)
+for durable evidence and checkpoint authorities. No further GPU run is queued.

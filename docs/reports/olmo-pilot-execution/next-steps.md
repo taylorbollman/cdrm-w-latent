@@ -2,8 +2,8 @@
 
 The next review milestone is a concrete, costed pilot declaration. The ordered
 stream now works with the shared two-GPU update engine, named development
-evaluation and interruption recovery. Finish the bounded native capacity results
-in this milestone, then choose the learning configuration. Do not repeat the
+evaluation and interruption recovery. The bounded native capacity runs are
+complete; the next decision is the learning configuration. Do not repeat the
 general numerical investigation or launch the eight-arm campaign automatically.
 
 This updates the implementation status in the
@@ -51,16 +51,18 @@ RNG and cursors; never assign historical optimizer steps to zero moments.
 
 ## 2. Keep physical capacity separate from the learning batch
 
-Use the measured comfortable physical batch for each arm, leaving the observed
-evaluation/capture/checkpoint memory margin. Preserve a common global effective
+Use the measured comfortable physical batch for each arm, leaving the measured
+capture/update headroom and allowance for evaluation/checkpoint transients. Preserve a common global effective
 batch for the comparison. The existing proposed starting point is **524,288
 valid input tokens per update**, or 512 full T1024 rows. It is a recipe choice,
 not a number implied by whatever fits on one GPU.
 
-The current capacity protocol starts ordinary B32/rank, conditionally B64, and
-NFR B12/rank with B8 fallback. Each runs eight updates and measures updates 4–8
-after excluding the first three. These candidates do not select the future
-learning allocation until the complete memory/evaluation results are reviewed.
+Completed capacity runs support **B32/rank for ordinary B and B12/rank for
+NFR** on these two H100s. B64 fits but adds only about 2.6% throughput in the
+recorded regions for 18.35 GiB more reserved memory per GPU. Each fixture ran
+eight updates and measured updates 4–8. These one-slot measurements do not
+establish the accumulated pilot's all-in throughput; NF also needs its own
+initial capacity/health observation.
 
 For example, on two GPUs this requires eight accumulation slots at B32/rank,
 four at B64/rank, or 32 at B8/rank. B12/rank needs 22 slots, with 16 dummy rows
@@ -167,8 +169,9 @@ cost. This is an estimate, not a timing guarantee.
 
 There is no need to raise the current 600-second limit to target the user's
 20–30 minute interruption window. Provisionally budget roughly **40% or more**
-of elapsed time for checkpoint work under such a cadence, then revise from the
-actual NFR costs; this is not a measured steady-state overhead fraction. The
+of elapsed time for checkpoint work under such a cadence. Completed NFR12
+selected checkpoint regions were about 389–393 seconds, consistent with that
+allowance; it is not a measured steady-state overhead fraction. The
 short fixture's every-four-update policy is much more expensive proportionally.
 See [checkpoint-cost.md](checkpoint-cost.md) for measured regions, clock semantics
 and the scope of a later focused I/O improvement.

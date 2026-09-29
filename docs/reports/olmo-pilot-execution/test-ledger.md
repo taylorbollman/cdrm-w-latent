@@ -24,7 +24,7 @@ fixed its assertion (final31pass). The first synthetic fixture had insufficient
 dev reserves; the second hit a report-only rank-batch length bug. The accepted
 third fixture and final tests retain the data-capacity rejection rules.
 
-## Actual GPU results so far
+## Actual GPU acceptance
 
 Tiny reference and evaluation insertion completed on two H10080GB GPUs with
 CUDA graphs. The original independent insertion audit passes2063checks, including
@@ -36,7 +36,7 @@ A terminal restored checkpoint2 evaluates without a newupdate or graphcapture.
 The original resume auditor compared `preservation.elapsed_seconds` exactly;
 this produced a retained false failure even though meaningful preservation
 fields, update3 gradients/metrics and finalstate are identical. The zero-update
-terminal path also needs an empty-updates case in the comparison auditor.
+terminal path also required an empty-updates case in the comparison auditor.
 A separate v2 auditor was added at `2d9fb70`, with27additional distinct CPU
 tests passing in0.65s. It excludes only preservation wall time from cross-process
 equality (still validates that it is finite/nonnegative), and handles a validated
@@ -49,5 +49,16 @@ Update3 inputs, gradients, metrics and full state match uninterrupted execution.
 Terminal evaluation repeats at checkpoint2 with no optimizer update, graph
 preparation or new checkpoint publication.
 
-Native B32 capacity is running. CPU metadata resolution is not GPU capacity
-acceptance, and these tests establish no cross-precision trajectory clearance.
+Native B32, B64 and NFR12 each completed eight updates, final named FP32
+evaluation, preparation/evaluation preservation checks and verified checkpoints
+at updates 0, 4 and 8. The final independent summary revalidated all runtime
+source pins, declarations, allocations, counts and ownership for the three runs.
+All 24 updates were finite. NFR still clipped heavily and its later dev passes
+were worse than pass one; execution acceptance is not learning success.
+
+Timing uses only updates 4–8 of each native run. NFR8 fallback was unnecessary.
+These are operational capacity fixtures with different logical batches and
+startup histories, not a matched cohort or cross-precision trajectory clearance.
+Native restart was not repeated under these new physical layouts; exact ordered
+integration restart is scoped to the tiny fixture above. Prior native recovery
+evidence remains separately scoped to its original layouts.

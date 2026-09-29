@@ -1,6 +1,11 @@
 # Ordered pilot execution progress
 
-2026-09-29: in progress on `feat/olmo-pilot-execution`, starting at `3d5c949`.
+Current status: implementation and acceptance complete; PR50 closeout. All three
+native capacity runs and W&B synchronization finished. No active or queued GPU
+run. Final inventory includes152objects/101,826,528,826bytes; see storage-receipt.
+The entries below preserve the work timeline; earlier pending states are historical.
+
+2026-09-29 initial entry: `feat/olmo-pilot-execution`, starting at `3d5c949`.
 The user authorized ordered-runner integration, two-GPU restart/evaluation
 acceptance, then bounded native T1024 capacity measurements. No quality
 campaign or precision sweep is planned. Both H10080GB devices were verified
@@ -98,3 +103,31 @@ receipt filenamesbecausegenericretainer excludescheckpoint-publications dirs;
 fullpublicationrecords alreadyembedded inreports, individualbytes willbeinfinal
 inventoryarchive. No model/runtime/sourcefreezechanges. Preparefinalcapacity
 summary,W&Bsummary,inventory,docs/PRcloseoutafterB64completes. Allpriorworkpushed.
+
+
+20:35 UTC: final native-b64-01 completed all8updates, finalFP32evaluation,
+checkpoint0/4/8 verified, W&B72bvkgwm synced. Fullstage1052.09s. No furtherGPUjob.
+Final three-case capacity summary SHA507e43a97436ecaa667cb8dd0ab580bd65e85092c7ca00a986e5df7fc456e0ff;
+all192runtimepins unchanged. B64:71,268.9compute-region inputs/s,69,001.2including
+materialization,60.75GiBreserved,16.865GiBsamplefree. About2.6% fasterthanB32 for
+18.35GiBadditionalreserved memory; B32remainsordinarydefault. NFR12comfortable.
+W&Baggregate48jhxju3 synced, charts/regions explicitlyscoped. NativeB64 andfinal
+summaryretained; finishingtrackingretention/inventory/closeout. Noqualitycampaign.
+
+
+Final acceptance/retention closeout (2026-09-29): independent read-only report
+review found no substantive blocker. Historical model/kernel/engine/test sources
+are unchanged. All149+27distinctnewCPUtests passed; no redundantGPUrerun. Both
+H100s verifiedidle/0MiB/0% insidecontainer; final-gpu-idle-01.log records this.
+Inventory report SHAa31fec8d479ee31a930e84f2718c73c0ec8842e5befb2fa1b58ec51f85d9bdce;
+retention receipt SHA946d8291544de5f9a6cbde6f939a1944f6e499cf112cb8abee875267fcc35e25.
+Closeout archive contains2,501members with22explicit safe-name mappings;
+117,550,865rawbytes before its manifest. It preserves metadata/source/docs,
+including individual checkpoint receipts under neutral/safe names; large state
+bytes and synthetic corpus were retained separately. Closeout report SHA
+7ea9ddf64ad9140a53b739467ae028556e25529a95be1b990e2735f86de56bb4.
+Closeout receipt SHA345c84c75f6fc5cf24ff11ed803ad0793424c17b2fdd24e5bffc94fd8c1cf89e.
+Archive `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T190649Z/pilot-execution-closeout-01/evidence.tar.gz`
+generation`1790714283791758`, SHA`73e47d68a0027dc1a8332405b60ad50c79125dea5225b2d7ce2475100eba4a9e`.
+Full readback/server verification passed. Own and later administration receipts
+are outside earlier inventory/closeout snapshots. No learning run queued.

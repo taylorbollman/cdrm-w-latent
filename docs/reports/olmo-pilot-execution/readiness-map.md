@@ -12,7 +12,7 @@ after each run finishes, not in this checklist as forecasts.
 | Precision | Qualified BF16 functionality; prior FP32 comparisons and optimizer-history diagnostics; trajectory divergence remains documented | Monitor actual health; no general numerical requalification unless a concrete new failure appears |
 | Data | PR49's pinned Dolma selection, 134.2M-input ordered train capacity, disjoint dev/confirmation identities, source/coverage audit and cloud recovery | Freeze a smaller pilot exposure and the development prefix; retain limited books coverage and unknown original pretraining exposure as qualifications |
 | Distributed execution | Tiny two-H100 ordered graph integration; evaluation insertion 2,063 audit checks, cloud resume 2,136, terminal evaluation-only 1,914; exact accepted comparisons | Resolve the actual logical batch; exercise its first updates as the pilot begins |
-| Native T1024 capacity | B/NFR physical batch, memory and cost measurements are the final part of this milestone; consult completed results per configuration | Pick comfortable physical batches from successful runs, independently of a common effective global batch |
+| Native T1024 capacity | Completed B32, B64 and NFR12 T1024 measurements, including final FP32 evaluation and cloud checkpoints; comfortable tested headroom | Pick comfortable physical batches from successful runs, independently of a common effective global batch |
 | Evaluation | Named dev prefixes, explicit per-arm FP32 batch, all trained passes, separate loss denominators, preserved training state | Choose useful monitoring membership and cadence from coverage and measured total cost; confirmation remains separate |
 | Checkpoints | New ordered identity, unchanged shared SSD engine, narrow storage metadata adapter, manifest-last exact-generation recovery, verified retention before pruning | Freeze cadence/storage budget; preserve full Adam/schedule/RNG/cursor on same-lineage resume |
 | Throughput and cost | Update regions, setup, evaluation and checkpoint/transfer costs are separately observable; parameter ownership is retained | Price the proposed segment from actual measurements; do not confuse compute-region throughput with all-in training throughput |
@@ -25,8 +25,8 @@ and startup routes can differ, so their learning values are not a matched
 architecture comparison. None of the audit check counts above measures model
 quality or grants general BF16/H200 clearance.
 
-The frozen capacity sequence is B32/rank with conditional B64, and NFR B12/rank
-with B8 fallback. Eight-update fixtures measure updates 4–8. Their 600-second,
+The frozen capacity sequence completed B32/rank, B64 and NFR B12/rank; B8
+fallback was unnecessary. Eight-update fixtures measure updates 4–8. Their 600-second,
 every-four-update checkpoint policy is a test setting; future cadence and the
 provisional learning budget still require the review described in next-steps.
 
