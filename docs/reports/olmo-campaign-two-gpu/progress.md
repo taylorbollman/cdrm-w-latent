@@ -48,3 +48,10 @@ rawgradient atupdate1 (globalL2 .0340224273) despitepassinglosses. Read
 [localization plan](qualification-plan.md). Preservefailure. Addpreparedlocal
 reference toseparate dense/sparseBF16 differencefromDDP; no relaxedbudgets and
 no generalprecisionclearance. Capacity waitsforpreparedexecution/restart gates.
+
+Runtime `61d6d2b`: prepared-reference eager NFR passes all11operationalgates.
+The separatelyrecorded canonical-vs-prepared local qualification reproduces
+exactly .0340224273 gradientL2 BEFORE DDP; the discrepancy is not introduced by
+distributed synchronization in this fixture. Independentreference status stays
+FAILED, operationalstatus PASS. Graphed B/NFR comparison follows, then one
+bounded actualpretrained FP32 loss-layout diagnostic and fullcheckpointrestart.
