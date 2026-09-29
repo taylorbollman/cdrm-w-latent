@@ -227,3 +227,27 @@ preparation copied evidence (its original report has no sources field, so no
 normalized report was needed), guarded audit and both recovery asset stages.
 Original report bytes/snapshots remain preserved; source-schema handling does not
 alter any experiment or constitute a new check.
+
+## 10:00 UTC — frozen packed bridge and conditional continuation
+
+Packed bridge committed68dff19 and pushed. Final63affectedCPUtests passed25.02s;
+sourcec4224e1cece3a4fe8bda1e1edfb180dd68ab6b79a5351f6802725361a6dec4dd.
+Independentreview no blocker. Await actual NFR4 report/retained BF16 endpoint.
+First NFR full checkpoint2 FP32 retained at1333.7s, ~291.4s afterlocalwrite;
+second BF16 localcheckpoint2 written1408.5s, uploadverificationactive.
+Projected complete~54–59min under original1h watchdog, little transfermargin.
+Do not change frozen code or mislabel diagnosticCPU/I/O time as throughput.
+
+Root authorized implementation (notlaunch) of conditional16updatefullNFR
+continuation from common retainedBF16step4, explicit inherited-historyscope.
+Strict oldrestore then prefix-preserving tokenschedule extension4→20, same
+sourceindices148..163 acrossprecisions. Scalartelemetry eachstep, commonFP32
+heldout/checkpoints4/12/20; existingoriginreceipt reused, no duplicate15GBorigin
+write. Newcheckpointlineage, no default/math/QK changes. Only launchif NFR4
+finite, packedFP32semantic/BF16graphgates pass and remainingdeadline permits.
+Agentprecision implementing; dataagentindependentreview.
+
+LivetwoGPUevaluation insertionhelperunderCPUtest, devfixtureReddit16+C4prefix9
+rightpaddedT16,25inputs/23CEtargets, no realintrarowboundary. Rootreview clarified
+installedW&Bexplicitstep defaultcommit=False, so same-stepeval/train accumulation
+is supported. No droppedmetricbugclaimed or unnecessary wrapper retained.
