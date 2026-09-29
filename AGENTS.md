@@ -32,7 +32,7 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 09:49 UTC: overnight work ACTIVE until about14:00UTC.
+2026-09-29 09:45 UTC: overnight work ACTIVE until about14:00UTC.
 Branch feat/olmo-fusion-startup. Read docs/reports/olmo-fusion-startup/results.md,
 overnight-plan.md and progress.md; completed helpers/tests/protocols frozen.
 Warmup128 complete, checkpoint SHA892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc

@@ -69,7 +69,7 @@ campaign. We have not changed Q/K normalization, recurrence math, loss weights
 or numerical budgets to obtain these results.
 
 See [component results](component-results.md). A four-update matched optimizer
-test of the complete NFR model is being prepared to measure the practical
+test of the complete NFR model is running to measure the practical
 effect on gradients, Adam moments, parameter updates and common-FP32 held-out
 losses. It uses fresh training rows and a fresh all-component optimizer, not a
 claim that backbone moments existed in the fusion-only checkpoint.
@@ -101,11 +101,29 @@ Authoritative warmup checkpoint:
 It is retained with verified bytes under
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/20260929T075900Z/train-02/`.
 
-Two short fusion-only trajectories are running from that same checkpoint and
+Two short fusion-only trajectories completed from that same checkpoint and
 Adam state: FP32 and BF16, 16 additional updates each. A fresh-process BF16
-midpoint replay will check exact continuation. Metrics are online in
-[Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
+midpoint replay matched all remaining updates and the final saved boundary
+exactly. Common-FP32 held-out CE at update144 differs by **0.000171 nats/target**;
+the cumulative fusion update vectors differ **18.41%**. Close short-run losses
+and different optimization trajectories are both part of the result. See
+[continuation results](continuation-results.md).
 
-The full NFR optimizer test and an operator recovery bundle are the remaining
-bounded follow-ups currently being prepared. This page will be updated after
-those stages finish; completed diagnostic sources stay frozen.
+The complete-model paired optimizer diagnostic is active. Its first update
+starts from exactly matched state and data. Backbone raw gradients differ
+13.45%, clipped gradients13.42%, and actual master-weight updates17.47%; fusion
+updates differ26.58%. Both paths are finite. Later updates will include accumulated
+trajectory differences and must not be described as same-state precision checks.
+These preliminary figures are not new performance or numerical acceptance gates.
+
+The [operator recovery bundle](../olmo-campaign-lifecycle/recovery-bundle-results.md)
+has verified actual cloud-restored checkpoint/index/source/data authorities and
+emits an explicitly conditional launch command. An abrupt-rank-exit acceptance
+is queued after the active GPU job releases both devices. The next numerical
+bridge uses the saved full-model endpoint on the fixed packedT1024 fixture to
+compare sparse, prepared and CUDA-graph backwards.
+
+Metrics are online in
+[Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
+This page will be updated after the remaining bounded stages finish; completed
+diagnostic sources stay frozen.

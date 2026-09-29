@@ -194,7 +194,7 @@ configurations, separately counted setup/capture backwards, no optimizer. This
 addresses the old sparse/prepared training-path qualification directly. No
 core model or original frozen helper changes. Current committede0adc06.
 
-## 09:49 UTC — full-model first pair and recovery assets
+## 09:45 UTC — full-model first pair and recovery assets
 
 NFR first paired update completed with matched initial state/data/LR/counters.
 Backbone raw/clipped/delta differences13.4465/13.4162/17.4687%; fusion delta26.5810%.
@@ -210,3 +210,20 @@ Fresh real cloud restore02 verified six exact-generation objects/23,851,490bytes
 Manifest09b5dc49f94bab3af06343d1c0fc5486845ff5e122eb89661f5fe4a4f140c247.
 First asset-only success with wrong outer command path is preserved. Agent is
 assessing remaining concrete campaign readiness gaps without starting more jobs.
+
+## 09:50 UTC — next independent readiness gap
+
+Root authorized additive tiny two-GPU live-graph evaluation insertion acceptance.
+Compare uninterrupted no-evaluation reference with same source/seed training where
+fixed disjoint no-jitter heldout evaluation runs between completed updates. Preserve
+full boundary, modes, RNG and persistent graph/input/gradient pointers; subsequent
+captured updates must match exactly. Runner agent implementing after independent
+packed bridge review (no blocker). This is functionality only, not a production
+evaluation policy. Root launches after active NFR, rank-failure and packed bridge
+resources permit. No old helper/core edits.
+
+Retention batch10 completed for RT preparation explicit rich-report envelope, NFR
+preparation copied evidence (its original report has no sources field, so no
+normalized report was needed), guarded audit and both recovery asset stages.
+Original report bytes/snapshots remain preserved; source-schema handling does not
+alter any experiment or constitute a new check.
