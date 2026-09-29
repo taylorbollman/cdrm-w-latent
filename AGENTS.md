@@ -31,15 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 ordered pilot execution IN PROGRESS on feat/olmo-pilot-execution.
-Read docs/reports/olmo-pilot-execution/progress.md and protocol.md. New adapters
-connect PR49 ordered corpus to unchanged PR48 SSD engine. Two H100s available;
-root owns all GPU launches. New contract/eval/fixture/audit code under active
-parallel development; do not launch from unfrozen source hashes. No GPU run
-started yet. Persistent evidence .runtime/olmo-pilot-execution; SSD checkpoints
-and gs://fast-chunks retention. Next tiny reference/eval/recovery acceptance,
-then bounded actual native B/NFR T1024 capacity. Prior BF16 qualifications remain.
-
+2026-09-29 ordered pilot execution IN PROGRESS, draft PR50, feat/olmo-pilot-execution.
+Read docs/reports/olmo-pilot-execution/progress.md. Runtime frozen be74dde/192pins;
+149newCPUtests pass. Tiny reference/eval insertion pass2063checks exact gradients
+and boundaries. Tiny stop2 complete; cloudrestore2 then resume3/terminal checks
+are current queue. Native B32/NFR12 (+conditionalB64/NFR8) declarations resolved
+but not launched yet. Root owns all GPU jobs; inspect current stage reports and
+launch-result JSON before continuing, never blindly restart. No source edits
+through resume. Evidence .runtime/olmo-pilot-execution, SSD checkpointnamespace
+pilot-execution, cloud smallstages olmo-two-gpu/20260929T190649Z. New storage/restore
+adapters validate orderedidentity; shared engine/model/vendor/oldtests unchanged.
+BF16 qualifications unchanged; no quality campaign. Save/retain every20–30min.
 
 2026-09-29 pilot data COMPLETE, PR49 merged c433406; final retention metadata is in
 docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
