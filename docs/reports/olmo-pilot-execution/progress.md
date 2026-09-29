@@ -49,3 +49,14 @@ subclass overrides only two metadata validation methods; restore uses explicit
 newidentity validators with unchanged streaming and bytepublication helpers.
 Old outer cursor/checkpoint schemas remain shared, ordered inneridentity is new.
 No preexisting source/test changes. Follow sourcefreeze through all resumes.
+
+
+19:31 UTC: tiny integration/recovery acceptance is complete. Runtime stayed frozen;
+a separate auditorv2/test commit `2d9fb70` adds27CPUtests for wall-time exclusion and
+empty terminal segments. Original v1 false failures preserved. Final resume audit
+passes2136checks, terminal1914. Both exact, including update3 gradients/finalstate.
+Native B32 is running via native-b32-01 (torchrun2, BF16 graph,8updates, lean);
+checkpoint0/4/8 retained automatically. Next NFR12; conditional largerbase orNFR8
+only after capacity review. No concurrent GPU job. Analysis helper
+summarize_capacity.py validates original192sourcepins independently; its timing
+regions exclude logging/health/checkpoint/eval costs and must be labeled so.
