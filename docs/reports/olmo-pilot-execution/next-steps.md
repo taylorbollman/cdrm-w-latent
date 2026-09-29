@@ -145,11 +145,26 @@ review; change the recipe only for a concrete concern and label new lineages.
 
 The native capacity fixtures use a 600-second policy and every-four-update
 checkpoints. That is a test setting, not a future learning-cadence decision.
-Choose pilot checkpoint boundaries within the user's 20–30 minute interruption window,
-with verified GCS publication before pruning and two retained local boundaries.
-The current validator permits at most 600 seconds for its time policy; retaining
-that bound is compatible with the interruption goal. Increasing it requires an
-explicit policy revision before launch, rather than silently changing a run.
+For a learning pilot, retain **600 seconds plus terminal and meaningful update
+milestones**, rather than automatically checkpointing every four updates.
+Keep verified GCS publication before pruning and two retained local boundaries.
+
+The completed B32 fixture makes the cost material: selected checkpoint regions
+at updates 4 and 8 took **367.55 and 383.71 seconds**, excluding later untimed
+publication/validation. Its eight-update stage lasted **17.49 minutes**, mostly
+checkpoint work. The loop resets its checkpoint clock **after verified
+publication**. Consequently, 600 seconds of advancing work followed by another
+approximately 6.3-minute checkpoint implies roughly 16–17 minutes or more
+between durable publications, plus boundary overshoot and unmeasured publication
+cost. This is an estimate, not a timing guarantee.
+
+There is no need to raise the current 600-second limit to target the user's
+20–30 minute interruption window. Provisionally budget roughly **40% or more**
+of elapsed time for checkpoint work under such a cadence, then revise from the
+actual NFR costs; this is not a measured steady-state overhead fraction. The
+short fixture's every-four-update policy is much more expensive proportionally.
+See [checkpoint-cost.md](checkpoint-cost.md) for measured regions, clock semantics
+and the scope of a later focused I/O improvement.
 Report any indivisible setup, evaluation or transfer operation likely to exceed
 that window. Continue online W&B and immutable local/cloud evidence. A successful
 short pilot may form the beginning of the eventual learning run only when its
