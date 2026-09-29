@@ -17,6 +17,7 @@ passing scope does not erase the separate GPU qualifications.
 | Saved full-NFR sparse/prepared/captured bridge | 63 passed | `olmo-fusion-startup/cpu-packed-bridge-01.log` |
 | Full-NFR continuation and checkpoint contract | 54 passed | `olmo-fusion-startup/cpu-nfr-continuation-03.log` |
 | Final per-pass evaluation observation | 19 passed | `olmo-fusion-startup/cpu-nfr-per-pass-01.log` |
+| Full-NFR endpoint comparison | 20 passed | New helper/tests/protocol frozen at `b68aa14`; final endpoint execution pending |
 | Guarded common lifecycle loop | 28 passed | `olmo-campaign-lifecycle/cpu-guarded-01.log` |
 | Abrupt-rank failure driver | 11 passed | `olmo-campaign-lifecycle/cpu-rank-failure-01.log` |
 | Cloud recovery bundle | 14 passed | `olmo-campaign-lifecycle/cpu-recovery-bundle-03.log` |

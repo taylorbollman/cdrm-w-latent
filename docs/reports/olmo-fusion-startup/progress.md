@@ -328,3 +328,29 @@ Next is conditional full-NFR16-update comparison; root-only orchestration is
 It uses one independent GPU per precision and the same BF16 update4 origin.
 The new ordinary pretrained host-loop acceptance is frozen and reviewed;
 root orchestration `run_base_loop.py` is ready for the subsequent slot.
+
+## 11:00 UTC — paired continuation midpoint
+
+Both live-evaluation GPU stages passed, process exits0; following captured
+updates exactly match the no-evaluation reference. Reports are retained in
+batch12, with independent result audit pending. Root launched conditional NFR
+continuations at10:48UTC, session48449, FP32 on physicalGPU0 and BF16 onGPU1.
+W&B: FP32 `mfzy5brd`, BF16 `2v1ygap2`. Both strict original imports reproduce
+the same BF16 update4 state; schedule extension retains the original token
+warmup and matched data/noise. Eight new updates per path are now complete.
+
+At midpoint12, common-FP32 dev CE is5.78232148/5.78957914 (FP32/BF16), compared
+with common origin5.71905397. Final-pass CE is7.87281956/7.87245743, compared
+with7.79196503. Both therefore show modest CE regression, while KL falls to
+1.31656277/1.31188378 and latent loss to0.27714687/0.27713525. The small
+precision gap and the shared auxiliary/CE tradeoff are different findings.
+Do not report combined-objective improvement as improvement in every term.
+Both midpoint checkpoints are being retained; eight remaining updates follow.
+
+Endpoint-only comparison helper/tests/protocol frozen `b68aa14`:20CPUtests
+passed3.62s, independent review no blocker. It reads exactly three checkpoints
+after both paths finish, using CPU mmap and streamed FP64 geometry. It compares
+actual cumulative updates and moment changes, not only entire pretrained weight
+norms, and produces per-term/per-pass plots. Root will run it concurrently with
+the later ordinary-B GPU loop when endpoints are ready. No additional numerical
+GPU sweep is planned unless a new, decision-relevant problem appears.
