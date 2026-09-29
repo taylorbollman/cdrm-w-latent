@@ -31,8 +31,8 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 closeout/merge
-metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
+2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 merged039fa96b.
+Closeout metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
 pilot-plan.md, open-issues.md, test-ledger.md and storage-receipt.md there.
 Runtime85e5f78/200 pins frozen; historical192 pins unchanged. New versioned
 engine/loop/worker/executor resumes after immutable SSD save; one worker owns

@@ -90,3 +90,24 @@ under neutral snapshot names with mappings. InventorySHA
 2b8d949260f64df6a6691c55de9dc74df937b153fab954d600ae09a8bba1a1ee.
 Own/latercloseout receipts excluded fromcounts; no newcorpus. Documentation and
 pilot cost updated. PR ready/merge and final closeout receipt follow below.
+
+PR51 merged successfully at `039fa96b82027d2a945ccb5bf4db268e1338ea6f`, after
+ready state, clean mergeability and exact-head check against
+`141e0709d4659834dd76128ceb2e277e5ebc03aa`. GitHub had no configured check runs
+or commit statuses; the local CPU/GPU acceptance is recorded in the ledger.
+Main was fast-forwarded. No model/runtime source changed after freeze.
+
+Final closeout01 contains 2,303 members (93,282,298 bytes before manifest).
+Its report SHA256 is
+`d86bc5d2bba9f21f2a9c6368fcd17ac40324d11db45aaa6465b3c50b23542285`;
+verified retention receipt SHA256 is
+`0fdfa1b6ea30969c3aa6ac4e7577b880a7acedf2ed5af70fe1214e88bc84b8d4`.
+Prefix: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T204500Z/pilot-async-closeout-01`.
+The final administrative receipt, produced after this documentation commit,
+is `.runtime/olmo-pilot-async/retention/closeout-admin-01.json`; it retains the
+merge response, prior closeout receipt and final documentation snapshot.
+
+Both GPUs are idle, no job is queued, and the proposed learning cohort remains
+unlaunched. Next review: the bounded B/NF/NFR first32 segment and its roughly
+two-hour NFR cost, with clipping/later-pass CE still open. Do not restart the
+completed four-update diagnostic or silently turn it into the cohort origin.
