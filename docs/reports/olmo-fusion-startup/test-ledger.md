@@ -17,12 +17,13 @@ passing scope does not erase the separate GPU qualifications.
 | Saved full-NFR sparse/prepared/captured bridge | 63 passed | `olmo-fusion-startup/cpu-packed-bridge-01.log` |
 | Full-NFR continuation and checkpoint contract | 54 passed | `olmo-fusion-startup/cpu-nfr-continuation-03.log` |
 | Final per-pass evaluation observation | 19 passed | `olmo-fusion-startup/cpu-nfr-per-pass-01.log` |
-| Full-NFR endpoint comparison | 20 passed | New helper/tests/protocol frozen at `b68aa14`; final endpoint execution pending |
+| Full-NFR endpoint comparison | 20 passed | `olmo-fusion-startup/cpu-nfr-comparison-01.log`; endpoint analysis passed 105 controls |
 | Guarded common lifecycle loop | 28 passed | `olmo-campaign-lifecycle/cpu-guarded-01.log` |
 | Abrupt-rank failure driver | 11 passed | `olmo-campaign-lifecycle/cpu-rank-failure-01.log` |
 | Cloud recovery bundle | 14 passed | `olmo-campaign-lifecycle/cpu-recovery-bundle-03.log` |
 | Live evaluation insertion | 38 passed | `olmo-campaign-lifecycle/cpu-eval-insertion-final-03.log` |
 | Ordinary pretrained host-loop adapter | 24 passed | `olmo-campaign-lifecycle/cpu-base-loop-final-03.log` |
+| CPU campaign manifest resolver | 27 passed | `olmo-campaign-manifest/cpu-tests-02.log` |
 
 The four-update NFR helper separately passed 17 focused tests, documented in
 [its results](nfr-updates-results.md). The recurrence-strength, adapted-position
@@ -43,9 +44,13 @@ GPU acceptance is separate from CPU tests:
 - Tiny two-GPU captured training survives a graceful stop, a coordinated
   logging failure, and a deliberate abrupt rank loss by restarting from a
   complete retained checkpoint. Both ranks' following updates match exactly.
-- The live-evaluation pair completed successfully; an independent audit is
-  being finalized. Full-NFR continuations and ordinary pretrained host-loop
-  acceptance are still pending at the time of this entry.
+- The live-evaluation pair completed successfully; its independent audit passes
+  435 checks. Subsequent updates and final boundaries are exact.
+- The full-NFR continuations complete 16 updates per precision from one shared
+  BF16 update4 origin. All four new full checkpoints are verified. A 131-check
+  independent scalar/receipt audit and 105-check CPU endpoint comparison pass;
+  these are evidence-integrity checks, not gradient-equivalence acceptance.
+- Ordinary pretrained host-loop acceptance is still active at this entry.
 
 Historical failures worth retaining include the initial warmup runner exiting
 its forced attention context before checkpoint recomputation, retention work

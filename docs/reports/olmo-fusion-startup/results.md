@@ -1,6 +1,6 @@
 # Overnight numerical and training-readiness investigation
 
-Work in progress, 2026-09-29. The user authorized about six hours of useful
+Numerical stages complete; final readiness checks active, 2026-09-29. The user authorized about six hours of useful
 technical work without intermediate review. This page summarizes the findings;
 the individual protocols, reports and retained source snapshots give the exact
 scope. No production-quality training campaign or model architecture change is
@@ -92,7 +92,7 @@ These are tiny-model operational tests. The earlier pretrained packed T1024
 restart evidence remains separately scoped. Neither substitutes for BF16
 gradient agreement or H200 testing.
 
-## Saved work and active follow-ups
+## Short training trajectories and saved work
 
 Authoritative warmup checkpoint:
 `.runtime/olmo-fusion-startup/train-02/update-000128.pt`, SHA256
@@ -125,11 +125,49 @@ long-run precision. See [full-model update results](nfr-updates-results.md).
 The [operator recovery bundle](../olmo-campaign-lifecycle/recovery-bundle-results.md)
 has verified actual cloud-restored checkpoint/index/source/data authorities and
 emits an explicitly conditional launch command. Abrupt-rank termination and
-exact fresh-process continuation have also completed. The active numerical
-bridge uses the saved full-model endpoint on the fixed packedT1024 fixture to
-compare sparse, prepared and CUDA-graph backwards, without further training.
+exact fresh-process continuation have also completed. The [packed execution bridge](packed-bridge-results.md) is also complete. On the
+saved full-model endpoint and fixed T1024 rows, FP32 sparse/prepared semantics
+pass, and BF16 prepared eager versus CUDA-graph losses and all 71 gradient
+hashes match exactly. Prepared BF16 versus FP32 gradients differ **1.10%**
+globally on this adapted fixture. The BF16 sparse/prepared comparison retains
+its strict elementwise miss (50/71 tensors), despite a much smaller **0.0879%**
+global difference. These are separate comparisons and remain separately scoped.
+
+We then continued **both precisions from the same BF16 update-4 checkpoint**
+for 16 more updates, preserving Adam history, data order and the original LR
+warmup. This is a conditional comparison, not two independent from-scratch
+trajectories. Common-FP32 held-out results at update20 are:
+
+| Training precision | Aggregate CE | Final-pass CE | KL | Latent |
+|---|---:|---:|---:|---:|
+| FP32 | 5.66989 | 7.68463 | 1.03313 | 0.16634 |
+| BF16 | 5.66764 | 7.68473 | 1.03140 | 0.16585 |
+
+There is no BF16-specific loss deterioration at this endpoint. Nevertheless,
+cumulative backbone updates differ **16.27%** (cosine 0.9868); fusion and
+predictor updates differ 1.40% and 1.45%. Close losses do not establish equal
+optimization paths. Both paths show a midpoint CE regression while auxiliary
+losses improve. First-pass CE remains slightly worse than the origin, and
+later-pass CE remains substantially worse than first-pass CE. This is a
+functionality result, not evidence that feedback improves language modeling.
+See [full-model continuation results and plots](nfr-continuation-results.md).
+
+The new evidence supports considering a **bounded, monitored BF16 pilot with an
+explicit startup policy**. It does not clear arbitrary cold-start BF16 training,
+all data/context regimes or a long production campaign. No further numerical
+GPU sweep is warranted solely to make these percentages smaller. Preserve the
+qualification and make the next test answer a practical training question.
+The original model math, native Q/K behavior and accepted kernel choices stay
+unchanged.
+
+The ordinary pretrained base model is now undergoing the same host-loop
+reference, exact-generation cloud restore and fresh two-GPU continuation.
+A separate CPU manifest resolver has passed 27 focused tests and is resolving
+one actual readiness example for all eight component combinations. It creates
+an auditable data/schedule/partition/resource plan; it does not launch training,
+choose a production recipe or confer numerical clearance.
 
 Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
-This page will be updated after the remaining bounded stages finish; completed
-diagnostic sources stay frozen.
+Completed helpers, tests and protocols remain frozen. The final readiness
+results and next implementation boundary will be linked here at closeout.

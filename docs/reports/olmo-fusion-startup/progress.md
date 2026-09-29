@@ -354,3 +354,40 @@ actual cumulative updates and moment changes, not only entire pretrained weight
 norms, and produces per-term/per-pass plots. Root will run it concurrently with
 the later ordinary-B GPU loop when endpoints are ready. No additional numerical
 GPU sweep is planned unless a new, decision-relevant problem appears.
+
+## 11:28 UTC — full continuation evidence complete
+
+Both full-NFR continuations completed successfully, with verified update12/20
+checkpoints. Endpoint comparison passed 105 controls and the independent
+scalar/receipt audit passed 131. Aggregate common-FP32 dev CE ends at
+5.669885/5.667641; final-pass CE 7.684629/7.684726. Cumulative backbone update
+vectors still differ 16.2663%, cosine0.986783. The comparison is conditional on
+shared BF16 update4 history; do not splice it into two from-scratch20-step runs.
+See finalized nfr-continuation-results.md and figures. No further numerical GPU
+sweep is planned from this endpoint agreement.
+
+Ordinary-B host-loop root orchestration is active (session9966), reference then
+exact-generation cloud restore and fresh resume. Reference has completed three
+updates and is retaining its final checkpoint. CPU manifest helper/tests/protocol
+are frozen at8341904 after27 focused tests and two independent reviews. One
+actual CPU-only readiness resolution is authorized, no training launch. Root is
+consolidating results and retaining final evidence. Target closeout remains
+about14:00UTC, without adding work simply to consume the interval.
+
+## 11:30 UTC — final bounded integration selected
+
+Actual CPU manifest resolution passed in4.44s; independent audit51checks,
+all52source/snapshot pins. Three16,384-input updates describe48chunks,
+49,104CE/49,103latent/49,054KL positions, no padding. The prefix spans two books
+documents and is not a production mixture. Manifest/resolved remain no-launch,
+no-numerical-clearance declarations. Evidence retention started separately.
+
+The remaining useful overnight task is a narrowly scoped manifest-driven
+ordinary-B launch adapter, not a general all-arm campaign. It will bind actual
+recipe/data/partition/schedule/checkpoint identity from a pinned resolved plan,
+three16,384-input updates, twoH100s, BF16 captured ordinary model, fresh original
+startup. New helper/tests/protocol only; all completed sources stay frozen.
+Precision reviewer implements, data/runner reviewers audit, root owns GPU
+launches after final CPU scope/review. Candidate target12:25UTC. All-arm/adapted
+startup support and production data/quality choices remain later milestones.
+This is standard readiness work independent of the recurrence precision decision.
