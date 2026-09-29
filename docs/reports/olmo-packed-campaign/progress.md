@@ -87,3 +87,12 @@ Boundary retention receipt verified; full checkpoint now in GCS. CPU restoration
 into `/mnt/localssd/cdrm-checkpoints/packed-campaign/cloud-restored-01` running.
 Only after downloaded bytes verify, launch new torchrun resume with the above
 report+manifest pins, cloud-restored index path and unchanged runtime sources.
+
+Full checkpoint cloud download verified: state15,214,757,825 bytes plus manifest
+58,065 bytes. Fresh-process resume launched with new cloud-restored index path
+and restored checkpoint, source/config pins unchanged. W&B `igpkw3gd`; stage
+`.runtime/olmo-packed-campaign/pretrained-resume-01`. Exact configuration and
+restored boundary gates pass; actual Adam is resident before DDP construction.
+Cold warmup is running. Remaining: capture, restored next update and bitwise
+comparison, then retain final evidence/audit and close draft PR39. Main report
+and next-steps.md prioritize numerical localization rather than quality training.
