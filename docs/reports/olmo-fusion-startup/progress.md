@@ -124,3 +124,34 @@ Newcomponentprobe readyforreview (62affectedCPUtests7.47s) andnewtiny2GPU
 lifecycleloop ready (25CPU/Glootests10.20s), bothfrozenpendingrootlaunch.
 No oldcore/sourcechanges; noBF16productionclearance. Longfixtureimprovement
 supports continuingtheseexplicitboundedfollowups, notextending128warmup.
+
+## 09:15 UTC: broader gradients and lifecycle recovery
+
+The saved fusion128 checkpoint now has paired T128 component observations in
+`components-128-01` (report SHA
+`59e850755c25d3e585b1787b3b7a70ec67a43a8a7edfc97ceacd0d6f75a0653d`).
+NF combined backbone/fusion gradient errors are 0.735%/0.888%; NFR CE gives
+32.442%/47.421%, and NFR combined 12.059%/20.389%. Predictor errors remain
+0.763%/0.820% in the combined cases. No numerical clearance for native RT.
+New alpha0/.25 combined probes and an ordinary N-only packed T1024 CE baseline
+are running separately on GPUs0/1. Both helpers have independent source review
+and CPU checks; all old math/probe sources remain frozen.
+
+The tiny captured two-GPU lifecycle reference and stop-after-update1 passed.
+The first fresh-resume gate failed exact comparison and then required external
+container teardown after its failed report and W&B sync. A second fresh resume
+with observation-only recording completed all updates. Its model, gradients,
+Adam, metrics, data, rank1 RNG and counters are bitwise identical; only rank0
+Python RNG index differs by two draws, consistent with checkpoint retention
+consuming randomness after checkpoint capture. The failed gate remains retained.
+A new runner adapter will preserve RNG around retention and improve failure
+teardown, followed by fresh reference/stop/resume/failure stages. No old source
+will be silently patched.
+
+Counterfactual Adam, packed128 and both independent audits have verified GCS
+evidence under retention/update-128-01.json, packed-128-01.json,
+components-128-01.json, warmup-audit-01.json and update-packed-audit-01.json.
+The generic small-evidence retainer rejected the T16 preparation report's richer
+source-metadata schema before uploading it; that index will be retained via an
+explicit manifest/database upload. This is a retention-adapter issue, not a data
+validation failure. Current committed code is6ffe5c6, pushed.
