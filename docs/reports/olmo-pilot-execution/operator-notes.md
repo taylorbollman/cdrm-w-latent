@@ -61,19 +61,30 @@ K2 fixed-layout benchmark. Its isolated full-valid K4/T1024 probes measured:
 | 12 | 4,311 | 59.06 GiB | 14.23 GiB |
 | 16 | 4,970 | 69.97 GiB | 3.30 GiB |
 
-Start NFR B8/rank, then B12/rank if setup and evaluation leave comfortable
-headroom; do not pursue B16 to consume the final few GiB. Ordinary B can start
-B32/rank and conditionally B64/rank, but old T512 ordinary rates are not a
-T1024 campaign capacity acceptance. These are suggested bounded candidates,
-not promises of fitting the actual ordered execution path.
+The frozen protocol starts NFR at B12/rank, with B8/rank as the fallback if
+setup or evaluation lacks comfortable headroom. Do not pursue B16 to consume
+the final few GiB. Ordinary B starts at B32/rank; consider B64/rank only after
+the measured margin supports it. Old T512 ordinary rates are not a T1024
+campaign capacity acceptance. These are bounded candidates, not promises of
+fitting the actual ordered execution path.
 
-Use a fresh process per physical batch. Aim for two untimed complete updates
-and five measured complete updates after graph setup. Keep capture warmup,
-checkpoint write/cloud transfer, held-out evaluation and source audits outside
-the timed update interval. Report global valid input tokens once, actual CE/
+Use a fresh process per physical batch. Each capacity declaration has eight
+updates: exclude updates 1–3 from timing and report updates 4–8. Keep capture
+warmup, checkpoint write/cloud transfer, held-out evaluation and source audits
+outside the compute-region update interval. Report global valid input tokens once, actual CE/
 latent/KL counts, physical rows/rank, accumulation, setup peak allocated/reserved,
 steady reserved and sampled free memory. A large logical batch obtained through
 accumulation is not a large RT kernel batch.
+
+The capacity declarations use a 600-second checkpoint policy plus checkpoints
+every four completed updates, including retained origin and final boundaries.
+This is a bounded test setting, not the selected cadence for a future learning
+run. Choose that cadence from measured write/transfer costs while retaining
+progress within the intended approximately 20-minute interruption window. Time
+policies are checked at completed update boundaries; an indivisible longer
+operation must be reported separately. The present declaration validator caps
+the configured time interval at 600 seconds, so a larger interval would require
+an explicit policy change before launch.
 
 Initially allocate common-FP32 dev evaluation at B1/rank independently of the
 training batch. Measure its cost and memory before choosing routine monitoring

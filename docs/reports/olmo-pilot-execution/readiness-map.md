@@ -25,6 +25,11 @@ and startup routes can differ, so their learning values are not a matched
 architecture comparison. None of the audit check counts above measures model
 quality or grants general BF16/H200 clearance.
 
+The frozen capacity sequence is B32/rank with conditional B64, and NFR B12/rank
+with B8 fallback. Eight-update fixtures measure updates 4–8. Their 600-second,
+every-four-update checkpoint policy is a test setting; future cadence and the
+provisional learning budget still require the review described in next-steps.
+
 ## Terms and comparison boundaries
 
 **B** is ordinary OLMo continuation. **N** adds NextLat training losses and its

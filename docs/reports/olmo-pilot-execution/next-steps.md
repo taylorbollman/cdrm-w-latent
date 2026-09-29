@@ -57,6 +57,11 @@ batch for the comparison. The existing proposed starting point is **524,288
 valid input tokens per update**, or 512 full T1024 rows. It is a recipe choice,
 not a number implied by whatever fits on one GPU.
 
+The current capacity protocol starts ordinary B32/rank, conditionally B64, and
+NFR B12/rank with B8 fallback. Each runs eight updates and measures updates 4–8
+after excluding the first three. These candidates do not select the future
+learning allocation until the complete memory/evaluation results are reviewed.
+
 For example, on two GPUs this requires eight accumulation slots at B32/rank,
 four at B64/rank, or 32 at B8/rank. B12/rank needs 22 slots, with 16 dummy rows
 in the final global slot. The ordered planner records those allocations and
@@ -138,8 +143,13 @@ CE, auxiliary terms, clipping/gradient behavior and whether the live execution
 stays finite and recoverable. Extend only within the declared ceiling after the
 review; change the recipe only for a concrete concern and label new lineages.
 
-Use checkpoint boundaries within the user's 20–30 minute interruption window,
+The native capacity fixtures use a 600-second policy and every-four-update
+checkpoints. That is a test setting, not a future learning-cadence decision.
+Choose pilot checkpoint boundaries within the user's 20–30 minute interruption window,
 with verified GCS publication before pruning and two retained local boundaries.
+The current validator permits at most 600 seconds for its time policy; retaining
+that bound is compatible with the interruption goal. Increasing it requires an
+explicit policy revision before launch, rather than silently changing a run.
 Report any indivisible setup, evaluation or transfer operation likely to exceed
 that window. Continue online W&B and immutable local/cloud evidence. A successful
 short pilot may form the beginning of the eventual learning run only when its
