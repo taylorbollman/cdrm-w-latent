@@ -106,3 +106,9 @@ Final source audit passes all 1,120 declared report/snapshot pairs across
 full-checkpoint SHA evidence remains separately recorded. Both GPUs idle,
 0 MiB used and no compute processes. Only final documentation archive/receipt
 and guarded PR merge remain; no background GPU work remains.
+
+Final documentation archive is retained and download-SHA verified:
+`campaign-closeout/evidence.tar.gz`, generation 1790644055095603,
+SHA256 cc4874a6b886751ebbc7ff323968fdc8eeff362f2e1b79870fdd72ddd0c660a4.
+20 verified receipts now cover 46 cloud objects. PR 38 contains the completed
+milestone; exact receipt and remaining scope are in the storage/results docs.

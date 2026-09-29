@@ -166,5 +166,5 @@ clear production-loader, evaluation or cold-restart memory requirements.
 
 The B12 CLI/protocol change was recorded prospectively in `cac5c1c`; B32 was
 deliberately skipped and is not an observed OOM. There is no active capacity run
-at this ledger snapshot. Final documentation/closeout retention remains pending
-for root.
+at this ledger snapshot. Final documentation/closeout retention is verified;
+see the storage receipt. Source audit verifies all 1,120 report/snapshot pairs.

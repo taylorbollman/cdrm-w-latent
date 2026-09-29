@@ -5,7 +5,8 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 ## Current decision, authorization and next action
 
 **Campaign two-H100 execution/restart/capacity complete,
-2026-09-29:** branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
+2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),
+branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
 [results](reports/olmo-campaign-two-gpu/results.md),
 [test ledger](reports/olmo-campaign-two-gpu/test-ledger.md),
 [usage](reports/olmo-campaign-two-gpu/usage.md),
@@ -38,7 +39,8 @@ batch/schedule calibration. Read the [proposed next milestone](reports/olmo-camp
 Current adapters reject multidocument rows. No
 quality campaign or production mixture is authorized by this readiness slice.
 Preserve progress every 20–30 min; completed evidence and full checkpoint are
-durable in GCS, with exact references in the storage receipt.
+durable in GCS, with exact references in the storage receipt. All 1,120 source
+pairs and 20 retention receipts (46 objects, including closeout) verify.
 
 **Reusable document preparation complete, 2026-09-28:** read
 [results](reports/olmo-document-shards/results.md),

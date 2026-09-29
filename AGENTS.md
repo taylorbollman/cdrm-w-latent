@@ -33,7 +33,7 @@ W&B tracking.
 
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and
-storage-receipt.md. Branch feat/olmo-campaign-two-gpu. Tiny all-eight-arm
+storage-receipt.md. PR 38; capacity source cac5c1c. Tiny all-eight-arm
 NCCL eager/graph pass; actual pretrained B/NFR prepared-reference graph passes.
 Full 15.21 GB NFR checkpoint restored from GCS; new-process next update matches
 original live-graph continuation bitwise on both ranks. Safe scalar metadata
@@ -46,7 +46,8 @@ T1024 K4/RT0,15/all NextLat losses: recommend B12/rank/M2 starting point,
 B16 passes at 4,970/s but only 3.30 GiB free; B32 skipped. GPU tests stopped.
 Read next-steps.md for proposed packed stream semantics, actual-data cursor
 recovery, cold T1024 restart/accumulation and bounded BF16 follow-up. No quality
-run or production packing. Save progress every 20–30 min; retain in GCS.
+run or production packing. All 20 receipts/46 cloud objects verified; 1,120
+source pairs checked. Save progress every 20–30 min; retain in GCS.
 
 2026-09-28 reusable Dolma document preparation complete. Read
 docs/reports/olmo-document-shards/results.md, usage.md and storage-receipt.md.

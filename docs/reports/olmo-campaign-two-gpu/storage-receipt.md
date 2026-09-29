@@ -127,7 +127,7 @@ receipts do not claim that an active capacity run's unsaved optimizer state is
 recoverable; capacity probes are bounded disposable tests reconstructed from
 the retained source checkpoint.
 
-## Completed capacity retention; final documentation retention pending
+## Completed capacity retention
 
 `capacity-b8-m2-01` completed successfully with all 12 stages passing and eight
 complete Adam updates; [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg).
@@ -161,4 +161,22 @@ for additional headroom and B16 a tighter option. The [test ledger](test-ledger.
 records measured throughput, memory and the remaining qualification limits.
 B32 was deliberately skipped after observing B16 headroom; there is no B32 run
 or receipt. All capacity stages have stopped and their evidence is retained.
-Only final documentation/closeout retention remains pending for root.
+
+## Verified final documentation archive
+
+The closeout prefix is `<root>/campaign-closeout/`; local receipt
+`.runtime/olmo-campaign-two-gpu/retention/closeout.json` is verified. Its 37
+members include documentation at commit `36c07f2`, CPU logs, all 19 stage
+receipts, the source audit and final idle-GPU evidence. The audit verifies
+1,120 report/source pairs across 18 report-bearing stages. This archive was
+created before appending its own receipt here; this final receipt is in Git.
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 91,306 | `1790644055095603` | `cc4874a6b886751ebbc7ff323968fdc8eeff362f2e1b79870fdd72ddd0c660a4` |
+| `retention-manifest.json` | 8,633 | `1790644055379261` | `fad9e3bf6e3d3b812073e3fede3f18860c7c993911f00c569ce3f45d565a7e99` |
+
+Both objects pass full download SHA256, server MD5, size and SHA metadata
+checks. Including closeout, **20 verified receipts cover 46 cloud objects**.
+The code and reports are delivered in
+[PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38). No GPU job remains.
