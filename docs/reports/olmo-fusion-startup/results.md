@@ -1,6 +1,6 @@
 # Overnight numerical and training-readiness investigation
 
-Numerical stages complete; final readiness checks active, 2026-09-29. The user authorized about six hours of useful
+Numerical and GPU readiness stages complete, 2026-09-29. The user authorized about six hours of useful
 technical work without intermediate review. This page summarizes the findings;
 the individual protocols, reports and retained source snapshots give the exact
 scope. No production-quality training campaign or model architecture change is
@@ -171,11 +171,15 @@ focused tests and an actual all-eight-arm readiness resolution, with 51
 independent checks. It creates an auditable data/schedule/partition/resource
 plan. The example's first 49,152 tokens span two books documents and are not a
 production mixture. A new, separately invoked ordinary-B adapter connects that
-plan to bounded execution and recovery; its 19 CPU tests and both independent
-reviews pass, and GPU reference/restart acceptance is active. General all-arm
-launching and adapted-startup support remain later work.
+plan to bounded execution and recovery. Its 19 CPU tests, both independent
+reviews and actual two-GPU reference/cloud-restore/restart acceptance all pass.
+The manifest adapter also reproduces the earlier ordinary runner's first
+update exactly on inputs, gradients, metrics and model/Adam state. The final
+independent audit passes 566 checks; see [execution results](../olmo-campaign-manifest/run-results.md).
+General all-arm launching and adapted-startup support remain later work.
 
 Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
-Completed helpers, tests and protocols remain frozen. The final readiness
-results and next implementation boundary will be linked here at closeout.
+Completed helpers, tests and protocols remain frozen. Read the
+[assessment and next implementation boundary](next-steps.md),
+[readiness map](readiness-map.md) and [validation ledger](test-ledger.md).

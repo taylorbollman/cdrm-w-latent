@@ -1,6 +1,6 @@
 # Overnight validation ledger
 
-2026-09-29, work still active. These are focused final scopes, not disjoint test
+2026-09-29. These are focused final scopes, not disjoint test
 counts. **Do not sum this table:** several suites include the same supporting
 tests. Earlier failing attempts remain in the runtime directories; a final
 passing scope does not erase the separate GPU qualifications.
@@ -25,6 +25,7 @@ passing scope does not erase the separate GPU qualifications.
 | Ordinary pretrained host-loop adapter | 24 passed | `olmo-campaign-lifecycle/cpu-base-loop-final-03.log` |
 | CPU campaign manifest resolver | 27 passed | `olmo-campaign-manifest/cpu-tests-02.log` |
 | Manifest-driven ordinary B adapter | 19 passed | Frozen `c11cb05`; final focused log recorded in its execution results |
+| Fixed-generation CPU checkpoint readback | 29 passed | `olmo-campaign-lifecycle/cpu-readback-final-02.log` |
 
 The four-update NFR helper separately passed 17 focused tests, documented in
 [its results](nfr-updates-results.md). The recurrence-strength, adapted-position
@@ -53,8 +54,9 @@ GPU acceptance is separate from CPU tests:
   these are evidence-integrity checks, not gradient-equivalence acceptance.
 - Ordinary pretrained host-loop reference, exact-generation cloud restore and
   fresh continuation all pass; the independent audit passes 460 checks.
-- The narrow manifest-driven ordinary-B integration is now the final active
-  GPU acceptance, separate from the completed hardcoded base-loop test.
+- The narrow manifest-driven ordinary-B reference, cloud restore and fresh
+  replay all pass. Its independent audit passes 566 checks, including direct
+  first-update parity with the earlier hardcoded base-loop test.
 
 Historical failures worth retaining include the initial warmup runner exiting
 its forced attention context before checkpoint recomputation, retention work

@@ -66,28 +66,27 @@ declare and account for adaptation tokens, objectives, trainability, optimizer
 resets and schedule changes; an adapted NFR checkpoint is not an exposure-matched
 baseline against untouched ordinary OLMo.
 
-## Recommended next milestone: one manifest-driven execution path
+## Recommended next milestone: generalize the accepted execution path
 
-The next authorized implementation is an **ordinary-B-only launch adapter**;
-its code review and runtime acceptance are pending. It is gated on the current
-pretrained B reference/resume acceptance. Use
-the validated manifest to drive three small T1024 updates and an exact
-cloud-restored continuation. Explicitly restrict this first adapter to original
-startup, two ranks and the accepted BF16 captured path; reject unsupported arms,
-startup and backend declarations. Derive the recipe, data membership, schedule,
-allocation and checkpoint policy from the manifest, without monkeypatching the
-frozen diagnostic runner or silently applying its hardcoded defaults. Keep the
-manifest and launcher source identities in the new checkpoint lineage. This
-adds real configuration-to-execution coverage; an all-arm startup abstraction
-alone would leave that integration untested. The following steps describe the
-broader extension after that bounded entrypoint works.
+The **ordinary-B-only manifest adapter is now accepted** on the actual
+pretrained model, with original startup, two ranks, T1024/B8 and the BF16
+captured path. Three declared updates, exact-generation cloud restore and fresh
+continuation pass. Its first update also matches the previous hardcoded
+ordinary-model loop on inputs, gradients, step metrics, model weights and Adam
+state. See [execution results](../olmo-campaign-manifest/run-results.md).
+
+The next implementation boundary is to generalize this accepted path to the
+component combinations and explicitly declared adapted startup. It is not a
+request to launch an all-arm quality campaign. The following steps retain the
+existing operational acceptance and target only newly introduced behavior.
 
 1. **Connect the resolved manifest to the common host loop.** Bind model/data/
    index/source pins, component ownership, per-arm physical allocation, exact
    masks and global loss counts, keyed feedback noise, committed cursor, token
    schedule, precision/backend policy and checkpoint lineage. Keep the same
    logical data exposure across arms while allowing different physical batches
-   and accumulation. The resolver is a validated plan, not a training launcher.
+   and accumulation. The resolver remains a validated plan; the separate B-only adapter is the
+   accepted execution implementation so far.
 2. **Make startup explicit before using adapted evidence.** First preserve the
    existing original/fresh-optimizer contract. Add a separately named, strictly
    validated adapted-start or resume path only where needed for the bounded
@@ -97,10 +96,9 @@ broader extension after that bounded entrypoint works.
 3. **Accept the new integration with small tests.** Exercise all eight component
    selections on tiny CPU models, including disabled losses and parameter
    ownership. Reuse completed two-GPU lifecycle, rank-failure and evaluation
-   insertion evidence. Finish and assess the already planned ordinary pretrained
-   B reference/cloud-restore/resume acceptance before calling that integration
-   ready. Then check only the additional manifest dispatch and recovery behavior
-   on representative B/NFR paths; expand coverage if another arm introduces
+   insertion evidence. Retain the completed ordinary pretrained
+   B reference/cloud-restore/resume and manifest-dispatch acceptance. Check only
+   additional dispatch and recovery behavior on a representative NFR path; expand coverage if another arm introduces
    untested ownership, graph or unused-parameter behavior. This is operational
    acceptance, not another broad precision sweep.
 4. **Freeze the first actual pilot contract.** Select the training mixture,

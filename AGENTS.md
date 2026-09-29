@@ -32,49 +32,36 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 11:33 UTC: overnight work ACTIVE, target closeout about14:00UTC.
-Branch feat/olmo-fusion-startup. Read results.md/progress.md/next-steps.md under
-olmo-fusion-startup. Numerical stages COMPLETE: fusion warmup128, matched
-fusion-only16 continuations/exact replay, full NFR4 paired updates, saved-state
-packedT1024 bridge, full NFR16 conditional continuations and CPU geometry.
-Final NFR heldout CE5.669885/5.667641 (FP32/BF16), finalpass7.684629/7.684726;
-cumulative backbone updates differ16.2663%, cos.986783. Both paths inherit the
-same BF16update4 Adam/model history; not independent cold-start20-update runs.
-No broad BF16 numerical clearance, quality/refinement win or QK/core change.
-Read nfr-continuation-results.md, packed-bridge-results.md and next-steps.md.
-Prepared/captured BF16 bridge losses/71gradients exact; sparse/prepared retains
-strict elementwise miss at0.08792%global; crossprecision prepared1.0955%global.
+2026-09-29 12:13 UTC: overnight investigation in final evidence/CPU closeout.
+Target about14:00UTC; user authorized useful technical work withoutreview.
+Branch feat/olmo-fusion-startup. Numerical and GPU stages COMPLETE. Read
+results.md/next-steps.md/progress.md under docs/reports/olmo-fusion-startup.
+FP32fusionwarmup128 improves NF precision; fullNFR4 plus16conditionalupdates
+end with CE5.669885/5.667641 FP32/BF16, but cumulativebackboneupdates differ16.27%.
+Both continuations inherit sameBF16update4 model/Adam, notindependentcoldstarts.
+PackedT1024 savedstate BF16prepared/captured exact; crossprecision1.0955%global,
+separate sparse/prepared strict elementwise qualification0.08792%global remains.
+No BF16 universal clearance, quality/refinement win or QK/core change.
 
-Active root session9966 runs ordinary-B actual-pretrained host-loop reference,
-exact-generation cloud restore1, fresh twoGPUresume2/3 via
-.runtime/olmo-campaign-lifecycle/run_base_loop.py --stage all. Reference passed910s; cloudrestore passed75.56s; freshresume now active.
-Runner reviewer audits finalstages.
-CPU manifest resolver is frozen8341904; actual readiness resolution4.44s passes,
-51independentchecks/52sourcepairs. All8arms metadata only; 3x16384input plan has
-2booksdocuments, not productiondata. Evidence under olmo-campaign-manifest.
+ActualordinaryB hostloop/cloudrestore/replay passes460auditchecks. B-onlymanifest
+adapter frozen c11cb05 also passes all3GPU/restorestages;566auditchecks,200sourcepairs,
+exactupdates2/3 and firstupdateparity with oldrunner. All8CPUmanifest metadata
+validated;49,152tokenreadinessprefix onlytwo booksdocs, notproductionmixture.
+Read olmo-campaign-manifest/run-results.md. Generalallarm/adaptedstart laterwork.
 
-Final useful overnight task: precision agent implements NEW narrowly scoped
-manifest-driven B-only adapter/tests/protocol; data+runner reviewers audit.
-Original freshstartup, T1024/B8/tworanks/BF16captured,3x16384inputs. Bind declared
-recipe/data/partition/schedule/retention/tracking and exact checkpoint lineage;
-no monkeypatch/frozen edits. Candidate target12:25, root alone GPU scheduling.
-General allarm/adapted launcher deferred. Every completed helper/tests/protocol
-and cdrm/pretrained/*.py remain frozen; do not add core files (source globs).
+Both GPUs verifiedidle0MiB/0% afterlastjob. OnlyCPUreadbackprobe active session78868:
+frozen dfacdb0, scripts/olmo_checkpoint_readback_probe.py. One exact14.15GB
+cloudobject comparison bytes-vs-stream, no uploads/tensorloads, outer900s.
+Await closure before finalsmall-evidence retention to avoidnetworkcontention.
+Dataagentclaimsreview, runneragentreadbackresults, precisionagentfinalstorageaudit.
+Root owns launches. Completedhelpers/tests/protocols and cdrm/pretrained/*.py
+frozen; do notaddcorefiles(sourceglobs). No extra numericalGPU/qualitycampaign.
 
-64stage receipts verified before manifest retention; pending final base+new
-adapter evidence, selected small-evidence cloud readback and closeout. Root
-prepared .runtime/olmo-fusion-startup/storage-audit-01/audit.py, selection pending.
-No production campaign or extra numericalGPU sweep. Save/push20–30min; verify
-completed-boundary checkpoints routinely. Do not fill time with redundant runs.
-
-2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
-User authorizes~6hours useful technical work withoutreview; proceed beyond first
-warmup as evidence warrants, not just plan/stop. Read docs/reports/olmo-fusion-startup/
-overnight-plan.md and progress.md. First128-update originalbackbone/freshfusion
-FP32-only warmup K4beta1jitter.02, thenFP32/BF16 probes old+freshdata. Conditional
-shortBF16continuation or controlledbeta startup; independentreadinessgaps can
-proceed. Noqualitycampaign. RootonlyGPU scheduling, codefreezeperstage,
-W&B/GCS and checkpoint<=10min/savepush20–30min. Oldcompletedhelpersremainfrozen.
+Pending: finalmanifestrestore/resume/audit/orchestration smallretention;
+CPUreadbackresult/retention; selected13smallreceiptcloudreadback and local
+fullcheckpointinventory; consolidatedhandoff/closeout/PR. Preserve failedstages,
+no deletinglocalweights. Bootfree~178GiB; SSD~1.4TiB. Save/push20–30minutes.
+Do not fill time with redundant runs.
 
 2026-09-29 crossed-state NF precision COMPLETE, PR44, feat/olmo-crossed-precision.
 Read docs/reports/olmo-crossed-precision/results.md, next-steps.md, test-ledger.md,
