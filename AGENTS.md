@@ -31,6 +31,16 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 ordered pilot execution IN PROGRESS on feat/olmo-pilot-execution.
+Read docs/reports/olmo-pilot-execution/progress.md and protocol.md. New adapters
+connect PR49 ordered corpus to unchanged PR48 SSD engine. Two H100s available;
+root owns all GPU launches. New contract/eval/fixture/audit code under active
+parallel development; do not launch from unfrozen source hashes. No GPU run
+started yet. Persistent evidence .runtime/olmo-pilot-execution; SSD checkpoints
+and gs://fast-chunks retention. Next tiny reference/eval/recovery acceptance,
+then bounded actual native B/NFR T1024 capacity. Prior BF16 qualifications remain.
+
+
 2026-09-29 pilot data COMPLETE, PR49 merged c433406; final retention metadata is in
 docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
 protocol.md, storage-receipt.md, test-ledger.md and next-steps.md there.
