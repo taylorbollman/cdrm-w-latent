@@ -4,6 +4,38 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Crossed-state NF precision complete, 2026-09-29:**
+[PR44](https://github.com/taylorbollman/cdrm-w-latent/pull/44), branch
+`feat/olmo-crossed-precision`; read [results](reports/olmo-crossed-precision/results.md),
+[next steps](reports/olmo-crossed-precision/next-steps.md),
+[test ledger](reports/olmo-crossed-precision/test-ledger.md),
+[storage receipt](reports/olmo-crossed-precision/storage-receipt.md) and
+[progress](reports/olmo-crossed-precision/progress.md) for final PR/retention.
+
+Runtime3364376, four aggregate/eight physical backwards in177.394 seconds,
+no training. Original backbone + adapted complete fusion gives **8.7328%**
+backbone and **13.2529%** fusion BF16/FP32 gradient error. Reverse hybrid gives
+**53.8216%/54.4150%**. Existing cold/cold is60.8698%/65.2122%, adapted/adapted
+0.9085%/1.4051%. The reverse hybrid's absolute discrepancies increase despite
+lower relative errors. Adapted fusion transfers substantial but partial benefit;
+it does not prove cold-start fusion training can learn that benefit.
+
+CA incoming-cotangent discrepancy still reaches16.57%. AC record0/pass3 hidden
+error remains9.323% on union-supported positions (all-valid9.261%); it is not
+confined to unused terminal positions. Old AA12.44% intermediate spike remains
+unlocalized because original position tensors were not retained. Same K4/beta1/
+jitter.02, CE-only NF, no temporal RT, isolated T16. No BF16 training clearance.
+
+All four first-pass identities and state/fixture/RNG/health controls pass.
+Final CPU58pass;109source/snapshot pairs independently verified, W&Bcwxjdnwe
+synced, immutable stage evidence read back from GCS. Both GPUs are idle.
+**Next recommendation, not launched:** one bounded full-FP32 fusion-only warmup
+from original OLMo/fresh fusion, backbone frozen, fixed feedback beta1/K4/jitter;
+then matched checkpoint precision checks on old and fresh fixtures. Provisional
+budget/optimizer and fallback are in next-steps; finalize a separate protocol
+before launch. No further GPU run queued. Preserve frozen runtime sources and
+save/push work every20–30minutes.
+
 **Adapted-state precision comparison complete, 2026-09-29:**
 [PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43), branch
 `feat/olmo-adapted-precision`; read [results](reports/olmo-adapted-precision/results.md),
@@ -34,13 +66,10 @@ RT/NFR, packed T1024 or training. No new error budget or precision fix is adopte
 
 CPU43tests pass (one test-onlyscalarwarning);104source/snapshot pairs and all
 import/fixture/RNG/health controls verified. Evidence retained inGCS. Both GPUs
-are idle. **Next proposed, not launched:** two crossed-state precision pairs,
-coldbackbone/adaptedfusion and adaptedbackbone/coldfusion, with all saved fusion
-buffers and per-position observations. Fouraggregate/eightphysicalbackwards
-would guide fusion-only warmup versus feedback-strength startup. Hybrids test
-transfer sufficiency, not training reachability; their observations cannot
-retrospectively clear the current adapted/adapted intermediate spike. No further
-GPU run queued. Preserve frozen sources and save/push every20–30minutes.
+are idle. That proposed crossed-state continuation is now complete; read the
+current entry above rather than relaunching it. It tests transfer sufficiency,
+not training reachability, and does not retrospectively clear this AA spike.
+Preserve frozen sources and save/push every20–30minutes.
 
 **Fixed-boundary precision diagnostic complete, 2026-09-29:**
 [PR42](https://github.com/taylorbollman/cdrm-w-latent/pull/42), branch
