@@ -45,7 +45,7 @@ from scripts.olmo_validation import require_container_gpu
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--batch-size", type=int, choices=(8, 16, 32), required=True)
+    parser.add_argument("--batch-size", type=int, choices=(8, 12, 16, 32), required=True)
     parser.add_argument("--microbatches", type=int, choices=(1, 2), default=1)
     parser.add_argument("--warmup-updates", type=int, default=3)
     parser.add_argument("--measured-updates", type=int, default=5)

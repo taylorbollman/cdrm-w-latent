@@ -12,7 +12,7 @@ from scripts.olmo_campaign_capacity import (ROOT, adam_residency, capacity_fixtu
 
 
 @pytest.mark.parametrize("microbatches", [1, 2])
-@pytest.mark.parametrize("batch_size", [8, 16, 32])
+@pytest.mark.parametrize("batch_size", [8, 12, 16, 32])
 def test_capacity_full_valid_fixture_matches_global_input_and_per_term_counts(batch_size, microbatches):
     recipe = CampaignRecipe("NFR", sequence_length=8, rt_layers=(0, 1))
     before = torch.get_rng_state().clone()

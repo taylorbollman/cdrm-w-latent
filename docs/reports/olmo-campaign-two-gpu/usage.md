@@ -82,7 +82,7 @@ Source changes mean a new write/resume pair, not silently accepting old pins.
 Model, optimizer, RNG, cursor and next-update comparisons are recorded per rank.
 
 After correctness/restart gates pass, `scripts/olmo_campaign_capacity.py`
-accepts one `--batch-size 8|16|32` and `--microbatches 1|2` candidate per launch.
+accepts one `--batch-size 8|12|16|32` and `--microbatches 1|2` candidate per launch.
 It uses NFR K4/T1024, RT0/15 every pass, full-valid isolated document rows,
 three eager warmup Adam updates before graph capture, one untimed replay
 backward/discard and five timed graph updates. Actual Adam moments are resident

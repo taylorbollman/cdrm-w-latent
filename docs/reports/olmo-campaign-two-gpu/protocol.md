@@ -79,3 +79,13 @@ Rates count global valid input tokens once and include runner validation,
 refill, NCCL, clipping and Adam. Fixture generation/logging/extra health scans
 are excluded. Full-valid isolated documents and full CE/auxiliary masks; this
 does not qualify packed corpus semantics or a production data loader.
+
+### Prospective amendment after B8/B16 results, 2026-09-29
+
+B16 passed all stages but left only 3.30 GiB sampled free per GPU (69.97 GiB
+peak reserved), versus B8's 22.97 GiB free. Skip B32. Add one B12 candidate to
+measure a comfortable middle option, using the identical M2 setup, three eager
+updates, resident-Adam capture, replay priming and five timed updates. Its CLI
+allowlist and this protocol are pinned in the new attempt's source snapshot;
+previous completed attempts retain their original source snapshots. No model
+math, numerical budget, timing denominator or execution backend changes.

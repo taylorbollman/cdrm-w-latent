@@ -86,3 +86,9 @@ tokens/s, median 9.564 s/update, peak reserved 50.35 GiB and final sampled free
 verified retention receipt is `retention/capacity-b8-m2-01.json`.
 B16/rank is running in a fresh process, bounded to 900 s; session evidence is
 `capacity-b16-m2-01/` plus its external launcher log. No other GPU jobs.
+
+00:54 UTC: B16 passes all 12 stages, 4,969.84 input tokens/s, median 13.187 s,
+69.97 GiB peak reserved and 3.30 GiB final sampled free/GPU. W&B cbl8xn7l.
+Too little headroom for recommendation; skip B32. Before any next timing,
+amend protocol/CLI to allow a single B12 candidate with unchanged setup/math.
+This is a measured middle option, not an extrapolated memory claim.

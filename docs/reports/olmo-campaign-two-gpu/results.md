@@ -99,13 +99,29 @@ It remains a source-coverage fixture, not a production mixture or packing test.
 T1024 NFR K4 resource checks follow full-model restart acceptance. They
 use one candidate per process, separate graph pools, full-valid isolated
 documents, full CE/auxiliary masks and two accumulated physical batches.
-This workload differs from older K2/partial-KL benchmarks; do not attribute its
-throughput difference solely to two-GPU scaling.
+This workload differs from the [older one-GPU T1024 benchmark](../olmo-combined-t1024/results.md);
+these rates do not measure two-GPU scaling of that benchmark:
+
+| Work per input / execution choice | Earlier benchmark | Current campaign probe |
+| --- | --- | --- |
+| FBT passes | 2 | 4 |
+| RT on passes | Ordinary bootstrap, then RT0/15 on one pass | RT0/15 on all four passes |
+| Recurrent-layer executions per input | 2 | 8 |
+| NextLat KL mask | Response half | All valid same-document triples |
+| Ordinary SwiGLU | Compiled | Eager |
+| Layout / noise | Fixed layout, no feedback noise | Prepared masks/counts and keyed 0.02 feedback jitter |
+| Parallel execution | One GPU, one graph | Two GPUs, local/sync graphs, accumulation and NCCL |
+
+The earlier physical batch was 64 on one GPU; a smaller physical batch per GPU
+also changes RT utilization. Accumulation increases the logical update batch,
+not RT's physical kernel batch. CE/pass weights differ too. No matched ablation
+attributes a measured fraction of the speed difference to any one change.
 
 | Physical batch per GPU | Accumulation | Global sequences/update | Global input tokens/s | Peak reserved/GPU | Final sampled free/GPU |
 | ---: | ---: | ---: | ---: | ---: | ---: |
 | 8 | 2 | 32 | **3,428.23** | 50.35 GiB | 22.97 GiB |
-| 16 | 2 | 64 | Pending | Pending | Pending |
+| 12 | 2 | 48 | Pending | Pending | Pending |
+| 16 | 2 | 64 | **4,969.84** | 69.97 GiB | 3.30 GiB |
 
 The [B8 run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg)
 passes all 12 stages, including three eager optimizer updates, capture with
@@ -116,6 +132,12 @@ refills, CUDA graph replay, NCCL, clipping, Adam and scheduling. It excludes
 fixture construction, logging and extra post-update health scans. Tokens count
 each valid input once, rather than multiplying by the four feedback passes.
 These are short resource measurements, not a long-run stability assessment.
+
+The [B16 run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/cbl8xn7l)
+also passes all 12 stages; median update time 13.187 s, whole attempt 575.49 s.
+Its 3.30 GiB free memory is too tight for a comfortable recommendation. A
+prospective protocol amendment adds one otherwise identical B12 run and skips
+B32; the original B8/B16 evidence and source snapshots remain unchanged.
 
 Packed multidocument rows remain rejected. Before production training, qualify
 the agreed concatenation/EOS policy separately for CE, NextLat, feedback and
