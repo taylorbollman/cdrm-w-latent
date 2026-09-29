@@ -93,3 +93,16 @@ Fixedhidden BF16prepared/sparse differences:latent0.1416%,KL0.2016%; FP32below
 8e-7. Auxiliary retention running. Adaptiveprotocol freezes onecrossedbackend
 CEcondition Flash/eager plus2recomputed reference cases. Precisionagent owns
 newcrossscript/tests; oldruntime/protocolsources stayfrozen. Root alone launches.
+
+Crossed-backend01 completed and independently audited:3 CEaggregate cases/6physical
+backwards,39.70s,W&Bmrgqe7di. Flash/eager equalsFlash/Triton exactly for all
+71parametergradients and8validpass states/cotangents. Both vsMath/eager CE
+relativeL2=.798459023. All78sourcepairs verified. ReportSHA
+`97ced83fd037c907bd6a8ad34c377b96a0c1bc04dc424c21950cbf2194da9a65`.
+Allthree stage retentionreceipts verified. OrdinarySDPA dispatch accounts for
+this CEbackend pair; RTtile changes havezero measured effect here. Neither
+sharedBF16/FP32 sensitivity norcombined/longer-context behavior iscleared.
+Next boundedlocal check is recordedin attention-local-protocol.md: capture
+8actualordinaryattention sites (layers1/14,passes0/3,bothrecords), identical
+QKV/cotangent localFP32math/BF16math/BF16Flash VJPs. Runneragent implementstwo
+new files; root alone launches afterreview/sourcefreeze. Oldsources untouched.
