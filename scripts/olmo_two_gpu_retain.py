@@ -27,7 +27,7 @@ PREFIX_ROOT = "gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/"
 MAX_EVIDENCE_BYTES = 128 * 1024**2
 FORBIDDEN = {"wandb", ".git", ".docker-home", "__pycache__", "hf-cache", "checkpoints", "checkpoint"}
 SUFFIXES = {".json", ".log", ".txt", ".md", ".py", ".sh", ".csv", ".yaml", ".yml",
-            ".toml", ".png", ".pdf", ".svg", ".html"}
+            ".toml", ".png", ".pdf", ".svg", ".html", ".sqlite"}
 
 
 def parse_prefix(prefix: str) -> tuple[str, str]:

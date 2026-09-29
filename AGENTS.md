@@ -31,6 +31,31 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 packed campaign readiness complete on `feat/olmo-packed-campaign`,
+PR 39. Read docs/reports/olmo-packed-campaign/results.md, test-ledger.md,
+storage-receipt.md, precision-assessment.md and next-steps.md first.
+Opt-in continuous-stream-v1 carries attention/RT/FBT within chunks across true
+boundaries; CE crosses, NextLat latent/KL exclude boundaries. Isolated default
+unchanged. All 6,947,277 train tokens match independent packed-stream oracle;
+verified disk index and committed cursor restore at a new path. Do not retokenize.
+Tiny all-eight-arm two-H100 eager/graph and actual pretrained B/NFR operational
+checks pass. Deterministic T1024/B12/rank/K4/nativeRT0,15/both NextLat losses:
+524,288 valid tokens/update,22 slots/rank; fresh-process cloud-restored next update
+is bitwise exact on both ranks, actual Adam resident before DDP/capture. Write
+13 gates/resume 10 gates pass. About 3.50k input tokens/s,59.03 GiB peak reserved and
+12.82 GiB sampled free/GPU on resumed update. Both checkpoints/evidence retained.
+Original resume01 failed; isolated T1024 Flash backward nondeterminism confirmed.
+Runner e5a593b enables and pins deterministic controls before CUDA; new matched
+pair 02 passes. This resolves repeatability for the pinned execution contract.
+It does NOT resolve BF16 numerical qualification: isolated loss-layout 3.40224%,
+packed fixture 1.6953%; BF16/full-FP32 combined gradients differ ~86%,cosine ~0.51
+on initial isolated NFR T16. Kernels change too; cause unlocalized. CE-only
+layouts agree; auxiliary paths carry layout gap. No architecture/QKnorm change,
+quality training, production mixture or H200 qualification. Next recommendation:
+six-backward precision/backend bridge, then fixed-hidden auxiliary cotangents.
+CPU regression 971 passed plus overlapping 20 data/18 determinism checks. GPU tests
+finished. See progress.md for final retention/PR state; preserve prior failures.
+
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and
 storage-receipt.md. PR 38; capacity source cac5c1c. Tiny all-eight-arm

@@ -17,6 +17,7 @@ import torch
 from torch import Tensor, nn
 from torch.nn import functional as F
 from torch.utils.checkpoint import checkpoint
+from .document_policy import ISOLATED_DOCUMENTS, CONTINUOUS_STREAM, validate_document_policy
 
 
 NEXTLAT_REVISION = "b37d3411ab9b17be8638abbddb9529f0f3a0a5f9"
@@ -42,8 +43,10 @@ class NextLatConfig:
     # Optional CE-only position chunk. None preserves the historical shared
     # chunk size; KL continues to use vocab_chunk_size independently.
     ce_chunk_size: int | None = None
+    document_policy: str = ISOLATED_DOCUMENTS
 
     def __post_init__(self) -> None:
+        validate_document_policy(self.document_policy)
         if type(self.model_dim) is not int or self.model_dim <= 0:
             raise ValueError("model_dim must be a positive integer")
         if type(self.vocab_chunk_size) is not int or self.vocab_chunk_size <= 0:
@@ -81,6 +84,8 @@ class NextLatConfig:
         # optional override must retain their original serialized schema.
         if self.ce_chunk_size is None:
             values.pop("ce_chunk_size")
+        if self.document_policy == ISOLATED_DOCUMENTS:
+            values.pop("document_policy")
         return values
 
     @classmethod
@@ -146,7 +151,8 @@ class NextLatBatch:
     ``ce_mask[:,s]`` selects prediction of token s from state s-1;
     ``latent_mask[:,s]`` selects prediction of state s from state s-1 and e_s;
     ``kl_mask[:,s]`` selects prediction of token s from the predicted state s-1.
-    None selects all valid same-document pairs/triples for that objective.
+    None selects all policy-eligible positions. The default uses same-document
+    pairs/triples; continuous-stream-v1 CE uses any within-row valid adjacency.
     document_ids must be nonnegative at valid positions; padding ids are ignored.
     No implicit EOS or prompt/response policy is inferred from token IDs.
     """
@@ -184,14 +190,21 @@ def _validate_batch(batch: NextLatBatch, *, one_document_per_row: bool = False) 
                 raise ValueError("Packed documents are unsupported: each batch row must contain only one document")
 
 
-def build_nextlat_masks(batch: NextLatBatch) -> dict[str, Tensor]:
-    """Loss-only boundary masks; they do not provide attention isolation."""
+def build_nextlat_masks(batch: NextLatBatch, *, document_policy=ISOLATED_DOCUMENTS) -> dict[str, Tensor]:
+    """Loss-only masks; stream CE crosses true boundaries, auxiliary losses do not.
+
+    Both policies stay within the current row. Token IDs (including literal
+    EOS) never override authoritative document IDs or infer attention isolation.
+    """
+    validate_document_policy(document_policy)
     _validate_batch(batch)
     valid, docs = batch.valid_mask, batch.document_ids
-    pair = valid[:, :-1] & valid[:, 1:] & (docs[:, :-1] == docs[:, 1:])
+    adjacent = valid[:, :-1] & valid[:, 1:]
+    pair = adjacent & (docs[:, :-1] == docs[:, 1:])
     triple = pair[:, :-1] & pair[:, 1:]
+    ce = adjacent if document_policy == CONTINUOUS_STREAM else pair
     return {
-        "ce": pair if batch.ce_mask is None else pair & batch.ce_mask[:, 1:],
+        "ce": ce if batch.ce_mask is None else ce & batch.ce_mask[:, 1:],
         "latent": pair if batch.latent_mask is None else pair & batch.latent_mask[:, 1:],
         "kl": triple if batch.kl_mask is None else triple & batch.kl_mask[:, 2:],
     }
@@ -260,9 +273,10 @@ def compute_nextlat_loss_sums(hidden_states: Tensor, token_embeddings: Tensor,
     ``latent`` sums the coordinate-mean SmoothL1(beta=1) at each selected pair;
     its count is the number of pairs. CE/KL counts are selected target tokens.
     Cross-document masks here do NOT make an already computed hidden state
-    document-isolated; the integrated wrapper rejects packed-document rows.
+    document-isolated. Packed rows require the integrated wrapper's explicit
+    continuous-stream-v1 policy, which permits causal cross-document context.
     """
-    masks = build_nextlat_masks(batch)
+    masks = build_nextlat_masks(batch, document_policy=config.document_policy)
     shape = (*batch.input_ids.shape, config.model_dim)
     if hidden_states.shape != shape or token_embeddings.shape != shape:
         raise ValueError("Hidden states and embeddings must have [batch, sequence, model_dim] shape")
@@ -302,8 +316,9 @@ class NextLatLM(nn.Module):
     """Own one native backbone and optional predictor; no extra readout alias.
 
     Runtime RT mode belongs to ``backbone_kwargs`` and is independent of the
-    constructor's NextLat enabled flag. Full documents only: cache/chunked state
-    and packed documents need a separate attention-isolation design.
+    constructor's NextLat enabled flag. The default requires one document per
+    row; continuous-stream-v1 permits causal cross-document context within a
+    row, without document-isolated attention or inter-row cache state.
     """
 
     def __init__(self, backbone: nn.Module, config: NextLatConfig, *, enabled: bool = True):
@@ -325,12 +340,13 @@ class NextLatLM(nn.Module):
         return _objective_weights(self.config, self.enabled)
 
     def counts(self, batch: NextLatBatch) -> dict[str, int]:
-        _validate_batch(batch, one_document_per_row=True)
-        masks, weights = build_nextlat_masks(batch), self.objective_weights()
+        _validate_batch(batch, one_document_per_row=self.config.document_policy == ISOLATED_DOCUMENTS)
+        masks = build_nextlat_masks(batch, document_policy=self.config.document_policy)
+        weights = self.objective_weights()
         return {name: int(masks[name].sum().item()) if weights[name] else 0 for name in _TERMS}
 
     def loss_sums(self, batch: NextLatBatch, *, backbone_kwargs: Mapping[str, Any] | None = None) -> NextLatLosses:
-        _validate_batch(batch, one_document_per_row=True)
+        _validate_batch(batch, one_document_per_row=self.config.document_policy == ISOLATED_DOCUMENTS)
         kwargs = {} if backbone_kwargs is None else dict(backbone_kwargs)
         forbidden = {"input_ids", "inputs_embeds", "attention_mask", "past_key_values", "use_cache", "return_logits"} & kwargs.keys()
         if forbidden:

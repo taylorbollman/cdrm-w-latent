@@ -23,6 +23,7 @@ from .nextlat import (
     _ce_chunk, _chunked_sum, _kl_chunk, _objective_weights, _validate_batch,
     build_nextlat_masks,
 )
+from .document_policy import ISOLATED_DOCUMENTS, validate_document_policy
 
 
 _TERMS = ("ce", "latent", "kl")
@@ -31,8 +32,9 @@ _INDICES = ("ce_source_indices", "needed_source_indices", "latent_target_indices
             "latent_prediction_indices", "kl_teacher_indices", "kl_prediction_indices")
 
 
-def _cpu_batch(batch: NextLatBatch) -> NextLatBatch:
+def _cpu_batch(batch: NextLatBatch, *, document_policy=ISOLATED_DOCUMENTS) -> NextLatBatch:
     """Snapshot caller-owned tensors before host-side structural validation."""
+    validate_document_policy(document_policy)
     if not isinstance(batch, NextLatBatch):
         raise TypeError("batch must be NextLatBatch")
     # Check the original devices/types before copying to a common CPU device;
@@ -51,7 +53,7 @@ def _cpu_batch(batch: NextLatBatch) -> NextLatBatch:
             raise ValueError(f"{name} must be {dtype} with input_ids shape/device")
         values[name] = value.detach().cpu().clone()
     result = NextLatBatch(**values)
-    _validate_batch(result, one_document_per_row=True)
+    _validate_batch(result, one_document_per_row=document_policy == ISOLATED_DOCUMENTS)
     return result
 
 
@@ -85,8 +87,8 @@ class PreparedNextLatLayout:
             raise TypeError("config must be NextLatConfig")
         if type(enabled) is not bool:
             raise TypeError("enabled must be boolean")
-        cpu = _cpu_batch(batch)
-        masks = build_nextlat_masks(cpu)
+        cpu = _cpu_batch(batch, document_policy=config.document_policy)
+        masks = build_nextlat_masks(cpu, document_policy=config.document_policy)
         weights = _objective_weights(config, enabled)
         counts = tuple(int(masks[name].sum()) if weights[name] else 0 for name in _TERMS)
         latent = masks["latent"] if weights["latent"] else torch.zeros_like(masks["latent"])
@@ -125,7 +127,7 @@ class PreparedNextLatLayout:
         if batch.input_ids.shape != self.shape or batch.input_ids.device not in (torch.device("cpu"), self.device):
             raise ValueError("Prepared layout requires the same batch shape and CPU or execution device")
         self.validate_integrity()
-        cpu = _cpu_batch(batch)
+        cpu = _cpu_batch(batch, document_policy=self.config.document_policy)
         for name, expected in zip(_STRUCTURE, self._structure):
             actual = getattr(cpu, name)
             if (actual is None) != (expected is None) or (actual is not None and not torch.equal(actual, expected)):

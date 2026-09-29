@@ -45,7 +45,8 @@ class DynamicNextLatLayout:
     graph input storage. The input token buffer belongs to the caller.
 
     T>=3 is an explicit initial scope, including completely masked dummy rows.
-    Packed documents remain unsupported, matching the integrated model wrapper.
+    Packed documents require the explicit continuous-stream-v1 config; CE then
+    crosses document boundaries while auxiliary losses keep same-document masks.
     """
 
     shape: tuple[int, int]
@@ -72,7 +73,7 @@ class DynamicNextLatLayout:
             raise TypeError("enabled must be boolean")
         if config.dropout:
             raise ValueError("Dynamic NextLat requires zero predictor dropout")
-        cpu = _cpu_batch(batch)
+        cpu = _cpu_batch(batch, document_policy=config.document_policy)
         shape = tuple(cpu.input_ids.shape)
         if shape[1] < 3:
             raise ValueError("Dynamic NextLat requires sequence length >= 3")
@@ -85,7 +86,7 @@ class DynamicNextLatLayout:
         kl_prediction = torch.arange(shape[0]*(shape[1]-1), device="cpu").reshape(shape[0], shape[1]-1)[:, :-1].reshape(-1)
         kl_teacher = torch.arange(cpu.input_ids.numel(), device="cpu").reshape(shape)[:, 1:-1].reshape(-1)
         weights = _objective_weights(config, enabled)
-        masks = build_nextlat_masks(cpu)
+        masks = build_nextlat_masks(cpu, document_policy=config.document_policy)
         mask_buffers = tuple((masks[term] if weights[term] else torch.zeros_like(masks[term]))
                              .reshape(-1).float() for term in _TERMS)
         counts = tuple(int(value.sum()) for value in mask_buffers)
@@ -118,8 +119,8 @@ class DynamicNextLatLayout:
         if (batch.input_ids.shape != self.shape
                 or batch.input_ids.device not in (torch.device("cpu"), self.device)):
             raise ValueError("Dynamic NextLat requires its fixed shape and CPU or execution device")
-        cpu = _cpu_batch(batch)
-        masks = build_nextlat_masks(cpu)
+        cpu = _cpu_batch(batch, document_policy=self.config.document_policy)
+        masks = build_nextlat_masks(cpu, document_policy=self.config.document_policy)
         weights = self.weights
         buffers = tuple((masks[term] if weights[term] else torch.zeros_like(masks[term]))
                         .reshape(-1).float() for term in _TERMS)

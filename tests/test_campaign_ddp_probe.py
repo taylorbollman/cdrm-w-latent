@@ -63,8 +63,9 @@ def test_fixtures_reproduce_keyed_noise_without_consuming_global_rng():
 
 
 @pytest.mark.parametrize("arm", ARMS)
-def test_independent_canonical_global_reference_matches_prepared_accumulation(arm):
-    args = Namespace(scale="tiny", length=8)
+@pytest.mark.parametrize("document_policy", ["isolated-v1", "continuous-stream-v1"])
+def test_independent_canonical_global_reference_matches_prepared_accumulation(arm, document_policy):
+    args = Namespace(scale="tiny", length=8, document_policy=document_policy)
     model, recipe, checkpoint, _, _ = construct(args, arm, "cpu")
     assert "fixture" in checkpoint
     data = fixtures(recipe, 2)
@@ -105,9 +106,28 @@ def test_cli_is_bounded_and_defaults_to_all_tiny_arms():
     args = parse_args(common)
     assert args.arms == ARMS and args.length == 8 and args.warmup == 11 and args.reference == "canonical"
     assert parse_args(common+["--reference", "prepared"]).reference == "prepared"
+    assert args.document_policy == "isolated-v1"
+    assert parse_args(common+["--document-policy", "continuous-stream-v1"]).document_policy == "continuous-stream-v1"
     for extra in (["--warmup", "10"], ["--length", "1024"], ["--arms", "B,B"], ["--arms", "bad"]):
         with pytest.raises(SystemExit):
             parse_args(common+extra)
+
+
+def test_packed_fixture_crosses_true_eos_boundaries_and_moves_layout_without_changing_padding_contract():
+    recipe = CampaignRecipe("NFR", sequence_length=8, rt_layers=(0, 1),
+                            document_policy="continuous-stream-v1")
+    for update in range(3):
+        crossings = 0
+        for batches, _ in fixtures(recipe, update):
+            for batch in batches:
+                adjacent = batch.valid_mask[:, :-1] & batch.valid_mask[:, 1:]
+                cross = adjacent & (batch.document_ids[:, :-1] != batch.document_ids[:, 1:])
+                assert (batch.input_ids[:, :-1][cross] == 60).all()
+                masks = build_nextlat_masks(batch, document_policy=recipe.document_policy)
+                assert torch.equal(masks["ce"], adjacent & batch.ce_mask[:, 1:])
+                assert not masks["latent"][cross].any()
+                crossings += int(cross.sum())
+        assert crossings > 0
 
 
 @pytest.mark.parametrize("rank,update,batch_size,length", [(2, 0, 2, 8), (0, 3, 2, 8), (0, 0, 3, 8), (0, 0, 2, 7)])

@@ -15,6 +15,7 @@ from torch import Tensor, nn
 from .olmo import OLMoCache, OLMoForCausalLM
 from .olmo_recurrent import OLMoRTForCausalLM
 from .recurrent import RTMode
+from .document_policy import ISOLATED_DOCUMENTS, validate_document_policy, feedback_eligibility
 
 
 def _unit_interval(value, name):
@@ -60,6 +61,8 @@ class FBTMode:
     checkpoints, including ordinary K1; ``configured-rt-v1`` executes rt_mode on
     every pass. Training jitter requires externally supplied unit-uniform noise,
     so assigning noise to logical examples is independent of microbatch shape.
+    continuous-stream-v1 permits attention/RT/shifted feedback across document
+    boundaries within a row. isolated-v1 retains historical packed-row rejection.
     """
 
     enabled: bool = True
@@ -68,8 +71,10 @@ class FBTMode:
     rt_mode: RTMode = RTMode(())
     first_pass_policy: str = "ordinary-v1"
     feedback_jitter: float = 0.0
+    document_policy: str = ISOLATED_DOCUMENTS
 
     def __post_init__(self):
+        validate_document_policy(self.document_policy)
         if type(self.enabled) is not bool:
             raise TypeError("enabled must be boolean")
         if type(self.num_passes) is not int or self.num_passes < 1:
@@ -190,8 +195,10 @@ class FBTOnlineOutput:
 class OLMoFBT(nn.Module):
     """Shared native stack plus opt-in feedback, without backbone mutation.
 
-    One document per row, optionally padded, is supported. Loss masks alone
-    cannot isolate packed documents, so multi-document rows are rejected.
+    Default execution requires one document per row, optionally padded. Finite
+    passes additionally accept continuous-stream-v1, with causal context and
+    feedback crossing actual document boundaries. Loss masks never provide
+    document-isolated attention. Online execution retains isolated rows only.
     Finite passes use fresh layer histories; caching belongs only to the
     explicitly separate exact-online API. That API requires an RT-capable
     backbone (ordinary execution uses an empty selection) for its stronger
@@ -240,7 +247,8 @@ class OLMoFBT(nn.Module):
         return self.backbone(inputs_embeds=embeddings, return_logits=False, **kwargs)
 
     @staticmethod
-    def _documents(valid, document_ids):
+    def _documents(valid, document_ids, document_policy=ISOLATED_DOCUMENTS):
+        validate_document_policy(document_policy)
         if document_ids is None:
             documents = torch.zeros_like(valid, dtype=torch.long)
         else:
@@ -249,9 +257,10 @@ class OLMoFBT(nn.Module):
             documents = document_ids
         if bool((documents[valid] < 0).any()):
             raise ValueError("Valid tokens require nonnegative document IDs")
-        for row, active in zip(documents, valid):
-            if row[active].unique().numel() > 1:
-                raise ValueError("Packed multi-document rows are unsupported; attention would cross documents")
+        if document_policy == ISOLATED_DOCUMENTS:
+            for row, active in zip(documents, valid):
+                if row[active].unique().numel() > 1:
+                    raise ValueError("Packed multi-document rows are unsupported; attention would cross documents")
         return documents.masked_fill(~valid, -1)
 
     def _blend(self, previous_hidden, embeddings, beta, eligible):
@@ -309,7 +318,8 @@ class OLMoFBT(nn.Module):
         ``right_padded_causal`` additionally permits valid-prefix rows, including
         empty rows. Ordinary attention uses an implicit causal mask; native RT
         retains token validity and every stack zeros invalid output queries.
-        This opt-in requires the native tiled backbone and no packed documents.
+        This opt-in requires the native tiled backbone. Packed rows additionally
+        require explicit continuous-stream-v1 in mode; they are not isolated.
 
         Nonzero training ``mode.feedback_jitter`` requires external unit noise;
         evaluation is deterministic and rejects supplied noise. No RNG state is
@@ -337,7 +347,7 @@ class OLMoFBT(nn.Module):
             embeddings, valid, positions, _, _, _ = self.backbone._prepare_inputs(
                 input_ids, inputs_embeds, attention_mask, position_ids, None,
             )
-        documents = self._documents(valid, document_ids)
+        documents = self._documents(valid, document_ids, mode.document_policy)
         noise = self._validate_feedback_noise(feedback_noise, mode,
             embeddings[:, 1:].shape, embeddings.device, embeddings.dtype)
         if full_valid_causal and not bool(valid.all()):
@@ -348,7 +358,7 @@ class OLMoFBT(nn.Module):
                              position_ids=positions, **stack_options).last_hidden_state
         states = [hidden]
         if mode.enabled:
-            eligible = valid[:, 1:] & valid[:, :-1] & (documents[:, 1:] == documents[:, :-1])
+            eligible = feedback_eligibility(valid, documents, mode.document_policy)
             for pass_index in range(1, mode.num_passes):
                 previous = self._jitter_feedback(hidden[:, :-1], mode, eligible,
                     None if noise is None else noise[pass_index - 1])

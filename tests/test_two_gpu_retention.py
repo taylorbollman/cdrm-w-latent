@@ -62,6 +62,22 @@ def test_hardware_or_interrupted_stage_without_main_report_is_retainable(tmp_pat
     assert len(members) == 2 and verified == []
 
 
+def test_packed_sqlite_metadata_index_is_retained_as_exact_bounded_bytes(tmp_path, monkeypatch):
+    import sqlite3
+    path = tmp_path/"packed-index"/"documents.sqlite"
+    path.parent.mkdir()
+    with sqlite3.connect(path) as db:
+        db.execute("CREATE TABLE chunks (start INTEGER, length INTEGER)")
+        db.execute("INSERT INTO chunks VALUES (0, 1024)")
+    original = path.read_bytes()
+    members, _ = retain.collect_evidence(tmp_path)
+    assert [(p.read_bytes(), name) for p, name in members] == [
+        (original, "evidence/packed-index/documents.sqlite")]
+    monkeypatch.setattr(retain, "MAX_EVIDENCE_BYTES", len(original)-1)
+    with pytest.raises(ValueError, match="128 MiB"):
+        retain.collect_evidence(tmp_path)
+
+
 @pytest.mark.parametrize("name", ["report.json", "source-snapshot"])
 def test_symlink_evidence_is_rejected(tmp_path, name):
     stage = tmp_path/"stage"; stage.mkdir()

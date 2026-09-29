@@ -4,6 +4,46 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Packed campaign readiness complete, 2026-09-29:**
+[PR 39](https://github.com/taylorbollman/cdrm-w-latent/pull/39), branch
+`feat/olmo-packed-campaign`. Read [results](reports/olmo-packed-campaign/results.md),
+[test ledger](reports/olmo-packed-campaign/test-ledger.md),
+[usage](reports/olmo-packed-campaign/usage.md),
+[storage receipt](reports/olmo-packed-campaign/storage-receipt.md) and
+[progress](reports/olmo-packed-campaign/progress.md).
+
+Opt-in continuous-stream packing now has explicit CE/NextLat/attention/RT/FBT
+semantics, a verified disk-backed index and a committed actual-data cursor.
+All 6,947,277 train tokens agree with an independent oracle. Tiny all-eight-arm
+and pretrained B/NFR distributed operational checks pass. On two H100s, actual
+T1024/B12/rank/K4/nativeRT0,15/NextLat with 524,288 inputs/update passes full
+checkpoint cloud restoration and fresh-process **bitwise next-update equality**
+on both ranks, including actual resident-Adam cold DDP/capture. Deterministic
+write13 gates and resume 10 gates pass; about 3.50k input tokens/s, resumed peak
+reserved 59.03 GiB/free 12.82 GiB per GPU. GPU work finished; no quality run queued.
+
+The first T1024 restart failed despite identical inputs/state/forward losses.
+[Repeatability investigation](reports/olmo-packed-campaign/restart-repeatability.md)
+reproduced isolated Flash backward nondeterminism; runner `e5a593b` now pins
+deterministic controls before CUDA. Fresh matched pair 02 passes, old failure
+remains retained. This fixes scoped repeatability, not numerical agreement.
+
+The [component assessment](reports/olmo-packed-campaign/precision-assessment.md)
+finds **~86% BF16/full-FP32 combined gradient L2 error**, cosine ~0.51, on the
+initial isolated T16 fixture. Kernels change too, so cause remains unlocalized.
+The prior 3.40224% BF16 loss-layout error reproduces in auxiliary pathways;
+CE-only layouts agree. The different packed fixture retains 1.6953% error.
+[Next milestone](reports/olmo-packed-campaign/next-steps.md): bounded six-backward
+precision/backend bridge, then fixed-hidden auxiliary cotangents and selective
+localization. No Q/K-normalization or architecture change before evidence.
+
+CPU regression 971 passed plus overlapping focused 20 data/18 determinism checks.
+Two full checkpoints, both restore attempts, index and evidence are retained;
+read the storage receipt for exact generation/hash pins and final closeout.
+No production mixture, long quality campaign, changed-world-size or H200
+qualification. Preserve progress every 20–30 min; do not retokenize the corpus.
+The historical PR38 proposed packing/recovery below is superseded by this result.
+
 **Campaign two-H100 execution/restart/capacity complete,
 2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),
 branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
