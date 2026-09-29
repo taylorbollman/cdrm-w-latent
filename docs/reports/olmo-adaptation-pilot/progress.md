@@ -42,3 +42,13 @@ evidence retention both completed successfully. Declarations, launch-time helper
 snapshots and standalone analysis helpers are also retained. Queue remains
 running in the original host process, with NFR pending; do not start another
 GPU run. Host session identifier7388 is a convenience, not recovery authority.
+
+23:54 UTC: NF reached update16; first fixed FP32 development evaluation is
+running. Update8 checkpoint is cloud-verified; next cadence save follows the
+current update/evaluation boundary. All updates remain finite; gradients vary
+(raw norm425 at1,24 at8,40 at13,22 at16), all clipped. Auxiliary losses fall;
+per-pass CE assessment is pending. NFR remains queued. New assessment-guide.md
+records exact loss semantics and planned review criteria; no runtime changes.
+Posthoc inventory helper is prepared and retained in analysis-helpers-02.
+Immutable progress-2354 snapshots contain current queue/native report metadata
+and completed B retention authorities, not a coherent new recovery checkpoint.
