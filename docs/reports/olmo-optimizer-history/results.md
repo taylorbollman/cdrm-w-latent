@@ -47,6 +47,29 @@ actual clipping operation. Per-target means are:
 The FP32 means exactly reproduce the saved BF16 endpoint's prior common-FP32
 evaluation. Opposing component differences partly cancel in the combined loss.
 
+There is also an earlier **same-fixture** comparison, before full-model
+adaptation, at original backbone/predictor plus fusion128 weights. The
+[component probe](../olmo-fusion-startup/component-results.md) used exactly the
+same tokens, masks, noise, physical records, mode, loss weights/denominators,
+parameter participation, precision paths and runtime. Its130 source/snapshot
+pins remain unchanged and are included in the current inventory. Report SHA256:
+`59e850755c25d3e585b1787b3b7a70ec67a43a8a7edfc97ceacd0d6f75a0653d`.
+
+| Raw gradient difference | Before full-model adaptation | BF16 update20 state |
+|---|---:|---:|
+| All | 11.4280% | 1.3687% |
+| Backbone | 12.0590% | 1.2894% |
+| Fusion | 20.3890% | 1.0638% |
+| Predictor | 0.8202% | 1.6678% |
+
+The backbone absolute difference also falls21.4491→0.119592, while the FP32
+reference norm falls177.8677→9.27478. Predictor relative error increases, though
+its absolute difference falls0.540359→0.074916. This supports lower overall
+precision sensitivity at this particular adapted model state on unchanged data;
+it does not show uniform improvement in every component. Because all model
+weights evolved, it cannot attribute that change to Adam history, fusion alone,
+or any single training mechanism. Adam does not enter a fixed-state backward.
+
 The earlier [initial full-NFR update](../olmo-fusion-startup/nfr-updates-results.md)
 had a13.447% raw backbone difference and17.469% actual backbone update
 difference. Today's1.289% raw result is a different model state **and a different

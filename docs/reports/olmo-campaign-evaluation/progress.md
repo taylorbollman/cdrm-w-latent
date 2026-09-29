@@ -45,3 +45,13 @@ by merging fresh-evaluation and trainingmetrics into one log; eligible resumed
 boundary publishes separately before nextupdate. No evaluationGPUjob yet.
 Bootfree~110GiB before newstates. Save/push20–30minutes; use latest runtime
 reports before any launch after interruption.
+
+16:20UTC: evaluation source frozen ecac9b9 (164files), corrected declarations-02
+pass realCLI CPUauthoritypreflight. Declarations-01 had unsupportedretainerprefix
+and was never GPU-launched; retained assupersededpreflight. Tinyreference and
+liveinsertion complete (~19s each); exactnextupdate/finalboundary accepted by
+independentaudit1,787checks. Tinyupdate2stop/cloudrestore/resumecomplete; repeat
+scheduledrestored evaluation succeeds. Terminal-boundaryresume from2withstop2
+currentlyrunning; thennativeNFRinsertion againstretainedPR46reference. Rootowns
+GPU schedule. All priorGPUstagesclosedandretained; sourceaudit helperfrozenafter
+71CPUtests. TotalcurrentCPUcoverage196distincttests. NativeGPUstillpending.
