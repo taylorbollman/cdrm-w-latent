@@ -2,7 +2,8 @@
 
 ## Current state, 2026-09-29 16:45 UTC
 
-Work is complete; PR47 is in final administrative closeout. Native insertion
+Work is complete. PR47 merged as
+`9419a98ec9c910e36de7fb473179047132cd2f82`; the checkout is on main. Native insertion
 completed in 1,113.07 seconds, with exact post-evaluation training and final
 state against PR46. Independent audit passes 1,742 checks / 319 source snapshots.
 All 197 final CPU tests pass. Tiny live insertion, cloud restore/resume and
@@ -14,7 +15,21 @@ next-steps.md. The companion optimizer-history report separates model-state
 gradient sensitivity from Adam-history effects. No numerical default, Q/K,
 architecture or quality-campaign decision was silently changed. Boot free is
 about 91 GiB; no local pruning occurred. Runtime sources remain frozen at
-ecac9b9 / 164 files. Final merge and closeout receipt metadata follow below.
+ecac9b9 / 164 files.
+
+Final bundle: `.runtime/olmo-campaign-evaluation/closeout-01`, report SHA256
+`21dfc3d322c46759a6a6098a00b8c588a0f565912ee508bb4cf395c97fbd41d8`.
+Verified GCS prefix:
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T155500Z/campaign-evaluation-closeout-01/`.
+Receipt `receipts/closeout-01.json` SHA256:
+`0dd01600f78f93f9285043b0c48b1a9769a77369cc7b6a909ba85f5e41b7848a`.
+The bundle has 1,988 members, including both new dev indexes, all closed reports
+and source snapshots, numerical/public-loss evidence, inventories and preceding
+receipts. Its archive/manifest generations are 1790700458977093/1790700459296408.
+The bundle necessarily precedes its own receipt and this final administrative
+note. No model payload is duplicated in the small-evidence archive; its verified
+checkpoint object authorities are retained separately. Final source checks
+confirm all 164 execution and 148 optimizer-probe pins unchanged after merge.
 
 ## Execution history
 

@@ -62,3 +62,11 @@ The verified local download is `tiny-restored-01/checkpoint`.
 The companion [optimizer storage record](../olmo-optimizer-history/storage-receipt.md)
 holds the independent numerical probe and public original-loss reference.
 Final PR/closeout receipts are recorded in [progress](progress.md).
+
+PR [47](https://github.com/taylorbollman/cdrm-w-latent/pull/47) merged as
+`9419a98ec9c910e36de7fb473179047132cd2f82`. The verified final small-evidence
+bundle is `campaign-evaluation-closeout-01` under the root above. It includes
+both new dev indexes and their SQLite metadata, the two diagnostic/public
+reference stages, all acceptance reports and source snapshots, docs, inventory
+and preceding receipts. It excludes the large model payloads and its own later
+receipt. Exact final bundle report/receipt hashes are in progress.md.
