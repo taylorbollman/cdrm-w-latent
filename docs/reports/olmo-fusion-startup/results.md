@@ -132,6 +132,8 @@ hashes match exactly. Prepared BF16 versus FP32 gradients differ **1.10%**
 globally on this adapted fixture. The BF16 sparse/prepared comparison retains
 its strict elementwise miss (50/71 tensors), despite a much smaller **0.0879%**
 global difference. These are separate comparisons and remain separately scoped.
+The T1024 rows, document policy and saved state differ from the earlier T128
+probe, so their percentages are not a controlled before/after adaptation test.
 
 We then continued **both precisions from the same BF16 update-4 checkpoint**
 for 16 more updates, preserving Adam history, data order and the original LR
