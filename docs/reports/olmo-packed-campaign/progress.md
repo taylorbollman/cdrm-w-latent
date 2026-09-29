@@ -25,3 +25,10 @@ cloud retain/restore, then fresh-process resident-Adam cold capture/resume.
 The real update has 524,288 valid inputs, 512 chunks; B12/rank on two GPUs needs
 22 accumulation slots/rank with padded final slots. All qualification failures
 remain separate from operational readiness. No quality training queued.
+
+Runtime/data freeze `f0be95d` pushed. Broad CPU regression: 971 passed in
+75.32s; final data hardening scope: 20 passed in 3.40s (overlap). Tiny two-GPU
+eager and CUDA graph probes both pass all eight arms under stream semantics,
+including independent gradients and three-update Adam parity. Their reports
+are retained (eager verified, graph upload pending at this entry). Actual
+pretrained short graph probe is running; source hashes must stay unchanged.
