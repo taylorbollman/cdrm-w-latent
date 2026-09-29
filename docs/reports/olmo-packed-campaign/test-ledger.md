@@ -2,8 +2,9 @@
 
 Recorded 2026-09-29 from completed local reports and CPU logs. This ledger
 separates model-boundary semantics, distributed operational correctness and
-independent numerical qualification. Later T1024 actual-data recovery and
-component-precision outcomes must be added only after their stages complete.
+independent numerical qualification. Index cloud recovery and the bounded
+precision-component diagnostic are complete; T1024 actual-data training
+recovery remains pending in this version of the ledger.
 See [protocol](protocol.md), [usage](usage.md) and [progress](progress.md).
 
 ## CPU checks
@@ -72,6 +73,16 @@ Packed-index manifest SHA256:
 This is the file-byte pin used by the runner, not its separate canonical
 identity or document-order digest.
 
+`index-restore-evidence-01/report.json` subsequently passes **three CPU checks**
+in 3.2267 s: full-byte verification of exact-generation evidence/manifest cloud
+downloads; safe extraction and SHA256/size verification of all 14 inventory
+members; and equality of the restored index identity, first-update chunk keys,
+counts and cursor. The restored manifest has the same SHA256 above, and its
+first update contains the same 512 chunk keys. A hypothetical completed-update
+cursor at chunk 512/update 1 restores exactly into a fresh reader. This is
+index/data-cursor recovery only: no optimizer step or GPU model restart ran in
+this CPU stage.
+
 ## Actual two-H100 execution checks
 
 All three completed GPU probes use `continuous-stream-v1` and actual NCCL on
@@ -134,11 +145,48 @@ before/after improvement. Read `operational_status` together with
 operational pass is not full BF16 numerical clearance. No threshold changed,
 and no claim of harmlessness for learning follows from the local/DDP agreement.
 
+## Completed component and cross-precision diagnostic
+
+[precision-components-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/6a48mv6r)
+completed **12 backward probes plus one fixed-weight/source/RNG integrity
+check**, all 13 operational rows passing, in 77.4641 s. W&B is synced. It uses
+one initial pretrained NFR state, T16/B2, two virtual rank fixtures and the
+original `isolated-v1` policy. There is no DDP, CUDA graph, optimizer update or
+new checkpoint. Its status `passed_operational_diagnostic` does not mean
+precision acceptance. Full interpretation and follow-up recommendations are
+in [precision-assessment.md](precision-assessment.md).
+
+| Objective | BF16 prepared versus sparse relative gradient L2 | BF16 sparse versus FP32 | BF16 prepared versus FP32 |
+| --- | ---: | ---: | ---: |
+| Combined | 3.40224% | 85.96% | 86.13% |
+| CE only | 0% | 95.93% | 95.93% |
+| Latent only | 2.17298% | 104.17% | 104.35% |
+| KL only | 2.28388% | 71.95% | 72.55% |
+
+The original 3.40224% layout discrepancy reproduces. CE alone agrees exactly
+between the two BF16 loss layouts; either NextLat auxiliary contribution can
+introduce the discrepancy. The combined gradient cosine between BF16 layouts
+is 0.999422. Combined-backward rounding differs from separate component
+backwards, so these component errors must not be added to apportion the total.
+
+The **approximately 86% combined cross-precision difference is a larger,
+additional qualification**: cosine against FP32 is about 0.5112 for BF16 sparse
+and 0.5083 for BF16 prepared. It is not explained by the small mutual layout
+difference, and CE alone already has a large cross-precision gap. However,
+precision **and kernels change** in this comparison: BF16 uses ordinary Flash
+SDPA and Triton native RT; full FP32 uses math SDPA and eager native RT. These
+measurements do not isolate BF16 rounding or identify a specific faulty
+operation. Old-budget flags are descriptive; no new cross-precision acceptance
+threshold was introduced. Neither this diagnostic nor the operational packed
+checks establish harmlessness for learning. A matched-kernel precision bridge
+and fixed-input/cotangent localization remain follow-up work.
+
 ## Evidence audit and remaining stages
 
 The independent review verified all declared source-snapshot bytes for the
-three GPU reports (70 files each) and the index report (eight files): **218
-source/snapshot pairs**. Report hashes at review time are:
+three distributed GPU reports (70 files each), index report (eight files),
+component diagnostic (72 files) and index-cloud-restore report (two files):
+**292 source/snapshot pairs**. Report hashes at review time are:
 
 | Stage | Completed report SHA256 |
 | --- | --- |
@@ -146,14 +194,16 @@ source/snapshot pairs**. Report hashes at review time are:
 | tiny-eager-01 | `7e10e3bfd9f6cec43e4b05ccc15850902ec3a6239cf352c6c44412127aaf0e6d` |
 | tiny-graph-01 | `b7cc280b0d46f10d839a19763eedc0ceaa75de4d4fd0de643489bf3cb271ff56` |
 | pretrained-graph-01 | `200efad282fa37c872434a550d4d868d025c3a78bc6272de17e2a484198b7655` |
+| precision-components-01 | `f6bf376ea511e9c853984f7290872cb24ae06bdb98b55130e9238b79261cf405` |
+| index-restore-evidence-01 | `625218c61f111799c33d2745bc3fec529e797689eaeaa2fc8920c45e9976cf8c` |
 
-Each of these four stages has a local `status: verified` retention receipt
+Each of these six stages has a local `status: verified` retention receipt
 with two cloud objects. That is recorded artifact-publication evidence; it is
 not the still-pending actual-data checkpoint download/restart acceptance.
 
-Pending at this ledger's initial publication: real-corpus T1024 write and
+Pending in this ledger version: real-corpus T1024 write and
 cloud-restored next-update comparison, cold T1024 DDP/capture with resident
-Adam, short real-loader rate, and the per-loss BF16/FP32 component diagnostic.
+Adam, and short real-loader rate.
 These need their own completed reports. Production mixture/shuffling, long
 quality training, H200, changed world size, sharding and interrupted in-flight
 collective recovery are outside this milestone's current evidence.
