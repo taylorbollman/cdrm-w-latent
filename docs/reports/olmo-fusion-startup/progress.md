@@ -155,3 +155,58 @@ The generic small-evidence retainer rejected the T16 preparation report's richer
 source-metadata schema before uploading it; that index will be retained via an
 explicit manifest/database upload. This is a retention-adapter issue, not a data
 validation failure. Current committed code is6ffe5c6, pushed.
+
+## 09:38 UTC: continuations complete, full-model updates active
+
+Both fusion-only 16-update continuations128→144 completed, and a fresh BF16
+process replayed136→144 exactly (all8 updates, final state/Adam/RNG/cursor,
+common-FP32 evaluations). W&B FP32=17ty29w3, BF16=2l8pyh82, replay=7dogvmmi.
+Final held-out CE5.137168103/5.137339194, gap0.00017109 nats per target.
+Cumulative fusion-update vectors differ18.4122%, cosine0.98300; full weights
+differ0.36445%, Adam first/second moments9.9456%/2.3627%. Read
+continuation-results.md; do not conflate close losses with equal trajectories.
+Final comparison55 checks passes, artifact continuation-comparison-02.
+
+Guarded lifecycle reference/stop/resume/log-failure/failure-resume are complete.
+Both fresh resumes exactly match their reference, deliberate log failure exits
+1 promptly and retains completed update1. Root orchestration script and log are
+in.runtime/olmo-campaign-lifecycle/run_guarded_remaining.py and corresponding
+guarded-remaining-launcher.log. Read loop-results.md. Verified evidence and
+index retention are complete. A scoped CPU/cloud operator recovery bundle is
+being tested; it downloads exact generations and emits a conditional command,
+without launching GPU or weakening runtime checks.
+
+Root started nfr-updates-01 on GPU0 at09:32UTC, W&Brmz59xy0, frozenaebd17a.
+Four matched full NFR updates per precision, fresh all-component Adam and
+original token warmup; train indices144..147,32768CE targets/33638 valid inputs
+per trajectory,78 physical backwards total. CPU snapshots/geometry are expensive
+and not throughput data. At09:36 process alive, CPU206%,RSS38GB, GPU21GiB;
+no completed row yet. One-hour external bound; checkpoint cadence10minutes at
+paired boundaries, endpoint checkpoints about15GB each. Both other GPU jobs
+are finished. Root will run abrupt-rank-exit reference/failure/fresh-resume once
+both GPUs are free (new helper11 CPU tests, independently reviewed). This tests
+loss of a rank before update2 backward after retained update1, not mid-Adam
+rollback or an actual whole-VM power loss.
+
+After full NFR endpoint4, prepare one saved BF16-state packedT1024 bridge:
+FP32 sparse/prepared, BF16 sparse/prepared, BF16 captured replay. Five measured
+configurations, separately counted setup/capture backwards, no optimizer. This
+addresses the old sparse/prepared training-path qualification directly. No
+core model or original frozen helper changes. Current committede0adc06.
+
+## 09:49 UTC — full-model first pair and recovery assets
+
+NFR first paired update completed with matched initial state/data/LR/counters.
+Backbone raw/clipped/delta differences13.4465/13.4162/17.4687%; fusion delta26.5810%.
+Both finite. Heavy CPU FP64 geometry and full model/Adam snapshot/hash work account
+for much of elapsed time; these diagnostic timings are not throughput results.
+Do not edit the frozen running helper. GPU0 active, GPU1 reserved idle until root
+can run the three tiny abrupt-rank stages together. New root orchestration file
+`run_rank_failure.py` is prepared but not launched.
+
+Recovery-bundle helper now explicitly separates host checkout and container paths.
+Fresh real cloud restore02 verified six exact-generation objects/23,851,490bytes,
+88 source snapshots and86 corpus files; assets_verified_launch_pending only.
+Manifest09b5dc49f94bab3af06343d1c0fc5486845ff5e122eb89661f5fe4a4f140c247.
+First asset-only success with wrong outer command path is preserved. Agent is
+assessing remaining concrete campaign readiness gaps without starting more jobs.

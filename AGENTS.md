@@ -32,27 +32,29 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 09:20 UTC: overnight work ACTIVE until about 14:00 UTC.
-Branch feat/olmo-fusion-startup, current committed09f6b9f. Read
-`docs/reports/olmo-fusion-startup/overnight-plan.md` and `progress.md`.
-Warmup128 is complete; checkpoint SHA892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc
-at `.runtime/olmo-fusion-startup/train-02/update-000128.pt`, verified GCS.
+2026-09-29 09:49 UTC: overnight work ACTIVE until about14:00UTC.
+Branch feat/olmo-fusion-startup. Read docs/reports/olmo-fusion-startup/results.md,
+overnight-plan.md and progress.md; completed helpers/tests/protocols frozen.
+Warmup128 complete, checkpoint SHA892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc
+at .runtime/olmo-fusion-startup/train-02/update-000128.pt, verified GCS.
 NF CE backbone BF16 errors at128: original0.823%, fresh short1.983%, T1281.627%,
-packed T1024 5.209% (cold60.87/24.33/144.02/19.97%). Ordinary packed N-only CE
-is1.799%. NF combined T128 backbone0.735%; native RT combined alpha0/.25/1
-is0.704%/9.912%/12.059%. RT CE alone32.442%. No BF16 production clearance.
-Completed reports remain frozen. Component/alpha results doc being prepared.
-Guarded tiny two-GPU lifecycle checks active: initial resume failure was only
-rank0 Python RNG consumed by GCS after checkpoint; model/Adam/gradients exact.
-New additive guarded driver preserves RNG and releases failed captured owners;
-reference passed, stop/resume/log-failure/recovery pending. Original failures
-retained. Then launch paired16-update fusion-only FP32/BF16 continuation128→144
-and BF16 midpoint replay (new helper frozen). A separate four-update full NFR
-paired optimizer-impact diagnostic is being implemented, training indices144–147,
-fresh all-component Adam, no alpha ramp or adaptation tuned to gradient errors.
-Root alone schedules GPUs. Do not add/edit cdrm/pretrained files while probes pin
-its glob. New helpers under scripts/tests/docs; no quality campaign. Save/push
-regularly and retain checkpoints at≤10-minute completed boundaries.
+packed T1024 5.209% (cold60.87/24.33/144.02/19.97%). Ordinary packed N-only1.799%.
+NF combined T128 backbone0.735%; nativeRT combined alpha0/.25/1 errors
+0.704/9.912/12.059%; RT CE32.442%. No BF16 production clearance.
+Paired fusion-only128→144 continuations complete, commonFP32devCE gap0.0001711;
+cumulative optimizer deltas differ18.412%, exact BF16 fresh136→144 replay.
+Active GPU0: nfr-updates-01, session76760, W&B rmz59xy0, four paired all-component
+Adam updates on new training selections144–147, original campaign LR warmup.
+First pair raw backbone gradients13.4465%, clipped13.4162%, delta17.4687%.
+CPU geometry/snapshot overhead large; do not confuse with training throughput.
+Agentprecision building savedBF16NFR4→packedT1024 sparse/prepared/graph bridge.
+Guarded tiny twoGPU lifecycle exactstop/resume/logfailure/recovery now complete;
+CPU/cloud recovery assets verified, final recovered-stop-02. Original RNG-only
+resume failure and failed teardown retained. Root next runs abrupt-rank test
+reference/fault/resume (newdriver e0adc06) after NFR GPU0 releases. Orchestrator
+.runtime/olmo-campaign-lifecycle/run_rank_failure.py ready, not yet launched.
+Root only schedules GPUs. No cdrm/pretrained edits/additions (glob sourcepins).
+No quality campaign. Save/push every20–30min; checkpoint ≤10min completedboundary.
 
 2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
 User authorizes~6hours useful technical work withoutreview; proceed beyond first

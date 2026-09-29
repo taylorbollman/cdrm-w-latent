@@ -61,10 +61,11 @@ forward states and raw loss sums. The objective changes only the backward
 cotangents. The RT transition preserved every learned tensor and buffer.
 
 This supports continuing bounded BF16 readiness work for adapted feedback plus
-NextLat. Full-strength RT still needs investigation. A matched RT-strength check
-at zero and 0.25 is a useful next diagnostic: zero retains the native scan backend
-while removing recurrent strength, and 0.25 tests a less abrupt functional change.
-Neither this result nor the strength check alone establishes multi-step optimizer
+NextLat. Full-strength RT still needs investigation. The subsequent
+[RT-strength check and ordinary packed calibration](rt-strength-and-baseline-results.md)
+are now complete: zero strength retains the native scan backend while removing
+recurrence, and 0.25 tests a less abrupt functional change. Neither this result
+nor that strength check alone establishes multi-step optimizer
 stability, production BF16 clearance, or task quality. The separate
 [saved-Adam and packed-context analysis](update-and-packed-results.md) covers
 different objectives and data scopes and should retain its own qualifications.
