@@ -31,6 +31,25 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
+Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
+next-steps.md, storage-receipt.md and progress.md first. Four single-process
+GPU stages: six precision/backend cases, eight fixed-hidden auxiliary cases,
+three crossed-backend CE cases, and eight local-attention sites x three VJPs.
+No core/model changes or training. Final focused CPU suite: 44 pass; earlier scopes
+are overlapping. Combined BF16/math versus FP32 still 81.50%, production 85.96%.
+CE ordinary Flash with eager RT exactly equals Flash with Triton RT, both 79.85%
+from math/eager. Fixed-hidden BF16 auxiliary layout errors 0.1416%/0.2016%.
+Fixed actual attention QKV/cotangent: Flash vsFP32 local gradient errors
+0.174–1.501%, output0.160–0.186%; local Flash outputs exact to captured values.
+This supports full-model sensitivity investigation, not a large local Flash
+backward defect or numerical clearance. Prior 3.40224%/1.6953% qualifications
+remain. Next proposed step is eight within-arm CE precision cases separating
+ordinary/RT/FBT/FBT+RT (N/NR/NF/NFR with zero auxiliary cotangents); not launched. Source 7082225,
+old protocols/helpers frozen. GPU idle. Stage evidence and small tensor anchors
+retained with independent audits and verified closeout; see progress.md.
+Save work every 20–30 min.
+
 2026-09-29 packed campaign readiness complete on `feat/olmo-packed-campaign`,
 PR 39. Read docs/reports/olmo-packed-campaign/results.md, test-ledger.md,
 storage-receipt.md, precision-assessment.md and next-steps.md first.

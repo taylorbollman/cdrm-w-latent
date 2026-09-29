@@ -4,6 +4,47 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Bounded numerical localization complete, 2026-09-29:**
+[PR40](https://github.com/taylorbollman/cdrm-w-latent/pull/40), branch
+`feat/olmo-precision-localization`, from PR39. Read
+[results](reports/olmo-precision-localization/results.md),
+[test ledger](reports/olmo-precision-localization/test-ledger.md),
+[next steps](reports/olmo-precision-localization/next-steps.md),
+[storage receipt](reports/olmo-precision-localization/storage-receipt.md) and
+[progress](reports/olmo-precision-localization/progress.md) for final PR/retention state.
+
+Four single-process stages completed with unchanged model/weights and no
+optimizer updates: six aggregate precision/backend cases, eight fixed-hidden
+auxiliary cases, three crossed-backend CE cases, and eight fixed-input
+ordinary-attention sites with three local VJPs each. Final focused CPU suite: 44 pass;
+prior suites overlap. Source 7082225, with per-stage immutable source snapshots.
+No GPU job or quality-training run is queued.
+
+The broad BF16/FP32 gradient qualification remains: combined math/eager 81.50%
+and production Flash/Triton 85.96% relative L2 versus FP32. The CE crossed check
+finds Flash/eager RT and Flash/Triton RT **exactly equal**, both 79.85% from
+math/eager. Thus the ordinary-attention backend accounts for this paired
+backend difference; the native RT tile switch does not. This does not establish
+a Flash defect. At fixed actual Q/K/V and incoming cotangent, local Flash
+outputs differ 0.160–0.186% from FP32 math, and Q/K/V gradients 0.174–1.501%.
+All eight local Flash outputs reproduce captured bytes. The assembled model
+is therefore a more useful next sensitivity target than an assumed large local
+attention-backward bug; harmlessness in training is not established.
+
+Fixed-hidden auxiliary BF16 prepared/sparse cotangent differences are 0.1416%
+latent and 0.2016% KL, versus below 8e-7 in FP32. They identify local rounding
+before propagation but do not clear the previous 3.40224% isolated/1.6953%
+packed full-gradient layout qualifications. T16 observations are not numerical
+qualification at the campaign's packed T1024 context.
+
+Recommend a separately frozen eight-case within-arm BF16/FP32 CE comparison
+of ordinary / RT / K4 FBT / K4 FBT+RT computation, preserving the NextLat
+branches with zero auxiliary cotangents (N/NR/NF/NFR). Use the original fixture
+first, shared weights and keyed noise, and compare shared backbone gradients.
+Only then choose one precision boundary and conditionally confirm on packed
+T1024. That follow-up is not launched. No Q/K-normalization, architecture or
+training policy change follows automatically from these diagnostic results.
+
 **Packed campaign readiness complete, 2026-09-29:**
 [PR 39](https://github.com/taylorbollman/cdrm-w-latent/pull/39), branch
 `feat/olmo-packed-campaign`. Read [results](reports/olmo-packed-campaign/results.md),
