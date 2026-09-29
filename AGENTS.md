@@ -31,6 +31,18 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 manifest component execution ACTIVE on feat/olmo-campaign-execution.
+User authorized next milestone after PR45. Read docs/reports/olmo-campaign-execution/
+progress.md and prior olmo-fusion-startup/implementation-map.md. New modules only:
+execution engine/CLI, declaration/startup contracts and lean/acceptance observers.
+All-eight original/fresh arms; initial adapted allowlist fusion128 weights with
+fresh all-active Adam, NF/NFR only. Generic same-lineage resume must not require
+a completed reference report, and completed-plan resume must skip graph setup.
+No numerical sweep/quality campaign, QK or core changes. Frozen prior scripts,
+tests, protocols and cdrm/pretrained files stay unchanged. Root schedules GPUs;
+currently coding/CPU checks, both H100s idle. Save/push20–30minutes.
+
+
 
 2026-09-29 overnight numerical/readiness work COMPLETE, PR45; closeout/PR metadata
 is recorded in docs/reports/olmo-fusion-startup/progress.md. Branch was
