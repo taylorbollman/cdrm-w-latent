@@ -1,6 +1,6 @@
 # Overnight numerical and training-readiness investigation
 
-Numerical and GPU readiness stages complete, 2026-09-29. The user authorized about six hours of useful
+Investigation and independent storage audits complete, 2026-09-29. The user authorized about six hours of useful
 technical work without intermediate review. This page summarizes the findings;
 the individual protocols, reports and retained source snapshots give the exact
 scope. No production-quality training campaign or model architecture change is
@@ -188,4 +188,7 @@ Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
 Completed helpers, tests and protocols remain frozen. Read the
 [assessment and next implementation boundary](next-steps.md),
-[readiness map](readiness-map.md) and [validation ledger](test-ledger.md).
+[readiness map](readiness-map.md), [validation ledger](test-ledger.md),
+[code-level implementation map](implementation-map.md) and
+[storage/recovery receipt](storage-receipt.md). All completed checkpoints and
+stage evidence are retained in `gs://fast-chunks`; both GPUs are idle.

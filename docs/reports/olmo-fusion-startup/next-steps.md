@@ -68,6 +68,9 @@ baseline against untouched ordinary OLMo.
 
 ## Recommended next milestone: generalize the accepted execution path
 
+The [code-level implementation map](implementation-map.md) identifies reusable
+APIs, explicit migrations and the minimal acceptance matrix for the next PR.
+
 The **ordinary-B-only manifest adapter is now accepted** on the actual
 pretrained model, with original startup, two ranks, T1024/B8 and the BF16
 captured path. Three declared updates, exact-generation cloud restore and fresh

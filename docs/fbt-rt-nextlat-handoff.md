@@ -4,12 +4,14 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-**Overnight investigation active, 2026-09-29, target closeout about 14:00 UTC:**
-user authorized useful technical work without intermediate review. The numerical and GPU readiness
-stages are complete; read [current results](reports/olmo-fusion-startup/results.md),
+**Overnight investigation complete, 2026-09-29:**
+user authorized useful technical work without intermediate review. The numerical,
+GPU readiness and final independent storage audits are complete; read [current results](reports/olmo-fusion-startup/results.md),
 [assessment and next steps](reports/olmo-fusion-startup/next-steps.md),
 [readiness map](reports/olmo-fusion-startup/readiness-map.md) and
-[progress](reports/olmo-fusion-startup/progress.md).
+[progress](reports/olmo-fusion-startup/progress.md),
+[code-level next milestone](reports/olmo-fusion-startup/implementation-map.md) and
+[storage/recovery receipt](reports/olmo-fusion-startup/storage-receipt.md).
 
 FP32 fusion-only warmup128 substantially reduces measured NF precision
 sensitivity without changing the backbone. Full NFR retains significant
@@ -35,8 +37,10 @@ independent checks. Its first update also matches the older runner exactly on
 inputs, gradients, metrics and model/Adam state. It connects declared recipe,
 data, schedule, partition and checkpoint lineage to bounded execution; see
 [execution results](reports/olmo-campaign-manifest/run-results.md).
-General all-arm/adapted startup support remains later work. Root owns GPU
-launches. All completed helpers/tests/protocols and core sources stay frozen.
+General all-arm/adapted startup and generic interrupted-run recovery remain
+later work. The present B replay requires checkpoint1 from a completed reference.
+Both GPUs are idle, with no job queued. All completed helpers/tests/protocols and
+core sources stay frozen.
 Preserve checkpoints to GCS and save/push every20–30minutes. No production
 quality campaign or extra numerical sweep is queued.
 

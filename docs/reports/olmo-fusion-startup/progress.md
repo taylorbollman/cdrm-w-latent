@@ -463,3 +463,22 @@ Final scientific/correctness review finds no blocker. Corrected wording keeps
 checkpoint target is not a guaranteed wall interval; long steps/publication add
 time. Generic interrupted-run CLI is future work: current manifest acceptance
 resumes checkpoint1 only from a fully completed reference. No new GPU sweep.
+
+## 2026-09-29 12:24 UTC — investigation complete; final closeout publication
+
+All planned numerical, GPU operational, CPU manifest and readback stages are
+complete. The independent final cloud audit passes13selectedreceipts/26objects,
+1,274archive members and1,212source pairs. The fixed local inventory records
+79stage receipts and65checkpoint payload URI-generation pairs (208,579,046,712
+bytes). The three later audit/inventory receipts are also verified and are
+explicitly outside those snapshot counts. No local model or corpus file deleted.
+
+The scientific and host-loop correctness reviews found no blocker in executed
+acceptance, while retaining the numerical and generic-recovery qualifications.
+The code-level implementation-map.md now identifies exact reusable APIs and the
+next all-arm/startup/recovery acceptance boundary. It proposes no quality run.
+
+No further numerical sweep is justified by these results. We reached a useful
+stopping point before the full six-hour allowance; the remaining work changes
+the training entrypoint/startup contract and requires a separately bounded
+implementation milestone. Closeout bundle/PR links follow below.
