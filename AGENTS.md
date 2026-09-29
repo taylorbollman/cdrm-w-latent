@@ -31,6 +31,15 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 optimizer-history + per-pass evaluation ACTIVE. User authorized~90min
+autonomous work, starting15:55UTC. Branch feat/olmo-optimizer-history-and-eval.
+Read docs/reports/olmo-campaign-evaluation/progress.md before continuing. Root
+owns GPU schedule; no overlapping jobs. New source files only; old accepted
+scripts/tests/protocols/core stay frozen. Diagnostic is fixedstateupdate20 with
+inherited/reset Adam, not more training; evaluation must preserve live model/
+Adam/RNG/graph buffers and nextupdate. Retain evidence/checkpoints in GCS, W&B
+for graphable metrics, commit/push every20–30minutes.
+
 2026-09-29 manifest component execution COMPLETE, PR46; final merge/retention
 metadata in docs/reports/olmo-campaign-execution/progress.md. Read results.md,
 test-ledger.md, storage-receipt.md, operator-notes.md and next-steps.md. New
