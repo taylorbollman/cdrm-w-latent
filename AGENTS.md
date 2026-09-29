@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 ordered pilot execution COMPLETE, PR50 closeout in progress. Read
+2026-09-29 ordered pilot execution COMPLETE, PR50 merged806c1be. Read
 docs/reports/olmo-pilot-execution/results.md, next-steps.md, checkpoint-cost.md,
 readiness-map.md and progress.md. Frozen runtime be74dde/192pins unchanged;
 149 new CPU tests plus27 separate auditorv2 tests pass. Tiny insertion/cloud

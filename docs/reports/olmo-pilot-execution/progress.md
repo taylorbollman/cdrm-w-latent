@@ -1,6 +1,6 @@
 # Ordered pilot execution progress
 
-Current status: implementation and acceptance complete; PR50 closeout. All three
+Current status: COMPLETE, PR50 merged `806c1be`; final administration on main. All three
 native capacity runs and W&B synchronization finished. No active or queued GPU
 run. Final inventory includes152objects/101,826,528,826bytes; see storage-receipt.
 The entries below preserve the work timeline; earlier pending states are historical.
@@ -131,3 +131,20 @@ Archive `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T190
 generation`1790714283791758`, SHA`73e47d68a0027dc1a8332405b60ad50c79125dea5225b2d7ce2475100eba4a9e`.
 Full readback/server verification passed. Own and later administration receipts
 are outside earlier inventory/closeout snapshots. No learning run queued.
+
+
+PR50 merged as806c1bec5c39aabec6b0bdaa81eb8aa2cfbd14be fromexacthead
+211fdc359a75e98481d6fdfc4d46668d1d34bdd6 afterready/mergeable/clean confirmation.
+No configured CIchecks were reported; local/container tests and GPUacceptance
+are the validation evidence above. All192runtime source hashes recheckedbefore
+merge. Localmain fast-forwarded; no additional GPUjobs or numericalchanges.
+Finalpublication snapshot retains merge response, PRbody, closeout/inventory
+receipts and these finaldocs; its own receipt is recorded below afterverification.
+
+Final publication verified: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T190649Z/pilot-execution-publication-01/evidence.tar.gz`
+generation`1790714412209957`, SHA`4a7871edd4cb2fe3d71051c4c579ddead51f5762f49e3860c311908654b6377d`.
+Receipt SHA`2d2678818149854054e8374afe85bd36e9abf04558be661b84932bce62cb0788`; 18archivedmembers.
+The generic filter omits checkpoint-cost.md from this small administrative
+archive; its identical final bytes are retained under the explicit safe-name
+mapping in closeout-01. Final administration receipt and this annotation are
+committed onmain, outside earlier retained snapshots. Allselectedworkcomplete.
