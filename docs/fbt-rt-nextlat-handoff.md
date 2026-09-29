@@ -4,6 +4,15 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Numerical localization active, 2026-09-29:** user authorized the bounded
+[protocol](reports/olmo-precision-localization/protocol.md), starting from PR39.
+Branch `feat/olmo-precision-localization`; read its
+[progress](reports/olmo-precision-localization/progress.md) before resuming.
+Initial scope is six aggregate precision/backend cases on the original T16
+fixture, followed by eight fixed-hidden auxiliary-loss cases. No training,
+architecture change or new numerical acceptance threshold. GPU phases remain
+bounded and evidence retained; old qualifications below remain authoritative.
+
 **Packed campaign readiness complete, 2026-09-29:**
 [PR 39](https://github.com/taylorbollman/cdrm-w-latent/pull/39), branch
 `feat/olmo-packed-campaign`. Read [results](reports/olmo-packed-campaign/results.md),

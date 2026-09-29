@@ -31,6 +31,14 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 numerical localization ACTIVE on feat/olmo-precision-localization.
+Read docs/reports/olmo-precision-localization/protocol.md and progress.md first.
+User authorized bounded BF16/FP32 backend bridge and fixed-hidden auxiliary
+cotangents; no quality run. Six aggregate model cases, eight loss-only cases,
+same initial NFR T16 inputs and source weights. Root alone launches GPUs;
+determinism before CUDA, 900s stages, retain every20–30min. Prior precision
+qualifications remain; do not infer a result from implementation/CPU tests.
+
 2026-09-29 packed campaign readiness complete on `feat/olmo-packed-campaign`,
 PR 39. Read docs/reports/olmo-packed-campaign/results.md, test-ledger.md,
 storage-receipt.md, precision-assessment.md and next-steps.md first.
