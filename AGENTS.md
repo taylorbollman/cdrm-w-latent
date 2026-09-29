@@ -31,15 +31,22 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 recurrence/precision separation ACTIVE, feat/olmo-recurrence-precision.
-User approved PR40 next milestone. Read docs/reports/olmo-recurrence-precision/
-protocol.md and progress.md. Eight aggregate CE cases N/NR/NF/NFR x FP32/BF16,
-original isolated T16/two-B2 fixture; preserve NextLat branches with zero
-auxiliary cotangents. Match weights/buffers/tokens and NF/NFR keyed noise;
-require NFR prior endpoints and paired first-pass states to reproduce. Root
-alone launches GPU, 900s stages, W&B/GCS, save/push every20–30min. Old PR40
-helpers/protocols stay frozen. No training, core model or Q/K change. Conditional
-precision-boundary follow-up requires a separate pre-run written scope.
+2026-09-29 recurrence/precision separation GPU work COMPLETE, closeout active.
+Branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
+results.md, test-ledger.md, next-steps.md and progress.md for final PR/retention.
+Eight CE cases N/NR/NF/NFR x FP32/BF16 on original isolated T16/two-B2 fixture:
+shared-backbone gradient errors 0.98%/25.46%/60.87%/95.85%. Shared state/noise,
+first-pass identities and old NFR endpoints reproduce exactly. NextLat branches
+execute with zero auxiliary cotangents. Neither recurrence is an exclusive cause.
+One conditional NF-only FP32-fusion probe completed three cases: backbone error
+60.87% to 56.16%, but final hidden-state errors worsen on both records; do not
+adopt this as a fix or broaden precision changes automatically. No core/default,
+Q/K-normalization or architecture change, no optimizer updates. Matrix runtime
+6ed920a, fusion a5e9540. CPU scopes 66 and 27 pass (overlap). W&B lt54objk and
+wih59gy7. Numerical qualifications remain; T16 is not packed T1024 clearance.
+All completed helpers/tests/protocols stay frozen. Next recommendation is a
+bounded shared-input/shared-cotangent sensitivity diagnostic, not launched.
+GPU runs finished; preserve work every 20–30 minutes and retain in GCS.
 
 2026-09-29 bounded numerical localization complete, PR40, feat/olmo-precision-localization.
 Read docs/reports/olmo-precision-localization/results.md, test-ledger.md,
@@ -54,8 +61,8 @@ Fixed actual attention QKV/cotangent: Flash vsFP32 local gradient errors
 0.174–1.501%, output0.160–0.186%; local Flash outputs exact to captured values.
 This supports full-model sensitivity investigation, not a large local Flash
 backward defect or numerical clearance. Prior 3.40224%/1.6953% qualifications
-remain. Next proposed step is eight within-arm CE precision cases separating
-ordinary/RT/FBT/FBT+RT (N/NR/NF/NFR with zero auxiliary cotangents); not launched. Source 7082225,
+remain. The proposed eight within-arm CE precision cases separating
+ordinary/RT/FBT/FBT+RT are now complete in the current entry above. Source 7082225,
 old protocols/helpers frozen. GPU idle. Stage evidence and small tensor anchors
 retained with independent audits and verified closeout; see progress.md.
 Save work every 20–30 min.

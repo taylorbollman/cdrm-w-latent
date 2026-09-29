@@ -61,3 +61,51 @@ is disabled; ordinaryFlash/BF16 unchanged. Candidate firstpass must match;
 compare later forwardstates andbackbone gradients jointly. If unsuccessful,
 retainnegative andstop rather than expandprecisionchanges. Newhelper/tests
 ownedby runneragent; root alone launchesafterreview/sourcefreeze.
+
+## Fusion diagnostic launched
+
+Runtime source `a5e9540` is committed and pushed. The new helper and tests are
+frozen; independent review found no blocker. Focused CPU checks passed 27 tests
+in 4.41 seconds (15 existing recurrence tests and 12 new fusion tests; these
+overlap the earlier 66-test scope). No warnings. Evidence is in
+`cpu-fusion-01.log`, SHA256
+`c364006ec3531723e9997e2c9ac7628409f81c94a4d9a1704f0e0474a0872065`.
+
+Stage `fusion-01` is running on device 0 with a 900-second timeout. W&B run
+`wih59gy7`. Baseline and matrix retention receipts are verified. Root owns the
+GPU process and retention; the data and precision reviewers are independently
+checking the final outcome. No production model code has changed.
+
+## Fusion complete; precision changes stopped
+
+`fusion-01` exited successfully in 38.67 seconds. Report SHA256
+`4f98763c43d5e94fc6c5f783712151a2f648f74ea4147b1cf2f6424bba6446a6`.
+All three cases, exact NF anchors, first-pass identity, six-call override scope,
+15 contract checks and final integrity checks pass. W&B `wih59gy7` is synced.
+All 82 source/snapshot pairs were independently checked.
+
+Backbone gradient error improves from 60.87% to 56.16%, but final hidden-state
+errors worsen on both records: 12.66% to 14.52%, and 3.228% to 3.273%. Fusion's
+own gradient error rises from 65.21% to 67.24%. This is not a joint correction;
+retain the negative result and stop the precision changes under the frozen
+protocol. No production policy or core model code is changed.
+
+Both GPU stages are complete: 11 aggregate cases / 22 physical backwards,
+zero optimizer updates. Baseline, matrix and fusion retention receipts are
+verified; independent cloud readback and final documentation are in progress.
+The next proposed diagnostic is recorded in [next steps](next-steps.md), not
+launched. Root owns final handoff/PR; data reviewer owns results/ledger/storage
+audit. Preserve all completed sources, tests, protocols and reports unchanged.
+
+## Independent closeout review
+
+Matrix and fusion source/control audits pass. Independent cloud readback of
+three stage receipts verifies six exact-generation objects, 168 inventory
+members and 162 archived source snapshots (including the baseline audit's own
+source). See [storage receipt](storage-receipt.md). Both GPUs are idle with
+0 MiB reported in `postflight-01.log`. Final documentation review found no
+blocker; the proposed fixed-boundary VJP diagnostic remains unlaunched.
+
+Final closeout will retain the CPU logs, audit scripts/reports, source files,
+documentation and prior receipts. That separate archive is not yet counted in
+the three verified stage receipts. Root is preparing it and the PR now.
