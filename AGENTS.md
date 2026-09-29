@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 fixed-boundary precision diagnostic ACTIVE, feat/olmo-boundary-precision.
+User approved PR41 continuation. Read docs/reports/olmo-boundary-precision/
+protocol.md and progress.md. Two exact NF CE anchors plus12 local VJPs:
+record0/pass1,3, fusion+ordinary stack; compare FP32 at FP32-origin input,
+FP32 at BF16-origin input, BF16 at same BF16-origin input, all at common actual
+BF16-origin output cotangent. Preserve real masks/positions/strides and require
+both local precision endpoints to reproduce captured outputs exactly. Retain
+small boundary tensors. Root alone launches GPU0, 900s stages, W&B/GCS. No core,
+precision-policy, Q/K or training change. Old helpers/tests/protocols frozen.
+Stop after diagnostic and assess; save/push every20–30min.
+
 2026-09-29 recurrence/precision separation COMPLETE, PR41.
 Source branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
 results.md, test-ledger.md, next-steps.md and progress.md for final PR/retention.

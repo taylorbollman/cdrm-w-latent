@@ -4,6 +4,20 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Fixed-boundary precision diagnostic active, 2026-09-29:** user approved the
+PR41 continuation. Branch `feat/olmo-boundary-precision`; read
+[protocol](reports/olmo-boundary-precision/protocol.md) and
+[progress](reports/olmo-boundary-precision/progress.md). Two exact NF CE anchors
+capture four sites (record 0, fusion and following ordinary stack entering
+passes 1 and 3). Twelve local VJPs separate inherited-input sensitivity from
+within-module precision/backend differences using common incoming gradients.
+Require original FP32/BF16 outputs to reproduce; preserve and retain actual
+inputs, masks, strides and cotangents. Root owns GPU launches, each under a
+900-second limit, with W&B/GCS retention. No core/default/architecture change,
+training, or new numerical acceptance budget. Stop after this diagnostic and
+assess before proposing a correction. Old sources stay frozen; save/push every
+20–30 minutes. No new GPU result yet.
+
 **Recurrence/precision separation complete, 2026-09-29:**
 [PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41), source branch
 `feat/olmo-recurrence-precision`, from PR40. Read
