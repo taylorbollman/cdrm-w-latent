@@ -38,3 +38,13 @@ Shared `_plain` accepted this `str` subclass but returned it without casting to
 builtinstr. Fixcanonicalscalar/key normalization rather than relaxing safeload;
 add regression and repeat write/resume under newsourcepins. Oldwrite/checkpoint
 and failedresume retained; oldpair is not restartqualification.
+
+Runtime `0c77166`: metadatafix passes70scopedCPUtests; broadcampaign/checkpoint/
+DDP suite389passes. Tinywrite02 and cloud-restored fresh tinyresume02 PASS,
+including bitwise next gradients/Adam/model/RNG/cursor; W&Bo34f5ijq/7du9uw9g.
+
+Pretrained eager01: ordinaryB passesall11gates; NFR fails independentcanonical
+rawgradient atupdate1 (globalL2 .0340224273) despitepassinglosses. Read
+[localization plan](qualification-plan.md). Preservefailure. Addpreparedlocal
+reference toseparate dense/sparseBF16 differencefromDDP; no relaxedbudgets and
+no generalprecisionclearance. Capacity waitsforpreparedexecution/restart gates.

@@ -3,8 +3,10 @@
 
 Run with torchrun --nproc_per_node=2 in the project GPU container. The external
 launcher must have a timeout and both NCCL async-error environment flags set to
-0. Each process first runs an independent canonical global-batch reference on
-its own GPU, then reuses the same parameter storage for the distributed run.
+0. Each process first runs a local global-batch reference on its own GPU, then
+reuses the same parameter storage for the distributed run. The default is the
+independent canonical objective. Prepared-reference mode isolates DDP behavior
+and retains canonical-versus-prepared arithmetic as a separate qualification.
 No full diagnostic model/optimizer checkpoint is written by this probe.
 """
 from __future__ import annotations
@@ -31,7 +33,7 @@ from torch.nn.attention import SDPBackend, sdpa_kernel
 from cdrm.pretrained.artifacts import sha256_file, write_json
 from cdrm.pretrained.campaign_recipe import (ARMS, CampaignRecipe, CampaignTokenSchedule,
     build_campaign_model, build_campaign_adamw, feedback_noise_for_rows)
-from cdrm.pretrained.campaign_training import CampaignObjective
+from cdrm.pretrained.campaign_training import CampaignObjective, CampaignGraphTraining
 from cdrm.pretrained.distributed_training import sum_objective_counts
 from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters
 from cdrm.pretrained.nextlat import NextLatBatch
@@ -55,6 +57,8 @@ def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--scale", choices=("tiny", "pretrained"), required=True)
     parser.add_argument("--case", choices=("eager", "graph"), required=True)
+    parser.add_argument("--reference", choices=("canonical", "prepared"), default="canonical",
+                        help="Local reference arithmetic; prepared separately retains canonical-vs-dense qualification")
     parser.add_argument("--arms", help="Comma-separated campaign arms; tiny defaults to all eight, pretrained B,NFR")
     parser.add_argument("--length", type=int)
     parser.add_argument("--batch-size", type=int, choices=(1, 2), default=2)
@@ -194,6 +198,23 @@ def canonical_backward(model, recipe, fixtures, *, precision):
     return {**metrics, "loss_sums": totals, "objective": objective_total}
 
 
+def prepared_backward(model, recipe, fixtures, *, precision):
+    """Single-device dense objective, no DDP/reducer and no captured graph.
+
+    Every physical microbatch retains exactly its original B/T and keyed noise.
+    The local runner uses world_size=1 and the full global-update denominators;
+    its initialization backward is cleared before collecting the reference.
+    """
+    model.zero_grad(set_to_none=True)
+    batches = tuple(batch for rank_batches, _ in fixtures for batch in rank_batches)
+    noises = tuple(noise for _, rank_noises in fixtures for noise in rank_noises)
+    metadata = global_fixture_metadata(model, fixtures)
+    adapter = CampaignObjective(model, batches[0], mode=recipe.mode(),
+        global_counts=metadata["counts"], world_size=1, feedback_noise=noises[0],
+        config=LMTrainingConfig(precision=precision, max_grad_norm=recipe.max_grad_norm))
+    return CampaignGraphTraining(adapter).backward(batches, feedback_noises=noises, replay=False)
+
+
 def state_digests(model, optimizer, scheduler, counters):
     """Exact inter-rank agreement; bounded one-tensor-at-a-time host copies."""
     result = {"parameters": {n: tensor_digest(p) for n, p in model.named_parameters()},
@@ -222,6 +243,32 @@ def run_arm(args, arm, rank, publish):
     initial = parameter_snapshot(model)
     context = nullcontext() if args.scale == "tiny" else sdpa_kernel(SDPBackend.FLASH_ATTENTION)
     with context:
+        if args.reference == "prepared":
+            before = rng_snapshot()
+            canonical = canonical_backward(model, recipe, fixtures[0], precision=precision)
+            canonical_gradients, canonical_snapshot = gradient_record(model, save_cpu=True)
+            prepared = prepared_backward(model, recipe, fixtures[0], precision=precision)
+            qualification_gradients, _ = gradient_record(model, canonical_snapshot)
+            qualification_gradients["comparison"]["scope"] = (
+                "Fixed initial parameters/global physical rows/noise: canonical selected-position losses "
+                "versus prepared dense-mask losses, both single-device without DDP")
+            metric_check = compare_metrics(prepared, canonical)
+            healthy = canonical_gradients["finite"] and qualification_gradients["finite"] and rng_unchanged(before)
+            publish(arm, "canonical-versus-prepared-qualification", {
+                "canonical_metrics": canonical, "prepared_metrics": prepared,
+                "canonical_gradients": canonical_gradients, "gradient_comparison": qualification_gradients,
+                "metric_comparison": metric_check, "rng_unchanged": rng_unchanged(before),
+                "finite_execution": healthy,
+                "qualification": "Separate unchanged-budget arithmetic compatibility check; a failure remains unresolved even if prepared-reference distributed execution passes",
+                "passed": healthy and metric_check["passed"]
+                    and qualification_gradients["comparison"]["all_parameters_close"]}, gating=False)
+            if not healthy:
+                raise AssertionError("Canonical/prepared localization produced nonfinite gradients or changed RNG")
+            del canonical_snapshot
+            model.zero_grad(set_to_none=True)
+            restore_parameters_in_place(model, initial)
+            gc.collect()
+        reference_backward = canonical_backward if args.reference == "canonical" else prepared_backward
         optimizer = build_campaign_adamw(model, recipe, fused=True)
         schedule = CampaignTokenSchedule(optimizer, tokens, warmup_tokens=recipe.warmup_tokens,
                                          start_fraction=recipe.warmup_start_fraction)
@@ -229,7 +276,7 @@ def run_arm(args, arm, rank, publish):
         references = []
         for update, fixture in enumerate(fixtures):
             before = rng_snapshot()
-            metrics = canonical_backward(model, recipe, fixture, precision=precision)
+            metrics = reference_backward(model, recipe, fixture, precision=precision)
             gradients, snapshot = gradient_record(model, save_cpu=True)
             norm = float(torch.nn.utils.clip_grad_norm_(model.parameters(), recipe.max_grad_norm))
             optimizer.step()
@@ -237,7 +284,7 @@ def run_arm(args, arm, rank, publish):
             schedule.step()
             advance_counters(counters, metrics)
             references.append((metrics, snapshot))
-            publish(arm, f"canonical-update-{update+1}", {"metrics": metrics, "gradients": gradients,
+            publish(arm, f"{args.reference}-update-{update+1}", {"metrics": metrics, "gradients": gradients,
                 "preclip_norm": norm, "rng_unchanged": rng_unchanged(before), "memory": memory(),
                 "passed": gradients["finite"] and rng_unchanged(before)})
         expected_parameters = parameter_snapshot(model)
@@ -324,11 +371,13 @@ def main(argv=None):
     dist.init_process_group("nccl", timeout=timedelta(seconds=300), device_id=torch.device("cuda", rank))
     tracker = None
     started = time.monotonic()
-    report = {"schema": "olmo-campaign-two-gpu-probe-v1", "status": "running", "rank": rank,
+    report = {"schema": "olmo-campaign-two-gpu-probe-v1", "status": "running", "operational_status": "running",
+        "independent_reference_status": "not_completed", "rank": rank,
         "started_utc": datetime.now(timezone.utc).isoformat(), "runtime": runtime,
-        "scale": args.scale, "case": args.case, "arms": args.arms, "length": args.length,
+        "scale": args.scale, "case": args.case, "reference": args.reference, "arms": args.arms, "length": args.length,
         "physical_batch_per_rank": args.batch_size, "sources": source_hashes(), "rows": [],
-        "scope": "Real NCCL campaign accumulation/graph and three Adam updates versus independent canonical objective; not throughput, production packing, fresh-process restart or FP32 qualification of pretrained BF16",
+        "scope": "Real NCCL campaign accumulation/graph and three Adam updates versus the explicitly named local reference; prepared reference retains canonical-versus-dense arithmetic as a separate unchanged-budget qualification. Not throughput, production packing, fresh-process restart or FP32 qualification of pretrained BF16",
+        "qualification_failures": [],
         "snapshots": "CPU RAM only; atomic small evidence every stage; bounded launcher required"}
     try:
         if rank == 0:
@@ -339,34 +388,44 @@ def main(argv=None):
                 shutil.copy2(ROOT / relative, destination)
             tracker = OnlineTracker(project="pretrained-fbt-rt-nextlat", output_dir=args.output_dir,
                 group="olmo-campaign-two-gpu-readiness", name=args.output_dir.name, preserve_state=preserve_local_rng)
-            tracker.start({k: report[k] for k in ("scale", "case", "arms", "length", "physical_batch_per_rank", "scope")})
+            tracker.start({k: report[k] for k in ("scale", "case", "reference", "arms", "length", "physical_batch_per_rank", "scope")})
             report["wandb"] = tracker.record
             print({"wandb": tracker.record["run_url"]}, flush=True)
         dist.barrier()
 
-        def publish(arm, stage, row):
-            report["rows"].append({"arm": arm, "stage": stage, **row})
+        def publish(arm, stage, row, *, gating=True):
+            report["rows"].append({"arm": arm, "stage": stage, "gating": gating, **row})
             report["elapsed_seconds"] = time.monotonic()-started
             write_json(args.output_dir / f"rank-{rank}.json", report)
             rows = gather({"rank": rank, **row})
             passed = all(r.get("passed", False) for r in rows)
+            if not passed and not gating:
+                report["qualification_failures"].append({"arm": arm, "stage": stage,
+                    "status": "unresolved", "gating": False})
+            if not gating:
+                report["independent_reference_status"] = "failed" if report["qualification_failures"] else "passed"
+            elif not passed and args.reference == "canonical":
+                report["independent_reference_status"] = "failed"
             if rank == 0:
-                report["rows"][-1] = {"arm": arm, "stage": stage, "passed": passed, "ranks": rows}
+                report["rows"][-1] = {"arm": arm, "stage": stage, "gating": gating, "passed": passed, "ranks": rows}
                 write_json(args.output_dir / "report.json", report)
                 tracker.log(scalar_metrics({"ranks": {str(r["rank"]): r for r in rows}}, f"diagnostic/{arm}/{stage}"),
                             step=len(report["rows"]))
-                print({"arm": arm, "stage": stage, "passed": passed,
+                print({"arm": arm, "stage": stage, "passed": passed, "gating": gating,
                        "elapsed_seconds": time.monotonic()-started}, flush=True)
-            if not passed:
+            if not passed and gating:
                 raise AssertionError(f"Campaign two-GPU probe failed: {arm}/{stage}")
 
         for arm in args.arms:
             run_arm(args, arm, rank, publish)
         if report["sources"] != source_hashes():
             raise AssertionError("Runtime sources changed during probe")
-        report["status"] = "passed"
+        report["status"] = report["operational_status"] = "passed"
+        if args.reference == "canonical":
+            report["independent_reference_status"] = "passed"
     except Exception as error:
-        report.update(status="failed", error_type=type(error).__name__, error=str(error), traceback=traceback.format_exc())
+        report.update(status="failed", operational_status="failed", error_type=type(error).__name__,
+                      error=str(error), traceback=traceback.format_exc())
         raise
     finally:
         report["elapsed_seconds"] = time.monotonic()-started

@@ -6,11 +6,10 @@ import pytest
 import torch
 
 from cdrm.pretrained.campaign_recipe import ARMS, CampaignRecipe
-from cdrm.pretrained.campaign_training import CampaignObjective, CampaignGraphTraining
 from cdrm.pretrained.lm_training import TrainingCounters
 from cdrm.pretrained.nextlat import build_nextlat_masks
 from scripts.olmo_campaign_ddp_probe import (advance_counters, canonical_backward,
-    construct, fixture_for_update, global_fixture_metadata, parse_args)
+    construct, fixture_for_update, global_fixture_metadata, parse_args, prepared_backward)
 
 
 @pytest.fixture(autouse=True)
@@ -71,12 +70,7 @@ def test_independent_canonical_global_reference_matches_prepared_accumulation(ar
     data = fixtures(recipe, 2)
     expected = canonical_backward(model, recipe, data, precision="fp32")
     reference = {n: p.grad.clone() for n, p in model.named_parameters() if p.grad is not None}
-    model.zero_grad(set_to_none=True)
-    batches = tuple(b for rank_batches, _ in data for b in rank_batches)
-    noises = tuple(n for _, rank_noises in data for n in rank_noises)
-    adapter = CampaignObjective(model, batches[0], mode=recipe.mode(),
-                                global_counts=expected["counts"], feedback_noise=noises[0])
-    actual = CampaignGraphTraining(adapter).backward(batches, feedback_noises=noises)
+    actual = prepared_backward(model, recipe, data, precision="fp32")
     for key in ("counts", "microbatches", "documents", "input_tokens"):
         assert actual[key] == expected[key]
     assert actual["objective"] == pytest.approx(expected["objective"], rel=3e-6, abs=1e-6)
@@ -109,7 +103,8 @@ def test_cli_is_bounded_and_defaults_to_all_tiny_arms():
     path = str(ROOT / ".runtime/probe-test")
     common = ["--scale", "tiny", "--case", "graph", "--output-dir", path]
     args = parse_args(common)
-    assert args.arms == ARMS and args.length == 8 and args.warmup == 11
+    assert args.arms == ARMS and args.length == 8 and args.warmup == 11 and args.reference == "canonical"
+    assert parse_args(common+["--reference", "prepared"]).reference == "prepared"
     for extra in (["--warmup", "10"], ["--length", "1024"], ["--arms", "B,B"], ["--arms", "bad"]):
         with pytest.raises(SystemExit):
             parse_args(common+extra)
