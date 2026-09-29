@@ -1,0 +1,40 @@
+# Component execution test ledger
+
+2026-09-29. Candidate training sources frozen at `febc312` after independent
+construction and lifecycle reviews. No historical execution, model, kernel,
+checkpoint implementation, test or protocol was changed.
+
+| CPU scope | Result | Local log |
+| --- | --- | --- |
+| Startup/recovery contract and unchanged manifest | 70 passed (43 new + 27 existing) | `.runtime/olmo-campaign-execution/cpu-contract-01/pytest-final.log` |
+| Shared engine ownership/packing/transitions | 29 passed | `.runtime/olmo-campaign-execution-cpu-engine-01.log` |
+| Observer with actual all-eight CPU/Gloo updates | 20 passed | `.runtime/olmo-campaign-execution-cpu-observer-final-03.log` |
+| Launcher and engine after declared constructor fixes | 49 passed (20 launcher + same 29 engine) | `.runtime/olmo-campaign-execution/cpu-cli-engine-04.log` |
+| Actual Adam/token-scheduler clocks | 18 passed | `.runtime/olmo-campaign-execution/cpu-clocks-01.log` |
+| Generic cloud restore helper | 41 passed | `.runtime/olmo-campaign-execution/cpu-restore-01/pytest-raw-sdk.log` |
+
+Counts across repeated engine runs must not be added as distinct tests. The
+training candidate has 130 distinct new CPU tests plus 27 unchanged manifest
+tests. Restore helper tests belong to its separate operational source set.
+
+The initial observer fixture failed because its data did not match its declared
+packed policy; the fixture was corrected before acceptance. Initial launcher
+collection failed on a test-module import, also corrected before acceptance.
+Review caught the required generic checkpoint fingerprint field, two omitted
+tiny constructor flags, and missing explicit scheduler/Adam-to-counter checks.
+The corresponding fixes and regression checks precede all GPU launches.
+
+`contract-authority-01` authenticates the historical fusion128 checkpoint/report
+and all116 historical source pins on CPU, explicitly forbidding tensor loading.
+`declarations-01` is superseded preflight-only evidence, never launched.
+`declarations-02` resolves the final155-source training candidate and actual
+NF/NFR startup plan. It plans9,216 valid inputs,9,207 CE/latent positions and9,198
+KL triples across three updates, with no source-document boundary in this short
+native prefix. Independent CPU fixture tests cover real document boundaries.
+
+The actual tiny cloud restore used the unchanged helper/protocol with the earlier
+40-test snapshot. One later test-only refinement adds the production SDK
+RawDownload retry oracle; it does not change helper behavior or training identity.
+Both byte-download modes pass. Earlier logs/snapshots remain retained.
+
+GPU acceptance stages and independent audit will be recorded after completion.

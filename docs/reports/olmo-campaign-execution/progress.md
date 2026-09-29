@@ -32,3 +32,14 @@ focused mutation tests pending. New engine/CLI source revision requires a new
 CPU declaration resolution: declarations-01 was preflight only, never launched.
 CPU-only streaming generic GCS restore helper under development separately.
 No GPU acceptance has started yet. Commits eeecd64/34addf7 pushed.
+
+14:31 UTC: training sources frozen febc312/155files. Tiny two-H100 stages
+reference, lean stop1, lean full3, exact-generation cloud restore, acceptance
+resume2/3 and terminal resume3 are closed, successful and W&B synced. Root
+quick comparison is exact on configuration/origin/final and every resumed
+input/gradient/step boundary. Terminal skipscapture/updates. Independent JSON
+audit underway. Native adapted NFR lean stop1 running from declarations-02,
+W&B qjk60oku; first saving/retaining distributed origin before graph setup.
+Runtime commands/logs under .runtime/olmo-campaign-execution. Generic streaming
+restore helper41CPUtests accepted separately; initial tinyrestore used earlier
+40-test snapshot, behavior unchanged. Small stage GCS retention in progress.
