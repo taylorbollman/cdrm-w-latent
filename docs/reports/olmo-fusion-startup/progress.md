@@ -41,3 +41,35 @@ T1024two-rankfixture524288valid vs540672allocatedpositions. NoGPU. Report/eviden
 under.runtime/olmo-campaign-resource-ledger/ledger-01, retention/resource-ledger-01.json.
 Read docs/reports/olmo-campaign-resource-ledger/results.md. Lifecyclefault-handling
 helper/tests being implemented separately; no existingruntimefileschange.
+
+## Corrected preflight and main training
+
+Runtimec8c96bd freezes corrected backend context through backward; focused40CPU
+tests passed3.91s (overlap with prior suites). preflight-02 passed two logical
+updates plus exact replay,113.15s wall including construction/retention.
+W&Bpuuc00h4. Update1/2 compute6.008/5.031s. All checkpoints0/1/2 retained and
+verifiedGCS; update1 SHA09f4be2b4378a8f2da3dbdfffd0e239373ce3f6c38cb2d6607eaa93bcbf7dbb0.
+
+fresh-resume-01 independently resumed update1 in a new process. Complete
+fusion/Adam/scheduler/RNG/cursor boundary, all update metrics except measured
+time/memory, input/noise pins and serialized update2 checkpoint bytes match
+uninterrupted preflight-02 exactly. Independent comparison JSON in that stage.
+
+Maintrain-01 launchedGPU0 at08:28UTC, max32 then strictresume to128. W&Bxyk0qmbq,
+https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/xyk0qmbq .
+Initial update0 retainedGCS. Compute estimate~12min for128 excludes data/hash/I/O;
+provisionalwall15–20min may be revised with actual progression. No source edits
+to frozen runtime. Maintrain firstthree updates finite.
+
+GPU1 adapted-position-01 completed. Independent all-pass forward fingerprints
+and every comparable oldAA gradient/geometry summary reproduce exactly. The
+12.4366% record0/pass1 hidden discrepancy is0.659623% on19 union-supported
+positions. Two terminal positions with zero incoming cotangent in both
+precisions account for99.7455% of squared hidden error. This localizes the old
+fixture spike; it does not establish general BF16 safety. Supplemental findings
+being saved separately.
+
+Independent CPU lifecycle helper completed eight actual two-rankGloo cases;
+3focusedtests,126casechecks plus5reportchecks. No productionrunner integration
+yet and noNCCL/dead-peer/hung-callback claims. NewT128devfixture probe and
+conditional same-Adam FP32/BF16 update comparison being prepared separately.
