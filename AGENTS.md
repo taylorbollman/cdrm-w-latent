@@ -31,6 +31,46 @@ W&B tracking.
 
 # Pretrained model handoff
 
+
+2026-09-29 overnight numerical/readiness work COMPLETE, PR45; closeout/PR metadata
+is recorded in docs/reports/olmo-fusion-startup/progress.md. Branch was
+feat/olmo-fusion-startup. Read results.md, next-steps.md, implementation-map.md,
+readiness-map.md, test-ledger.md and storage-receipt.md in that report directory.
+No GPU job is active or queued; do not restart completed diagnostics.
+
+FP32 fusion-only warmup128 improves NF precision. Full NFR4 plus16 conditional
+updates end with common-FP32 CE5.669885/5.667641 for FP32/BF16 training, but
+cumulative backbone updates differ16.27%. Both continuations inherit the same
+BF16update4 model/Adam; these are not independent cold starts. Saved-state packed
+T1024 BF16 prepared/captured losses and71gradients are exact. Crossprecision
+prepared gradients differ1.0955% globally; separate sparse/prepared0.08792%global
+still has50/71tensors failing unchanged elementwise limits. No universal BF16
+clearance, quality/refinement win or QK/core change. No extra sweep warranted.
+
+Actual ordinary-B host-loop/cloud-restore/replay passes460auditchecks. The
+B-only manifest adapter (frozen c11cb05) also passes all stages,566auditchecks,
+200sourcepairs and direct first-update parity. Its resume CLI deliberately
+requires checkpoint1 from a fully completed reference; generic interrupted-run
+recovery is next work. All-eight CPU manifest metadata validated;49,152-token
+readiness prefix contains two books documents, not a production mixture.
+
+CPU checkpoint readback verifies identical14.15GB bytes using streaming hashes
+at~110MiBpeakRSS versus13.25GiB, both~92s. No retainer change or speed claim.
+Storage snapshot:79verified small-stage receipts,65checkpoint payload objects,
+208,579,046,712bytes. Independent selected13receipt/26object readback passes,
+including1,212sourcepairs. Later audit/closeout receipts excluded from snapshot.
+Checkpoints/evidence in gs://fast-chunks; exact authorities in storage-receipt.
+No local files deleted. Bootfree~178GiB after these retained diagnostic states.
+
+Next implementation: generalize accepted manifest execution to component arms,
+explicit selected adapted startup and same-lineage recovery; separate lean
+observations from heavy acceptance hashing. Follow implementation-map.md before
+coding. Do not label adapted weights/inheritedAdam as original fresh startup.
+Actual pilot mixture/budget/target hardware remain decisions. No quality campaign
+launched. Completed helpers/tests/protocols and cdrm/pretrained/*.py remain frozen;
+new versioned entrypoints must preserve historical source guards. Checkpoint10min
+is a completed-boundary target, not a hard wall-clock guarantee. Save/push20–30min.
+
 2026-09-29 crossed-state NF precision COMPLETE, PR44, feat/olmo-crossed-precision.
 Read docs/reports/olmo-crossed-precision/results.md, next-steps.md, test-ledger.md,
 storage-receipt.md and progress.md. Runtime3364376; four aggregate/eight physical
