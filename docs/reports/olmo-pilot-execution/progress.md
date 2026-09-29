@@ -25,5 +25,5 @@ then stop2/cloud restore/resume3 and terminal evaluation-only acceptance.
 Evidence namespace for this milestone:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T190649Z`.
 Checkpoint namespace:
-`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-pilot-execution/20260929`.
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/20260929T190649Z/pilot-execution`.
 No GPU run started yet. Runtime/CPU code and test development are ongoing.

@@ -131,7 +131,7 @@ def load_spec(args):
             if (data.length!=16 or data.split!='train' or data.manifest_sha256!=data_spec['index_manifest_sha256']
                     or data.manifest['corpus_manifest_sha256']!=data_spec['corpus_manifest_sha256']):
                 raise ValueError('Tiny fixture data differs')
-            plan=legacy.plan_updates(data,{'updates':3,'target_valid_tokens_per_update':80},{args.arm:(2,2)})
+            plan=contract.plan_updates(data,{'updates':3,'target_valid_tokens_per_update':80},{args.arm:(2,2)})
         manifest={'data':data_spec,
             'execution':{**legacy.EXECUTION_COMMON,**legacy.PATHS['fp32'],'precision':'fp32','graph_mode':'prepared_cuda_graph'},
             'budget':{'updates':3,'target_valid_tokens_per_update':80},
@@ -254,7 +254,7 @@ def run_stage(args,coordinator,device,runtime,determinism,report,tracker):
     with OrderedCampaignData(legacy.local_path(data_spec['corpus']),legacy.local_path(data_spec['index'])) as data:
         if data.manifest_sha256!=data_spec['index_manifest_sha256']:raise ValueError('Actual ordered index changed')
         partitions={arm:(2,batch) for arm,batch in manifest['partition']['physical_batch_per_rank'].items()}
-        actual=legacy.plan_updates(data,manifest['budget'],partitions)
+        actual=contract.plan_updates(data,manifest['budget'],partitions)
         if actual!=spec['plan']:raise ValueError('Actual pure data plan differs')
         plans=[];cursor=data.cursor()
         for count in tokens:
