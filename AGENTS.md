@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 campaign two-H100 execution and cloud restart qualified. Read
+2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and
 storage-receipt.md. Branch feat/olmo-campaign-two-gpu. Tiny all-eight-arm
 NCCL eager/graph pass; actual pretrained B/NFR prepared-reference graph passes.
@@ -40,11 +40,13 @@ original live-graph continuation bitwise on both ranks. Safe scalar metadata
 fix retains weights_only=True. Independent NFR BF16 sparse/dense gradient
 difference 3.40224% remains FAILED; reproduces before DDP, full-FP32 loss-layout
 comparison passes (7.38e-7). Do not mislabel operational passes as numerical
-clearance. CPU regression 445 pass, then 19 focused capacity checks (overlap).
-T1024 K4/RT0,15/all NextLat losses B8/rank/M2 passes at 3,428 input tok/s,
-50.35 GiB peak reserved and 22.97 GiB free/GPU. B16 candidate currently running;
-read live progress before launching. No quality run or production packing.
-All completed stages/checkpoint retained; save progress every 20–30 min.
+clearance. CPU regression 445 pass, then 21 focused capacity checks (overlap).
+T1024 K4/RT0,15/all NextLat losses: recommend B12/rank/M2 starting point,
+4,311 input tok/s, 59.06 GiB peak reserved and 14.23 GiB free/GPU. B8 fallback;
+B16 passes at 4,970/s but only 3.30 GiB free; B32 skipped. GPU tests stopped.
+Read next-steps.md for proposed packed stream semantics, actual-data cursor
+recovery, cold T1024 restart/accumulation and bounded BF16 follow-up. No quality
+run or production packing. Save progress every 20–30 min; retain in GCS.
 
 2026-09-28 reusable Dolma document preparation complete. Read
 docs/reports/olmo-document-shards/results.md, usage.md and storage-receipt.md.

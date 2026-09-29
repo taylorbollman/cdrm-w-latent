@@ -1,7 +1,7 @@
 # Campaign two-H100 test ledger
 
 Recorded 2026-09-29 from completed local reports and verified retention receipts.
-The T1024 B8 capacity check passes; the B16 candidate remains pending below. This ledger distinguishes
+The T1024 B8, B12 and B16 capacity checks pass. This ledger distinguishes
 distributed execution, numerical reference agreement and restart acceptance.
 See [results](results.md), [protocol](protocol.md),
 [qualification plan](qualification-plan.md) and [storage receipt](storage-receipt.md).
@@ -17,10 +17,13 @@ disabled. They do not substitute for the actual NCCL/CUDA checks below.
 | Campaign/checkpoint/DDP regression after scalar metadata fix | 389 passed in 59.90 s | `.runtime/olmo-campaign-two-gpu/cpu-tests-02.log` |
 | Final regression, including historical DDP graph scopes | **445 passed in 60.03 s** | `.runtime/olmo-campaign-two-gpu/cpu-tests-final.log` |
 | Capacity helpers after resident-Adam setup change | **19 passed in 2.52 s** | `tests/test_campaign_capacity.py`; focused agent-run output |
+| Final capacity scope after prospective B12 candidate addition | **21 passed in 2.42 s** | `.runtime/olmo-campaign-two-gpu/cpu-capacity-final.log` |
 
 These scopes overlap; do not add their counts as distinct tests. The focused
 capacity scope extends its previous 17 tests with checks of actual initialized
-Adam moments and independent optimizer/scheduler/token-clock snapshots.
+Adam moments and independent optimizer/scheduler/token-clock snapshots. The
+later 21-test scope includes those same tests and the bounded B12 CLI/fixture
+checks; it is not an additional disjoint 21-test suite.
 
 The probe CPU checks compare an independently assembled canonical objective
 against the prepared dense objective for all eight campaign arms. Fixtures
@@ -106,32 +109,35 @@ hashes, rather than the later branch HEAD, identify the code actually tested.
 | `61d6d2b` | Separate prepared operational reference from independent qualification; prepared eager/graph and the shared source contract used by full pretrained write/resume |
 | `28d6a93` | Bounded FP32 localization implementation; first full-FP32 diagnostic |
 | `f5f3cd3` | FP32 diagnostic report-label correction; repeated FP32 diagnostic 02 |
-| `c2df2f6` | Capacity ordering captures with real resident Adam moments; B8 acceptance passes, B16 pending |
+| `c2df2f6` | Capacity ordering captures with real resident Adam moments; B8 and B16 acceptance pass |
+| `cac5c1c` | Prospective bounded B12 headroom candidate after observing B16 memory; B12 acceptance passes |
 
 The source contract for the full pretrained restart remains unchanged across
 its write and resume phases even though documentation/diagnostic-only commits
 advanced the branch. All pinned Python files were compared against the listed
 source-content milestones. Reports retain exact per-file hashes.
 
-## Completed B8 capacity check; B16 pending
+## Completed T1024 capacity checks
 
-`capacity-b8-m2-01` passes all **12 stages** on both ranks;
-[W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg).
-This is physical B8 per rank, T1024, M2 accumulation, NFR K4 with native RT at
-layers 0 and 15 on every pass, and full CE/auxiliary masks. It performs eight
-complete Adam updates: three eager warmups and five measured graph updates.
+`capacity-b8-m2-01`, `capacity-b12-m2-01` and `capacity-b16-m2-01` each pass all **12 stages** on both
+ranks; [B8 W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg),
+[B12 W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8yx9sar0),
+[B16 W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/cbl8xn7l).
+All use T1024, M2 accumulation, NFR K4 with native RT at layers 0 and 15 on
+every pass, and full CE/auxiliary masks. Each performs eight complete Adam
+updates: three eager warmups and five measured graph updates.
 
-| Quantity | Measured value |
-| --- | ---: |
-| Global valid input tokens per optimizer update | 32,768 |
-| Measured complete updates | 5 |
-| Total timed wall time, summing the slower rank for each update | 47.79149 s |
-| Global valid input throughput | **3,428.2253 tokens/s** |
-| Median complete update time | 9.56365 s |
-| Peak allocated memory per rank, including setup | 34.86480 GiB |
-| Peak reserved memory per rank, including setup | **50.35352 GiB** |
-| Final sampled free memory per rank | **22.97083 GiB** |
-| Whole probe duration, excluding retention | 524.64 s |
+| Quantity | B8 per rank | B12 per rank | B16 per rank |
+| --- | ---: | ---: | ---: |
+| Global valid input tokens per optimizer update | 32,768 | 49,152 | 65,536 |
+| Measured complete updates | 5 | 5 | 5 |
+| Total timed wall time, summing the slower rank for each update | 47.79149 s | 57.00747 s | 65.93370 s |
+| Global valid input throughput | **3,428.2253 tokens/s** | **4,311.0141 tokens/s** | **4,969.8411 tokens/s** |
+| Median complete update time | 9.56365 s | 11.39990 s | 13.18692 s |
+| Peak allocated memory per rank, including setup | 34.86480 GiB | 38.19932 GiB | 42.28342 GiB |
+| Peak reserved memory per rank, including setup | **50.35352 GiB** | **59.06250 GiB** | **69.97070 GiB** |
+| Final sampled free memory per rank | **22.97083 GiB** | **14.23254 GiB** | **3.29895 GiB** |
+| Whole probe duration, excluding retention | 524.64 s | 542.40 s | 575.49 s |
 
 DDP preparation uses 20 backwards before Adam initialization. Three eager
 updates create the real optimizer moments, then both graphs are captured using
@@ -150,6 +156,15 @@ multidocument semantics. This setup also does not qualify cold T1024 DDP
 construction with restored Adam already resident. The older K2 measurements
 use a different workload and are not a controlled throughput comparison.
 
-B8 evidence retention is verified; see [storage receipt](storage-receipt.md).
-At this snapshot, `capacity-b16-m2-01` is running. Its outcome, any additional
-candidate attempts and final closeout retention remain pending for root.
+All three completed capacity archives are verified; see
+[storage receipt](storage-receipt.md). **Recommend physical B12 per rank for
+comfortable further work on this path**, retaining B8 as the option with more
+memory headroom. B16 is faster but leaves only 3.30 GiB of sampled free memory
+per rank, so it is a tight capacity point rather than the comfortable default.
+B12 retains 14.23 GiB free per rank at 4,311 tokens/s. These short probes do not
+clear production-loader, evaluation or cold-restart memory requirements.
+
+The B12 CLI/protocol change was recorded prospectively in `cac5c1c`; B32 was
+deliberately skipped and is not an observed OOM. There is no active capacity run
+at this ledger snapshot. Final documentation/closeout retention remains pending
+for root.

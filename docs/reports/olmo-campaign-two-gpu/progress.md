@@ -92,3 +92,17 @@ B16/rank is running in a fresh process, bounded to 900 s; session evidence is
 Too little headroom for recommendation; skip B32. Before any next timing,
 amend protocol/CLI to allow a single B12 candidate with unchanged setup/math.
 This is a measured middle option, not an extrapolated memory claim.
+
+01:05 UTC: B12 passes all 12 stages in 542.40 s; 4,311.01 global input tokens/s,
+median 11.400 s/update, 59.06 GiB peak reserved and 14.23 GiB final sampled free
+per GPU. W&B 8yx9sar0. Recommend B12 for next integration checks, B8 fallback;
+B16 is tight and B32 was skipped. All capacity probes have stopped. Runtime
+source `cac5c1c`; no model math changes. Final focused capacity suite 21 passes
+in 2.42 s (overlaps broad 445-test regression). Final evidence retention/audit
+and PR closeout follow; do not rerun completed stages after interruption.
+
+Final source audit passes all 1,120 declared report/snapshot pairs across
+18 report-bearing stages. All 19 stage receipts verify (44 objects); restored
+full-checkpoint SHA evidence remains separately recorded. Both GPUs idle,
+0 MiB used and no compute processes. Only final documentation archive/receipt
+and guarded PR merge remain; no background GPU work remains.

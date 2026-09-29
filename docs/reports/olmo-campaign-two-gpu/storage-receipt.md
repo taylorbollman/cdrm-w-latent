@@ -11,8 +11,8 @@ Each stage below has an `evidence.tar.gz` and `retention-manifest.json` under
 `.runtime/olmo-campaign-two-gpu/retention/<stage>.json`. They retain object
 generations, sizes, SHA256 values, MD5 checks and verification outcomes.
 All listed stage receipts report `status: verified`; none deletes local files.
-The B8 capacity stage is now included; the in-progress B16 stage is excluded
-until its writers stop and retention finishes. See [test ledger](test-ledger.md) for numerical and operational outcomes:
+All three completed B8, B12 and B16 capacity stages are included.
+See [test ledger](test-ledger.md) for numerical and operational outcomes:
 successful retention does not make a failed experiment pass.
 
 ## Verified evidence archives
@@ -42,6 +42,8 @@ the corresponding report; different attempts are preserved separately.
 | `checkpoint-restores` | 5 | 3,675 | `1790641980097684` | `8ec824f885667d4fceec72a672c60b92de25a3a25324e540855f371641236798` |
 | `pretrained-fp32-02` | 71 | 273,431 | `1790642118172202` | `cb1d827229d9962e14c6a2f8abc38ca85a93b1e8f43bd4c742781c8c090104b1` |
 | `capacity-b8-m2-01` | 74 | 304,278 | `1790642663041190` | `dc0b09ee8546c2d1c2345fa65a262a103283c6ca38fac270cbf50107082ba14e` |
+| `capacity-b16-m2-01` | 74 | 304,523 | `1790643313491107` | `8d9c7d7f5b336abe7132aa57d1d283a7939306c3b36dade15fd6bf1e6e7e73fb` |
+| `capacity-b12-m2-01` | 74 | 304,921 | `1790643911208455` | `ff3be54621c26e8ddc89f99110f2b57425cf229f487b82bc8cc5be6f99123b79` |
 
 The failed `pretrained-eager-01` numerical comparison and failed
 `tiny-resume-01` safe-load attempt are retained in this inventory, along with
@@ -64,6 +66,9 @@ gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260928T235700Z/camp
 
 This is the full NFR campaign model plus initialized optimizer and recovery
 state after one accumulated update, not merely the original OLMo weights.
+It is a recovery-test checkpoint trained on the operational fixture, not a
+quality-trained model or the starting point for a production comparison. New
+campaign arms should use the agreed pinned pretrained weights and initialization.
 Its source model remains pinned to OLMo-1B revision
 `81b71efbce6f4dada57c94860301af4298bcd351`, original weight SHA256
 `ccd2f952be7e68fdb602a486eb3eef64a81f9afc97901c640f5480867a1d750c`.
@@ -122,7 +127,7 @@ receipts do not claim that an active capacity run's unsaved optimizer state is
 recoverable; capacity probes are bounded disposable tests reconstructed from
 the retained source checkpoint.
 
-## Pending capacity and final documentation retention
+## Completed capacity retention; final documentation retention pending
 
 `capacity-b8-m2-01` completed successfully with all 12 stages passing and eight
 complete Adam updates; [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg).
@@ -133,7 +138,27 @@ Both objects passed full download SHA256, server MD5, size and SHA metadata
 verification. No full capacity checkpoint was uploaded and no local files were
 deleted. Timing and memory results are in the [test ledger](test-ledger.md).
 
-At this snapshot, `capacity-b16-m2-01` is running and has no final receipt in
-the inventory above. Its outcome and any further capacity attempts must be
-appended only after completion and verified upload. Final documentation/closeout
-retention is also pending. Root owns those updates.
+`capacity-b16-m2-01` also completed successfully with all 12 stages passing and
+eight complete Adam updates;
+[W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/cbl8xn7l).
+Its verified archive is included above. The companion manifest is 18,840 bytes,
+generation `1790643313758825`, SHA256
+`7294a188e8a7cf6d4d0e6008a8cac171b280179f634ca1933bdcd5f9cc0539f4`.
+Both objects passed full download SHA256, server MD5, size and SHA metadata
+verification. No capacity checkpoint was uploaded and no local files deleted.
+
+`capacity-b12-m2-01` completed successfully with all 12 stages passing and eight
+complete Adam updates;
+[W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8yx9sar0).
+Its verified archive is included above. The companion manifest is 18,840 bytes,
+generation `1790643911526332`, SHA256
+`07734c3b49528ab831594790be19c82842125d999221c3627005218d73a746e2`.
+Both objects passed full download SHA256, server MD5, size and SHA metadata
+verification. No capacity checkpoint was uploaded and no local files deleted.
+
+B12 is the recommended comfortable next-work configuration, with B8 available
+for additional headroom and B16 a tighter option. The [test ledger](test-ledger.md)
+records measured throughput, memory and the remaining qualification limits.
+B32 was deliberately skipped after observing B16 headroom; there is no B32 run
+or receipt. All capacity stages have stopped and their evidence is retained.
+Only final documentation/closeout retention remains pending for root.

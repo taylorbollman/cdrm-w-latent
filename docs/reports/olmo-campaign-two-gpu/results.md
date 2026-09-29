@@ -1,13 +1,14 @@
 # Campaign training on two H100s
 
-2026-09-29. **Distributed execution and full pretrained cloud restart pass;
-T1024 resource calibration is being completed.** One independent
+2026-09-29. **Distributed execution, full pretrained cloud restart and bounded
+T1024 resource calibration are complete.** One independent
 BF16 numerical qualification remains visible below. This is readiness work,
 not a quality-training experiment.
 
 Read [protocol](protocol.md), [usage](usage.md), [test ledger](test-ledger.md),
 [storage receipt](storage-receipt.md), [progress](progress.md) and
-[numerical localization](qualification-plan.md). Core runtime `79fc75b`;
+[numerical localization](qualification-plan.md) and [next steps](next-steps.md).
+Core runtime `79fc75b`;
 checkpoint metadata fix `0c77166`; reference isolation `61d6d2b`;
 FP32 diagnostic `28d6a93`. Legacy runners/model defaults remain unchanged.
 
@@ -31,7 +32,7 @@ checkpointing and native reused RoPE. No FA4 or torch.compile.
 
 | Check | Result |
 | --- | --- |
-| CPU regression suite | 445 tests pass; 19 focused capacity checks after final setup change also pass (overlapping scope) |
+| CPU regression suite | 445 tests pass; final 21 focused capacity checks also pass (overlapping scope) |
 | NCCL sums, 4 bytes through 256 MiB | All five sizes exact |
 | Tiny eager and graph, eight arms each | 88 gates each pass |
 | Tiny max raw-gradient relative L2 vs independent canonical | 3.69222e-7 |
@@ -120,7 +121,7 @@ attributes a measured fraction of the speed difference to any one change.
 | Physical batch per GPU | Accumulation | Global sequences/update | Global input tokens/s | Peak reserved/GPU | Final sampled free/GPU |
 | ---: | ---: | ---: | ---: | ---: | ---: |
 | 8 | 2 | 32 | **3,428.23** | 50.35 GiB | 22.97 GiB |
-| 12 | 2 | 48 | Pending | Pending | Pending |
+| **12** | **2** | **48** | **4,311.01** | **59.06 GiB** | **14.23 GiB** |
 | 16 | 2 | 64 | **4,969.84** | 69.97 GiB | 3.30 GiB |
 
 The [B8 run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/kkmsgtfg)
@@ -136,11 +137,33 @@ These are short resource measurements, not a long-run stability assessment.
 The [B16 run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/cbl8xn7l)
 also passes all 12 stages; median update time 13.187 s, whole attempt 575.49 s.
 Its 3.30 GiB free memory is too tight for a comfortable recommendation. A
-prospective protocol amendment adds one otherwise identical B12 run and skips
+prospective protocol amendment added one otherwise identical B12 run and skipped
 B32; the original B8/B16 evidence and source snapshots remain unchanged.
+
+The [B12 run](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/8yx9sar0)
+passes all 12 stages in 542.40 s, with median update time 11.400 s. **Recommend
+B12 per GPU as the starting point for the next integration checks**, retaining
+B8 as a fallback. B12 is about 26% faster than B8 in these short measurements
+and leaves 14.23 GiB sampled free. This is not a maximum-batch claim; B32 was
+skipped, not observed to fail. All three probes together complete 36 stages
+and 24 optimizer updates. No capacity attempt encountered OOM.
+
+The tested logical update is only two microbatches per rank. Final training
+accumulation, actual-loader timing and cold T1024 graph reconstruction with a
+restored optimizer need their own bounded acceptance; see the next-step plan.
 
 Packed multidocument rows remain rejected. Before production training, qualify
 the agreed concatenation/EOS policy separately for CE, NextLat, feedback and
 temporal recurrence; then integrate real-data cursors and calibrate the actual
 loader/batch/schedule. Same-world-size recovery here does not qualify changing
 rank count or H200 execution. No long quality run has been launched.
+
+## Evidence closeout
+
+All 1,120 report/source-snapshot pairs verify. The 19 completed stage receipts
+cover 44 cloud objects, including failed diagnostic attempts and the retained
+checkpoint objects. Full-checkpoint SHA readback is independently recorded in
+the restore evidence. Both GPUs are idle with no compute processes after the
+last probe. Final documentation, CPU logs, receipt inventory and audit are
+retained separately under `campaign-closeout`; its exact receipt is linked in
+the [storage record](storage-receipt.md).
