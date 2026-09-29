@@ -18,6 +18,7 @@ import time
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from scripts.olmo_pilot_ordered_data import OrderedCampaignData
+from scripts.olmo_pilot_data_plan import panel_quotas
 from cdrm.pretrained.nextlat import build_nextlat_masks
 
 SCHEMA='olmo-pilot-ordered-independent-audit-v1'
@@ -112,6 +113,11 @@ def verify_originals(corpus,manifest,originals):
                         and selected['shard']==shard['path']
                         and selected['source_name']==config['sources'][record['source_index']]['pin']['name'],
                         'Generated catalog differs from original corpus document')
+                    authority=manifest['acquisition_authority']['source_authorities'][selected['source_name']]
+                    url=authority['upstream_source']['url'];prefix='https://olmo-data.org/dolma-v1_5r1/'
+                    require(url.startswith(prefix) and selected['stratum']==url[len(prefix):].split('/')[0]
+                        and authority['source_pin']==config['sources'][record['source_index']]['pin'],
+                        'Generated catalog source stratum differs from declared upstream')
                     seen.add(index)
                 index+=1
     require(seen==set(originals),'Catalog references absent original document')
@@ -136,6 +142,7 @@ def audit(corpus,suite,suite_sha):
         directory=suite/path
         require(sha(directory/'manifest.json')==entry['manifest_sha256'],'Panel manifest pin differs')
         m=json.loads((directory/'manifest.json').read_bytes())
+        require(m['stratum_quotas']==panel_quotas(manifest['recipe'],name),'Panel quota differs from declared recipe')
         require(sha(directory/'documents.sqlite')==m['index']['sha256'],'Panel index pin differs')
         streams={};all_docs=defaultdict(list)
         with open_db(directory/'documents.sqlite') as db:

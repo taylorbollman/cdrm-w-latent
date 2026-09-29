@@ -39,6 +39,9 @@ def test_full_tiny_suite_independent_audit(tmp_path):
         originals={d['document_index']:dict(d) for d in db.execute('SELECT * FROM documents')}
     originals[next(iter(originals))]['token_offset']+=1
     with pytest.raises(ValueError,match='original corpus document'):verify_originals(f.corpus,f.manifest,originals)
+    originals[next(iter(originals))]['token_offset']-=1
+    originals[next(iter(originals))]['stratum']='wrong_source'
+    with pytest.raises(ValueError,match='source stratum'):verify_originals(f.corpus,f.manifest,originals)
     m=json.loads((f.output/'manifest.json').read_bytes());del m['panels']['confirmation-main']
     (f.output/'manifest.json').write_text(json.dumps(m))
     with pytest.raises(ValueError,match='21-panel'):audit(f.corpus,f.output,sha(f.output/'manifest.json'))
