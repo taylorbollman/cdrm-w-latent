@@ -83,3 +83,18 @@ thisprocesscloses. W&Bx8u0vz4c. Newcheckpoint-cost.md distinguishes selectedsave
 regions fromfullwalland recommends600s+terminalcadence forlaterpilot (clockresets
 afterverifiedpublication). Runtime192sources stillunchanged. Allworkpushed;
 retention/inventory/trackinghelpers preparedbutfinalrollupawaitsallnative runs.
+
+
+20:17 UTC: native-nfr12-01 completed8updates/finalFP32eval/verifiedcheckpoints0,4,8;
+W&Bx8u0vz4c synced. Stage1613.63s, no timeout. Independentcapacity-b32-nfr12-01
+summary passes(SHA41de9b41f88a5307068684a36a464f41e7bc3f5f0ed3df01d4ecdf2f88b8766b).
+NFR12:3,758.9compute-region inputs/s,3,578.0withmaterialization;59.06GiBreserved,
+12.78GiBsamplefree,FP32eval30.47s. Allfinite, substantialclipping remains(norm24.14
+at8), laterdevpassesworse thanfirst; notquality/refinementwin. NFR8notneeded.
+Native-b64-01 nowrunning(session56203), W&B72bvkgwm; finalplannedGPUfixture.
+Devprefixcoverage CPUauditretained:5k/16k/65k prefixescover4/6/7of9strata;allomit
+books/wiki. Sourceoutcomesnotusedforselection. Inventoryhelper nowusesneutral
+receipt filenamesbecausegenericretainer excludescheckpoint-publications dirs;
+fullpublicationrecords alreadyembedded inreports, individualbytes willbeinfinal
+inventoryarchive. No model/runtime/sourcefreezechanges. Preparefinalcapacity
+summary,W&Bsummary,inventory,docs/PRcloseoutafterB64completes. Allpriorworkpushed.

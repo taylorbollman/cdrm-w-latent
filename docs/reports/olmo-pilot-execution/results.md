@@ -2,9 +2,9 @@
 
 The representative ordered Dolma stream now runs through the shared two-GPU
 training engine, with named development evaluation and exact completed-boundary
-recovery in the tiny integration fixture. Native T1024 capacity measurements are
-in progress; their results will be added below before closeout. This milestone
-does not start a matched learning comparison.
+recovery in the tiny integration fixture. Native T1024 B32 and NFR12 capacity
+runs are complete; the larger base batch is the final pending check. This
+milestone does not start a matched learning comparison.
 
 ## What changed
 
@@ -63,7 +63,7 @@ separately scoped to its own tested layouts.
 
 ## Native capacity
 
-Pending completed measurements. All candidates use two H100 80GB GPUs,
+All candidates use two H100 80GB GPUs,
 T1024, BF16 mixed precision, prepared CUDA graphs, activation checkpointing,
 fused AdamW and the unchanged accepted attention backends. Ordinary attention
 uses Flash SDPA; RT uses native Triton tiles with recomputation. NFR uses K4
@@ -74,6 +74,29 @@ and 8 are verified in GCS before keep-two local retention. Final evaluation
 uses 5,120 dev-main inputs and 2,048 books inputs at FP32 batch 1 per GPU.
 These are functionality/cost prefixes, not representative quality evaluation.
 
+| Configuration | Physical batch/GPU | Global inputs/update | Compute-region inputs/s | Including recorded materialization | Maximum sampled reserved/GPU | Minimum sampled free/GPU |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Ordinary base B32 | 32 | 65,536 | 69,494 | 67,279 | 42.40 GiB | 35.21 GiB |
+| Combined NFR12 | 12 | 24,576 | 3,759 | 3,578 | 59.06 GiB | 12.78 GiB |
+
+Rates use the sum of inputs divided by the sum of each update's slowest-rank
+recorded regions. The compute region includes captured forward/loss/backward,
+DDP, optimizer work and cursor coordination. The second rate adds host data
+materialization. Neither includes all health checks, logging, coordination,
+checkpointing or evaluation; neither is complete training throughput. Memory
+is sampled during capture and updates. Peak counters are cumulative; no
+post-evaluation memory sample or continuous free-memory minimum is inferred.
+
+B32 preparation took 32.26 seconds and its final two-panel FP32 evaluation
+2.07 seconds. NFR12 took 442.81 seconds for preparation and 30.47 seconds for
+evaluation. Both finished eight finite updates and passed declared preparation
+and evaluation preservation checks. No smaller NFR fallback was needed.
+
+Checkpoint-heavy stage elapsed times were 17.49 minutes for B32 and 26.89 minutes
+for NFR12. Those short-stage averages are not production throughput estimates.
+Full-state checkpointing is a substantial synchronous cost; see
+[checkpoint-cost.md](checkpoint-cost.md) before choosing pilot cadence.
+
 The base starts from original OLMo weights with fresh Adam. NFR imports only
 the accepted fusion128 weights and uses fresh all-active Adam. That adaptation
 previously saw 1,073,565 inputs and 1,048,576 CE targets; it is separate from
@@ -81,7 +104,7 @@ new capacity exposure. Different effective batches and startup histories make
 these capacity runs unsuitable for a learning-quality comparison.
 
 Eight combined updates are finite, with substantial clipping throughout: raw
-gradient norm falls from 222.53 to 24.14. The base's norms range from 1.01 to
+gradient norm falls from 222.53 to 24.14. B32's norms range from 1.01 to
 1.48, also exceeding the configured limit of 1.0. These observations neither
 establish long-run stability nor identify a new precision defect. No additional
 per-loss gradient attribution was performed in this capacity milestone.
@@ -93,6 +116,25 @@ successful execution is not successful refinement. The base dev-main/books CE
 is 2.424/2.518 after its different exposure and original startup. Do not treat
 these tiny prefixes and unmatched runs as an architectural comparison. The
 next matched adaptation pilot should monitor per-pass CE and clipping explicitly.
+
+## Parameters and analytic work
+
+| Configuration | Active training parameters | Registered resident parameters | Deployable inference parameters |
+| --- | ---: | ---: | ---: |
+| Ordinary B | 1,176,764,416 | 1,185,153,024 | 1,176,764,416 |
+| NFR | 1,267,879,936 | 1,267,879,936 | 1,185,153,024 |
+
+The common base wrapper registers 8,388,608 dormant fusion parameters; they are
+not executed or optimizer-owned in B. NFR adds that fusion plus an 82,726,912
+parameter NextLat predictor, which is training-only. RT adds no parameters.
+
+The existing resource cards estimate **0.599–0.656 quadrillion matrix FLOPs**
+per B32 update and **1.123–1.198 quadrillion** per NFR12 update. These updates
+have different input counts. The estimates include declared checkpoint and
+attention reconstruction bounds; they exclude pointwise operations, optimizer,
+communication and other overhead. They are arithmetic accounting, not measured
+hardware FLOPs or utilization. Exact component ledgers accompany the capacity
+summary.
 
 ## Next decision
 
