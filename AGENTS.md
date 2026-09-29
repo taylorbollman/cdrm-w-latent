@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 pilot data COMPLETE, PR49; final merge/retention metadata is in
+2026-09-29 pilot data COMPLETE, PR49 merged c433406; final retention metadata is in
 docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
 protocol.md, storage-receipt.md, test-ledger.md and next-steps.md there.
 All 37 sources acquired: 584,851 unique documents / 310,669,141 stored tokens.

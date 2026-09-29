@@ -60,3 +60,11 @@ over partial shards. See [operator notes](operator-notes.md).
 
 No model checkpoints were created or deleted in this milestone. Existing model
 and optimizer checkpoints remain governed by their earlier storage receipts.
+
+
+Final code/reports were merged in PR49 (`c433406649c78656a7d820e9f02ba815c30aed08`).
+The separate `pilot-data-publication` evidence stage retains the merge response,
+final documentation and closeout receipt after publication. The closeout receipt
+SHA256 is `235ae69a7860f22d02b45c7662d513e689e3f7244d19fa7819b582ad61e7e141`.
+Its archive and manifest generations are `1790708333200860` and
+`1790708333454865`, respectively.

@@ -77,3 +77,12 @@ all test logs. The receipt is `.runtime/olmo-pilot-data/retention/closeout.json`
 An independent closeout review verified report counts, hashes, links, packing,
 recovery provenance and source isolation without finding a blocker. Final merge
 metadata follows after publication.
+
+
+PR49 merged successfully on 2026-09-29 as
+`c433406649c78656a7d820e9f02ba815c30aed08`; final PR head was `0ef18b0`.
+Local checkout is `main`. Closeout receipt SHA256:
+`235ae69a7860f22d02b45c7662d513e689e3f7244d19fa7819b582ad61e7e141`.
+The post-merge record and final documentation are retained separately under
+`pilot-data-publication`, with local receipt `retention/publication.json`.
+There are no active or queued jobs from this milestone.
