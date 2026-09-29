@@ -68,3 +68,14 @@ controls before launch. A real packed-data spot check follows a localized
 finding when needed; a broad sweep or Q/K-normalization transition is not
 authorized by numerical completion alone. Existing BF16 qualifications remain
 open until the results justify an explicitly documented resolution.
+
+Implementation/source freeze: bridge and auxiliary helpers independently reviewed,
+no blocking findings. Combined diagnostic CPU scope33 passed in5.14s; final
+auxiliary scope20 passed in3.07s (overlap, after reporting/source-pin polish).
+GPU queue begins with bridge-01, then auxiliary-01 using its pinned JSON anchor.
+Root alone launches. Evidence root `.runtime/olmo-precision-localization/`;
+cloud namespace
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T043105Z/`.
+These are single-process numerical probes; the retention namespace does not
+imply actual DDP or two-GPU execution. Both H100s were verified idle before
+launch; only CUDA device0 is used. Protocol and helper source bytes now frozen.
