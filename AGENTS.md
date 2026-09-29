@@ -32,18 +32,27 @@ W&B tracking.
 # Pretrained model handoff
 
 
-2026-09-29 08:56UTC overnight continuation still ACTIVE untilabout14:00UTC.
-Warmup128 COMPLETE withverifiedcheckpoint892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc
-at.runtime/olmo-fusion-startup/train-02/update-000128.pt. Readwarmup-results.md
-andprogress.md. NFCEbackbone BF16gradienterrors at128:original.823%,freshshort1.983%,
-T1281.627%,packedT1024 5.209%; cold60.87/24.33/144.02/19.97%. ActualfusionAdamdelta
-1.685%,residualbeyondzero-gradAdam4.917%; noBF16clearance. Originallong128failed
-JSONtuple/listguard; correctedNEWcontextdriver succeeded, oldhelperfrozen.
-RootGPU0components-128-01 active; GPU1idleafterpacked128. Nexttiny2GPUlifecycle
-stop/save/freshresume/erroracceptance, thenpaired16update FP32/BF16fusion-only
-continuation from128,BF16midpointreplay (agentimplementing). DoNOTstopatfirst
-warmupmilestone; userapprovedusefulovernightwork. Noqualitycampaign. Neveradd
-cdrm/pretrained fileswhileprobespinitsglob. Newhelpersunderscripts/tests/docs.
+2026-09-29 09:20 UTC: overnight work ACTIVE until about 14:00 UTC.
+Branch feat/olmo-fusion-startup, current committed09f6b9f. Read
+`docs/reports/olmo-fusion-startup/overnight-plan.md` and `progress.md`.
+Warmup128 is complete; checkpoint SHA892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc
+at `.runtime/olmo-fusion-startup/train-02/update-000128.pt`, verified GCS.
+NF CE backbone BF16 errors at128: original0.823%, fresh short1.983%, T1281.627%,
+packed T1024 5.209% (cold60.87/24.33/144.02/19.97%). Ordinary packed N-only CE
+is1.799%. NF combined T128 backbone0.735%; native RT combined alpha0/.25/1
+is0.704%/9.912%/12.059%. RT CE alone32.442%. No BF16 production clearance.
+Completed reports remain frozen. Component/alpha results doc being prepared.
+Guarded tiny two-GPU lifecycle checks active: initial resume failure was only
+rank0 Python RNG consumed by GCS after checkpoint; model/Adam/gradients exact.
+New additive guarded driver preserves RNG and releases failed captured owners;
+reference passed, stop/resume/log-failure/recovery pending. Original failures
+retained. Then launch paired16-update fusion-only FP32/BF16 continuation128→144
+and BF16 midpoint replay (new helper frozen). A separate four-update full NFR
+paired optimizer-impact diagnostic is being implemented, training indices144–147,
+fresh all-component Adam, no alpha ramp or adaptation tuned to gradient errors.
+Root alone schedules GPUs. Do not add/edit cdrm/pretrained files while probes pin
+its glob. New helpers under scripts/tests/docs; no quality campaign. Save/push
+regularly and retain checkpoints at≤10-minute completed boundaries.
 
 2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
 User authorizes~6hours useful technical work withoutreview; proceed beyond first
