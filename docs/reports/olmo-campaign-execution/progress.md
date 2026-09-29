@@ -84,3 +84,19 @@ storage/next-step notes written; PR46 ready for merge. No core or frozen
 execution-source edits since accepted candidate. Final closeout evidence prefix:
 gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T142100Z/execution-closeout-01/
 (record successful retention after it completes).
+
+15:27 UTC: PR46 merged as6b78fd2230eb95a440463456c623fffdec7a019c, branch
+removed, main checked out. closeout-01 packaging was rejected locally because
+nested reports lacked their adjacent source snapshots; no cloud objects were
+written. closeout-02 includes those unchanged snapshots plus the failed packaging
+log and verifies successfully. This is packaging only, not a training rerun.
+Final closeout report SHA256:
+36d3d40bf6b2e14d535e1c50dcc17c0ef7a47344d58ab4951df82fe10cdbf06b
+Receipt SHA256:
+7a2d11fee9ead6a4470ce3e48ec43eb3d8305d87f644259a0984b9120d7a1d45
+GCS prefix:
+gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T142100Z/execution-closeout-02/
+All acceptance/retention work complete. No active/queued GPU job. Boot free110GiB,
+SSD free1.4TiB; no local files deleted. Future long campaigns need an explicit
+local pruning/retention policy. Final administrative doc update is separate from
+the retained closeout snapshot; frozen execution and evidence remain unchanged.

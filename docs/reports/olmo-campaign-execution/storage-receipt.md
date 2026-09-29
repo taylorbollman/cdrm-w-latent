@@ -65,3 +65,18 @@ the machine-readable inventory.
 The finite three-update plan is complete: a same-lineage resume validates and
 exits; it does not authorize or silently extend training. See operator-notes.md
 and next-steps.md for recovery scope and the next milestone.
+
+## Final closeout
+
+PR [46](https://github.com/taylorbollman/cdrm-w-latent/pull/46) merged as
+`6b78fd2230eb95a440463456c623fffdec7a019c`. The verified final bundle is
+`execution-closeout-02` under the small-evidence root above. Its report SHA256 is
+`36d3d40bf6b2e14d535e1c50dcc17c0ef7a47344d58ab4951df82fe10cdbf06b`;
+local retention receipt SHA256 is
+`7a2d11fee9ead6a4470ce3e48ec43eb3d8305d87f644259a0984b9120d7a1d45`.
+
+The bundle includes reports, source snapshots, docs, inventory and preceding
+receipts. It also preserves a locally rejected packaging attempt that omitted
+nested source snapshots; that attempt wrote no cloud objects and changed no
+training/checkpoint evidence. This final receipt and the inventory receipt are
+outside the earlier 22-receipt snapshot counts.
