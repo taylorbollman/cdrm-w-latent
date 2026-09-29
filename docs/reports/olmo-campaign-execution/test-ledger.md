@@ -37,7 +37,7 @@ The actual tiny cloud restore used the unchanged helper/protocol with the earlie
 RawDownload retry oracle; it does not change helper behavior or training identity.
 Both byte-download modes pass. Earlier logs/snapshots remain retained.
 
-GPU acceptance stages and independent audit will be recorded after completion.
+GPU acceptance stages and independent audits are complete, as recorded below.
 
 Independent stdlib JSON auditor:44 CPU tests pass in
 `.runtime/olmo-campaign-execution-cpu-audit-03.log`. Frozen auditor checks both
@@ -56,10 +56,31 @@ It is evidence consistency, not a fresh tensor reload or FP32/BF16 comparison.
 Each comparison verified155 source pins for each report. Counts include routine
 metadata/identity checks; they are not independent numerical experiments. The
 same-precision scientific evidence is exact, without a tolerance or omitted
-comparison field. Native acceptance remains in progress.
+comparison field. Native acceptance is recorded below.
 
 Final integrated CPU scope: **242 distinct tests passed in30.06s** in one run
 across the seven new test modules and unchanged manifest tests. This is215 new
 focused tests plus27 existing manifest tests. Stage`cpu-integrated-01` verifies
 15 scoped live/source-snapshot pairs before and after the run. Only two existing
 Google/grpc future-compatibility warnings occurred; no GPU or cloud operation.
+
+| Native adapted NFR T1024 pair | Independent audit |
+| --- | --- |
+| Reference versus lean stop after update 1 | 1,101 checks pass |
+| Reference versus cloud-restored updates 2/3 | 1,236 checks pass |
+
+Native stages `native-stop-01`, `native-reference-01` and `native-resume-01` all
+exit successfully and sync W&B. The streamed `native-restored-01` checkpoint
+loads model/Adam/scheduler/RNG/cursor before DDP/capture. Preparation preserves
+the entire boundary; every resumed input, all 71 raw active parameter gradients,
+loss, optimizer state, RNG and cursor match exactly on both ranks. Final counters
+are three updates, 9,216 inputs, 9,207 CE/latent targets and 9,198 KL triples.
+
+Final native comparison report SHA256:
+`4e3d5fc9309ef8aa6ff376af246fab672ec4224a76278e4ca5b0508f0c263221`.
+Reference report SHA256:
+`362d0b1fb058e1287980a088272275f3daf51ba71ed025b538e7a7d743c518c7`.
+Resumed report SHA256:
+`350f7a501097cf09faa00bfb78304ce2d5f70391ad59cbce66539042c96d044d`.
+Native source snapshots each verify all 155 frozen execution files. No further
+GPU numerical sweep, full-model all-eight GPU campaign or quality test was run.
