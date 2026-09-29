@@ -32,6 +32,19 @@ W&B tracking.
 # Pretrained model handoff
 
 
+2026-09-29 08:56UTC overnight continuation still ACTIVE untilabout14:00UTC.
+Warmup128 COMPLETE withverifiedcheckpoint892ff2fdcdeec89e3008a16a12e91158250ebe05adfe0e9efce8f153409b8cfc
+at.runtime/olmo-fusion-startup/train-02/update-000128.pt. Readwarmup-results.md
+andprogress.md. NFCEbackbone BF16gradienterrors at128:original.823%,freshshort1.983%,
+T1281.627%,packedT1024 5.209%; cold60.87/24.33/144.02/19.97%. ActualfusionAdamdelta
+1.685%,residualbeyondzero-gradAdam4.917%; noBF16clearance. Originallong128failed
+JSONtuple/listguard; correctedNEWcontextdriver succeeded, oldhelperfrozen.
+RootGPU0components-128-01 active; GPU1idleafterpacked128. Nexttiny2GPUlifecycle
+stop/save/freshresume/erroracceptance, thenpaired16update FP32/BF16fusion-only
+continuation from128,BF16midpointreplay (agentimplementing). DoNOTstopatfirst
+warmupmilestone; userapprovedusefulovernightwork. Noqualitycampaign. Neveradd
+cdrm/pretrained fileswhileprobespinitsglob. Newhelpersunderscripts/tests/docs.
+
 2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
 User authorizes~6hours useful technical work withoutreview; proceed beyond first
 warmup as evidence warrants, not just plan/stop. Read docs/reports/olmo-fusion-startup/
