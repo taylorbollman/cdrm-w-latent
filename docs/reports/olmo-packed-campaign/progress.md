@@ -60,3 +60,20 @@ W&B `8c13f3ne`. Initial preparation starts without Adam; fresh-process resume
 will load real Adam first. Index cloud restore passed at
 `.runtime/olmo-packed-campaign/index-cloud-restore-01/evidence/index`; exact
 generations, downloaded SHA/bytes and all 14 archive members verified.
+
+Actual T1024 first logical update passes all five raw/state/finite/RNG-cursor/count
+gates. Measured 3,968.23 valid input tokens/s globally: 7.823s loader+jitter,
+123.702s graph backward, 0.597s Adam+cursor; diagnostic hashes/gates excluded.
+Peak reserved 58.8984GiB/GPU, sampled free 14.3966GiB. Checkpoint saving at
+~603s into write phase, then record live-graph next update. Cold Adam-before-DDP
+restart remains untested at this entry.
+
+Checkpoint after actual update one is committed. To reduce interruption
+exposure, a separate immutable `checkpoint-boundary-01` evidence stage is
+uploading its full checkpoint while the original write process records update
+two. Retention receipt target: `retention/checkpoint-boundary-01.json`, GCS
+stage `packed-checkpoint-boundary-01`. The completed write report will later
+be retained separately without uploading a duplicate 15GB state. Restore helper
+is prepared under `checkpoint-restore-evidence-01/restore_checkpoint.py`; use
+that boundary receipt once verified. Do not resume until the original writer
+finishes and its completed report hash is pinned.
