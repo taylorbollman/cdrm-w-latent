@@ -31,6 +31,39 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 closeout/merge
+metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
+pilot-plan.md, open-issues.md, test-ledger.md and storage-receipt.md there.
+Runtime85e5f78/200 pins frozen; historical192 pins unchanged. New versioned
+engine/loop/worker/executor resumes after immutable SSD save; one worker owns
+storage and uses a CPU-only cloud child to avoid training-RNG races. Full
+verification retained, drain before next save and terminal. VM loss while
+uploading rolls back to the previous verified cloud checkpoint. A600s save
+trigger is not a maximum rollback interval. No GPU job is active or queued.
+
+CPU136 distinct tests pass. Tiny blocking/async passes2847 exact checks;
+cloudrestore2/resume3 passes2427. Native NFR4 updates at T1024,B12/rank,
+524288 inputs/update,22 slots/rank complete:2,097,152 inputs. Compute plus
+materialization3568 inputs/s, reserved59.06GiB/GPU, sampled free12.78GiB.
+Populated local-save regions76s; checkpoint2 background346s overlaps updates/
+evaluation; terminal background365s drains. Checkpoints0/2/4 cloud-verified.
+Native source/budget/ownership/evaluation assertions pass; exact new-runtime
+native cloud continuation was not separately rerun. No BF16 clearance change.
+
+Heavy clipping persists (norm211→52); final FP32 dev CE3.18058/7.87717/7.71814/
+7.74559. Useful refinement remains unestablished. Keep explicit32-update review
+of per-pass gaps, first-pass trajectory and separate-loss scales before any
+extension; no update-zero dev measurement. CPU declarations B/NF/NFR128 ceiling,
+firststop32 are prepared but UNLAUNCHED. NFR first segment budget roughly2h;
+NF accumulated cost unmeasured. Four-update fixture is not cohort initialization.
+W&B nativeosqidkgt, summary1ofs0x3r synced. Optional immediate metadata readback
+failed; later independent confirmation passed, without rerunning training/charts.
+Evidence/checkpoints retainedGCS; inventory12 checkpoints/16small receipts;
+later inventory/closeout receipts separate. .runtime/olmo-pilot-async; SSDpilot-async;
+cloud small olmo-two-gpu/20260929T204500Z. Save/push/retain every20–30min.
+Check reports/processes before launching after interruption.
+
+
 2026-09-29 ordered pilot execution COMPLETE, PR50 merged806c1be. Read
 docs/reports/olmo-pilot-execution/results.md, next-steps.md, checkpoint-cost.md,
 readiness-map.md and progress.md. Frozen runtime be74dde/192pins unchanged;
