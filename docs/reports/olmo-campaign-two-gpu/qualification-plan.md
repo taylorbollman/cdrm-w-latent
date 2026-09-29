@@ -28,3 +28,21 @@ If DDP adds a discrepancy, fix or further localize it before resource checks.
 
 The corrected tiny fresh-process restart pair passes bitwise after GCS restore.
 The metadata serialization fix retains weights_only=True; old failure preserved.
+
+## Measured localization outcome
+
+Prepared-local versus distributed eager and CUDAgraph checks both pass. Across
+three NFR updates, maximum raw-gradient relativeL2 is4.9563e-9; parameter-update
+relativeL2 is1.4977e-8 and Adam-moment relativeL2 is3.4936e-9. Both ranks agree
+exactly. The initial local canonical/prepared BF16 discrepancy is exactly the
+same0.0340224273 as the original failed DDP/reference comparison. These results
+locate the discrepancy before DDP in this tested fixture.
+
+One actualpretrained fixed-state full-FP32 diagnostic also passes the unchanged
+element/loss budgets. Sparse/prepared gradient relativeL2 is7.38198e-7 and
+objective absolute difference4.83649e-7. It uses forcedmathSDPA and eager native
+RT tiles (FP32 attention, TF32off), no DDP/graph/optimizer. This supports math
+agreement at the actual weights and a BF16 arithmetic explanation, but does not
+prove BF16 harmlessness, identify a single offending operation or test BF16
+against an FP32 training trajectory. Neither model math nor numerical budgets
+were changed to make these checks pass.

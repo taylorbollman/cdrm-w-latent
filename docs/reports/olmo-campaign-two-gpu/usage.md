@@ -52,6 +52,19 @@ pretrained defaults to B/NFR, B2/T16 BF16 mixed with FP32 masters. Every attempt
 needs a new output directory. The launcher log should be copied into the stage
 after its writers stop, then retained with the source snapshot and report.
 
+Default `--reference canonical` uses independently selected-position losses.
+`--reference prepared` instead checks distributed execution against the same
+dense masked arithmetic run locally without DDP or capture. It also records a
+fixed-state canonical/prepared comparison separately. Read `operational_status`,
+`independent_reference_status` and `qualification_failures` together: an
+operational pass does not clear a failed independent reference. The observed
+NFR BF16 discrepancy and localization are documented in qualification-plan.md.
+
+`scripts/olmo_campaign_fp32_localize.py --output-dir NEW` is a one-GPU,
+no-DDP/no-optimizer diagnostic at the same actual pretrained weights. It uses
+full FP32, forced math SDPA and eager native RT to compare sparse/dense loss
+layouts. This does not compare BF16 with FP32 or prove BF16 harmlessness.
+
 `scripts/olmo_campaign_restart.py --phase write --scale tiny|pretrained --arm NFR`
 requires new `--output-dir` and `--checkpoint-dir`. It saves after one update
 and records the next update through the original live graph. Retain the

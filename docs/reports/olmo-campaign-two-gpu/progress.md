@@ -55,3 +55,10 @@ exactly .0340224273 gradientL2 BEFORE DDP; the discrepancy is not introduced by
 distributed synchronization in this fixture. Independentreference status stays
 FAILED, operationalstatus PASS. Graphed B/NFR comparison follows, then one
 bounded actualpretrained FP32 loss-layout diagnostic and fullcheckpointrestart.
+
+Pretrained preparedgraph01 passes22operationalgates (B/NFR,3Adamupdates each);
+NFRindependentBF16qualification remainsfailed. W&B7kkx637i. FixedstatefullFP32
+sparse/dense diagnostic passes at7.38198e-7 gradientL2; W&B5gv7m5wl. Runtime
+`28d6a93`. Fullpretrained NFR writephase is underway in `pretrained-write-01`;
+checkpoint SSDpath `/mnt/localssd/cdrm-checkpoints/campaign-two-gpu/pretrained-01`.
+Aftercompletion retain+restorefromGCS beforefreshresume. No qualitytraining.
