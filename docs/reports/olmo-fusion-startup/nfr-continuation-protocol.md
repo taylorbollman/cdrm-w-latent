@@ -42,6 +42,12 @@ divergence rather than solely same-state rounding.
 
 Evaluate the identical long held-out fixture using the same read-only FP32
 path at4/12/20; report all three losses separately and their combined objective.
+A narrow, restored instance-method observer also records CE, latent and KL
+sums/means for each of the four passes from those exact existing forwards.
+The frozen evaluator's aggregate fields remain unchanged, and observed call
+counts must equal the physical fixture records. No extra model forward, change
+to weighting, or replacement loss implementation is introduced; final-pass
+differences remain visible even if earlier-pass changes offset them.
 Preserve complete model/Adam/scheduler/RNG/cursor state. The frozen loader gets
 an explicit NF data-construction recipe and must reproduce the original NFR
 report's exact fixture/noise pins; actual execution remains NFR.

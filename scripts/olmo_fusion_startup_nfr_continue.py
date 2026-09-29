@@ -206,6 +206,37 @@ def load_continuation(path,model,optimizer,scheduler,*,digest,configuration,fing
     return restored['counters']
 
 
+def evaluate_fp32(model,recipe,fixtures,*,original_flags):
+    """Observe per-pass losses from exactly the frozen evaluator's forwards."""
+    original=model.loss_sums;sentinel=object();prior=model.__dict__.get('loss_sums',sentinel)
+    records=[];metadata=global_fixture_metadata(model,fixtures);passes=recipe.mode().num_passes
+    def observed(*args,**kwargs):
+        losses=original(*args,**kwargs)
+        if torch.is_grad_enabled() or len(losses.pass_losses)!=passes:
+            raise AssertionError('Per-pass observer requires the unchanged no-grad evaluation')
+        records.append(tuple({'counts':dict(row.counts),
+            'sums':{term:float(row.sums[term]) for term in endpoint.TERMS}} for row in losses.pass_losses))
+        return losses
+    object.__setattr__(model,'loss_sums',observed)
+    try:
+        result=endpoint.evaluate_fp32(model,recipe,fixtures,original_flags=original_flags)
+    finally:
+        if prior is sentinel:object.__delattr__(model,'loss_sums')
+        else:object.__setattr__(model,'loss_sums',prior)
+    per_pass={}
+    for index in range(passes):
+        counts={term:sum(record[index]['counts'][term] for record in records) for term in endpoint.TERMS}
+        sums={term:sum(record[index]['sums'][term] for record in records) for term in endpoint.TERMS}
+        if counts!=result['counts'] or not all(math.isfinite(value) for value in sums.values()):
+            raise AssertionError('Observed pass losses have different counts or nonfinite sums')
+        per_pass['pass_'+str(index)]={'loss_sums':sums,'loss_means':{term:sums[term]/counts[term] for term in endpoint.TERMS},'counts':counts}
+    if len(records)!=metadata['microbatches'] or model.__dict__.get('loss_sums',sentinel) is not prior:
+        raise AssertionError('Per-pass observation changed call count or method ownership')
+    return {**result,'per_pass':per_pass,'per_pass_observer':{'loss_sums_calls':len(records),
+        'pass_loss_records':len(records)*passes,'counts_exact':True,'method_restored':True,
+        'scope':'Detached scalar observation of the same frozen evaluator forwards; original aggregate preserved'}}
+
+
 def parse_args(argv=None):
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--precision',choices=tuple(PATHS),required=True)
     for name in ('origin-checkpoint','nfr-report','fixture'):
@@ -291,7 +322,7 @@ def main(argv=None):
             write_json(Path(record['path']).with_suffix('.receipt.json'),record);last_save=time.monotonic();persist('checkpoint/retained/'+str(number))
         def evaluate():
             before=bridge.current_boundary(model,optimizer,scheduler,counters)
-            row={'update':counters.optimizer_updates,**endpoint.evaluate_fp32(model,recipe,fixtures,original_flags=flags)}
+            row={'update':counters.optimizer_updates,**evaluate_fp32(model,recipe,fixtures,original_flags=flags)}
             if before!=bridge.current_boundary(model,optimizer,scheduler,counters):raise AssertionError('Read-only eval changed complete boundary')
             report['evaluations'].append(row);tracker.log({'update':counters.optimizer_updates,**scalar_metrics(row,'dev_common_fp32')},step=counters.optimizer_updates);persist('evaluation')
         # Original update4 is already retained. The new scheduler fork is

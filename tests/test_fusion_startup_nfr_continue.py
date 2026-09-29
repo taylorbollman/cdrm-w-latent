@@ -145,6 +145,43 @@ def test_heldout_common_fp32_keeps_forked_full_state_and_reports_all_losses(tmp_
     assert before==probe.bridge.current_boundary(obj.model,obj.optimizer,obj.scheduler,obj.counters)
 
 
+def test_per_pass_observation_keeps_old_aggregate_exact_and_adds_no_forward(tmp_path):
+    obj=setup(tmp_path);fork(obj)
+    before=probe.bridge.current_boundary(obj.model,obj.optimizer,obj.scheduler,obj.counters)
+    calls=[]
+    handle=obj.model.backbone.register_forward_hook(lambda *args:calls.append(1))
+    try:
+        old=probe.endpoint.evaluate_fp32(obj.model,obj.recipe,obj.fixtures,original_flags=obj.flags)
+        expected_calls=len(calls);calls.clear()
+        observed=probe.evaluate_fp32(obj.model,obj.recipe,obj.fixtures,original_flags=obj.flags)
+        assert len(calls)==expected_calls==2
+    finally:handle.remove()
+    assert {key:observed[key] for key in old}==old
+    assert observed['per_pass_observer']['loss_sums_calls']==2
+    assert observed['per_pass_observer']['pass_loss_records']==8
+    assert 'loss_sums' not in obj.model.__dict__
+    for index in range(4):
+        row=observed['per_pass']['pass_'+str(index)]
+        assert row['counts']==old['counts'] and set(row['loss_means'])=={'ce','latent','kl'}
+        assert all(row['loss_means'][term]==row['loss_sums'][term]/row['counts'][term] for term in row['counts'])
+    for term in ('ce','latent','kl'):
+        weights=(.5,1/6,1/6,1/6) if term=='ce' else (.25,)*4
+        reconstructed=sum(observed['per_pass']['pass_'+str(i)]['loss_sums'][term]*weight for i,weight in enumerate(weights))
+        assert reconstructed==pytest.approx(old['loss_sums'][term],rel=2e-7,abs=1e-7)
+    assert before==probe.bridge.current_boundary(obj.model,obj.optimizer,obj.scheduler,obj.counters)
+
+
+def test_per_pass_observer_restores_existing_instance_method_on_failure(tmp_path,monkeypatch):
+    obj=setup(tmp_path)
+    original=obj.model.loss_sums
+    def custom(*args,**kwargs):return original(*args,**kwargs)
+    object.__setattr__(obj.model,'loss_sums',custom)
+    def fail(*args,**kwargs):raise OSError('evaluation interruption')
+    monkeypatch.setattr(probe.endpoint,'evaluate_fp32',fail)
+    with pytest.raises(OSError):probe.evaluate_fp32(obj.model,obj.recipe,obj.fixtures,original_flags=obj.flags)
+    assert obj.model.__dict__['loss_sums'] is custom
+
+
 def test_nonfinite_loss_never_steps_and_missing_gradient_is_visible(tmp_path,monkeypatch):
     obj=setup(tmp_path);fork(obj)
     original=probe.component_backward
