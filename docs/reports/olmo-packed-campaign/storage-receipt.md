@@ -12,8 +12,9 @@ gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T023500Z/
 
 Local receipts are in `.runtime/olmo-packed-campaign/retention/`. Each stage
 contains `evidence.tar.gz`, `retention-manifest.json` and an uploaded
-`storage-receipt.json`. Only `packed-checkpoint-boundary-01` additionally
-contains the model/optimizer `checkpoint/state.pt` and its committed manifest.
+`storage-receipt.json`. `packed-checkpoint-boundary-01` and
+`packed-checkpoint-boundary-02` additionally contain the model/optimizer
+`checkpoint/state.pt` and its committed manifest.
 The evidence archives include the source snapshots declared by their reports.
 Retention preserves failures and qualifications as well as operational passes.
 
@@ -30,11 +31,18 @@ Retention preserves failures and qualifications as well as operational passes.
 | `checkpoint-boundary-01.json` | `packed-checkpoint-boundary-01` | 78 | 4 |
 | `pretrained-write-01.json` | `packed-pretrained-write-01` | 80 | 2 |
 | `checkpoint-restore-01.json` | `packed-checkpoint-restore-01` | 6 | 2 |
+| `pretrained-resume-01.json` | `packed-pretrained-resume-01` | 80 | 2 |
+| `flash-t16-d0-01.json` | `packed-flash-t16-d0-01` | 8 | 2 |
+| `flash-t16-d1-01.json` | `packed-flash-t16-d1-01` | 8 | 2 |
+| `flash-t1024-d0-01.json` | `packed-flash-t1024-d0-01` | 8 | 2 |
+| `flash-t1024-d1-01.json` | `packed-flash-t1024-d1-01` | 8 | 2 |
+| `checkpoint-boundary-02.json` | `packed-checkpoint-boundary-02` | 79 | 4 |
+| `pretrained-write-02.json` | `packed-pretrained-write-02` | 81 | 2 |
 
-A local read-only audit checked all nine verified receipts, their **20 listed
-objects**, each retained archive/manifest SHA256 and byte count, **481 archived
-member hash/size pairs**, and **446 declared source/snapshot pairs**. The
-separately uploaded receipt objects are not included in the 20-object count.
+A local read-only audit checked all 16 verified receipts, their **36 listed
+objects**, each retained archive/manifest SHA256 and byte count, **753 archived
+member hash/size pairs**, and **700 declared source/snapshot pairs**. The
+separately uploaded receipt objects are not included in the 36-object count.
 Archive and retention-manifest uploads had already been downloaded and SHA256
 verified by the retention tool. The local audit did not re-download every
 object; the index and checkpoint recovery exercises below independently did
@@ -45,7 +53,7 @@ evidence is retained separately under `packed-pretrained-write-01`; its report
 SHA256 is
 `960e65563ac4b66a51197546cb14e8eccd6d457bfdb32838c8136333d5c8ce38`.
 
-## Actual-data checkpoint
+## First actual-data checkpoint and retained restart failure
 
 The checkpoint was saved after the first completed packed NFR update: 524,288
 valid input tokens, 512 real rows, 523,776 CE targets, 523,768 latent pairs and
@@ -83,11 +91,57 @@ SHA256 `cca970fe759c30db934dda130a04a595a344873b459ec26a4acf8d878b2768db`.
 Its frozen evidence includes the reusable restoration script and two verified
 source snapshots, retained under `packed-checkpoint-restore-01`.
 
-**Byte restoration is verified. Fresh-process model continuation is still
-pending at this entry.** File recovery does not by itself establish cold
-T1024 DDP/graph construction with resident Adam, next-gradient equality or
-bitwise optimizer continuation. The active resume stage will supply that
-separate evidence; do not infer it from this receipt.
+**Byte restoration passed, but the first fresh-process continuation failed
+bitwise equality.** Its failure report and source snapshots remain retained
+under `packed-pretrained-resume-01`. Restored state before the update, graph
+preparation, next input/noise, forward losses and predictor gradients matched;
+backbone gradients differed, followed by a different gradient norm and updated
+state. Do not label this first pair a successful exact restart.
+
+The subsequent isolated Flash tests are also retained. At T16, deterministic
+mode off/on both repeated exactly. At T1024, mode off produced query-gradient
+differences (maximum aggregate relative L2 `3.917861750344298e-6`), while mode
+on repeated exactly across three eager backwards and three graph replays. These
+are fixed-input attention diagnostics, not whole-model continuation tests or
+clearance of the separate BF16 gradient qualifications.
+
+## Deterministic rerun checkpoint
+
+The second write phase passed all 13 gates and saved a new update-one
+checkpoint. Its harness records deterministic algorithms enabled,
+`CUBLAS_WORKSPACE_CONFIG=:4096:8`, cuDNN deterministic mode enabled and cuDNN
+benchmarking disabled. Its logical data, model and update size match the first
+pair; it has its own source/configuration fingerprint and checkpoint.
+
+Completed write report SHA256:
+`a3c1b48913ecc95f087cc1a79ddc3c70e6ac0642e0f0e5ee0f3883b42b230754`.
+Completed write evidence is retained separately under
+`packed-pretrained-write-02`.
+
+These exact objects are under `packed-checkpoint-boundary-02/`:
+
+| Object | Exact GCS generation | Bytes | SHA256 |
+| --- | --- | ---: | --- |
+| `checkpoint/state.pt` | `1790653137378773` | 15,214,758,081 | `c27186bb4847d4325821ef96916e85e69e3c9246a73eb4886d343941467e1199` |
+| `checkpoint/manifest.json` | `1790653137632395` | 58,373 | `c1cdb79fc58b767160bf6466777b434665f4271f731e03698549b28d85e74ed1` |
+| `evidence.tar.gz` | `1790653137843529` | 373,961 | `dafcb23626b56e8a2cf0bdb829f95dc85bd774c4af5c14166c27dc6942244acc` |
+| `retention-manifest.json` | `1790653138099686` | 20,906 | `a91cdf386a3805239c7177714b0f005645dc6144808d98fdf1dc5cee385d1bef` |
+
+The separately retained completed write archive is 605,709 bytes, SHA256
+`1476bdf65562f20ca1b06c2bc51a4bd858e208050d6200381d2a7117b67e5283`,
+generation `1790653015576665`. Its retention manifest is 20,581 bytes, SHA256
+`4d8e312da327f00cf388413ffce018c6111ead06d540339c2681baaab29560b7`,
+generation `1790653015847241`. Local independent inspection verified both
+archives/manifests, all their member pins and all declared source snapshots.
+
+Original checkpoint:
+`/mnt/localssd/cdrm-checkpoints/packed-campaign/pretrained-write-02`.
+The state and manifest upload receipt verifies server byte count, MD5 and
+SHA256 metadata. It does not itself establish complete checkpoint download
+verification. At this entry, the generation-pinned restoration of the second
+pair's **15,214,816,454 checkpoint bytes** is running, and its verification
+receipt is pending. **Exact continuation for pair 02 also remains pending.**
+The first checkpoint and its failure evidence remain intact.
 
 ## Packed index recovery
 
@@ -126,8 +180,9 @@ mixture selection or corpus cycling occurred.
 
 ## Pending closeout
 
-Fresh-process continuation is active. Its completed report, source evidence
-and any failure records must be retained before claiming restart acceptance.
-Final closeout retention and the final receipt/member/source audit remain
-pending. This entry does not clear the numerical qualifications described in
+Pair 02 still requires full checkpoint readback verification and completed
+fresh-process continuation, followed by retention of both reports and source
+evidence. Pair 01's failed continuation is retained and must remain part of
+the record. Final closeout retention and the final receipt/member/source audit
+remain pending. This entry does not clear the numerical qualifications described in
 [precision assessment](precision-assessment.md).

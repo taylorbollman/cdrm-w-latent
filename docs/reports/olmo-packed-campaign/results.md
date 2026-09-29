@@ -1,7 +1,8 @@
 # Packed campaign readiness
 
 2026-09-29. Operational checks and numerical qualification are separate.
-Runtime implementation: `f0be95d`; model policy and precision probe: `b9985bc`.
+Runtime/data implementation: `f0be95d`; deterministic runner fix: `e5a593b`.
+Model policy and precision probe: `b9985bc`; Flash repeatability probe: `2080c11`.
 This is readiness work on the retained Dolma coverage fixture, not a production
 mixture or learning-quality comparison.
 
@@ -51,11 +52,13 @@ B12/rank on two H100s. Each logical update contains 524,288 valid inputs in 512
 real rows, spread over 22 slots/rank. The final synchronization slot has eight
 real rows on rank 0 and none on rank 1.
 
-The write phase passed all 13 gates and two updates in 835.55 seconds, including
+The original nondeterministic write phase passed all 13 gates and two updates
+in 835.55 seconds, including
 setup, hashes and checkpoint I/O. Model/Adam replicas, real loss counts, cursor,
 RNG, graph preparation and source pins agree as required. Checkpoint after
-update one is retained in GCS; its bytes are being downloaded and verified for
-fresh-process recovery. The second update ran on the original live graph.
+update one is retained in GCS and its downloaded bytes are verified. The second
+update ran on the original live graph. This original pair subsequently failed
+restart, as described below; these rates are historical.
 
 | Update | Global valid input tokens/s | Loader and jitter | Captured backward | Adam and cursor commit | Peak reserved/GPU | Sampled free/GPU |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -76,9 +79,20 @@ is 196.2971954 versus 196.2953186, which does not bound vector error. Cold captu
 left 14.95 GiB free/GPU. The failed attempt is retained separately.
 
 The runner omitted deterministic setup used by our earlier distributed harness.
-A bounded fixed-input Flash-backward test and a fresh deterministic write/resume
-pair are now planned under the protocol addendum. **Restart remains unqualified**
-at this entry; neither scalar-loss agreement nor a small norm change clears it.
+The [fixed-input Flash diagnostic](restart-repeatability.md) confirms ordinary
+Flash backward nondeterminism at T1024: only dQ varies, with maximum combined
+Q/K/V relative L2 difference 3.92e-6. Deterministic controls restore exact eager
+and captured repeats at T16 and T1024. The corrected runner applies these
+controls before CUDA initialization and pins them in checkpoint configuration.
+
+The fresh deterministic write02 passes 13/13 gates in 965.54 seconds. Its two
+full updates measure **3,499.43 and 3,500.12 valid input tokens/s**, or 3,499.78
+combined: about 11.7% below the original pair, with the same timing exclusions.
+Peak reserved memory is 58.90 GiB/GPU and sampled free memory is 12.95 GiB.
+The full new checkpoint is retained; its cloud download and fresh-process
+resume02 are pending. **Restart remains unqualified** until that comparison
+passes. Deterministic repeatability is separate from the unresolved BF16 layout
+and BF16/FP32 gradient comparisons above.
 The recovery checkpoint is a readiness fixture, not an approved production
 quality-training starting point.
 

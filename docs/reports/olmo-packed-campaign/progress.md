@@ -143,3 +143,11 @@ is active (root session37366); after its receipt verifies, use prepared
 `/mnt/localssd/cdrm-checkpoints/packed-campaign/cloud-restored-02`, then launch
 resume02 with the completed report/manifest hashes above and restored index.
 All four Flash stage receipts verified. No new-process acceptance yet.
+
+Boundary02 upload and full generation-pinned download now verify, including
+all 15,214,816,454 checkpoint bytes. Fresh torchrun resume02 active under root
+session73498, using the cloud-restored checkpoint and cloud-restored index.
+Its launcher script is `.runtime/olmo-packed-campaign/resume02.sh`; log is
+`pretrained-resume-02-launcher.log`. Each phase still has the 1200s bound.
+Restore evidence retention session63007. The final18-stage closeout audit must
+wait until completed resume02 passes and its retention receipt verifies.
