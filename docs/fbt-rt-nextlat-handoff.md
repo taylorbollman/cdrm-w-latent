@@ -4,6 +4,44 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Adapted-state precision comparison complete, 2026-09-29:**
+[PR43](https://github.com/taylorbollman/cdrm-w-latent/pull/43), branch
+`feat/olmo-adapted-precision`; read [results](reports/olmo-adapted-precision/results.md),
+[next steps](reports/olmo-adapted-precision/next-steps.md),
+[test ledger](reports/olmo-adapted-precision/test-ledger.md),
+[storage receipt](reports/olmo-adapted-precision/storage-receipt.md) and
+[progress](reports/olmo-adapted-precision/progress.md) for final PR/retention.
+
+Runtime9f4693e imported the pinned O5c mixed update512 checkpoint into current NF
+with exact saved backbone/fusion tensors and scale, preserved parameter identity,
+trainability, tying and fresh predictor. Old source guards are unchanged; the
+new importer explicitly maps six historical source revisions. No optimizer,
+scheduler, cursor or RNG history is restored. Two matched FP32/BF16 CE cases,
+four physical backwards,63.210seconds, no updates. W&B8ymbic44 synced.
+
+Backbone gradient relative L2 fell **60.8698%→0.9085%**, cosine0.9999588; fusion
+**65.2122%→1.4051%**. Absolute differences fell too, despite smaller reference
+gradient norms. This supports parameter-state/startup sensitivity rather than
+assuming that the BF16 implementation is intrinsically unusable. O5c inherited
+an adapted O5b backbone, so the result is not a causal fusion-only ablation.
+It also transfers K2/no-jitter weights into K4/jitter, not historical execution.
+
+Record0/pass1 hidden difference worsened to **12.4366%** (cold4.0913%). Final
+hidden differences are1.9277/2.2201% and cotangent errors0.3848–0.5932%, but the
+intermediate discrepancy is not located or shown harmless. Per-position tensors
+were not retained. CE-only/no-RT/T16 findings do not clear auxiliary gradients,
+RT/NFR, packed T1024 or training. No new error budget or precision fix is adopted.
+
+CPU43tests pass (one test-onlyscalarwarning);104source/snapshot pairs and all
+import/fixture/RNG/health controls verified. Evidence retained inGCS. Both GPUs
+are idle. **Next proposed, not launched:** two crossed-state precision pairs,
+coldbackbone/adaptedfusion and adaptedbackbone/coldfusion, with all saved fusion
+buffers and per-position observations. Fouraggregate/eightphysicalbackwards
+would guide fusion-only warmup versus feedback-strength startup. Hybrids test
+transfer sufficiency, not training reachability; their observations cannot
+retrospectively clear the current adapted/adapted intermediate spike. No further
+GPU run queued. Preserve frozen sources and save/push every20–30minutes.
+
 **Fixed-boundary precision diagnostic complete, 2026-09-29:**
 [PR42](https://github.com/taylorbollman/cdrm-w-latent/pull/42), branch
 `feat/olmo-boundary-precision`; read [results](reports/olmo-boundary-precision/results.md),
@@ -28,18 +66,12 @@ and 44 actual boundary tensor payloads are retained with independent cloud
 readback; final closeout is recorded in progress. No production precision,
 Q/K normalization, architecture or numerical-budget change was made.
 
-**Next recommendation, not launched:** run the matched current NF FP32/BF16
-fixture at the saved adapted O5c mixed update512 checkpoint, without training.
-The complete local checkpoint hash and report are verified. Actual model-schema
-import is still untested. Six old source pins differ, so add a new explicit
-weights-only import with architecture/key/shape/dtype/tie/buffer tests; do not
-weaken the old validator or claim historical-runtime reproduction. Preserve
-saved fusion output_scale. O5c inherited the already-adapted O5b backbone, so
-this is not a causal fusion-only comparison. It was trained K2/no jitter;
-current K4/jitter is intentionally a new numerical diagnostic. If agreement
-improves, investigate feedback startup; otherwise localize selected ordinary
-layers before another precision change. No GPU run or training is queued.
-Old helpers/tests/protocols remain frozen; save/push every 20–30 minutes.
+**Historical PR42 continuation:** the proposed adapted O5c NF FP32/BF16
+comparison is now complete; read the current entry above. The new explicit
+weights-only importer validates all saved state and maps the six changed sources
+without weakening the old validator. Its results support the startup branch of
+the previous plan, with the stated forward-state qualification. Do not relaunch
+that completed pair from this historical entry.
 
 **Recurrence/precision separation complete, 2026-09-29:**
 [PR41](https://github.com/taylorbollman/cdrm-w-latent/pull/41), source branch

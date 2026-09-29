@@ -31,6 +31,23 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 adapted-state precision COMPLETE, PR43, feat/olmo-adapted-precision.
+Read docs/reports/olmo-adapted-precision/results.md,next-steps.md,test-ledger.md,
+progress.md for finalPR/retention. Runtime9f4693e: saved O5c mixed update512
+backbone+fusion imported exactly (68state entries), fresh predictor4entries
+unchanged; old source guards untouched, six explicit source migrations.
+Two NF precision cases/fourphysicalbackwards,63.210s. Backbone gradienterror
+60.8698%cold→0.9085%adapted,cos0.9999588;fusion65.2122%→1.4051%. Absoluteerrors
+alsofall; no denominator-only explanation. Record0/pass1hidden12.4366% worsens
+versuscold4.0913%, laterfinal1.9277/2.2201%; do notclaimallforwardimproved or
+spikeharmless. CEonly/noRT/T16, noBF16productionclearance. No optimizerupdates.
+CPU43pass(one test-onlyscalarwarning);104sourcepairsverified,W&B8ymbic44 synced.
+Next proposed: two hybrids coldbackbone/adaptedfusion and reverse, eachFP32/BF16,
+completefusionbuffers, samefixture/trainability; fouraggregate/eightphysical
+backwards withposition-levelobservations. Guidesstartup, notcausaltrainingproof;
+notlaunched. BothGPUsidle. No core/precision/QK change. Preserveoldruntime
+sources; save/push every20–30min andretainGCS.
+
 2026-09-29 fixed-boundary precision diagnostic COMPLETE, PR42, feat/olmo-boundary-precision.
 Read docs/reports/olmo-boundary-precision/results.md, next-steps.md, test-ledger.md
 and progress.md for final PR/retention state. Runtime1023d7e; both NF CE anchors
@@ -41,15 +58,9 @@ include internal forward rounding; these norms are not additive causal fractions
 Eight exact local endpoints,104 local health checks,10 final integrity checks pass;
 CPU31pass, GPU147.87s, no updates. W&Bd43pjmvw synced. Evidence/source snapshots
 and44small boundary tensors retained with independent cloud readback.
-Next proposed step: matched FP32/BF16 current NF fixture at saved adapted O5c
-mixed update512 checkpoint, no training. Local4.81GB checkpoint hash verified;
-actual schema import NOT tested. Preserve saved fusion output_scale and full
-backbone state; old source validator correctly rejects six changed core files.
-Use a NEW explicit weights-only import with tests, never weaken old source pins.
-O5c inherited an adapted O5b backbone: not a causal fusion-only comparison.
-K2/no-jitter checkpoint tested under K4/jitter would be a new diagnostic, not
-historical resume. No further GPU run queued; both GPUs idle. BF16 qualification
-remains open. Old sources frozen, no policy/QK change; save every20–30min.
+That proposed adapted O5c matched-precision step is now complete; see above.
+Local4.81GB checkpoint hash and actual schema import were verified, with old
+source guards preserved. Do not relaunch from this historical entry.
 
 2026-09-29 recurrence/precision separation COMPLETE, PR41.
 Source branch feat/olmo-recurrence-precision. Read docs/reports/olmo-recurrence-precision/
