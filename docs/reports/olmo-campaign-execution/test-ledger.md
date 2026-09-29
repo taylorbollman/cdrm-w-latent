@@ -57,3 +57,9 @@ Each comparison verified155 source pins for each report. Counts include routine
 metadata/identity checks; they are not independent numerical experiments. The
 same-precision scientific evidence is exact, without a tolerance or omitted
 comparison field. Native acceptance remains in progress.
+
+Final integrated CPU scope: **242 distinct tests passed in30.06s** in one run
+across the seven new test modules and unchanged manifest tests. This is215 new
+focused tests plus27 existing manifest tests. Stage`cpu-integrated-01` verifies
+15 scoped live/source-snapshot pairs before and after the run. Only two existing
+Google/grpc future-compatibility warnings occurred; no GPU or cloud operation.

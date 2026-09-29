@@ -41,7 +41,7 @@ a completed reference report, and completed-plan resume must skip graph setup.
 No numerical sweep/quality campaign, QK or core changes. Frozen prior scripts,
 tests, protocols and cdrm/pretrained files stay unchanged. Root schedules GPUs;
 training candidate frozen febc312; tiny reference/lean/stop/cloud-resume/terminal
-checks pass. Native NFR stop1 acceptance is active; read progress.md and runtime
+checks pass. Native NFR reference/recovery acceptance is active; read progress.md and runtime
 report before launching anything. Root schedules GPUs. Save/push20–30minutes.
 
 

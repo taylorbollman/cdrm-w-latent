@@ -53,3 +53,13 @@ After reference exits, root must launch native-resume-01 from restored checkpoin
 using same declarations-02/frozen155sources; compare updates2/3/final exactly.
 Do not launch other GPU jobs meanwhile. Earlier tiny/audit/CPU/native-stop/restore
 small evidence retained in receipts/. PR46 draft; native final comparison pending.
+
+15:14 UTC: native-reference-01 closed and synced (three finite updates); its
+update1 is exact to the lean stop in independent audit-native-stop-01,1101checks.
+Native-resume-01 is active, W&B n8pchjsp, from the verified streamed cloud state.
+Its full restored origin matches reference update1 on both ranks, including
+71 Adam states, scheduler, RNG and cursor. Graph preparation is in progress.
+Root session47709; do not launch another GPU job. Remaining: exact updates2/3
+and final-state audit after closure, then evidence retention and PR46 closeout.
+Integrated CPU suite passes242 distinct tests; cpu-integrated-01 retained.
+No new numerical or quality clearance. All frozen execution sources unchanged.
