@@ -31,6 +31,25 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 manifest component execution COMPLETE, PR46; final merge/retention
+metadata in docs/reports/olmo-campaign-execution/progress.md. Read results.md,
+test-ledger.md, storage-receipt.md, operator-notes.md and next-steps.md. New
+shared B/N/F/R/NF/NR/FR/NFR launcher; all-eight original/fresh startup, adapted
+fusion128 + fresh all-active Adam allowlist NF/NFR. Generic same-lineage resume
+requires committed checkpoint, not a successful reference report. Lean updates
+avoid full per-update hashes; startup/checkpoint/final integrity remains.
+Training sources frozen febc312/155files; historical scripts/tests/protocols and
+cdrm/pretrained remain unchanged. CPU242distinct tests pass. Tiny two-H100
+reference/lean/stop/cloud-resume/terminal and native adapted NFR T1024 stop/
+reference/cloud-resume pass exactly; final native audit1236checks. Adam resident
+before DDP/capture; restored gradients/model/Adam/schedule/RNG/cursor exact.
+B1/rank/K4/nativeRT0,15/latent+KL/3rows per update is bounded operational
+acceptance, not throughput or production batch advice. Numerical qualifications
+remain; no BF16-vs-FP32 clearance or quality campaign. Both GPUs idle; no queued
+run. Checkpoints/evidence retained in gs://fast-chunks. Next: declared per-pass
+held-out evaluation with live-state preservation; then review actual mixture,
+budget/startup exposure and target-hardware capacity. Keep accepted sources
+frozen; version next implementation separately. Save/push every20–30minutes.
 
 2026-09-29 overnight numerical/readiness work COMPLETE, PR45; closeout/PR metadata
 is recorded in docs/reports/olmo-fusion-startup/progress.md. Branch was
