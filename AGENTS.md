@@ -39,7 +39,8 @@ entrypoint; old192runtime sourcepins remainfrozen. Oneworker/exclusive storage
 owner, CPUchildforSDK-RNGisolation, drainbefore nextsave/terminal, noGPUinworker.
 Rootownsengine/executor/GPU; async_loop agentnewloop/tests; async_checkpoint_design
 agentworker/tests; pilot_declaration_plan agentCPUdeclarations/pilotplan.
-NoGPUtraining launchedyet. Mainnativeprovisionaltest actual524288inputs/update,
+Tinyblocking/async complete (exactdirectJSONstate); cloudrestore2/resume3 next.
+Runtime85e5f78/200pins frozen;76CPUtests pass. PR51draft. Mainnativeprovisionaltest actual524288inputs/update,
 NFRB12/rank; newtinyblockingvsasync/cloudresume first. Pilotlearningcohortnotyet
 launched; preserveclipping/laterCEconcerns asreviewcriteria. Newnamespace
 .runtime/olmo-pilot-async; SSDpilot-async; cloudsmallolmo-two-gpu/20260929T204500Z.
