@@ -4,7 +4,10 @@ Recorded 2026-09-29 from completed local reports and CPU logs. This ledger
 separates model-boundary semantics, distributed operational correctness and
 independent numerical qualification. Index cloud recovery and the bounded
 precision-component diagnostic and T1024 actual-data write/continuation are
-complete; fresh-process model recovery remains pending in this ledger version.
+complete. The first T1024 fresh-process restart **failed bitwise continuation**;
+isolated Flash tests identify missing deterministic-backward controls as a
+plausible cause. A new deterministic write/resume pair is in progress, with no
+full restart pass yet. The original failure remains retained.
 See [protocol](protocol.md), [usage](usage.md) and [progress](progress.md).
 
 ## CPU checks
@@ -18,6 +21,7 @@ checks do not substitute for CUDA/NCCL or cold-start memory qualification.
 | First broad command, `cpu-regression-01.log` | No tests ran: nonexistent `tests/test_fbt*.py` glob; command-selection failure retained |
 | Corrected broad regression, `cpu-regression-02.log` | **971 passed in 75.32 s**, one dependency warning |
 | Final packed-data focus after index-verification race hardening | **20 passed in 3.40 s**, focused agent-run output |
+| Deterministic runner and Flash probe, `cpu-determinism-01.log` | **18 passed in 2.24 s** |
 
 The scopes overlap; do not sum these counts as distinct tests. The final
 20-test focus includes two new cases that replace `manifest.json` or
@@ -25,6 +29,13 @@ The scopes overlap; do not sum these counts as distinct tests. The final
 opened cannot differ silently from the verified index. The broad run's warning
 is Google API Core's announcement concerning a future grpcio minimum, not a
 test failure.
+
+The 18-test deterministic scope combines the six packed-runner tests and 12
+Flash-repeatability probe tests. It overlaps the separately run six-test
+runner focus and existing tests; it is not 18 additional disjoint regression
+tests. New runner coverage checks deterministic setup before any CUDA device
+initialization, rejection of already-initialized CUDA, returned control
+metadata and the helper's presence in source pins.
 
 New coverage includes independent stream masks/gradients for all eight arms;
 policy agreement and unchanged isolated defaults; literal EOS at chunk edges
@@ -238,8 +249,12 @@ size is 15,214,757,825 bytes, state SHA256
 `7b5e948eea2f1102676b26b4d9b883df398fad06c4b0523f3b0c79d12584b830`,
 and manifest SHA256
 `9238b186a33c80be85aa18aec11cc2ea15f097e137be34eece4e978ca2886a50`.
-Checkpoint cloud publication/full-download verification and fresh-process
-resume are separate acceptance steps, pending in this ledger version.
+The checkpoint was subsequently published through `checkpoint-boundary-01`
+and downloaded into a fresh directory. `checkpoint-restore-evidence-01`
+records exact-generation full-download SHA256/size checks for both state and
+manifest, totaling 15,214,815,890 bytes. The restored manifest has the pin above.
+This verifies checkpoint bytes; the model-continuation result below is a
+separate, failed acceptance gate.
 
 The first two real updates have only eight and six internal document
 boundaries, respectively. Boundary-rich tiny probes and the full-stream CPU
@@ -247,13 +262,71 @@ oracle provide complementary coverage; these two updates alone do not measure
 representative production packing or short-document throughput. Neither finite
 updates nor falling scalar objectives resolve the retained BF16 qualifications.
 
+## Retained failed restart and deterministic Flash follow-up
+
+[pretrained-resume-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/igpkw3gd)
+finishes **failed**, with **8/9 gates passing**, in 663.6377 s. Configuration,
+restored model/Adam/RNG/clocks/cursor, preparation invariance, actual next data
+counts and within-run replicas pass. The final original-versus-restored next
+update is not bitwise equal on either rank. W&B records the experiment as
+`synced_failed_experiment`; its evidence and checkpoint remain retained.
+
+Independent report comparison finds identical next input/noise fingerprints,
+RNG draws, CE/latent/KL loss sums and normalized objective. All 65 backbone
+and two fusion raw-gradient hashes differ; all four predictor hashes match.
+The only scalar metric difference is preclip norm:
+`196.2971954345703` versus `196.29531860351562`. Adam/updated-parameter hashes
+then differ. This approximately `9.56e-6` relative norm change does **not** bound
+the gradient-vector error; only digests, not raw tensors, were retained here.
+
+The cold resume did load real Adam before DDP preparation and successfully
+complete capture/update. After capture it reports 42.80221 GiB peak allocated,
+58.34961 GiB peak reserved and 14.94543 GiB sampled free per rank; after the
+update, peak reserved is 59.02734 GiB and sampled free is 14.26770 GiB. This
+establishes observed memory fit for that failed-numerics attempt, not successful
+recovery. New deterministic execution needs its own acceptance and memory data.
+
+Four isolated BF16 ordinary Flash SDPA probes then hold Q/K/V and incoming
+gradient fixed at B12, 16 heads and head dimension 128. Each performs three
+eager backwards and three graph replays. All inputs, generator state, forwards
+and source pins remain unchanged. These are single-operator probes, with no
+model, RT, NextLat, DDP or optimizer.
+
+| Stage / W&B | Deterministic algorithms | Backward repeatability | Duration |
+| --- | --- | --- | ---: |
+| [flash-t16-d0-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/4rmeljzu) | Off | All eager/replay gradients bitwise equal | 2.7856 s |
+| [flash-t16-d1-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/zul4zvyk) | On | All eager/replay gradients bitwise equal | 2.8525 s |
+| [flash-t1024-d0-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/u9l20orh) | Off | **Not repeatable** in eager or repeated graph replay | 9.0160 s |
+| [flash-t1024-d1-01](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/nsnyngyf) | On | All eager/replay gradients bitwise equal | 7.7434 s |
+
+All four have six finite/integrity rows passing. With deterministic mode off,
+the status `passed_operational_diagnostic` means the measurement completed; it
+does not require repeatability. In the T1024 off case, only query gradients
+change: up to 451 elements differ, maximum query-relative L2 is `7.16686e-6`
+and aggregate Q/K/V relative L2 is `3.91786e-6`. K/V gradients and forwards
+remain exact. With deterministic mode on, every reported error is zero.
+The short T16 success therefore could not establish T1024 repeatability.
+
+The existing deterministic-control helper is now required **before CUDA
+initialization** in the packed recovery runner, and its returned settings are
+recorded in report/W&B/checkpoint metadata. Source `e5a593b` contains the runner
+fix and microprobe source `2080c11` records its completed implementation.
+The changed source/configuration requires a new matched write/resume pair;
+the original failed comparison is not retested against incompatible pins.
+See [restart-repeatability.md](restart-repeatability.md) for diagnosis and
+scope. The isolated probes support this correction, but do not by themselves
+prove a full-model restart fix or resolve the distinct BF16/FP32 discrepancy.
+`pretrained-write-02` is running in this ledger version; no full deterministic
+restart success is claimed.
+
 ## Evidence audit and remaining stages
 
 The independent review verified all declared source-snapshot bytes for the
 three distributed GPU reports (70 files each), index report (eight files),
-component diagnostic (72 files), index-cloud-restore report (two files) and
-actual-data write report (76 files): **368 source/snapshot pairs**. Report
-hashes at review time are:
+component diagnostic (72 files), index-cloud-restore report (two files),
+actual-data write and failed resume reports (76 each), four Flash probes
+(six each), checkpoint-boundary report (76) and checkpoint-restore report
+(two): **546 source/snapshot pairs**. Report hashes at review time are:
 
 | Stage | Completed report SHA256 |
 | --- | --- |
@@ -264,15 +337,23 @@ hashes at review time are:
 | precision-components-01 | `f6bf376ea511e9c853984f7290872cb24ae06bdb98b55130e9238b79261cf405` |
 | index-restore-evidence-01 | `625218c61f111799c33d2745bc3fec529e797689eaeaa2fc8920c45e9976cf8c` |
 | pretrained-write-01 | `960e65563ac4b66a51197546cb14e8eccd6d457bfdb32838c8136333d5c8ce38` |
+| checkpoint-boundary-01 | `4debc7b7aee9cecb818f93acbad78c6c13b7da27b65d5f713cc5b5e2a1c79193` |
+| checkpoint-restore-evidence-01 | `cca970fe759c30db934dda130a04a595a344873b459ec26a4acf8d878b2768db` |
+| pretrained-resume-01 | `a8929837ca79b3db607999d1cc6eb20dae37270292f1cae1d241ee4b08389fcd` |
+| flash-t16-d0-01 | `4f57516051f9f9b59a8b8bca2b1a7042c95431da038f2e0966aee8b76650b191` |
+| flash-t16-d1-01 | `878c93f4379fdcb29c5bba75aa3ee65a3fcbb06fe44db300cc7c0d9db8757ea5` |
+| flash-t1024-d0-01 | `40c16536338c371ef1f875344d8fe9db6d4fc0eee2662f20360dd1aa0825e2e1` |
+| flash-t1024-d1-01 | `6931327b49cacf6f9db3692eb5b880f5fe1b59d743ac6fc8b67a1051bd676937` |
 
-The six stages preceding `pretrained-write-01` each have a local
-`status: verified` retention receipt with two cloud objects. That is recorded
-artifact-publication evidence; it is not the still-pending actual-data
-checkpoint download/restart acceptance. The write evidence and its separately
-published checkpoint boundary need their final retention records.
+The listed completed stages have local `status: verified` retention receipts,
+including the failed resume and separately published checkpoint boundary.
+Cloud publication is not numerical or restart acceptance. The original model
+checkpoint has separately verified downloaded bytes, while its full next-update
+comparison failed as recorded above.
 
-Pending in this ledger version: real-corpus T1024 cloud-restored next-update
-comparison and cold T1024 DDP/capture with resident Adam.
+Pending in this ledger version: the corrected deterministic real-corpus T1024
+write/resume pair, its cloud-restored next-update comparison, and corresponding
+cold-setup memory/timing evidence.
 These need their own completed reports. Production mixture/shuffling, long
 quality training, H200, changed world size, sharding and interrupted in-flight
 collective recovery are outside this milestone's current evidence.
