@@ -120,12 +120,19 @@ those checks must not silently become per-update production overhead. Preserve
 checkpoint integrity and bounded health observations, and explicitly time
 preparation, compute, diagnostic hashing, serialization, transfer and evaluation
 before reporting throughput. See the [checkpoint cost assessment](../olmo-campaign-lifecycle/checkpoint-cost-assessment.md).
-Its streaming-readback comparison is an isolated CPU memory check; it does not
-change the frozen retention policy or establish end-to-end checkpoint speed.
+The [streaming-readback comparison](../olmo-campaign-lifecycle/readback-results.md)
+verified the same 14.15 GB object with about 110 MiB peak host RSS instead of
+13.25 GiB; both complete checks took about 92 seconds in one ordered pair.
+It supports a separately reviewed operational streaming verifier, preserving
+full digests, generation guards, state-before-manifest publication and RNG
+isolation. The frozen retention policy is unchanged; end-to-end checkpoint
+speed remains unmeasured.
 
 For an initial adapted BF16 pilot, keep finite-value/participation checks,
 gradient norms and clipping, separate CE/latent/KL and per-pass held-out losses,
-and verified completed-boundary checkpoints at most ten minutes apart. A small
+and a ten-minute completed-boundary checkpoint target, with serialization and
+cloud-verification time measured separately. This is not a hard wall-clock
+guarantee: a long update or synchronous publication can extend the interval. A small
 common-FP32 observation at a predeclared boundary can anchor interpretation
 without duplicating an entire training run. If losses or updates behave
 unexpectedly, compare matched states and data before changing architecture.

@@ -444,3 +444,22 @@ wait until current GPU/checkpointtransfers finish. This targets transienthostRAM
 one ordered pair cannot establish speedup. Finalstorageaudit/inventory will
 wait for its smallreport as well. No additional numericalGPU sweep orquality
 training is planned.
+
+## 2026-09-29 12:18 UTC — final execution and CPU readback complete
+
+Manifest B reference, exact-generation cloud restore and fresh two-GPU resume
+all exit0. Independent audit passes566checks/200source pairs; updates2/3 and
+complete final boundaries are exact. Direct first-update control also matches
+the previous ordinary runner on all65gradients, inputs, metrics and model/Adam.
+Both GPUs are idle. Completed small stage evidence is retained (batch17).
+
+CPU-only readback bytes/stream pair passes on one exact14,154,933,413byte object;
+all size/SHA256/MD5 controls agree. Peak RSS13.248GiB versus pre-existing110.418MiB
+high-water; total92.308/91.604s. No speed claim or retainer adoption.47independent
+audit checks/18source matches pass. Final storage readback/inventory underway.
+
+Final scientific/correctness review finds no blocker. Corrected wording keeps
+50/71elementwise failures distinct from0.08792%global layout error. The ten-minute
+checkpoint target is not a guaranteed wall interval; long steps/publication add
+time. Generic interrupted-run CLI is future work: current manifest acceptance
+resumes checkpoint1 only from a fully completed reference. No new GPU sweep.

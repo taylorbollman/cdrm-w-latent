@@ -15,7 +15,7 @@ model quality, production throughput or numerical equivalence.
 | Common lifecycle loop | Tiny two-GPU captured-DDP stop, retention, fresh resume and coordinated logging-failure recovery pass; pretrained ordinary reference, cloud restore and exact continuation pass | Ordinary B manifest dispatch and recovery also pass; all-arm dispatch remains future scope |
 | Abrupt worker loss | Deliberate rank exit after retained update1; fresh process exactly reproduces reference updates2/3 | No rollback of an in-progress Adam step, actual VM power loss or every NCCL failure is claimed |
 | Evaluation inside a live graph-training process | Actual tiny two-GPU reference/insertion pair reproduces all following updates exactly | Tiny-model final-pass CE scope, not a production evaluation protocol |
-| Configuration to execution | All-eight CPU manifest resolution and 51-check independent audit pass | Narrow B-only manifest reference/restart acceptance passes; all-arm/adapted startup remains later work |
+| Configuration to execution | All-eight CPU manifest resolution and 51-check independent audit pass | Narrow B-only manifest reference/restart acceptance passes; all-arm/adapted startup and generic interrupted-run CLI remain later work |
 | Multi-GPU and hardware | Existing two-H100 packed/checkpoint evidence plus new tiny lifecycle checks | H200 capacity, topology and actual production batch still need hardware-specific qualification |
 
 The next decision is whether a modest BF16 pilot is justified after bounded

@@ -178,6 +178,12 @@ update exactly on inputs, gradients, metrics and model/Adam state. The final
 independent audit passes 566 checks; see [execution results](../olmo-campaign-manifest/run-results.md).
 General all-arm launching and adapted-startup support remain later work.
 
+A separate [checkpoint readback diagnostic](../olmo-campaign-lifecycle/readback-results.md)
+verified the same complete 14.15 GB cloud object using streaming hashes with
+about 110 MiB peak host memory instead of 13.25 GiB. Complete times were about
+92 seconds for both methods in one ordered pair. This is a useful memory result;
+the current retention helper remains unchanged, and no speedup is claimed.
+
 Metrics are online in
 [Weights & Biases](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat).
 Completed helpers, tests and protocols remain frozen. Read the

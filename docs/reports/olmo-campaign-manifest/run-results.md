@@ -108,6 +108,11 @@ Evidence is beneath `.runtime/olmo-campaign-manifest/`. Final SHA256 pins:
 - `b-execution-audit-01/report.json`:
   `ba9f2e27f80af2ce5a5355e01a80cb90dfe8864493963ed008f4e9884f35408f`.
 
+The resume CLI deliberately accepts checkpoint 1 from a fully completed
+three-update reference, so it can prove equality against updates 2/3. It is not
+yet a generic command to continue an arbitrary interrupted or stopped run.
+That generalization remains an explicit next implementation requirement.
+
 This closes the explicit ordinary-B execution bridge. The resolver continues
 to grant neither launch authorization nor numerical clearance by itself. The
 general eight-arm launcher, adapted-startup lineage, evaluation insertion,
