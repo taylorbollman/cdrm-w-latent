@@ -31,6 +31,21 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 SSD checkpoint readiness COMPLETE; read docs/reports/olmo-campaign-storage/
+results.md, next-steps.md, operator-notes.md, storage-receipt.md and progress.md.
+Runtime54ae688/172pins frozen; new versioned SSD executor/engine/storage/restore,
+independent tiny auditor. CPU215distinct pass. Tiny two-H100 storage transition,
+cloud resume and terminal evaluation-only pass2121/1649/1425auditchecks exactly.
+Full native15.2GB asset restore passes70.63s; no native GPU or cross-version resume
+claim. Keep newest2 local per new ownedsegment only after verifiedGCS + durable
+receipt/journal/latest. Historical files and resume sources untouched. Boot~91GiB
+free; SSD~1.4TiB. Evidence/checkpoints retainedGCS; bothGPUsidle, no queuedrun.
+Next: bounded representative data recipe/orderedreader, then actualT1024 capacity
+and declared evaluation allocation. See provisionaldata-plan; no newdata download
+or qualitycampaign launched. Startup/exposure and BF16 qualifications unchanged.
+Save/push every20–30min. FinalPR/merge/closeout authorities in progress.md.
+
+
 2026-09-29 optimizer-history + per-pass evaluation COMPLETE; PR47 final merge
 metadata is in docs/reports/olmo-campaign-evaluation/progress.md. Read results.md,
 next-steps.md, operator-notes.md, test-ledger.md and storage-receipt.md there, plus
