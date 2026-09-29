@@ -31,6 +31,15 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 packed campaign milestone ACTIVE on `feat/olmo-packed-campaign`.
+Read docs/reports/olmo-packed-campaign/protocol.md and progress.md first.
+Opt-in continuous-stream-v1 carries attention/RT/FBT within chunks across true
+doc boundaries; CE crosses boundaries, NextLat latent/KL exclude them. Legacy
+isolated-v1 remains default. Index/real committed cursor and actual T1024
+524288-token update/cloud restart are being qualified on two H100s. Do not
+retokenize the retained Dolma fixture. No quality run or production mixture.
+Source freeze before GPU checks; preserve BF16 qualification separately.
+
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and
 storage-receipt.md. PR 38; capacity source cac5c1c. Tiny all-eight-arm

@@ -4,6 +4,14 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Active packed campaign readiness, 2026-09-29:** branch
+`feat/olmo-packed-campaign` from main `7b9c614`. Read the new
+[protocol](reports/olmo-packed-campaign/protocol.md) and
+[progress](reports/olmo-packed-campaign/progress.md) before the completed PR38
+evidence below. Explicit stream policy, verified disk-backed chunks, real cursor,
+packed DDP gates, T1024 logical-update cloud recovery and bounded per-loss BF16
+localization are authorized. No production mixture or quality campaign.
+
 **Campaign two-H100 execution/restart/capacity complete,
 2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),
 branch `feat/olmo-campaign-two-gpu`, from `dde3240`. Read
