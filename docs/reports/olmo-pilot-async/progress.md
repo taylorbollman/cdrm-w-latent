@@ -56,3 +56,15 @@ Auditor60newCPUtests pass1.99s; separatefrom76runtime tests, total136distinct.
 Newauditorcommitae3b7c3; acceptedruntime200pinsunchanged. Bothauditstagesretained.
 NativefixtureW&Bosqidkgt; initialization/graphpreparation underway. Openadaptation
 issue separatelyrecorded inopen-issues.md andpilotreviewcriteria.
+
+21:46 UTC: all four native updates are finite; 2,097,152 inputs processed.
+Graph preparation took 448.69 seconds; selected compute plus materialization
+rate is 3,567.69 inputs/s. Reserved memory is 59.06 GiB/GPU, sampled free
+12.78 GiB. Populated local save regions take 76.18/76.41 seconds. Checkpoint 2
+is verified in GCS after 346.45 seconds of background work overlapping updates
+3/4; checkpoint 4 is locally complete and its worker is draining. Do not launch
+another GPU job before checking completion. Final dev evaluation took225.45s,
+preserved training state exactly, and returned CE3.18058/7.87717/7.71814/7.74559.
+Norms211.12/76.50/73.80/52.42 remain heavily clipped. Open issue and pilot cost
+estimates updated; no useful-refinement or BF16-clearance claim. Native final
+summary/retention/inventory and PR closeout remain pending.

@@ -100,12 +100,10 @@ Keep omitted-source diagnostic panels and unopened confirmation data separate;
 do not imply full source coverage or independent replications from overlapping
 main/source panels.
 
-NFR's prior dev-main measurement was approximately 21.52 seconds for 5,120
-inputs at this evaluation batch. Linear scaling suggests roughly **4.6 minutes
-per 65,536-input evaluation**, before changed fixed costs and normal variation.
-Two such evaluations would add about nine minutes to its first 32 updates.
-Allow approximately ten to eleven minutes when budgeting. This is an estimate,
-not a measured 64-row evaluation. The ordinary model should be much cheaper in
+The accumulated diagnostic measured **225.45 seconds / 3.76 minutes** for the
+65,536-input evaluation at this physical batch. Two such evaluations would add
+about 7.5 minutes to its first 32 updates if that timing holds. Allow variation
+when budgeting. The ordinary model should be much cheaper in
 absolute time, although evaluating equally often can consume a greater
 fraction of its much faster training time.
 
@@ -158,22 +156,25 @@ these trajectories differ. A new, localized failure would justify such work.
 ## Cost and checkpoint policy
 
 The recorded compute-plus-materialization rates are **67,279 inputs/s for B32**
-and **3,578 inputs/s for NFR12**. They omit health/logging/coordination gaps,
-evaluation, setup and checkpointing, and were measured with one slot/update.
-The following are simple exposure/rate extrapolations, not measured pilot
-throughput or guarantees:
+(the prior one-slot fixture) and **3,568 inputs/s for NFR12** (the new four-update,
+22-slot fixture). They omit health/logging/coordination gaps, evaluation, setup
+and checkpointing. The NFR measurement covers the actual proposed logical batch;
+B's accumulated timing is still an extrapolation. The following longer-run
+figures are exposure/rate estimates, not measured pilot throughput or guarantees:
 
 | Extent | New valid inputs | B32 selected-region estimate | NFR12 selected-region estimate |
 | --- | ---: | ---: | ---: |
-| 4-update accumulated diagnostic | 2,097,152 | 0.52 minutes | 9.77 minutes |
-| 32-update first learning segment | 16,777,216 | 4.16 minutes | 78.15 minutes |
-| Full 128-update ceiling | 67,108,864 | 16.62 minutes | 312.60 minutes |
+| 4-update accumulated diagnostic | 2,097,152 | 0.52 minutes | 9.80 minutes measured |
+| 32-update first learning segment | 16,777,216 | 4.16 minutes | 78.38 minutes |
+| Full 128-update ceiling | 67,108,864 | 16.62 minutes | 313.50 minutes |
 
-NFR graph preparation previously took 7.38 minutes. At 32 updates, adding that
-setup and two estimated larger development evaluations already gives about
-**95 minutes before checkpoint stalls and unmeasured host work**. An NFR first
-segment is plausibly a roughly two-hour task if asynchronous retention overlaps
-well; reserve more time until measured. Full NFR128 is a multi-hour run even
+NFR graph preparation took 7.48 minutes. At 32 updates, adding that setup and
+two measured-size development evaluations gives about **93.37 minutes before
+checkpoint stalls and unmeasured host work**. Populated local-save regions cost
+about 76 seconds each, while the middle checkpoint's background retention took
+346 seconds and overlapped following update callbacks. The final drain still
+waits. Budget roughly **two hours for the first NFR segment**, with additional
+margin for variation. Full NFR128 is a multi-hour run even
 with no checkpoint overhead. NF has no native accumulated throughput measure;
 do not manufacture a precise cohort estimate from layer/pass counts. Measure
 its first updates and then update the budget. All-three-cohort wall time is
@@ -191,6 +192,9 @@ be distinct in reports and checkpoint selection.
 
 For the future learning cohort, retain the **600-second trigger** and terminal/
 review boundaries, with **every 32 updates** as the explicit update milestone.
+This is a save trigger checked at completed updates, not a guarantee of a
+cloud checkpoint or at most ten minutes of rollback. Update duration, the
+local save, transfer and any drain can extend that interval.
 One in-flight publication plus a bounded pending policy is sufficient initially;
 avoid an unbounded backlog and never prune a needed in-flight or last durable
 checkpoint. Emit local-save stalls, worker transfer/verification time, durable
@@ -199,11 +203,11 @@ drain time separately. The exact async clock/backpressure semantics belong in
 the new runtime policy and its acceptance evidence, not an implicit alteration
 to an old checkpoint declaration.
 
-Moving retention off the critical path does not guarantee removal of all six
-and a half minutes: existing local boundary checks and serialization themselves
-take roughly a minute at native size, and the worker shares CPU/SSD/network
-resources with data materialization. Native overlap measurements will determine
-the actual gain. Keeping full cloud readback initially isolates concurrency as
+Moving retention off the critical path does not remove every pause: existing
+local boundary checks and serialization take about 76 seconds at native size,
+and the worker shares CPU/SSD/network resources with data materialization. The
+bounded native check demonstrates overlap; it is not a matched native blocking
+versus async speedup experiment. Keeping full cloud readback isolates concurrency as
 the change; lighter upload verification can be a separate optimization if it
 remains worthwhile. The user's willingness to accept some extra redo after an
 interruption is compatible with this explicit distinction between completed
