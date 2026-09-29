@@ -4,6 +4,14 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+**Overnight continuation active,2026-09-29 07:59–about14:00UTC:** user authorizes
+useful numerical/readiness work without another review. Read
+[overnight plan](reports/olmo-fusion-startup/overnight-plan.md) and
+[progress](reports/olmo-fusion-startup/progress.md). Start with boundedFP32
+fusion-only warmup fromoriginalbackbone/freshfusion; conditional follow-ups
+perthewrittenplan. No production-quality campaign. Preserve evidence and
+checkpoint regularly; root owns allGPU launches.
+
 **Crossed-state NF precision complete, 2026-09-29:**
 [PR44](https://github.com/taylorbollman/cdrm-w-latent/pull/44), branch
 `feat/olmo-crossed-precision`; read [results](reports/olmo-crossed-precision/results.md),

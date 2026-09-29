@@ -31,6 +31,16 @@ W&B tracking.
 
 # Pretrained model handoff
 
+
+2026-09-29 OVERNIGHT ACTIVE from07:59UTC toabout14:00UTC, feat/olmo-fusion-startup.
+User authorizes~6hours useful technical work withoutreview; proceed beyond first
+warmup as evidence warrants, not just plan/stop. Read docs/reports/olmo-fusion-startup/
+overnight-plan.md and progress.md. First128-update originalbackbone/freshfusion
+FP32-only warmup K4beta1jitter.02, thenFP32/BF16 probes old+freshdata. Conditional
+shortBF16continuation or controlledbeta startup; independentreadinessgaps can
+proceed. Noqualitycampaign. RootonlyGPU scheduling, codefreezeperstage,
+W&B/GCS and checkpoint<=10min/savepush20–30min. Oldcompletedhelpersremainfrozen.
+
 2026-09-29 crossed-state NF precision COMPLETE, PR44, feat/olmo-crossed-precision.
 Read docs/reports/olmo-crossed-precision/results.md, next-steps.md, test-ledger.md,
 storage-receipt.md and progress.md. Runtime3364376; four aggregate/eight physical
