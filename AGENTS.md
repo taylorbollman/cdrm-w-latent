@@ -39,6 +39,11 @@ isolated-v1 remains default. Index/real committed cursor and actual T1024
 524288-token update/cloud restart are being qualified on two H100s. Do not
 retokenize the retained Dolma fixture. No quality run or production mixture.
 Source freeze before GPU checks; preserve BF16 qualification separately.
+New bounded component diagnostic: BF16/FP32 combined gradients differ ~86%
+(cosine ~0.51) on initial isolated NFR T16. FP32 changes kernels too; cause not
+localized. Read precision-assessment.md; do not claim numerical clearance or
+launch quality training based on operational/restart passes. CE-only BF16
+layouts agree; auxiliary paths carry the prior 3.40224% layout discrepancy.
 
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and

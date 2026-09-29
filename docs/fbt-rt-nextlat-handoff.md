@@ -11,6 +11,12 @@ Updated 2026-09-29. **Read this first after compaction or interruption.**
 evidence below. Explicit stream policy, verified disk-backed chunks, real cursor,
 packed DDP gates, T1024 logical-update cloud recovery and bounded per-loss BF16
 localization are authorized. No production mixture or quality campaign.
+New [component assessment](reports/olmo-packed-campaign/precision-assessment.md)
+finds ~86% BF16/full-FP32 combined gradient L2 error, cosine ~0.51, on the
+initial isolated T16 fixture. This comparison changes kernels too, so cause is
+unresolved. Prior 3.40224% BF16 layout error reproduces in auxiliary pathways;
+CE-only layouts agree. Finish recovery acceptance, then prioritize bounded
+loss-cotangent/backend/precision localization before longer training.
 
 **Campaign two-H100 execution/restart/capacity complete,
 2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),
