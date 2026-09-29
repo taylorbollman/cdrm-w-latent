@@ -31,6 +31,26 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 pilot data COMPLETE, PR49; final merge/retention metadata is in
+docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
+protocol.md, storage-receipt.md, test-ledger.md and next-steps.md there.
+All 37 sources acquired: 584,851 unique documents / 310,669,141 stored tokens.
+Ordered T1024 train panel: 134,217,728 inputs; 21 panels total. CPU 161 distinct
+tests pass; independent 592-document retokenization and recovered ordered audit
+(134,272 panel row entries / 336 literal samples) pass. Raw 111-object recovery,
+first4 restored + next4 regenerated exact25files, remaining29 token recovery,
+full corpus verification and all44 ordered-index objects (792,408,198 bytes)
+pass. Books coverage is small; main/source overlap is explicit. See coverage.
+W&B qyp83axd synced. Data/evidence retained in gs://fast-chunks; persistent
+receipts under .runtime/olmo-pilot-data/. Large files are under
+/mnt/localssd/cdrm-data/olmo-dolma-v1_5-pilot-20260929 and -recovery.
+No GPU/model training or confirmation outcomes; no active or queued data jobs.
+Old model/vendor/helper/test sources remain frozen. No BF16 clearance change.
+Next: new ordered execution/evaluation adapters to unchanged SSD engine; tiny
+two-GPU graph/eval/cloud-restart acceptance; then native B/NFR T1024 capacity
+and evaluation allocation. Data capacity is not a training budget. Keep prior
+startup/exposure qualifications and save/retain progress every20–30minutes.
+
 2026-09-29 SSD checkpoint readiness COMPLETE, PR48 merged5d901bab; read docs/reports/olmo-campaign-storage/
 results.md, next-steps.md, operator-notes.md, storage-receipt.md and progress.md.
 Runtime54ae688/172pins frozen; new versioned SSD executor/engine/storage/restore,
