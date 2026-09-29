@@ -31,6 +31,28 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-29 ordered pilot execution COMPLETE, PR50 closeout in progress. Read
+docs/reports/olmo-pilot-execution/results.md, next-steps.md, checkpoint-cost.md,
+readiness-map.md and progress.md. Frozen runtime be74dde/192pins unchanged;
+149 new CPU tests plus27 separate auditorv2 tests pass. Tiny insertion/cloud
+resume/terminal acceptance passes2063/2136/1914 checks exactly; original v1
+auditor false failures retained. Native B32/B64/NFR12 each completed8updates,
+final FP32 evaluation and verified checkpoint0/4/8. No active/queued GPUrun.
+Recorded compute+materialization rates67.3k/69.0k/3.58k inputs/s; these exclude
+health/logging/eval/checkpoint gaps. Reserved42.40/60.75/59.06GiB perGPU, sampled
+free35.21/16.87/12.78GiB. RecommendB32ordinary/B12combined. W&Bsummary48jhxju3.
+Native fixtures differ in effective batch/ancestry, not a learning cohort. NFR
+finite but heavily clipped; later dev passes worse than first. No BF16 clearance
+change. Full checkpoint selected regions cost6.1–6.6min; later600sec cadence
+means roughly16–17+min between durable publications, not every10min.
+Evidence .runtime/olmo-pilot-execution; GCSsmallprefix olmo-two-gpu/20260929T190649Z.
+Individual checkpoint receipt bytes use neutral-name inventory snapshots due
+to generic archive filter; see storage-receipt. Historical model/vendor/engine/
+tests unchanged. Next: costed short matched pilot declaration (startup, fixed
+dev coverage, common logical batch, finite budget/stop), not automatic campaign.
+Proposal128updates/firststop32 remains unlaunched; preserve prior qualifications.
+Save/push/retain every20–30min. FinalPR/merge/retention state in progress.md.
+
 2026-09-29 pilot data COMPLETE, PR49 merged c433406; final retention metadata is in
 docs/reports/olmo-pilot-data/progress.md. Read results.md, coverage-assessment.md,
 protocol.md, storage-receipt.md, test-ledger.md and next-steps.md there.
