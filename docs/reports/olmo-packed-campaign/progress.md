@@ -116,3 +116,18 @@ tests to setcontrols beforeCUDA andpinmetadata/helper. Precisionagent addsfixed
 QKV Flashrepeatability probe; rootwillrunT16/T1024 off/on. Ifpositive, new
 write02/resume02 withnewsourcepins/checkpointboundary02; preservefailed01.
 Protocoladdendumrecords this; no thresholdrelaxation. DraftPR39 remainsdraft.
+
+Adaptive Flash test confirms T1024 ordinary backward nondeterminism without
+deterministic controls (maxcombinedQKVrelativeL2 3.91786e-6); T16 off is exact.
+Deterministic mode givesbitwiseexact eager/captured repeats atbothlengths.
+Fourstage reportscomplete; microharness2080c11. CombinedfocusedCPUchecks18pass
+in2.24s. Newpackedrunner e5a593b setscontrols BEFORE CUDA andpinshelper+
+determinism metadata in checkpoints. Source/protocol frozen fornewpair.
+
+`pretrained-write-02` launched at~03:20UTC, 1200s externalbound, sameB12/T1024
+actualindex/inputs, newcheckpoint
+`/mnt/localssd/cdrm-checkpoints/packed-campaign/pretrained-write-02`. RootGPU
+launcher session12644. Oncecheckpointcommits, retain separatelyas
+`checkpoint-boundary-02` whilecontinuationruns, then cloudrestoreinnew
+`cloud-restored-02` andfreshresume02 withnewreference/manifestpins. Original
+failedpair01remainsretained. FourFlashstagesretentionunderway.

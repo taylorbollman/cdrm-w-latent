@@ -17,6 +17,11 @@ initial isolated T16 fixture. This comparison changes kernels too, so cause is
 unresolved. Prior 3.40224% BF16 layout error reproduces in auxiliary pathways;
 CE-only layouts agree. Finish recovery acceptance, then prioritize bounded
 loss-cotangent/backend/precision localization before longer training.
+Original actual T1024 resume01 subsequently failed bitwise with exact forward
+losses/inputs/restored state. Ordinary Flash backward nondeterminism is reproduced
+atT1024; deterministic control passes isolated eager/graph repeats. Harness
+`e5a593b` now pins controls before CUDA. Fresh write02/resume02 is active; keep
+failed01 and do not infer final recovery acceptance from cold setup alone.
 
 **Campaign two-H100 execution/restart/capacity complete,
 2026-09-29:** [PR 38](https://github.com/taylorbollman/cdrm-w-latent/pull/38),

@@ -44,6 +44,11 @@ New bounded component diagnostic: BF16/FP32 combined gradients differ ~86%
 localized. Read precision-assessment.md; do not claim numerical clearance or
 launch quality training based on operational/restart passes. CE-only BF16
 layouts agree; auxiliary paths carry the prior 3.40224% layout discrepancy.
+First T1024 restart01 failed bitwise despite exact input/state/forwardlosses.
+Isolated Flash backward nondeterminism atT1024 is confirmed; deterministic mode
+passes bothlengths. Newrunner e5a593b pins deterministic controls preCUDA;
+write02/resume02 is the pending freshmatchedpair. Preserve failed01; do not
+claim recovery passes until02 actualcontinuation matches. Read progress.md.
 
 2026-09-29 campaign two-H100 execution, cloud restart and capacity complete. Read
 docs/reports/olmo-campaign-two-gpu/results.md, test-ledger.md, usage.md and
