@@ -56,7 +56,13 @@ class TrainingCounters:
 
 
 def _plain(value):
-    """Canonical configuration/cursor data, without code or tensor payloads."""
+    """Canonical builtin-only configuration/cursor data, without object payloads.
+
+    ``isinstance(value, str)`` also accepts torch's ``TorchVersion`` and other
+    scalar subclasses. Preserve their value, not their Python class: otherwise
+    torch.save serializes a custom global that weights_only loading rejects.
+    Mapping keys need the same canonicalization as scalar values.
+    """
     if is_dataclass(value):
         return _plain(asdict(value))
     if isinstance(value, Enum):
@@ -64,15 +70,23 @@ def _plain(value):
     if isinstance(value, Mapping):
         if not all(isinstance(k, str) for k in value):
             raise ValueError("Configuration/cursor keys must be strings")
-        return {key: _plain(item) for key, item in sorted(value.items())}
+        return {str(key): _plain(item) for key, item in sorted(value.items())}
     if isinstance(value, (tuple, list)):
         return [_plain(item) for item in value]
     if isinstance(value, (torch.dtype, Path)):
         return str(value)
-    if value is None or isinstance(value, (str, bool, int)):
-        return value
-    if isinstance(value, float) and math.isfinite(value):
-        return value
+    if value is None:
+        return None
+    if isinstance(value, str):
+        return str(value)
+    if isinstance(value, bool):
+        return bool(value)
+    if isinstance(value, int):
+        return int(value)
+    if isinstance(value, float):
+        converted = float(value)
+        if math.isfinite(converted):
+            return converted
     raise ValueError(f"Unsupported configuration/cursor value: {type(value).__name__}")
 
 
