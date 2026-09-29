@@ -47,7 +47,7 @@ row and reset between rows. See the [protocol](protocol.md) for exact semantics.
 | Check | Result |
 | --- | --- |
 | Integrated new-code CPU suite | 161 distinct tests passed in 57.64 s |
-| Raw/token audit | All metadata accounted for; 592 complete documents independently retokenized, 16 per source |
+| Raw/token audit | All metadata accounted for; 592 complete documents independently retokenized from recovered raw files against the original token corpus, 16 per source |
 | Ordered audit on recovered files | All 134,272 selected row entries counted; 336 literal chunks independently reconstructed, 16 per panel |
 | CPU rank and reader state | Uneven two-rank allocation, all loss masks, committed cursor restoration and finite exhaustion passed |
 | Raw GCS recovery | 111 objects / 2,086,379,363 bytes recovered at exact generations |

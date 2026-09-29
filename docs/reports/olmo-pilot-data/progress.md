@@ -71,5 +71,9 @@ choices remain explicit. No quality campaign or next data round is queued.
 ## Closeout metadata
 
 PR: https://github.com/taylorbollman/cdrm-w-latent/pull/49.
-Final commit, merge and closeout retention records are appended below after
-publication. Source code and data acceptance are complete.
+Code and report commit `496edaf` is preserved in the verified `pilot-data-closeout`
+cloud stage, including source snapshots, receipt catalog, operational scripts and
+all test logs. The receipt is `.runtime/olmo-pilot-data/retention/closeout.json`.
+An independent closeout review verified report counts, hashes, links, packing,
+recovery provenance and source isolation without finding a blocker. Final merge
+metadata follows after publication.
