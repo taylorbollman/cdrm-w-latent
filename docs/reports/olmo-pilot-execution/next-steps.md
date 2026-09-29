@@ -93,6 +93,13 @@ prefix's actual source and document coverage and choose its size without looking
 at model outcomes. The full `dev-main` contains 1,048,576 inputs; evaluating it
 every few updates is not required.
 
+The completed [prefix coverage check](dev-prefix-coverage.md) finds 14, 52 and
+193 unique documents at 5,120, 16,384 and 65,536 inputs, covering four, six and
+seven of the nine strata respectively. All three lack books and Wikipedia;
+the smallest also lacks C4, peS2o and Reddit. These nested-prefix counts inform
+the pending cost/coverage decision without selecting membership or reading
+model outcomes.
+
 Prefer one fixed `dev-main` prefix for routine monitoring. Select a larger
 prefix if the cost estimate supports useful coverage; use occasional source
 panels only for a stated diagnostic. Books and Wikipedia have little weight in
