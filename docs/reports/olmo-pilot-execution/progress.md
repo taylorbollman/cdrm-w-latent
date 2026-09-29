@@ -71,3 +71,15 @@ checkpoint-dominated, not a production throughput estimate. Native-nfr12-01
 started (session99090), W&Bx8u0vz4c, no concurrentGPUjob. B64 remains planned
 bounded followup; NFR8 onlyif12 lackscomfortablemargin. Runtime192pins unchanged.
 CPUauditorv2 evidence retained; nativeB32 andsummary retention queue running.
+
+
+20:05 UTC: native NFR12 finished442.81s graphpreparation with exactinitialboundary,
+then4finite updates; checkpoint4 is being retained. Reserved59.0625GiB with
+12.7833GiBsamplefree onbothGPUs afterAdamallocation. Earlycompute-regions~3.7–3.8k
+inputs/s; heavyclipping observed(norm222.5 down45 at4), notnewBF16failureorquality
+claim. FinalFP32dev stillpending. External1800sec deadline around20:18UTC; current
+progress shouldcompletebeforeit, but inspect actualfinalreport. B64nextonlyafter
+thisprocesscloses. W&Bx8u0vz4c. Newcheckpoint-cost.md distinguishes selectedsave
+regions fromfullwalland recommends600s+terminalcadence forlaterpilot (clockresets
+afterverifiedpublication). Runtime192sources stillunchanged. Allworkpushed;
+retention/inventory/trackinghelpers preparedbutfinalrollupawaitsallnative runs.
