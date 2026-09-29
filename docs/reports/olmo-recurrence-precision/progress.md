@@ -35,3 +35,29 @@ New retention namespace:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260929T053000Z/`.
 Baseline audit retention is being verified. Root owns GPU launch.
 Initial helper review has no blocker; focused tests are being completed.
+
+## Matrix launched
+
+Runtime source `6ed920a` is committed/pushed; helper and test bytes are frozen.
+Independent review found no blocker. Final CPU scope66 passed in7.14seconds
+(one known CPU RMSNorm fixture dispatch warning), recorded in
+`cpu-diagnostics-01.log`. Stage `matrix-01` is now running on device0 with
+900second timeout. Baseline audit cloud receipt is verified. Root owns launch
+and retention; independent agents will assess the completed matrix.
+
+## Matrix complete; one conditional boundary selected
+
+`matrix-01` completed8cases/16physical backwards in119.94s; W&Blt54objk.
+All79sources,68healthchecks, matchedstates/noise/firstpasses and oldNFRanchors
+independently verified. ReportSHA
+`bfaff91aae8e2625e5f2572cfaf4f33d449b560d5cefbef7ff563c6d820ac412`.
+Backbone errors: N0.9804%,NR25.4583%,NF60.8698%,NFR95.8461%. Neither recurrence
+is an exclusive explanation, and differences are not additive causal effects.
+
+The single conditional follow-up is NF-only fusion FP32, recorded before
+execution in [fusion protocol](fusion-protocol.md): two exact matched anchors
+plus one candidate,3aggregate CEcases/6physicalbackwards. Only fusion autocast
+is disabled; ordinaryFlash/BF16 unchanged. Candidate firstpass must match;
+compare later forwardstates andbackbone gradients jointly. If unsuccessful,
+retainnegative andstop rather than expandprecisionchanges. Newhelper/tests
+ownedby runneragent; root alone launchesafterreview/sourcefreeze.
