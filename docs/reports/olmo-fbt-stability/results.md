@@ -3,7 +3,11 @@
 Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength,
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
-The native FBT-only run is active; the first origin measurement is available.
+The native FBT-only run is active. Through update 48, feedback prediction is
+improving while first-pass prediction changes little; deeper passes still
+perform substantially worse than the first pass. Deep curves at 0 and 32
+already settle to a numerical floor, so settling alone is not the missing
+ingredient.
 
 The ordinary control has completed the requested 128 optimizer updates. Final
 checkpoint publication and terminal report closeout are complete. This
@@ -118,3 +122,16 @@ bounded observations are not a blanket activation-health or precision clearance.
 [Curves through32](figures/update-000032-figure3-style.pdf) ·
 [Scale/entropy through32](figures/update-000032-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/j2qipybb).
+
+## Update 48: continued feedback learning
+
+The regular 64-row development CE is now **2.657441 / 5.433011 / 5.562218 /
+5.639437** for passes 1–4. Relative to the origin, pass 4 improves by 1.532
+nats per target, while pass 1 worsens by 0.015. The separate eight-row probe
+gives first/fourth/eighth-pass CE of 2.682534 / 5.461301 / 5.529436, with a
+tail relative state change of 0.009648 at pass 8.
+
+Updates remain finite and clipped. Clipping is an observed property of this
+recipe, not a numerical failure by itself; the loss improvement does not prove
+that its gradient balance or learning rate is optimal. Update 64 is the next
+planned deep curve.
