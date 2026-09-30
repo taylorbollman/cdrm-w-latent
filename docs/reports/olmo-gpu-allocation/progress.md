@@ -98,3 +98,8 @@ Original B32/NFR128 checkpoints and422source entries unchanged. No scientific
 extension, no production topology migration and no eight-rank/H200 claim.
 Results/figures/next migration map complete. PR57 closeout follows; no GPU work
 is active or queued.
+
+PR57 merged2026-09-30T21:48:31Z as5caad6110784f2cd000c2d76481f1079a1fd8fb8.
+Local checkout returned to main. Benchmark/runtime sources remain unchanged;
+this final entry records administrative closeout only. No active or queued GPU
+job, learning continuation or topology-migration execution remains.
