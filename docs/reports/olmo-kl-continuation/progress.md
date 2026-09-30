@@ -39,3 +39,10 @@ Checkpoint prefix:
 `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/kl-continuation/20260930-pair01/`.
 Small evidence prefix: `gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T043200Z/`.
 No automatic extension beyond64 or NFR training.
+
+05:01 UTC: control reached48 with finite updates. Repeated32 evaluation exactly
+matched prior NF32:2.960392/7.393494/7.425865/7.435141. At48 it is
+2.908634/7.090835/7.124708/7.127553: ordinary continuation improves all passes,
+but later-vs-first deficit remains large. Continue authorizedstop64. Cloud40
+fully published while training continued. Reduced branch remains queued and
+unstarted. No model/source change since launch.
