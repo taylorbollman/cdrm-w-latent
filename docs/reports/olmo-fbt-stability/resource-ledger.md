@@ -76,10 +76,26 @@ throughputs. These selected regions exclude graph preparation, evaluation,
 checkpoint callbacks, and most reporting work. Concurrent background storage
 can still contend with them.
 
-The broader update-callback rates from
-`update_wall_seconds_by_rank` are B128: 68,293; F128: 10,207; NF KL1: 7,671; NF KL0.1: 7,531; NFR32: 3,247 input tokens/s.
-Those timers also include per-update validation/report/scalar work and any
-scheduled development/probe callback, but exclude checkpoint callbacks.
+The broader timed update-region rates from
+`update_wall_seconds_by_rank` are B128: 68,293; F128: 10,207; NF KL1: 7,671;
+NF KL0.1: 7,531; NFR32: 3,247 input tokens/s. Their timers include per-update
+validation, observation/gather, intermediate report persistence and scheduled
+development/probe callbacks. They stop before the final update-wall evidence
+persistence, outer tracker logging and checkpoint callbacks; graph preparation
+also precedes the timer. Thus these are broader update regions, not the whole
+training loop.
+
+For F128 specifically, the same 67,108,864-input numerator gives **12,782/s over
+5,250.347135 compute seconds**, **10,746/s over 6,245.082280 compute-plus-
+materialization seconds**, and **10,207/s over 6,574.690342 timed update-region
+seconds**. The extra 329.608061 seconds in the last scope includes the host
+work and scheduled dev/settling probes described above; it is not an additional
+materialization estimate. The previously reported 10,207/s and this ledger's
+10,746/s therefore measure different valid regions. All are distinct from
+7,014/s over 9,567.969001 full-executor seconds. The source is the terminal
+training report, not the curve-summary report (which has no throughput field).
+The exact update-timer boundaries are visible in the frozen run's
+[source snapshot](../../../.runtime/olmo-fbt-stability/native-f12-to128-01/source-snapshot/scripts/olmo_fbt_stability_engine.py).
 
 Full executor rates instead divide new inputs by `elapsed_seconds`. This
 includes stage setup, model/optimizer construction or restore, graph capture,
