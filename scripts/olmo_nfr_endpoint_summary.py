@@ -58,13 +58,37 @@ def load_pair(paths):
     return sorted(records, key=lambda r: -r['record']['kl_weight'])
 
 
+def load_final(path, reduced):
+    record = json.loads(path.read_text())
+    preservation = record.get('preservation', {})
+    if (record.get('schema') != 'olmo-nfr-final-curves-v1' or record.get('status') != 'completed'
+            or record.get('arm') != 'NFR' or record.get('after_update') != 128 or record.get('kl_weight') != .1
+            or record.get('optimizer_updates_performed') != 0
+            or any(record.get(k) is not True for k in ('weights_unchanged', 'rng_unchanged', 'gradient_buffers_absent'))
+            or preservation.get('integrity_passed') is not True or preservation.get('restored') is not True
+            or not preservation.get('checks') or not all(v is True for v in preservation['checks'].values())
+            or record['input_authorities']['endpoint64_report']['sha256'] != reduced['sha256']):
+        raise ValueError('Require preserved final128 probe bound to this exact reduced64 comparison')
+    old = reduced['record']
+    if (any(record[k] != old[k] for k in ('membership_sha256', 'index_manifest_sha256', 'batch_tensor_sha256', 'probe_policy'))
+            or any(record['result'][k] != old['result'][k] for k in ('input_tokens', 'ce_targets', 'policy', 'beta'))
+            or [p['pass'] for p in record['result']['passes']] != list(range(1, 33))):
+        raise ValueError('Final128 does not use the identical finite-pass observation')
+    require_finite(record['result']); require_finite(record['finite_residuals'])
+    return {'path': path, 'sha256': digest(path), 'record': record, 'label': 'NFR128 KL 0.1'}
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--inputs', type=Path, nargs=2, required=True)
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--publish', action='store_true')
+    parser.add_argument('--final128', type=Path)
     args = parser.parse_args(argv)
     records = load_pair(args.inputs)
+    if args.final128 is not None:
+        reduced = next(r for r in records if r['record']['kl_weight'] == .1)
+        records = [reduced, load_final(args.final128, reduced)]
     args.output_dir.mkdir(parents=True, exist_ok=False)
     snapshots = args.output_dir/'input-snapshot'
     snapshots.mkdir()
@@ -82,7 +106,7 @@ def main(argv=None):
             for name, region in p['regions'].items():
                 rows.append({'label': item['label'], 'kl_weight': record['kl_weight'],
                              'pass': p['pass'], 'region': name, **region['metrics']})
-        key_metrics.append({'label': item['label'], 'kl_weight': record['kl_weight'],
+        key_metrics.append({'label': item['label'], 'update': record['after_update'], 'kl_weight': record['kl_weight'],
             'ce_by_pass': {str(k): passes[k-1]['regions']['all']['metrics']['ce'] for k in (1, 4, 8, 32)},
             'tail_relative_change_by_pass': {str(k): passes[k-1]['regions']['tail_128']['metrics']['relative_delta_rms']
                                              for k in (4, 8, 16, 32)},
@@ -112,7 +136,8 @@ def main(argv=None):
             axis.set_xlabel('Total pass (training uses 4)')
             axis.grid(alpha=.2)
     axes[0, 0].legend()
-    figure.suptitle('NFR64 saved checkpoints: settling and predictive loss\n'
+    title = 'Reduced-KL NFR64 to128' if args.final128 else 'NFR64 saved checkpoints'
+    figure.suptitle(title+': settling and predictive loss\n'
                    'Same eight packed T1024 rows; FP32; no jitter; no optimizer updates', fontsize=11)
     for suffix in ('pdf', 'png'):
         figure.savefig(args.output_dir/f'endpoint-curves.{suffix}', dpi=165)
@@ -122,7 +147,8 @@ def main(argv=None):
         import wandb
         from scripts.experiment_tracking import OnlineTracker
         tracker = OnlineTracker(project='pretrained-fbt-rt-nextlat', entity='taylorbollman',
-            output_dir=args.output_dir, group='nfr-stability-128', name='nfr64-paired-pass-curves')
+            output_dir=args.output_dir, group='nfr-stability-128',
+            name='nfr64-to128-pass-curves' if args.final128 else 'nfr64-paired-pass-curves')
         tracker.start({'scope': 'Matched saved-state settling diagnostics, not quality or BF16 clearance',
                        'inputs': authorities})
         tracker.log({'endpoint-curves': wandb.Image(str(args.output_dir/'endpoint-curves.png')),
@@ -132,7 +158,7 @@ def main(argv=None):
     source_target = args.output_dir/'source-snapshot'/Path(__file__).name
     source_target.parent.mkdir()
     shutil.copyfile(__file__, source_target)
-    report = {'schema': 'olmo-nfr-endpoint-summary-v1', 'status': 'completed',
+    report = {'schema': 'olmo-nfr-stability-curves-summary-v1' if args.final128 else 'olmo-nfr-endpoint-summary-v1', 'status': 'completed',
         'inputs': authorities, 'key_metrics': key_metrics, 'tracking': tracking,
         'source_sha256': digest(source_target), 'optimizer_updates_performed': 0,
         'qualification': 'K32 is a finite reference, not exact online; settling does not establish useful refinement.',

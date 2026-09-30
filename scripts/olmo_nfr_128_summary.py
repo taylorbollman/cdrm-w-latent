@@ -55,7 +55,8 @@ def main(argv=None):
     for update, result in sorted(development.items()):
         for p in result['passes']:
             dev_rows.append({'update': update, 'pass': p['index']+1,
-                            **{key: finite(p['means'][key]) for key in ('ce', 'latent', 'kl')}})
+                            **{key: finite(p['means'][key]) for key in ('ce', 'latent', 'kl')},
+                            **{key+'_targets': p['counts'][key] for key in ('ce', 'latent', 'kl')}})
     training = []
     for update in range(65, 129):
         record = run['updates'][str(update)][0]
@@ -70,7 +71,8 @@ def main(argv=None):
             'lr_used': metrics['lr_used'][0], 'lr_next': metrics['lr_next'][0],
             'compute_plus_materialization_seconds': seconds,
             'complete_update_callback_seconds': max(run['update_wall_seconds_by_rank'][str(update)]),
-            **{key: finite(record['loss_means'][key]) for key in ('ce', 'latent', 'kl')}})
+            **{key: finite(record['loss_means'][key]) for key in ('ce', 'latent', 'kl')},
+            **{key+'_targets': metrics['counts'][key] for key in ('ce', 'latent', 'kl')}})
     args.output_dir.mkdir(parents=True, exist_ok=False)
     snapshots = args.output_dir/'input-snapshot'; snapshots.mkdir()
     for name, ref in inputs.items():
@@ -107,7 +109,7 @@ def main(argv=None):
     axes[1].plot(updates, [r['lr_used'] for r in training]); axes[1].set_ylabel('Learning rate used')
     for term in ('ce', 'latent', 'kl'):
         axes[2].plot(updates, [r[term] for r in training], label=term)
-    axes[2].set_ylabel('Unweighted training loss'); axes[2].legend()
+    axes[2].set_ylabel('Loss before term coefficients'); axes[2].legend()
     for axis in axes:
         axis.set_xlabel('Cumulative optimizer update'); axis.grid(alpha=.2)
         axis.axvline(100, color='grey', linestyle='--', linewidth=.8)
@@ -126,7 +128,7 @@ def main(argv=None):
         'executor_seconds': run['elapsed_seconds'], 'executor_inputs_per_second': tokens/run['elapsed_seconds'],
         'peak_reserved_gib': max(m['peak_reserved_gib'] for m in memories),
         'peak_allocated_gib': max(m['peak_allocated_gib'] for m in memories),
-        'scope': 'Real input tokens counted once despite K4; compute scope excludes startup, evaluations and checkpointing; executor scope includes these.'}
+        'scope': 'Real input tokens counted once despite K4; compute scope excludes startup, evaluations and checkpointing; executor scope includes these but excludes final W&B/host closeout. CE retains its declared pass weights; auxiliaries are pass-averaged before term coefficients.'}
     tracking = None
     if args.publish:
         import wandb
