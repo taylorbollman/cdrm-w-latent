@@ -93,3 +93,13 @@ verified. Queue remains detached/active. next-steps-draft.md is proposal-only
 for saved-state localization if later-pass deficit persists, with no diagnostic
 implementation or launch. progress-0048 retained successfully; progress-0110
 snapshot preserves current metadata and draft. Next dev16, fixedstop32.
+
+01:33 UTC: NFR at19 finite/clipped updates, checkpoint16 cloud-verified.
+Common FP32 dev16 completed:3.233708/7.408049/7.420141/7.435445. Relative to
+NF at16, firstpass is0.01991 lower and later passes0.36691/0.37825/0.38039 lower.
+This is a modest directional advantage at equal exposure, with a large later-
+pass deficit still present. Do not infer scientific efficacy. Evaluation16
+added about225s to update callback; selected training timings exclude it.
+No new runs/changes; stop32 remains. progress-0110 retained successfully;
+progress-0133 records current metadata. Current queue-02 and active NFR remain
+sole execution authorities, not original stale queue-01.
