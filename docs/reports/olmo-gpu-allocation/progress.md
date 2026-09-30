@@ -45,3 +45,23 @@ for bounded cleanup. Do not run training directly in the host shell.
 Later milestone remains full production checkpoint topology migration/restart.
 This versioned performance entrypoint does not relax the historical loader's
 same-world-size restriction or extend the finite128-update training plan.
+
+20:42UTC update: first Bpair01 finished finite math and W&B sync but blocked
+in process-group teardown while captured NCCL graphs remained live. Stopped
+only its owned container; supervisor correctly records failure. Evidence is
+retained under `allocation-b-pair-teardown-01` in the declared GCS prefix.
+New wrapper explicitly releases graphs/reducer before group destruction and
+marks completion only afterward; core math unchanged. Fix committedcdc4636.
+Primary Bpair02 and Bsingles01 both complete and exit0. Joint-window rates
+70,318 and71,590 inputs/s respectively (singles+1.81%, directional only),
+99.53%common overlap over the singles makespan; pair gives1.96x the mean
+individual single-job rate. All use35.10GiBallocated/42.39GiBreserved perGPU.
+Local independently validated Bsummary is `b-summary-01/report.json`.
+
+Native NFRpair01 is running, W&Bzbbf26i3. Detached bounded suite PID1942554
+will then launch NFRsingles01 and stop. Its report is `suite.json`; write
+`.runtime/olmo-gpu-allocation/STOP` to stop between cells. Do not launch a
+duplicate. Remaining suite producer and commands are retained under the runtime
+root. Final focusedCPUtest invocation has42passed in23.05s; log there.
+Summary helper committed0f4dd98. All code is pushed; full checkpoint migration
+and eight-rank/H200 measurements remain outside this first milestone.

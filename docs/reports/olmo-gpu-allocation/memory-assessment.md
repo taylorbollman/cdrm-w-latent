@@ -120,6 +120,15 @@ but do not quantify H200 gains for current K4.
 5. More memory may also permit reducing checkpointing or additional graph
    storage. Those are separate changes requiring their own bounded checks;
    do not include an assumed benefit in a purchase/allocation forecast.
+6. At a fixed512-row update on eight ranks, B12/GPU needs six slots and computes
+   576physical rows (64loss-masked dummies). B16/GPU needs four slots and exactly
+   512physical rows. If H200 makes B16 comfortable, it can improve both physical
+   batch utilization and this padding overhead. This is allocation arithmetic,
+   not a measured eight-GPU speedup; B32 is also a natural later capacity probe.
+
+NVIDIA specifies141GBcapacity and4.8TB/smemory bandwidth for H200. These are
+separate hardware advantages, so even an ordinary-model batch plateau does not
+rule out a bandwidth benefit. See the [official H200 specifications](https://www.nvidia.com/en-us/data-center/h200/).
 
 No H200 speed multiplier, maximum supported batch or all-eight-arm memory
 classification is established. Existing measurements are sufficient to make
