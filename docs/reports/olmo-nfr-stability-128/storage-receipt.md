@@ -118,3 +118,32 @@ receipt/result files are under `.runtime/olmo-nfr-stability-retention/` as
 `final-probe-static-01.json` and `final-probe-static-01-result.json`. The same
 CPU-only container policy was used; no active directory or checkpoint state
 was uploaded, no local file was deleted and no GPU command was run.
+
+## Final-audit preparation and verified origin64
+
+The static final-audit launcher, all twelve new/reused auditor source files,
+immutable origin observation, completed development64 artifact and copy/check
+receipt were retained in
+`.runtime/olmo-nfr-stability-128/audit-origin-retention-input-01`.
+Independent CPU checks confirmed exact inherited origin64 state and clocks,
+an unchanged metadata-transition boundary and an exact raw development64
+result. The active whole report was inspected but excluded from this archive;
+its recorded observation hash is not terminal authority.
+
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-audit-origin-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 76,229 | `1790784039480373` | `bb44bff92c43cb8985a598c3fd668623b7b9cf1c93d5334130473bf9c121649e` |
+| `retention-manifest.json` | 4,438 | `1790784039770304` | `fec0f8fcb4a3918d8cfa3ed1fa53a2834205847be6bc3476d2f3499df529a63b` |
+| `storage-receipt.json` | 1,289 | `1790784040052321` | `3370d7f09b2645a458f204edb9de2b1b4082fac18b8bb27f1220be8947df5207` |
+
+Sixteen files total 506,371 bytes before compression. All objects passed server
+size, MD5, SHA metadata and downloaded SHA256 checks. Local receipt/result
+files are `.runtime/olmo-nfr-stability-retention/audit-origin-01.json` and
+`audit-origin-01-result.json`. Final24-test evidence is explicitly owner-observed
+stdout/session/exit status; no nonexistent raw log is claimed. This archive is
+preparation and origin evidence, not a completed terminal128 audit. The CPU-only
+retention neither touched training state nor uploaded checkpoint tensors.

@@ -185,4 +185,17 @@ inherited boundary, unchanged data/LR, required update100 evaluation/save and
 accepted validator reuse are appropriate. Its explicit scope is an
 uninterrupted 64→128 segment; a restart requiring multiple report segments
 would need an independently reviewed history join. Imported audit helper
-sources must be included in the audit's own retained source inventory.
+sources are now included: all twelve reused/new audit sources are pinned and
+snapshotted. The owner observed 24 CPU tests passing in 6.46 seconds, session
+79265, exit 0; no raw test log was saved, and the retention receipt identifies
+this as owner-observed evidence. Audit implementation commit: `88847be`.
+
+An independent read-only startup check also confirmed that the continuation's
+recorded origin equals the original reduced64 complete boundary, with identical
+populated-Adam clocks and unchanged before/after metadata-transition state.
+Its completed development64 artifact exactly reproduces the original raw
+result, with both rank preservation flags true. The immutable evaluation SHA
+is `a7ac6e49c1853abe493a4aac6df7d0c924be9d7f8d0974f31e876b7bc7e6ed9b`.
+The small origin observation and evaluation were retained without copying the
+active whole report. This verifies restoration at 64; the terminal128 audit has
+not yet run.
