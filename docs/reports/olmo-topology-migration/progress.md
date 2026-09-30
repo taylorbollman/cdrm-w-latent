@@ -58,3 +58,19 @@ claimed. Logs plus operator-stop receipt are preserved. The fix uses the
 existing retention manager's explicit worker hook with a new campaign-identity
 CPU worker; historical validators, files and checkpoint formats stay frozen.
 Before retrying native, exercise actual tiny asynchronous cloud publication.
+
+## 2026-09-30 22:45 UTC — publication fix accepted
+
+The explicit campaign-identity retention hook passes18 focused CPU tests and
+an independently reviewed real SSD→CPU worker→GCS→publication probe (4.823s).
+Both state and manifest were independently downloaded by exact generation and
+SHA verified; parent RNG/source remained unchanged and the child initialized
+neither CUDA nor distributed state. Existing SSD publisher, async manager and
+historical validators are unchanged. Main executor now injects this hook and
+pins all its dependencies. The full focused suite passes109 tests.
+
+N, R and NR native smokes have completed successfully; FR is still running.
+Bare pretrained RT startup has heavy clipping (raw gradient norms about117 and
+114 on the first R/NR updates), retained as telemetry rather than cleared as
+stable optimization. After FR, retry bounded native migration/restart using
+new immutable output paths. Original scientific128 remains the endpoint.

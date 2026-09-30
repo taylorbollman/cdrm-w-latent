@@ -55,6 +55,7 @@ from scripts.olmo_two_gpu_recovery import seed_local
 from scripts.olmo_two_gpu_validate import preserve_local_rng
 from scripts.olmo_topology_contract import make_topology_contract, destination_configuration, destination_fingerprint, cursor_record, expected_counters_since_origin
 from scripts.olmo_topology_checkpoint import load_topology_checkpoint
+from scripts.olmo_topology_storage import retain_in_child, source_hashes as storage_source_hashes
 
 SCHEMA = 'olmo-topology-execution-v1'
 FIXTURE_SHA = hashlib.sha256(b'olmo-topology-packed-fixture-v1').hexdigest()
@@ -70,6 +71,7 @@ def digest_json(value):
 
 def source_hashes():
     result = allocation_sources()
+    result.update(storage_source_hashes())
     names = ['olmo_topology_execute.py', 'olmo_topology_contract.py', 'olmo_topology_checkpoint.py',
         'olmo_allocation_acceptance.py', 'olmo_campaign_execution.py', 'olmo_campaign_restart.py',
         'olmo_campaign_ssd_storage.py', 'olmo_pilot_async_storage.py', 'olmo_campaign_execution_restore.py',
@@ -286,7 +288,7 @@ def run(a,c,device,report,tracker,persist):
                 execution_identity_sha256=config['execution_identity']['sha256'],storage_prefix=a.storage_prefix,
                 keep_local_completed=4,resume_source=a.checkpoint)
             manager=AsyncCheckpointRetention(storage,evidence_dir=a.output_dir,storage_prefix=a.storage_prefix,
-                source_pins=report['sources'])
+                source_pins=report['sources'],retain_hook=retain_in_child)
         c.call('storage ownership',create_storage,rank_zero=True)
     else:c.call('new checkpoint root',lambda:a.checkpoint_root.mkdir(parents=True,exist_ok=False),rank_zero=True)
     def save(reason):
