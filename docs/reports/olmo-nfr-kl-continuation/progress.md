@@ -74,3 +74,16 @@ first pass. Raw latent losses are.261257/.043548/.044086/.043945; raw KL
 loss fall. No objective-total comparison or coefficient conclusion is made
 before the reduced branch. Checkpoint43 is verified remotely; the named48
 save follows evaluation. Control continues unchanged to64.
+
+12:24 UTC: control completed all32 resumed updates and the final64
+development evaluation. CE passes1–4 is2.930108/6.473414/6.604760/6.646855.
+First/fourth improve.112905/.416960nats from32, but feedback remains
+3.717nats worse than first. All32 updates are finite/clipped; raw norm
+min/median/max/final is3.52624/7.71443/23.63049/6.13940. Raw KL64 is
+2.299452/.666133/.683167/.683961; latent is
+.242130/.043243/.042835/.042737. Final checkpoint64 publication and W&B
+closeout are pending, with cloud63 verified. Queue retains its terminal
+guards before starting reduced from the original32 state. The current
+pace places paired closeout around14:30UTC, about an hour after the initial
+13:37 target under the user's timing flexibility; no further training
+will start after this finite pair.
