@@ -31,6 +31,40 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 19:45 UTC: NFR64-to128 AND FINAL PROBE COMPLETE. No training
+or GPU diagnostic remains active; update129 is not authorized or launched.
+Branch feat/olmo-nfr-stability-128, PR56 closing. Read docs/reports/
+olmo-nfr-stability-128/results.md, validation.md, storage-receipt.md and
+progress.md. All64 resumed updates finite;57clipped, final6unclipped.
+Regular dev128 CE2.756071/3.045481/3.053890/3.058500, fourth-first gap.302429;
+gap64/80/96/100/112 was2.745152/1.775912/.925822/.804918/.499755.
+Useful feedback refinement remains unestablished. Same KL.1/latent1/K4/RT0,15,
+T1024/B12perrank/22slots/512realrows; warmup100 then2e-4; no settings change.
+Cloud128 verified, W&B2zu5jloq synced, host83327exit0. Final training report
+.runtime/olmo-nfr-stability-128/native-nfr-reduced-64to128-01/report.json,
+SHAe678b1b70b833ef1384e79ddff990b20676449c10ed248e3d0e8d9e809847088.
+Final independent audit15,557checks passed; all222 training pins unchanged.
+Training summary9xienwmk and development/training PDFs retained.
+Final saved128 K32 probe completed/syncedw5r0fzkh/host97453exit0, report
+.runtime/olmo-nfr-final-curves/bound-01/result-01/report.json,
+SHAbfc90504971aaf954f24036a968ebb30ef3220dd1f15a9dba5e673c36b4d4326.
+Same8rows/FP32/nojitter: CEK1/K4/K32=2.772209/3.024883/3.031271;
+K4vs32 tail residual.7445% (old64 2.1792%), all2.0843% (old2.7539%);
+K8tail.0170% (old.1766%). Settles~1e-6 by16; extra inference passes worsen
+CE slightly, so they do not repair remaining first/later prediction gap.
+Overlay summarytc74nrn4; figures/reduced64-to128-curves.pdf. Preservation passed.
+Two initial CPU preflight full-stat failures left content hashes exact;
+unchanged third attempt passed. Original failed logs/stat evidence retained.
+User asked about extending: recommended192 with160check, proposal ONLY.
+Finite128 scheduler/data plan require explicit horizon extension and identical
+first128 prefix proof after strict saved128 load. Preserve weights/Adam/RNG/
+cursor/currentLR; no reset or new warmup. Do not alter completed frozen source
+or silently bypass128 horizon. Historical200/208/210/215/222 and final244
+sources/policies remain immutable; new extension needs explicit authority.
+Final checkpoint SSD: /mnt/localssd/cdrm-checkpoints/nfr-stability-128/
+native-nfr-reduced-64to128-01/update-000128; GCS manifest/receipts in report.
+All prior parent32/reduced64 authority still needed for provenance/restart.
+
 2026-09-30 FBT stability and paired NFR KL continuation COMPLETE. PR55 merged
 871d23c31f8e07337e5064f9c4d18fbb3ae4e7e3; main is current. Final closeout
 metadata is in docs/reports/olmo-fbt-stability/progress.md.

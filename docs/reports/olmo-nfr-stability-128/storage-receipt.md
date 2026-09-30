@@ -1,0 +1,287 @@
+# NFR settling and continuation evidence retention
+
+## Endpoint preparation
+
+The completed endpoint scope, plan, host launcher, commands, readiness receipt
+and both CPU preflight directories were copied into the isolated immutable
+directory `.runtime/olmo-nfr-stability-128/endpoint-static-retention-input-01`.
+Each copied file was hashed before and after copying; the four independently
+provided scope/plan/report pins matched. No active GPU result or launch output
+directory was selected.
+
+The standard CPU-only retainer published 468 files, 6,609,959 bytes before
+compression, with both 230-file source snapshots verified against their
+preflight reports. Its container used `CDRM_DOCKER_GPUS=none` and
+`env -u GOOGLE_APPLICATION_CREDENTIALS`. No checkpoint state was uploaded or
+rehashed, no local file was deleted, and no GPU command was launched by this
+retention work.
+
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr-endpoint-static-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 1,740,834 | `1790782786598423` | `493e80d546773f6eab0dda652bf71d27a413616a1631a9b17736c4d33d8af3d4` |
+| `retention-manifest.json` | 127,060 | `1790782786865719` | `73455ce471802094dc0467c0bd05efadefb7bc0dcfd398c658bbe69478e353ee` |
+| `storage-receipt.json` | 1,294 | `1790782787137929` | `fa69a66144399ecd97553d0b006eb9ba37fa9f37aacfd54e836fac717b4998a1` |
+
+Server size, MD5, SHA metadata and downloaded SHA256 checks passed for all
+three objects. Local receipt and result:
+`.runtime/olmo-nfr-stability-retention/endpoint-static-01.json` and
+`endpoint-static-01-result.json`.
+
+This archive preserves readiness and CPU preflight, not completed GPU curves or
+continuation. Their later receipts must be recorded separately.
+
+## Conditional continuation preparation
+
+The closed `continuation-prepared-01` directory, its CPU-test/readiness receipt,
+`launch_continuation.py` and all 222 pinned runtime sources were copied into
+`.runtime/olmo-nfr-stability-128/continuation-static-retention-input-01`.
+Scope, resolution and launcher pins matched the independent preparation
+receipt before copying. A new static report and per-file copy inventory record
+that this remains **prepared, not activated**. Mutable status helpers, future
+activation receipts, live endpoint outputs and training directories were
+excluded.
+
+The same CPU-only retainer verified and published 229 files, 3,671,835 bytes
+before compression, with the complete 222-file source inventory validated.
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-static-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 875,681 | `1790782973850511` | `1d215a43af74bb2198aa4f3cf5b52ea32b55a58d8ced23f06a312b8911b25b28` |
+| `retention-manifest.json` | 57,657 | `1790782974122928` | `e3a93b7e1c1b90d8895769bdf69dc0b29163cb86cb0ed8ab508904904e4dc926` |
+| `storage-receipt.json` | 1,274 | `1790782974403930` | `0c0f7ac0c7c25f02a454814eba9d63f716cc7cf51ae3aa8582431d660592ffa2` |
+
+All three objects passed server size, MD5, SHA metadata and downloaded SHA256
+checks. Local receipt/result files are
+`.runtime/olmo-nfr-stability-retention/continuation-static-01.json` and
+`continuation-static-01-result.json`. No model state was uploaded or rehashed,
+no local files were deleted, and no GPU command was run by retention.
+
+## Completed endpoint probes, summary and activation
+
+After both launchers exited 0 and both probes and their summary were completed
+and synced, their closed directories were copied into
+`.runtime/olmo-nfr-stability-128/endpoint-terminal-retention-input-01`.
+The selection contains `result-control-01`, `result-reduced-01`, `summary-01`,
+both launch completion directories, immutable `activation-01.json`, an
+independent CPU closure receipt and a copy inventory. It excludes the active
+64→128 training directory, its logs and every model checkpoint.
+
+The standard CPU-only retainer published 496 files, 14,401,033 bytes before
+compression, and verified both 230-file source snapshots. GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr-endpoint-terminal-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 2,958,605 | `1790783493220547` | `e1ff713c5c076698b1230e26745c2f05888b0e94131881b62d4c5ff04e2ed92e` |
+| `retention-manifest.json` | 132,146 | `1790783493523907` | `44f37b4a07fde5d039b80c439bba0bfa53d88ca63d85f8e57560ddc92913415b` |
+| `storage-receipt.json` | 1,300 | `1790783493787355` | `f7709b993156e45277038e6e7e508ac2ff68e6b7806c6d2acd86fc3c6ed5a404` |
+
+All objects passed server size, MD5, SHA metadata and downloaded SHA256 checks.
+Local receipt/result files are
+`.runtime/olmo-nfr-stability-retention/endpoint-terminal-01.json` and
+`endpoint-terminal-01-result.json`. No model state was uploaded again or
+rehashed, no local files were deleted, and no GPU command was run by retention.
+
+## Prepared final128 observer
+
+The final observer's frozen `prepare.py`, preparation receipt, new helper,
+tests and protocol were retained as a small additive source overlay, together
+with a copy inventory. All 244 preparation pins matched before copying. The
+historical training and endpoint source snapshots are already present in the
+preceding static and terminal archives; this six-file archive avoids repeating
+them. It is preparation only: no terminal128 checkpoint authority or actual
+final-probe result is claimed.
+
+Input directory:
+`.runtime/olmo-nfr-stability-128/final-probe-static-retention-input-01`.
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-final-probe-static-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 21,277 | `1790783852075089` | `18b5aa8eac10d97a8d7dbd0c14654870ff047beff0499d0b9191a43c010c29b6` |
+| `retention-manifest.json` | 1,898 | `1790783852323984` | `cb0aa03dd76d711c2775c49ab8f958b9c4eee60b8b0999c5c6c1140dbc542ce4` |
+| `storage-receipt.json` | 1,306 | `1790783852582314` | `7163a208e2d3ae668399450547267396cb4138edf9e8414dfd7b1b50f4c98a9f` |
+
+The six files total 53,827 bytes before compression. Server size, MD5, SHA
+metadata and downloaded SHA256 checks passed for all objects. Local
+receipt/result files are under `.runtime/olmo-nfr-stability-retention/` as
+`final-probe-static-01.json` and `final-probe-static-01-result.json`. The same
+CPU-only container policy was used; no active directory or checkpoint state
+was uploaded, no local file was deleted and no GPU command was run.
+
+## Final-audit preparation and verified origin64
+
+The static final-audit launcher, all twelve new/reused auditor source files,
+immutable origin observation, completed development64 artifact and copy/check
+receipt were retained in
+`.runtime/olmo-nfr-stability-128/audit-origin-retention-input-01`.
+Independent CPU checks confirmed exact inherited origin64 state and clocks,
+an unchanged metadata-transition boundary and an exact raw development64
+result. The active whole report was inspected but excluded from this archive;
+its recorded observation hash is not terminal authority.
+
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-audit-origin-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 76,229 | `1790784039480373` | `bb44bff92c43cb8985a598c3fd668623b7b9cf1c93d5334130473bf9c121649e` |
+| `retention-manifest.json` | 4,438 | `1790784039770304` | `fec0f8fcb4a3918d8cfa3ed1fa53a2834205847be6bc3476d2f3499df529a63b` |
+| `storage-receipt.json` | 1,289 | `1790784040052321` | `3370d7f09b2645a458f204edb9de2b1b4082fac18b8bb27f1220be8947df5207` |
+
+Sixteen files total 506,371 bytes before compression. All objects passed server
+size, MD5, SHA metadata and downloaded SHA256 checks. Local receipt/result
+files are `.runtime/olmo-nfr-stability-retention/audit-origin-01.json` and
+`audit-origin-01-result.json`. Final24-test evidence is explicitly owner-observed
+stdout/session/exit status; no nonexistent raw log is claimed. This archive is
+preparation and origin evidence, not a completed terminal128 audit. The CPU-only
+retention neither touched training state nor uploaded checkpoint tensors.
+
+## Terminal128 closeout preparation (historical)
+
+The existing terminal-summary reconciler accepts the unchanged
+`olmo-kl-continuation-report-v1` schema and does not hardcode update64. It can
+therefore reconcile update128 without modification. Its guards require a
+completed segment, drained verified publication, synced local tracking and a
+finished remote run at the same `update` and `_step`. It writes only the three
+checkpoint-summary fields and provenance, checks fresh readback, and verifies
+that unrelated summary fields are unchanged. It never resumes W&B or writes
+history.
+
+Prepared wrapper:
+`.runtime/olmo-nfr-stability-128/retain_terminal_128.py`.
+SHA256: `cd36bcbb03f30286e15b2b10164f771bb6ee4f3e9e1e32d906303ec52de79460`.
+Preparation receipt: `terminal-retention-prepared-01.json` in the same folder.
+At preparation time only syntax parsing and source review had run; no
+active-run API call or terminal retention was performed. The completed
+execution is recorded below.
+
+The prepared invocation requires the actual host launcher to have exited
+successfully and terminal report/publication bytes to be immutable:
+
+```bash
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed \
+  bash scripts/docker_shell.sh bash -lc \
+  'env -u GOOGLE_APPLICATION_CREDENTIALS PYTHONPATH=/workspace/cdrm-w-latent python .runtime/olmo-nfr-stability-128/retain_terminal_128.py'
+```
+
+The wrapper independently requires terminal128/cloud128/synced/host-exit0,
+exact 222-file source inventories, a matching local manifest/state-file size
+and saved final boundary before it accesses W&B. It copies publication receipts
+under neutral names, preserves the host receipt and remaining local manifests,
+and uses the unchanged accepted reconciler and retainer. If the summary is
+already current, it records that without writing. An incomplete previous
+summary mutation must use the reconciler's read-only `--verify-attempt` recovery;
+the wrapper does not silently repeat it.
+
+Closed-stage evidence is checked against the existing 128 MiB cap before the
+W&B mutation. If necessary it separates core evidence and asynchronous transport
+records into two archives, each subject to the same cap. Planned stages are
+`nfr128-training-terminal-01` (or `nfr128-training-core-01` and
+`nfr128-async-transport-01`), `nfr128-terminal-inventory-01`, and
+`nfr128-summary-correction-01`, under the common evidence prefix above.
+No checkpoint tensor is loaded, rehashed or uploaded again.
+
+
+## Completed terminal128 closeout, audit and training summary
+
+The prepared wrapper ran only after terminal128/cloud128/synced/host-exit0
+were independently observed. It finished successfully in CPU-only container
+session44902 (exit0) and retained the complete closed training stage within
+the unchanged128MiB cap; splitting was unnecessary. The publication inventory
+contains sixteen neutral-named receipts, the remaining local manifests,
+final cloud-object verification, host completion and pinned closeout utilities.
+It confirms the final report/publication hashes remained unchanged.
+
+The W&B correction changed local127/cloud122/pendingtrue to
+local128/cloud128/pendingfalse on the finished run `2zu5jloq`, with successful
+fresh readback and an identical hash for all unrelated summary fields. It
+added provenance but did not write history, resume the run or touch training
+state. The correction report is
+`.runtime/olmo-nfr-stability-128/terminal-summary-correction-01/report.json`,
+SHA256 `87de10ed8f8d262f3e64ab7146901ed2402d1e82f35127897914f8e8b10cff6b`.
+
+The completed independent audit was copied separately with its twelve source
+snapshots, six input snapshots and successful host launch receipt/log. The
+copy receipt confirms15,557 checks with zero failures, exact input/source
+pins and successful exit. It is stored under
+`final-audit-retention-input-01`; its receipt SHA256 is
+`b21b2a488eef42917d672acaba3fbdeb11fd4ae995563dc5d2c04b581840be8c`.
+The CPU retention command finished successfully (session73352, exit0).
+
+The root-produced, completed and synced training summary was independently
+checked against its three input pins, producer hash and six artifact
+hashes/sizes. It was copied with its closed input snapshots and producer to
+`summary-retention-input-01` and retained separately (session82577, exit0).
+Summary report SHA256:
+`64fbb8b94f381d771f4e30ff96e6acb0cb39336dc7a4159e032100a11a961f5c`.
+W&B summary run: `taylorbollman/pretrained-fbt-rt-nextlat/9xienwmk`.
+The final saved-state probe remained active/preparing and was excluded.
+
+All five stages use the common prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/`
+
+| Stage | Files | Archive bytes | Archive SHA256 | Storage-receipt SHA256 |
+| --- | ---: | ---: | --- | --- |
+| `nfr128-training-terminal-01` | 299 | 8,123,295 | `208e2e348778d1145c5f88970b570db419a86525a5be7c9a3098f19eacf318ac` | `c7bf78805b8cf7c89e21505ca837aab806d13c736c6c4e3bfb7fa51f84c40ab3` |
+| `nfr128-terminal-inventory-01` | 24 | 1,112,334 | `a9df2ad1aca336ea1b74eb67b50b33758fe86d66e9ad78f2a6dd77abe2633747` | `acd25b1ffcbfa20fb58925fc4697884628424f119e8c2d411bb12a9353ae59f4` |
+| `nfr128-summary-correction-01` | 6 | 5,211,331 | `ce054d39b4eba411df4d11628bf5b47b5190adad9054aeb252de466ca1e4e610` | `4e05fd5f5f4e9883d305ab051fffbdfb03f3fc67b5fb2209166843dd7fe8bdba` |
+| `nfr128-final-audit-01` | 23 | 8,534,733 | `3ff2adc19ba4e74cf791d8ebb156f1198f9f760a5eaa6126db36bc6138809af1` | `03d83a4f4c136955995f5563392ab2bebac8295e38e029debff9fcd0fc83a995` |
+| `nfr128-training-summary-01` | 13 | 8,770,146 | `ea980f7a5813e5179b70fe8ee5a1cfb7f21e7a23ae63e75f7b04085b19f6a341` | `e14c88793a641fb5dd7830e9fcdf90f6ee8a4dfdf687a5d9101e2acde4bdc7e3` |
+
+Each stage contains `evidence.tar.gz`, `retention-manifest.json` and
+`storage-receipt.json`; all three objects passed server size, MD5, SHA metadata
+and downloaded SHA256 checks. Object generations and complete verification
+receipts are recorded in `.runtime/olmo-nfr-stability-retention/`.
+The first three local receipt basenames match their stage names; the last two
+are `final-audit-01` and `training-summary-01`, each with a corresponding
+`-result.json`. No checkpoint tensor was uploaded again, loaded or rehashed;
+no local file was deleted, original report/history was unchanged, and no GPU
+command was run by this retention work.
+
+
+## Completed final pass curves and overlay
+
+After the final observer and overlay completed and synced, the entire closed
+`bound-01` selection was copied into `final-curves-retention-input-01`:
+scope, plan, command, CPU preflight, launch/completion and result with source
+snapshots. The selection also includes `binding-read-guard-01` intact. The two
+failed binding attempts are preserved alongside their unchanged-content
+receipts and successful third attempt; the possible access-time explanation
+remains explicitly an inference. No frozen reader or data bytes were modified.
+
+Independent CPU closure verified all 240 source pins, input authority,
+preservation, exact update64 data/policy equality and raw metric aggregation.
+Closure SHA256:
+`cf8bdc3914ddc5a5c1f3ad33819b1ccfbcb7e38b74fdb2a58a02d9f5a0b0e109`.
+The separate `final-curve-summary-retention-input-01` holds the completed
+update64→128 overlay, both input snapshots, pinned producer and closure:
+`bbef13338fbaf30e8f476ebfbd7d1122a1d50314893917e0eeb9d11cc3f42087`.
+
+Both CPU-only retentions completed successfully (sessions57872 and30830,
+exit0), under the same common GCS prefix used above:
+
+| Stage | Files | Archive bytes | Archive SHA256 | Storage-receipt SHA256 |
+| --- | ---: | ---: | --- | --- |
+| `nfr128-final-curves-01` | 505 | 2,079,217 | `9d263bb1e0ab692bd9d7d73a4954f9e0aeb7ac7bd1cd00b89ebfbb70691b9a60` | `954ef841adca16ba90323d562f1a53a72ef098bdc3c2069f3cded08fcc4c6c64` |
+| `nfr128-final-curve-summary-01` | 9 | 630,486 | `06283856d5891c670c91840d4be15f1d02d6be4c1055b9487dbb83b9651d5b4e` | `75ff9c769ec44f2c9904e138b38044818de966a9c27e66ba479281b91234e5ff` |
+
+The full curve selection contains505 files; the overlay selection contains9.
+Each archive, retention manifest and storage receipt passed server size, MD5,
+SHA metadata and downloaded SHA256 checks. Local receipt/result basenames in
+`.runtime/olmo-nfr-stability-retention/` are `final-curves-01` and
+`final-curve-summary-01`. No model tensors were reread or uploaded again,
+no GPU work occurred, no local files were deleted, and the completed original
+reports remained unchanged.
