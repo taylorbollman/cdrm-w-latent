@@ -3,11 +3,12 @@
 Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength,
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
-The native FBT-only run is active. Through update 48, feedback prediction is
+The native FBT-only run is active. Through update 64, feedback prediction is
 improving while first-pass prediction changes little; deeper passes still
 perform substantially worse than the first pass. Deep curves at 0 and 32
 already settle to a numerical floor, so settling alone is not the missing
-ingredient.
+ingredient. At 64, regular first/fourth-pass CE is 2.675 / 4.766; useful
+refinement remains unestablished.
 
 The ordinary control has completed the requested 128 optimizer updates. Final
 checkpoint publication and terminal report closeout are complete. This
@@ -135,3 +136,25 @@ Updates remain finite and clipped. Clipping is an observed property of this
 recipe, not a numerical failure by itself; the loss improvement does not prove
 that its gradient balance or learning rate is optimal. Update 64 is the next
 planned deep curve.
+
+## Update 64: better predictions at a still-settling state
+
+Regular development CE is **2.675040 / 4.536458 / 4.688323 / 4.765664** for
+passes 1–4. On the small curve panel, CE at passes 1/2/4/8/16/32 is
+2.700558 / 4.444502 / 4.650921 / 4.724816 / 4.750531 / 4.751938.
+Thus later-pass predictions improve substantially during training, but the
+ordinary pass remains best and additional passes beyond 2 modestly worsen CE.
+
+The tail relative state change is 0.08314 at pass 4, 0.01255 at 8, 0.00253
+at 16 and 2.12e-6 at 32. The unsettled-suffix curve also approaches 1e-6.
+Settling takes somewhat more passes than at update 32, without persistent
+oscillation or divergence on this panel. There has been no observed binary
+transition from non-settling to settling: the origin already settled.
+
+Late predictive entropy is now 4.850 nats and pre-final-normalization RMS is
+2.733, versus 6.832 and 1.323 at the origin. These complement the state-change
+curves; normalized hidden RMS alone would conceal the changing scale.
+
+[Curves through 64](figures/update-000064-figure3-style.pdf) ·
+[Scale/entropy through 64](figures/update-000064-scale-entropy.pdf) ·
+[W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/1tbe2qdx).

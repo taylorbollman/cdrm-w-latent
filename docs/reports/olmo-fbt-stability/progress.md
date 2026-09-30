@@ -102,3 +102,13 @@ suppliesnarrowKLmotivation. Revisitbasedon64/96/100/128 andremainingtime.
 Initialwindowtarget13:37UTC; pairmayneedsmalloverruntofinishbothendpoints
 dependingactualruntime. No followup GPUlaunchyet. UseF64,notF128,formatched
 contextwhenthepairedNFR64resultsareavailable.
+
+08:58 UTC: F64 deep curves complete/synced1tbe2qdx. Regular CE
+2.675040/4.536458/4.688323/4.765664; small K32 CE4.751938,
+tail relative state change2.12e-6. No observed binary stabilization transition;
+origin already settled, while training improves its poor feedback prediction.
+First pass remains best. Current training continues unchanged to128. Physical
+GPU0/1 follow-up launcher prepared, not launched; source and terminal-F128
+binding guards checked. Independent helper review found no blocker (42 tests).
+New NFR summary helper c720207 requires completed/audited pair, raw losses and
+matched F64 context only; no weighted-objective quality comparison.
