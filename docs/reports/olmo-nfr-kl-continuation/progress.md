@@ -64,3 +64,13 @@ Update33 is finite, preclip norm8.8348; clipping remains active. The repeated
 update32 development CE is3.043012/7.026269/7.055292/7.063815, matching the
 parent panel. The next scheduled development measurement is48. Both GPUs
 remain reserved; no new diagnostic is being run beside the pair.
+
+11:36 UTC: control48 development completed. Pass1–4 CE is
+2.983241/6.764267/6.839343/6.858271, versus restored32
+3.043012/7.026269/7.055292/7.063815. All first16 resumed updates are
+finite/clipped. Improvement is modest and feedback remains much worse than
+first pass. Raw latent losses are.261257/.043548/.044086/.043945; raw KL
+2.508881/.620044/.638946/.637515. Later-pass KL rises while CE and latent
+loss fall. No objective-total comparison or coefficient conclusion is made
+before the reduced branch. Checkpoint43 is verified remotely; the named48
+save follows evaluation. Control continues unchanged to64.
