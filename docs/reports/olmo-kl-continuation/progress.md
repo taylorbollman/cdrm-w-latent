@@ -68,3 +68,12 @@ improve directionally; laterpass deficit remains. First update33 raw loss sums,
 counts and LR exactly match control, with raw gradientnorm4.587565 vs11.802785.
 Cloud40verified; continue to64 as authorized, no extra intervention. Reported
 midpoint improvement is not a precision clearance or long-run quality claim.
+
+06:16 UTC: both branches reached64, no further updates queued. ReducedKL.1
+finaldevCE2.704137/5.752041/5.883908/5.956001 vscontrol
+2.845510/6.805770/6.923254/6.967279. Reduced raw normmin/median/max
+1.79871/2.92773/6.65571; all32finite/clipped. Larger laterpass gains remain
+~3.05–3.25nats behind its own firstpass. Reducedcloud58verified; final64
+retention pending. Pairedaudit, summaryplots and fullinventory run only after
+report/worker/W&B close. No nativeRT or newBF16clearance. Strong directional
+loss-balance finding, not useful-refinement/quality-campaign completion.
