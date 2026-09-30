@@ -1,17 +1,40 @@
-# Provisional follow-up if NFR also retains the later-pass CE deficit
+# Next milestone: locate the common feedback deficit
 
-**Proposal only.** NFR is still running when this draft is prepared. Finish the
-fixed cohort, retain its endpoints and assess the common summary before choosing
-follow-up. No diagnostic or continuation is launched by this document.
+**Recommendation for review; no diagnostic or continuation launched.** All three arms stopped at the agreed update 32. The completed cohort summary
+is `summary-cohort-01/report.json`, SHA256
+`ffb6e4eae228e4ae8e57394bc117a90ce2918eab3d3adb7820f64084d3e1178c`.
+Use its retained checkpoint authorities for any follow-up.
 
-NF already has the deficit without RT. Its dev CE improves from
-3.254/7.775/7.798/7.816 at update 16 to 2.960/7.393/7.426/7.435 at 32.
-Later-pass gaps narrow only about 0.08–0.09 nats/target and remain roughly 4.43–4.47.
-All 32 updates clip. The eight-update median norm falls from 69.35 to about
-12.98, while latent/KL losses fall substantially. This is some adaptation with
-a large unresolved feedback deficit, not evidence of representation collapse.
-If NFR is similar, diagnose the common NF path first, then confirm the relevant
-finding with RT present. Avoid attributing a shared failure to RT.
+The recorded fixed-panel development CEs at update 32 are:
+
+| Arm | Pass 1 | Pass 2 | Pass 3 | Pass 4 |
+| --- | ---: | ---: | ---: | ---: |
+| B | 2.63179 | — | — | — |
+| NF | 2.96039 | 7.39349 | 7.42586 | 7.43514 |
+| NFR | 3.04301 | 7.02627 | 7.05529 | 7.06382 |
+
+NFR's later passes have approximately **0.37 lower CE than NF**, while its first
+pass has **0.08262 higher CE**. This is an interesting mixed directional signal:
+RT may help within the difficult feedback path, but later NFR passes remain
+3.98–4.02 nats/target worse than its own first pass. Neither NF nor NFR has
+demonstrated useful multi-pass refinement on this panel.
+
+Both arms improve absolute CE from 16 to 32. NF moves from
+3.254/7.775/7.798/7.816 to the endpoint above, narrowing later-pass gaps by only
+about 0.08–0.09 nats/target. NFR moves from 3.234/7.408/7.420/7.435, narrowing
+its gaps by about 0.17–0.19. Both clip all 32 updates. NF's eight-update median
+norm falls from 69.35 to about 12.98; NFR's final update norm is 10.56. Auxiliary
+losses fall substantially overall. This is some adaptation with a large
+unresolved deficit, not evidence of representation collapse or harmlessness.
+
+I recommend a **bounded saved-state diagnosis, starting with NF**, before a
+longer training extension. NF already has the deficit without RT and is cheaper
+to inspect; then confirm the decisive finding with RT present. This focuses on
+the common feedback/NextLat path rather than assuming an RT-specific error.
+The comparison remains a single-seed, early-warmup pilot on a fixed prefix that
+covers seven of nine strata. Update 32 is still inside the 100-update warmup;
+no update-zero development observation was scheduled. Do not turn the current
+signal into a model-selection verdict or reopen a precision grid.
 
 ## 1. Small forward-only localization
 
@@ -83,9 +106,12 @@ a different question. Small-batch probe norms must not be numerically compared
 to the cohort's 524,288-input gradient norms as if their scales were equivalent.
 
 If a clear shared-parameter conflict appears, repeat only that decomposition on
-one second fixed batch and the NFR endpoint. Do not expand to a broad numerical
-campaign. Gradient opposition is local evidence, not proof that NextLat caused
-the training deficit; Adam moments and subsequent updates matter.
+one second fixed batch and the NFR endpoint. If no conflict appears and the
+endpoint looks settled, one joint-gradient observation at the saved NF origin
+on the same batch can cheaply check whether large startup pressure has already
+subsided. Do not expand to a broad numerical campaign. Gradient opposition is
+local evidence, not proof that NextLat caused the training deficit; Adam moments
+and subsequent updates matter.
 
 ## Decision after these probes
 
@@ -99,6 +125,7 @@ the training deficit; Adam moments and subsequent updates matter.
 
 These probes should answer where to look with a few saved-state forwards and
 backwards. They do not yet justify changing Q/K normalization, kernels, model
-family, precision policy or all objective weights. Do not run a learning fork
-or continue beyond 32 until the completed cohort and this conditional proposal
-have been reviewed.
+family, precision policy or all objective weights. Do not run a learning fork,
+diagnostic or continuation beyond 32 automatically. Review the completed cohort
+and this proposal first; any subsequent configuration change must have its own
+explicitly labeled lineage and retain the source checkpoint/optimizer state.

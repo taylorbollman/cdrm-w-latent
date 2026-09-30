@@ -117,3 +117,16 @@ finalnorm10.5631. No pass refines firstpass; large deficit remains. Training
 stopped; terminal checkpoint sequence draining prior31 before32save/retention.
 Do not claim fully closed yet; wait finalreport/W&B/cloud32. progress-0153
 retained;8d28794pushed. progress-0212 preserves endpoint observations.
+
+02:25 UTC: All arms fullyclosed and queue-02 completed_all_three_first32.
+Both GPUs confirmed0MiB/no compute processes in requiredcontainer. Fullsummary
+passed with exact paired origin parameters, SHA
+ffb6e4eae228e4ae8e57394bc117a90ce2918eab3d3adb7820f64084d3e1178c.
+NFRfinalreportSHA01bceb2a1191adb513bea974d8dcb0a5b52e8b5c3b384dbd0e69d21cfea665f7.
+Joint W&Bp7vk0qz0 synced (trackingreportf8853c62); nativeNFR, summary,tracking
+andqueue02 retention verified. Inventory43cad4ec passes:16checkpoints,
+21smallreceipts,74distinctobjects/211,682,402,282bytes; its own upload and later
+closeout/admin excluded by design. Independent reviewer confirms96updates,
+allreported arithmetic/scopes; mask-deriveddenominator and wall-clockoverlap
+wording clarified. Finalresults/validation/storage and next-steps.md replace
+draftassessment. No more GPUwork; stop32 retained. PR52 closeout next.

@@ -31,26 +31,33 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-29 bounded adaptation pilot IN PROGRESS, exp/olmo-adaptation-pilot32,
-starting main358ab65. User authorized actual B/NF/NFR first32 comparison.
-Read docs/reports/olmo-adaptation-pilot/protocol.md and progress.md. New namespace
-.runtime/olmo-adaptation-pilot, SSDadaptation-pilot. Reuse PR51 prepared
-declarations byte-for-byte;200-source runtime remains frozen. B32/GPU8slots,
-NF/NFR12/GPU22slots,T1024,524288inputs/update,stop32 inside128 finite plan.
-Queue runs B thenNF thenNFR; check queue-01/report.json and stage reports before
-any launch after interruption. Root alone owns GPUs. Expected stop status is
-stopped_at_boundary, not completed_plan. Async checkpoint policy unchanged,
-600s trigger/32milestone/terminal drain, all useful states toGCS. EstimatedNFR2h.
-Per-pass FP32 dev16/32; clipping/later-CE concern remains explicit. No automatic
-extension to128 or broad numerical retest. Save/push progress every20–30min.
-B and NF completed32/cloud-verified/synced (W&Bnxm2prv9/uf1ojrgl). B dev32
-CE2.63179, no clipping; NF dev32 CE2.96039/7.39349/7.42586/7.43514, all32 clipped.
-NF improves since16 but useful refinement unestablished. Server restart killed
-hostqueue01 parent only; NF GPUcontainer finished uninterrupted. NF original
-launcher exit unknown. Recovery queue-02 adopts verifiedB/NF and launches only
-freshNFR, detached hostpid1282711. queue-01 preserved; status.py selectsqueue02.
-NFR active/pendingstartup; no other GPU launches. See progress recovery entry.
+2026-09-30 first32 adaptation pilot COMPLETE, PR52 (closeout metadata below in
+its progress.md). Read docs/reports/olmo-adaptation-pilot/results.md, next-steps.md,
+assessment-guide.md, validation.md, storage-receipt.md and progress.md. Runtime
+85e5f78/200pins unchanged; new execution/analysis only. All B/NF/NFR32 finite
+updates, dev16/32 and cloud32/synced W&B complete. No active/queued GPU work.
+Same16,777,216new inputs/arm,T1024,effective524288/update; B32/GPU8slots,
+NF/NFR12/GPU22slots. B original weights, NF/NFR paired fusion128 import/fresh
+predictor/Adam, exact71named parameter tensors. Prior fusion exposure separate.
 
+Dev32: B2.63179; NF2.96039/7.39349/7.42586/7.43514;
+NFR3.04301/7.02627/7.05529/7.06382. Both improve16→32 but later passes remain
+~4nats worse than own first. NFR laterpasses beat NF~.37, firstpass worse.083;
+not a useful-refinement/RT quality win. All32 NF/NFR updates clipped, Bnone.
+Selectedcompute+materialization71.0k/7.78k/3.57kinputs/s; executor12.6/51.9/
+113.8min. Reserved42.50/58.70/59.08GiB. Keep timing/memory scope qualifications.
+Summary ffb6e4e, W&Bp7vk0qz0. Sixteen checkpoints/21small receipts in inventory
+43cad4ec, retainedGCS; inventory/closeout/admin later receipts separate.
+
+Daemonrestart killed hostqueue01 only; NF GPUcontainer finished uninterrupted.
+NF launcher exit unknown; final report/W&B/cloud authorities verified. Detached
+queue02 adopted B/NF and ran only untouched NFR. queue01 preserved/stale;
+queue02completed, no repeatedtraining. .runtime/olmo-adaptation-pilot,
+SSDadaptation-pilot, GCSsmall olmo-two-gpu/20260929T231346Z. Reviewstop32 inside
+unchanged128ceiling. Recommend bounded saved-state NF-first feedback sensitivity
+and per-loss/fusion gradient probes, decisiveNFR confirmation, no automatic
+continuation/newnumericalgrid. No BF16 clearance or Q/K/core change. Save/retain
+progress every20–30min for future work; inspect reports/processes after interruption.
 
 2026-09-29 asynchronous checkpoint milestone COMPLETE; PR51 merged039fa96b.
 Closeout metadata is in docs/reports/olmo-pilot-async/progress.md. Read results.md,
