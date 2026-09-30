@@ -91,3 +91,15 @@ def test_flattened_provenance_and_stale_readback_retry(monkeypatch):
 def test_reject_unrelated_summary_change():
     with pytest.raises(ValueError, match='Unrelated'):
         reconcile.verify_summary({'loss': 2.5}, {'loss': 3., 'checkpoint': 128}, {'checkpoint': 128})
+
+
+def test_kl_continuation_schema_retains_terminal_drain_gate():
+    report, publication = evidence()
+    report['schema'] = 'olmo-kl-continuation-report-v1'
+    report['arm'] = 'NFR'
+    report['status'] = 'stopped_at_boundary'
+    assert reconcile.validate_evidence(report, publication, 'pin') == (
+        128, 'taylorbollman/pretrained-fbt-rt-nextlat/example')
+    report['loop']['checkpoint_pending'] = True
+    with pytest.raises(ValueError, match='drain is incomplete'):
+        reconcile.validate_evidence(report, publication, 'pin')

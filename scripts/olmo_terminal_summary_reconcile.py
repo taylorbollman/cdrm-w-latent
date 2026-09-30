@@ -75,7 +75,8 @@ def readback(api_factory, run_path, before, patch):
 
 def validate_evidence(report, publication, publication_sha256):
     require(report.get('schema') in ('olmo-pilot-async-execute-report-v1',
-                                    'olmo-fbt-stability-execute-report-v1'),
+                                    'olmo-fbt-stability-execute-report-v1',
+                                    'olmo-kl-continuation-report-v1'),
             'Unsupported terminal report schema')
     require(report.get('status') in ('completed_plan', 'stopped_at_boundary')
             and report.get('segment_completed'), 'Execution segment is not complete')
