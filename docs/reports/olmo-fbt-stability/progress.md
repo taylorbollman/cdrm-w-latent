@@ -128,3 +128,14 @@ delta1.61e-6 already at16. LR warmup boundary adds no observed failure.
 Continue to128, expected around10:20 including final publication. Planned
 next stage remains bounded online/component checks, then evidence-dependent
 NFR saved32→64 KL pair; no automaticF192 or pass/gate change.
+
+10:13 UTC: F128 training/deep curves finished; final publication and host
+closeout still pending. Curves syncedynyxw8ml. Regular CE
+2.687038/2.919213/2.937069/2.942000; ordinary B1282.687618.
+Small K32 CE2.909915, taildelta~1.6e-6 by16. All128 updates finite,
+first116 clipped then12unclipped; rawnorm median3.0007/max51.8164.
+Feedback gap narrowed4.529→.255nats, no useful refinement yet.
+Root selects bounded online+saved component checks next, conditional NFRKL
+pair after those; no automatic F192. Evidence agent waiting terminal host
+exit for audit; execution agent retains final curves then terminal artifacts
+and reconciles W&B summary if needed. No follow-up GPU launched yet.

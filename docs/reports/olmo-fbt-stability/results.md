@@ -1,14 +1,28 @@
-# FBT-only stability study — in progress
+# FBT-only stability study
 
 Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength,
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
-The native FBT-only run is active. Through update 96, feedback prediction is
-improving while first-pass prediction changes little; deeper passes still
-perform substantially worse than the first pass. Deep curves at 0 and 32
-already settle to a numerical floor, so settling alone is not the missing
-ingredient. At 96, regular first/fourth-pass CE is 2.681 / 3.350; useful
-refinement remains unestablished.
+The native FBT-only training segment has finished 128 updates (67,108,864 new
+input tokens). Final checkpoint publication and independent terminal auditing
+are pending. Feedback learns substantially while first-pass performance remains
+close to the ordinary control. The iteration settles, but feedback still does
+not improve prediction over the ordinary pass on these panels.
+
+| Optimizer update | First-pass CE | Second-pass CE | Fourth-pass CE |
+| ---: | ---: | ---: | ---: |
+| 0 | 2.642404 | 7.399125 | 7.171813 |
+| 32 | 2.651994 | 6.241516 | 6.368114 |
+| 64 | 2.675040 | 4.536458 | 4.765664 |
+| 96 | 2.680980 | 3.279866 | 3.349725 |
+| 100 | 2.680524 | 3.195912 | 3.259452 |
+| 128 | 2.687038 | 2.919213 | 2.942000 |
+
+These are fixed 64-row development CE values in nats per target. The separate
+eight-row [final pass curves](figures/update-000128-figure3-style.pdf) show
+settling to about 1.6e-6 relative hidden change by pass 16. The shared starting
+point includes prior fusion-only training, so this study cannot identify any
+earlier stabilization transition during that preparation.
 
 The ordinary control has completed the requested 128 optimizer updates. Final
 checkpoint publication and terminal report closeout are complete. This
@@ -35,7 +49,8 @@ pass-curve panel or a final quality evaluation.
 Implementation checks: 52 focused execution/probe CPU tests, 55 independent
 auditor tests, and 23 isolated online-comparison tests pass. The small two-GPU
 insertion/cloud-resume checks also pass exactly (8,531 and10,150 independent
-checks respectively). Native F-only training is underway.
+checks respectively). Native F-only training has reached its requested
+128-update boundary.
 
 ## Before new F-only training: settling without useful prediction
 
@@ -192,3 +207,33 @@ continues with the declared constant LR plateau through update 128.
 [Curves through 100](figures/update-000100-figure3-style.pdf) ·
 [Scale/entropy through 100](figures/update-000100-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/5ogbkzpu).
+
+## Update 128 and the next diagnostic
+
+Final regular development CE is **2.687038 / 2.919213 / 2.937069 / 2.942000**.
+The first/fourth-pass gap has narrowed from 4.529 to 0.255 nats per target.
+The ordinary control finishes at 2.687618 on the same panel; the 0.000580
+difference is not a meaningful quality win. The F-only run preserves first-pass
+performance while learning to handle its feedback input.
+
+The small panel gives CE 2.714610 / 2.909644 / 2.909915 at passes 1/4/32.
+Tail relative hidden change is 0.02679 at pass 4, 0.000329 at 8 and about
+1.6e-6 at 16/32. A flat CE curve by pass 4 does not imply identical hidden
+states. The bounded exact-online comparison is the next check of this point.
+Late predictive entropy is 2.978 nats and pre-final-normalization RMS is 1.783.
+
+All 128 updates are finite. Preclip norms range from 0.7066 to 51.8164, with
+median 3.0007. The first 116 updates clip; the last 12 do not. This is an
+observed optimization trajectory, not an assertion of an optimal LR or general
+BF16 equivalence. No gate, pass-count, normalization or training-loss change was
+needed to complete this study.
+
+[Final pass curves](figures/update-000128-figure3-style.pdf) ·
+[Final scale/entropy curves](figures/update-000128-scale-entropy.pdf) ·
+[W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ynyxw8ml).
+
+The next work is the prepared exact-online check and matched saved NF/NFR
+curves, followed—if those checks expose no blocker—by the independently declared
+NFR KL1 versus KL0.1 continuation from its common saved update32 state. We are
+not extending F-only automatically to192. F versus NF removes both NextLat
+losses, so it does not by itself isolate the effect of KL; the paired test does.
