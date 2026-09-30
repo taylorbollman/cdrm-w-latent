@@ -38,7 +38,7 @@ feat/olmo-fbt-stability, draftPR55. Read docs/reports/olmo-nfr-kl-continuation/
 progress.md and protocol.md, then olmo-fbt-stability/results.md/progress.md.
 Both GPUs reserved for NFR queue-after-f128-01/session57288, started10:34UTC.
 Control native-nfr-control-32to64-01 RUNNING, W&Bujz924fj; reduced branch
-automatically follows only after verified/synced control64. Host monitor96042.
+automatically follows only after verified/synced control64. Host monitor53534 (replaced a reader that saw an in-progress eval placeholder).
 Both restore original NFR32+Adam, only KL1vs.1 changes; RT0/15, K4, latent1,
 T1024,B12/rank,524288inputs/update and original128schedule unchanged.
 Frozen215source scope; no F128 warmstart, no F192 extension. Runtime

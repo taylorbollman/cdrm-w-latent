@@ -151,3 +151,13 @@ Prepared result-nfr32 and bound result-online-f128 respectively. NF32 and
 NF64control/reduced remain unlaunched, to run sequentially onGPU1 afteronline.
 CPU agents auditing/retaining/reading finished artifacts; no further training.
 Conditional NFR pair queue prepared but not activated.
+
+10:34 UTC: All five post-F GPU diagnostics finished; four component helpers
+completed/synced with hostexit0. Online helper complete/synced and preservation
+checks pass; host-only terminal spelling mismatch caused wrapperexit1 after
+childsuccess. Immutable terminal-adoption.json records it; no inference rerun.
+All measured F/NF/NFR conditions settle tightly atK32. F128 exactonline on
+isolated2x128 crops agrees~1e-6 atK32, K4hiddenerror1.08% despite tinyCEgap.
+See post-diagnostics.md and figures. NFR KL pair activated at10:34,
+queue-after-f128-01/session57288, controlW&Bujz924fj; both GPUs reserved.
+Read NFR progress.md for live work. F-only study closed; no F192 extension.

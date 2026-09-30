@@ -53,3 +53,8 @@ Control started successfully in verified two-H100 container,
 W&B https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ujz924fj .
 Both GPUs reserved for this queue; all post-F GPU diagnostics already exited.
 Reduced remains queued, not yet launched. Startup/graph preparation underway.
+
+10:38 UTC: Root readonly monitor restarted as53534 after its display code
+encountered the valid startup evaluation placeholder with empty panels.
+It now waits for completed panel results. Training and queue were unaffected;
+old monitor96042 exited. Startup evaluator is repeating saved32 before updates.

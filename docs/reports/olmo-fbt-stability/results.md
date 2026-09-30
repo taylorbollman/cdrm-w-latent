@@ -233,11 +233,15 @@ needed to complete this study.
 [Final scale/entropy curves](figures/update-000128-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ynyxw8ml).
 
-The next work is the prepared exact-online check and matched saved NF/NFR
-curves, followed—if those checks expose no blocker—by the independently declared
-NFR KL1 versus KL0.1 continuation from its common saved update32 state. We are
-not extending F-only automatically to192. F versus NF removes both NextLat
-losses, so it does not by itself isolate the effect of KL; the paired test does.
+The [exact-online and matched component checks](post-diagnostics.md) are now
+complete. All saved configurations settle by K32; lower NF KL improves
+prediction despite slower early settling. On two isolated crops, F128 K32
+agrees with exact online to about 1e-6, while K4 retains about 1.08% hidden
+error despite a tiny mean CE gap. These observations expose no blocker to the
+independently declared [NFR KL1 versus KL0.1 continuation](../olmo-nfr-kl-continuation/progress.md),
+which is now running from the original common NFR32 state and Adam. F-only is
+not extended to192. F versus NF removes both NextLat losses, so it does not by
+itself isolate KL; the paired continuation does.
 
 ## Execution, memory and recovery
 
