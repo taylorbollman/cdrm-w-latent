@@ -47,24 +47,52 @@ removes both auxiliary losses; it cannot independently attribute that effect
 to KL. NFR-versus-NF also has different learned trajectories. Neither
 comparison establishes RT's causal value.
 
+### Midpoint assessment, 2026-09-30 at 13:35 UTC
+
+The completed update-48 evaluations favor reduced KL for every pass's CE:
+2.790368 / 6.348725 / 6.456982 / 6.493014, versus control
+2.983241 / 6.764267 / 6.839343 / 6.858271. Raw latent and KL losses are higher
+on every pass. This is the same direction of tradeoff seen in NF, not general
+improvement in every objective. Control has also finished 64 with first/fourth
+CE 2.930108 / 6.646855 and 32 finite, clipped updates. **Reduced 64 remains
+pending; these are midpoint findings, not the terminal comparison.** See the
+[NFR progress record](../olmo-nfr-kl-continuation/progress.md).
+
+Finite K4 execution does not determine deeper-pass dynamics at these newer
+weights. In the prior NF pair, reducing KL improved CE while slowing early
+settling. A bounded endpoint curve is therefore informative even if neither
+NFR branch shows a numerical health concern.
+
 ## Smallest sensible follow-up after review
 
-If a candidate completes cleanly with improving feedback prediction and
-acceptable first-pass retention, propose **one unchanged NFR64→128
-continuation**, retaining its exact optimizer, schedule, data order and
-architecture. Its question is whether the combined model remains healthy
-through the existing update 100 warmup boundary and continues adapting.
-Inspect saved 96/100/128 states using the existing measurement conventions.
+First propose **matched, no-update K1–32 curves for both saved NFR64
+endpoints**, using the existing eight-row FP32/no-jitter panel and metrics.
+This directly completes the Figure-3-style functionality question before
+spending on more training. Inspect tail state changes, hidden scales, entropy
+and K4-to-K32 CE. Do not require the old NFR32 numerical floor, or treat slower
+settling alone as failure. Small state changes with poor CE mean settled poor
+prediction; persistent growth or non-decaying oscillation warrants localization
+before assuming the same inference behavior. This observation is not a general BF16
+clearance or an exact-online check.
+
+Authenticating NFR64 in a new diagnostic scope must be explicit; the existing
+saved-component helper admits NFR32 only. Do not silently repurpose its
+checkpoint allowlist. No broad grid or repeat exact-online study is proposed.
+
+If the endpoints remain bounded and settle, and a candidate completes cleanly
+with improving feedback prediction and acceptable first-pass retention,
+propose **one unchanged NFR64→128 continuation**, retaining its exact optimizer,
+schedule, data order and architecture. Its question is whether the combined
+model remains healthy through the existing update 100 warmup boundary and
+continues adapting. Inspect saved 96/100/128 states using the existing conventions.
 This is a bounded functionality/adaptation study, not a quality competition;
 the unextended branch's 64 endpoint is not a matched 128 control. A stronger
 causal claim would require a separately agreed matched continuation.
 
-If the pair is ambiguous, or a new concern appears, do less first: inspect the
-relevant saved endpoint with a bounded no-update probe addressing that
-specific concern. Examples are deeper-pass/tail behavior or per-loss gradient
-balance, not another broad precision grid. Authenticating NFR64 in a new
-diagnostic scope must be explicit; the existing saved-component helper admits
-NFR32 only. Do not silently repurpose its checkpoint allowlist.
+If the completed pair or curves reveal a specific concern, localize that
+concern first, rather than adding a broad precision or hyperparameter grid.
+For example, a per-loss gradient probe should answer an identified gradient
+balance question, not become an automatic prerequisite for further work.
 
 No outcome here automatically calls for a fusion ramp, detached feedback,
 new Q/K normalization, altered RT placement or a pass-frequency sweep.
