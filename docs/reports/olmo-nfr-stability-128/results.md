@@ -91,3 +91,7 @@ such as gradient conflict or predictor lag.
 At the end of warmup, update100 CE is2.769629/3.510893/3.552609/3.574547,
 gap.804918nats. The36 resumed updates remain finite/clipped. Update101
 will use the original schedule's peak LR2e-4; no schedule change was made.
+
+Update112 CE is2.763501/3.231428/3.253204/3.263256, gap.499755nats.
+Adaptation continues after warmup, but feedback still worsens prediction
+relative to the first pass. The final128 results/probe are still pending.

@@ -117,3 +117,10 @@ All36 resumed updates finite/clipped; norm min/median/max1.472/2.580/5.199.
 Update100 uses.0001982 and schedules.0002 for101; this is the original
 warmup, not a changed learning-rate plan. Cloud96 verified. Remaining28
 updates continue unchanged at the planned peak LR; next regular dev112.
+
+18:33 UTC: dev112 complete, CE2.763501/3.231428/3.253204/3.263256;
+fourth-minus-first gap.499755, improving after warmup. Raw latent
+.195004/.152194/.152137/.151809; KL2.635841/2.052114/2.052222/2.047096.
+Latest preclip norm1.155449 remains finite. Cloud110 verified; named112
+save follows evaluation. Remaining16 updates and final saved-state probe
+continue under unchanged settings. No useful-refinement claim.
