@@ -141,10 +141,12 @@ def f64_context(evaluation, publication, paired_development):
     """Allow only same-panel F-only update64 CE, not F128 or a matched fork claim."""
     config = publication['metadata']['configuration']
     payload = config['execution_identity']['payload']
-    mode = payload['model_contract']['mode']
+    contract = payload['model_contract']; mode = contract['mode']
     require(publication['counters']['optimizer_updates'] == 64 and payload['arm'] == 'F'
             and mode['num_passes'] == 4 and mode['rt_mode']['selected_layers'] == []
-            and mode['enabled'] is False and mode['beta'] == 1.
+            and mode['enabled'] is True and mode['beta'] == 1.
+            and contract['weights'] == {'ce': 1., 'latent': 0., 'kl': 0.}
+            and contract['component_parameters']['predictor'] == 0
             and payload['recipe']['sequence_length'] == 1024
             and payload['recipe']['effective_valid_tokens'] == 524288,
             'Context must be native F-only at update64')

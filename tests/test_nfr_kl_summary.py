@@ -59,8 +59,9 @@ def f_context(result):
     evaluation['panels']['dev-main']['result']['enabled'] = {'ce': True, 'latent': False, 'kl': False}
     publication = {'counters': {'optimizer_updates': 64}, 'metadata': {'configuration': {
         'execution_identity': {'payload': {'arm': 'F',
-            'recipe': {'sequence_length': 1024, 'effective_valid_tokens': 524288}, 'model_contract': {'mode': {
-            'num_passes': 4, 'rt_mode': {'selected_layers': []}, 'enabled': False, 'beta': 1.}}}}}}}
+            'recipe': {'sequence_length': 1024, 'effective_valid_tokens': 524288}, 'model_contract': {
+            'weights': {'ce': 1., 'latent': 0., 'kl': 0.}, 'component_parameters': {'predictor': 0},
+            'mode': {'num_passes': 4, 'rt_mode': {'selected_layers': []}, 'enabled': True, 'beta': 1.}}}}}}}
     return evaluation, publication, result['arms']['KL1']['development'][-1]
 
 
@@ -74,6 +75,16 @@ def test_f64_only_context_and_exact_development_membership():
     values[0]['after_update'] = 64
     values[0]['panels']['dev-main']['membership_sha256'] = 'other'
     with pytest.raises(ValueError, match='membership'): summary.f64_context(*values)
+
+
+@pytest.mark.parametrize('mutation', ['FBT_disabled', 'predictor_present', 'auxiliary_enabled'])
+def test_f64_requires_active_feedback_but_no_predictor_or_auxiliary_loss(mutation):
+    values = f_context(summary.summarize(*fixture()))
+    contract = values[1]['metadata']['configuration']['execution_identity']['payload']['model_contract']
+    if mutation == 'FBT_disabled': contract['mode']['enabled'] = False
+    if mutation == 'predictor_present': contract['component_parameters']['predictor'] = 1
+    if mutation == 'auxiliary_enabled': contract['weights']['kl'] = 1.
+    with pytest.raises(ValueError, match='F-only'): summary.f64_context(*values)
 
 
 def test_cli_pins_snapshots_and_outputs_without_objective_columns(tmp_path):
