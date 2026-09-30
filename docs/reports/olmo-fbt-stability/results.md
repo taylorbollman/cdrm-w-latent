@@ -209,7 +209,7 @@ continues with the declared constant LR plateau through update 128.
 [Scale/entropy through 100](figures/update-000100-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/5ogbkzpu).
 
-## Update 128 and the next diagnostic
+## Update 128 and the completed online diagnostic
 
 Final regular development CE is **2.687038 / 2.919213 / 2.937069 / 2.942000**.
 The first/fourth-pass gap has narrowed from 4.529 to 0.255 nats per target.
@@ -220,7 +220,10 @@ performance while learning to handle its feedback input.
 The small panel gives CE 2.714610 / 2.909644 / 2.909915 at passes 1/4/32.
 Tail relative hidden change is 0.02679 at pass 4, 0.000329 at 8 and about
 1.6e-6 at 16/32. A flat CE curve by pass 4 does not imply identical hidden
-states. The bounded exact-online comparison is the next check of this point.
+states. The completed [bounded exact-online comparison](post-diagnostics.md)
+confirms this distinction on two isolated 128-token crops: K4 retains about
+1.08% hidden error, whereas K32 agrees with exact online near 1e-6. This is
+not an online-equivalence result for packed T1024 or general generation.
 Late predictive entropy is 2.978 nats and pre-final-normalization RMS is 1.783.
 
 All 128 updates are finite. Preclip norms range from 0.7066 to 51.8164, with

@@ -1,6 +1,7 @@
 # Conditional NFR comparison reporting
 
-This is prepared tooling, not evidence that either conditional branch has run.
+This document records the predeclared reporting procedure; current execution
+status is in [progress.md](progress.md).
 Do not publish until both NFR branches have completed updates 33–64, retained
 their update-64 checkpoints, and passed the independently pinned NFR pair audit.
 The original 215-source execution authority and its protocol remain unchanged.
