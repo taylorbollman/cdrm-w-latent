@@ -286,3 +286,46 @@ No GPU work or frozen runtime-source edits occurred. A metadata check caught
 and corrected an optional-summary guard in the unpinned reporting helper only:
 FBT mode is enabled while NextLat weights and predictor parameters are zero.
 The fix is separately committed as `2ff12d8`, with 14 focused CPU tests passing.
+
+## Curve summaries through updates 96 and 100
+
+The completed, W&B-synced summaries through updates 96 and 100 were retained
+as separate immutable analysis archives while native F training continued.
+Each report, source snapshot, input-probe snapshot and plotted artifact hash was
+checked before upload; the report hash was checked again afterward. No live
+native-F report was read or archived.
+
+| Directory under common evidence prefix | Included probe updates | Members | Archive generation | Archive SHA256 |
+|---|---|---:|---|---|
+|`fbt-stability-summary-update000096-01`|0, 32, 64, 96|11|1790761003490234|`45aa49e29e5add97bcbcc4e70ac770a9652103912ad3467c7f274fd6a549bc9b`|
+|`fbt-stability-summary-update000100-01`|0, 32, 64, 96, 100|12|1790761275372185|`012d4e289b0bb7e7801c34886249bf3bf6372785e7a760de1e51b9d6227e2bf8`|
+
+| Directory | Receipt generation | Receipt SHA256 |
+|---|---|---|
+|`fbt-stability-summary-update000096-01`|1790761004038280|`dbb7c94f4b3331764ead3c52278bd8b0fadbd3c3281cd85aaab444dc9323c4ba`|
+|`fbt-stability-summary-update000100-01`|1790761275925820|`7663a73e3c10f76b757439f93083e16d706e300fd10890bb4c7ccf4394111adc`|
+
+Terminal summary report pins:
+
+- `summary-update000096-01/report.json`: `6e29ec3119aa18ed2154a1266613867c2013666077fd3a68d3962476ca85f27a`.
+- `summary-update000100-01/report.json`: `cab6429e25fd48668a125932fc8229b83b0fa66bc64a66ae00f45746b099076c`.
+
+Local receipt/result files use those same names under
+`.runtime/olmo-fbt-stability-retention/`. Every remote archive, manifest and
+receipt passed size, server MD5, SHA metadata and downloaded SHA256 verification.
+
+The unchanged `scripts.olmo_two_gpu_retain.retain` helper was invoked by this
+bounded CPU-only watcher, which waited for each summary to be completed and synced:
+
+```bash
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed \
+  bash scripts/docker_shell.sh bash -lc \
+  'env -u GOOGLE_APPLICATION_CREDENTIALS python .runtime/olmo-fbt-stability-retention/retain_late_curves.py'
+```
+
+For each stage, its exact arguments are the same documented individual-command
+pattern: `--input-dir .runtime/olmo-fbt-stability/<stage>`,
+`--prefix gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/fbt-stability-<stage>`,
+and `--receipt .runtime/olmo-fbt-stability-retention/<stage>.json`.
+No `--checkpoint-dir` was supplied. No GPU execution, model-state rehash,
+frozen-source change or new experiment launch occurred.

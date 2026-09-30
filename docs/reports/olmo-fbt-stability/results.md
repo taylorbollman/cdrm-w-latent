@@ -180,3 +180,15 @@ still offer no CE benefit on this panel.
 [Curves through 96](figures/update-000096-figure3-style.pdf) ·
 [Scale/entropy through 96](figures/update-000096-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/yg1f732m).
+
+## Update 100: warmup boundary
+
+Regular development CE is **2.680524 / 3.195912 / 3.240730 / 3.259452**.
+The small panel gives CE 2.711169 / 3.192372 / 3.196360 at passes 1/4/32.
+Tail relative state change reaches 1.61e-6 by pass 16 and 1.47e-6 by pass 32.
+This adds no evidence of a sudden failure at the end of LR warmup. The model
+continues with the declared constant LR plateau through update 128.
+
+[Curves through 100](figures/update-000100-figure3-style.pdf) ·
+[Scale/entropy through 100](figures/update-000100-scale-entropy.pdf) ·
+[W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/5ogbkzpu).

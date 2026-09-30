@@ -121,3 +121,10 @@ Continue unchanged to100/128; no reason yet to change gate/pass design.
 F64 exact context+curve32/64 summaries retainedGCS, see storage-receipt.
 The optional NFR summary F64 mode guard was fixed against real metadata
 (2ff12d8;14 focused tests); training/source208/215 remain unchanged.
+
+09:43 UTC: F100 deep curves synced5ogbkzpu. Regular CE
+2.680524/3.195912/3.240730/3.259452; small K32 CE3.196360, tail
+delta1.61e-6 already at16. LR warmup boundary adds no observed failure.
+Continue to128, expected around10:20 including final publication. Planned
+next stage remains bounded online/component checks, then evidence-dependent
+NFR saved32→64 KL pair; no automaticF192 or pass/gate change.
