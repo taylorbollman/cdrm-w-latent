@@ -1,6 +1,6 @@
 # Saved-state feedback diagnostic progress
 
-**COMPLETE, 03:32 UTC.** All six native probes pass, all seven W&B runs including
+**COMPLETE, 2026-09-30.** All six native probes pass, all seven W&B runs including
 summary are synced, and both H100s are idle. No optimizer update or continuation
 is active/queued. Read results.md and next-steps.md; the proposed paired KL-weight
 continuation remains a review proposal only.
@@ -23,7 +23,18 @@ no historical report was rewritten to claim execution of relocated paths.
 All six probe archives, summary, fixture metadata/payload, failed preflight and
 packaging audit are cloud verified. Final code/docs/test/receipt closeout uses
 `feedback-closeout` under the same timestamp prefix; PR/merge identifiers are
-recorded below after publication.
+recorded below.
+
+[PR53](https://github.com/taylorbollman/cdrm-w-latent/pull/53) merged as
+`fcc5a29adbdc0d11c5380d3c132d61225b874e47`; reviewed head
+`c79282d05877d3a9b00dcc27b7999ff9dd9cd275`. No repository CI checks were configured;
+the explicit CPU/GPU and independent compatibility evidence above supplies the
+validation record. Working branch returned to main.
+Closeout receipt `.runtime/olmo-feedback-retention/closeout-01.json` has SHA256
+`63d5cb9b765972437df9923c462d3850de4ea8d7e7ed68baa31ec152edd56a05`.
+The38-member code/docs/test/receipt archive is fully download verified. This
+post-merge metadata and that receipt are separately retained under
+`feedback-admin` at the same cloud timestamp prefix.
 
 ## Earlier progress (superseded by completion above)
 
