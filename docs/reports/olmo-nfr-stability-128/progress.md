@@ -130,3 +130,16 @@ the first resumed update below clipping threshold1; update120 norm1.594339
 is again clipped. No new dev observation since112. Independent agents are
 watching terminal guards for CPU audit, final-probe binding, and closed-run
 retention; root retains control of the final GPU probe. No training beyond128.
+
+19:22 UTC: final dev128 complete/boundary-exact. CE passes1–4
+is2.756071/3.045481/3.053890/3.058500; fourth-minus-first gap.302429.
+Raw latent.193384/.154142/.154367/.154215;
+KL2.514281/2.069738/2.077383/2.075170. All64 resumed updates finite;
+119 and123–128 are below clipping threshold1. Final norm.944219.
+Cloud127 verified; final128 save/publication and terminal closeout pending.
+No update129 is authorized or launched. User asked about extending if the gap
+keeps closing: root recommends a bounded192 endpoint, conditional on healthy
+final curves, with160 observation. This is a proposal only. The live finite128
+scheduler cannot be bypassed with a stop flag; extension requires a new
+explicit192 plan with unchanged128 prefix and deliberate horizon-metadata
+transition preserving weights/Adam/RNG/cursor/currentLR. No new warmup/reset.

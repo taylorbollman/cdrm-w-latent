@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 18:33 UTC: NFR64-to128 TRAINING ACTIVE, authorized by latest user.
+2026-09-30 19:22 UTC: NFR64-to128 FINAL CLOSEOUT ACTIVE, authorized by user.
 Branch feat/olmo-nfr-stability-128. Read docs/reports/olmo-nfr-stability-128/
 protocol.md and progress.md. Prepare matched no-update K1-32 NFR64 KL1/.1
 endpoint curves on common eight-row FP32/no-jitter panel. If bounded/settling,
@@ -44,10 +44,12 @@ endpoint y8xlyhtw/sf5dwyaz, runtime olmo-nfr-endpoint-curves. All retained.
 Unchanged continuation launched15:49, root83327, monitor68687, both GPUs.
 W&B2zu5jloq; runtime olmo-nfr-stability-128/native-nfr-reduced-64to128-01.
 Exact restored64 full state/Adam/RNG/cursor/scheduler and dev64 verified.
-Dev112complete CE2.763501/3.231428/3.253204/3.263256, gap.499755;
-dev100 gap.804918, dev96 gap.925822, dev80 gap1.775912, dev64 gap2.745152.
-Feedback still worse. All48resumed updates finite; latestnorm1.155449.
-Cloud110verified. Original warmup ended100; peakLR.0002 since101.
+Dev128complete CE2.756071/3.045481/3.053890/3.058500, gap.302429;
+dev112 gap.499755, dev100 gap.804918, dev64 gap2.745152. Feedback still worse.
+All64resumed updates finite; final6unclipped, latestnorm.944219.
+Cloud127verified; final128 save/upload pending. Warmup ended100; peakLR.0002.
+User asked about extension: proposed192 with160check, NOT authorized/launched.
+Finite128 scheduler requires explicit new horizon/unchanged-prefix proof.
 DO NOT launch other GPU work. Timeout6h; STOP.json checkpointedstop; stop128.
 Final128 K32 probe prepared separately for AFTER terminaltraining+GPUrelease.
 Continuation36CPUtests/222frozenpins; endpoint44CPUtests. Scope/launch/

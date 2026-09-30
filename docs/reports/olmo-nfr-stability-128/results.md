@@ -95,3 +95,10 @@ will use the original schedule's peak LR2e-4; no schedule change was made.
 Update112 CE is2.763501/3.231428/3.253204/3.263256, gap.499755nats.
 Adaptation continues after warmup, but feedback still worsens prediction
 relative to the first pass. The final128 results/probe are still pending.
+
+Final regular-panel update128 CE is2.756071/3.045481/3.053890/3.058500,
+gap.302429nats. The gap continues shrinking, more slowly than before;
+first-pass CE also improves slightly. All64 resumed updates are finite,
+including six consecutive unclipped final updates. Evaluation preserves
+training state exactly. Final checkpoint publication and deep-pass probe
+remain pending at this observation; no update129 has been launched.
