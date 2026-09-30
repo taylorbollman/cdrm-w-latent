@@ -299,6 +299,27 @@ def source_hashes():
     return {str(path.relative_to(ROOT)): sha256_file(path) for path in sorted(paths)}
 
 
+def release_completed_graph_runner(runner, *, synchronize=None):
+    """Release captured NCCL ownership before process-group destruction.
+
+    Call only after a successfully completed, synchronized update boundary.
+    A graph retains NCCL user objects even after its last replay; destroying
+    the process group while these graphs remain reachable can wait forever.
+    This wrapper owns shutdown only and does not modify the shared graph core.
+    """
+    if synchronize is None:
+        synchronize = torch.cuda.synchronize
+    synchronize(runner.device)
+    for name in ("local_graph", "sync_graph"):
+        graph = getattr(runner, name)
+        if graph is not None:
+            graph.reset()
+        setattr(runner, name, None)
+    runner.local_result = runner.sync_result = None
+    runner.ddp = None
+    runner.stream = None
+
+
 def main(argv=None):
     args = parse_args(argv)
     if not Path("/.dockerenv").exists() or Path.cwd() != Path("/workspace/cdrm-w-latent"):
@@ -451,7 +472,7 @@ def main(argv=None):
             if origin["state_stat"] != {"size": state_stat.st_size, "mtime_ns": state_stat.st_mtime_ns, "inode": state_stat.st_ino}:
                 raise ValueError("Original checkpoint state-file metadata changed")
             report["original_checkpoint_unchanged"] = True
-        report["status"] = "completed"
+        report["status"] = "updates_complete"
         coordinator.call("completed summary", lambda: tracker.summary(report["summary"]), rank_zero=True)
     except BaseException as error:
         report.update(status="failed", error={"type": type(error).__name__, "message": str(error),
@@ -459,14 +480,52 @@ def main(argv=None):
         raise
     finally:
         report["elapsed_seconds"] = time.monotonic() - started
-        if coordinator.rank == 0 and args.output_dir.exists():
-            persist()
-            if tracker:
-                tracker.finish(succeeded=report["status"] == "completed")
+        completed_work = report["status"] == "updates_complete"
+        tracking_error = None
+        try:
+            if coordinator.rank == 0 and args.output_dir.exists():
                 persist()
+                if tracker:
+                    tracker.finish(succeeded=completed_work)
+                    persist()
+        except BaseException as error:
+            tracking_error = error
+            report.update(status="failed", error={"type": type(error).__name__,
+                "message": str(error), "scope": "final tracking synchronization"})
         if data is not None:
             data.close()
-        dist.destroy_process_group()
+        if completed_work:
+            try:
+                report["teardown"] = "releasing_graphs_and_reducer"
+                if coordinator.rank == 0:
+                    persist()
+                release_completed_graph_runner(runner)
+                # Drop all remaining references before collecting any reducer
+                # cycles. The historical executors achieve this by returning
+                # from their segment function before process-group shutdown.
+                runner = adapter = optimizer = model = None
+                gc.collect()
+                report["teardown"] = "destroying_process_group"
+                if coordinator.rank == 0:
+                    persist()
+                dist.destroy_process_group()
+                report["teardown"] = "completed"
+                if tracking_error is None:
+                    report["status"] = "completed"
+            except BaseException as error:
+                report.update(status="failed", error={"type": type(error).__name__,
+                    "message": str(error), "scope": "completed-boundary teardown"})
+                if coordinator.rank == 0:
+                    persist()
+                raise
+        # Following an unknown CUDA/NCCL failure, avoid inventing additional
+        # collectives or synchronized CUDA cleanup; the supervisor terminates
+        # the disposable job. Partial per-update evidence is already durable.
+        if coordinator.rank == 0 and args.output_dir.exists():
+            report["elapsed_seconds"] = time.monotonic() - started
+            persist()
+        if tracking_error is not None:
+            raise tracking_error
 
 
 if __name__ == "__main__":

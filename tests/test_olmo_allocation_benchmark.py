@@ -9,7 +9,7 @@ from cdrm.pretrained.campaign_recipe import CampaignRecipe
 from cdrm.pretrained.lm_training import optimizer_ownership, parameter_layout
 from scripts.olmo_allocation_benchmark import (
     ROOT, allocation, construct_tiny, parse_args, recipe_from_record,
-    summary_from_updates, tiny_batches, validate_clone_payload,
+    release_completed_graph_runner, summary_from_updates, tiny_batches, validate_clone_payload,
 )
 
 
@@ -126,3 +126,19 @@ def test_cli_bounds_native_scope_and_gate_identity():
         parse_args(baseline+["--measured-updates","13"])
     with pytest.raises(SystemExit):
         parse_args(baseline+["--gate-id","not-paired-with-path"])
+
+
+def test_completed_teardown_releases_captured_nccl_before_reducer():
+    calls = []
+    class Graph:
+        def __init__(self, name):
+            self.name = name
+        def reset(self):
+            assert runner.ddp is not None
+            calls.append(self.name)
+    runner = SimpleNamespace(device="test-device", local_graph=Graph("local"), sync_graph=Graph("sync"),
+                             local_result=object(), sync_result=object(), ddp=object(), stream=object())
+    release_completed_graph_runner(runner, synchronize=lambda device: calls.append(("synchronize",device)))
+    assert calls == [("synchronize","test-device"),"local","sync"]
+    assert all(getattr(runner,name) is None for name in
+               ("local_graph","sync_graph","local_result","sync_result","ddp","stream"))
