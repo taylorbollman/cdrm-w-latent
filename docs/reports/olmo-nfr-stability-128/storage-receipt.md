@@ -147,3 +147,47 @@ files are `.runtime/olmo-nfr-stability-retention/audit-origin-01.json` and
 stdout/session/exit status; no nonexistent raw log is claimed. This archive is
 preparation and origin evidence, not a completed terminal128 audit. The CPU-only
 retention neither touched training state nor uploaded checkpoint tensors.
+
+## Prepared terminal128 closeout (not executed)
+
+The existing terminal-summary reconciler accepts the unchanged
+`olmo-kl-continuation-report-v1` schema and does not hardcode update64. It can
+therefore reconcile update128 without modification. Its guards require a
+completed segment, drained verified publication, synced local tracking and a
+finished remote run at the same `update` and `_step`. It writes only the three
+checkpoint-summary fields and provenance, checks fresh readback, and verifies
+that unrelated summary fields are unchanged. It never resumes W&B or writes
+history.
+
+Prepared wrapper:
+`.runtime/olmo-nfr-stability-128/retain_terminal_128.py`.
+SHA256: `cd36bcbb03f30286e15b2b10164f771bb6ee4f3e9e1e32d906303ec52de79460`.
+Preparation receipt: `terminal-retention-prepared-01.json` in the same folder.
+Only syntax parsing and source review have run; no active-run API call or
+terminal retention was performed.
+
+Run only after the actual host launcher has exited successfully and terminal
+report/publication bytes are immutable:
+
+```bash
+CDRM_DOCKER_GPUS=none CDRM_FLASH_ATTENTION_SOURCE=installed \
+  bash scripts/docker_shell.sh bash -lc \
+  'env -u GOOGLE_APPLICATION_CREDENTIALS PYTHONPATH=/workspace/cdrm-w-latent python .runtime/olmo-nfr-stability-128/retain_terminal_128.py'
+```
+
+The wrapper independently requires terminal128/cloud128/synced/host-exit0,
+exact 222-file source inventories, a matching local manifest/state-file size
+and saved final boundary before it accesses W&B. It copies publication receipts
+under neutral names, preserves the host receipt and remaining local manifests,
+and uses the unchanged accepted reconciler and retainer. If the summary is
+already current, it records that without writing. An incomplete previous
+summary mutation must use the reconciler's read-only `--verify-attempt` recovery;
+the wrapper does not silently repeat it.
+
+Closed-stage evidence is checked against the existing 128 MiB cap before the
+W&B mutation. If necessary it separates core evidence and asynchronous transport
+records into two archives, each subject to the same cap. Planned stages are
+`nfr128-training-terminal-01` (or `nfr128-training-core-01` and
+`nfr128-async-transport-01`), `nfr128-terminal-inventory-01`, and
+`nfr128-summary-correction-01`, under the common evidence prefix above.
+No checkpoint tensor is loaded, rehashed or uploaded again.
