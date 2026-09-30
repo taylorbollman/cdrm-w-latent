@@ -76,3 +76,19 @@ fusion-scale-assessment.md for sourcecitations and actual adaptations. No
 normalization/gate change. Update14 finite, rawgrad4.00, trainCE4.8213;
 firstregularposttraining64roweval16 pending. ConditionalNFRindependentpreflight
 passes685checks/22CPUtests (61b3575), remainsunlaunched.
+
+08:00 UTC: F16regularCE2.645652/6.909640/6.899153/6.993049, firstpassnearstable
+andlaterpassmodestimprovement. SmallprobeK8CE7.1965 vsK4CE6.9288;
+tailrelativechangeK8=.035253, largerthanupdate8(.000470). Do notconflatetrained
+passimprovementwithconvergence; deepK32atupdate32 remainsnext. Checkpoint16
+cycleactive; unchangedtrainingcontinues. See results.md earlytrainingsection.
+
+08:18 UTC: F32deepcurve published j2qipybb; training32sqvp7e. RegularCE
+2.651994/6.241516/6.326875/6.368114; smallK32CE6.389008,
+taildelta6.91e-7. FBT learnswhilepreservingfirstpassandempiricalsettling;
+laterpassesstillmuchworse. LatepreLN RMS1.323→3.764 vsorigin, entropy6.832→6.021;
+recordedratherthancallinglowdeltaoverallhealth. ComparematchedNF32CE
+2.960392/.../7.435141 andNFR32 3.043012/.../7.063815. No recipechange;
+continueto128. Checkpoint32pending, previouscloud16. Figurescopiedtodocs.
+Newtraining-semantics-assessment.md recordsattachedgradientmatch, overallhalf
+lossnormalization anddeliberatepaperFigure3pass-mixture/startupdifferences.
