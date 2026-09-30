@@ -32,14 +32,36 @@ evaluation covers 64 rows. Their CE values have different sampling variation and
 must not be spliced into one apparent learning curve. No final confirmation set
 is used for this diagnostic.
 
-The optional exact-online comparison uses two explicitly recorded, isolated
-document crops. Within each crop, finite-pass and sequential execution use the
+The completed F128 exact-online comparison uses two explicitly recorded,
+isolated document crops. Within each crop, finite-pass and sequential execution use the
 same tokens and reset context. Its CE is not directly comparable with packed
 1024-token development CE. It answers whether finite passes approximate the
 sequential process on those crops, not whether generation quality improves.
+At K32, hidden and logit relative errors are around 1e-6. At K4, nearly equal
+mean CE still accompanies 1.08% hidden error. See [post-diagnostics](post-diagnostics.md).
+
+## What the completed observations mean
+
+The origin already settled while predicting badly. Repeating feedback was
+therefore not visibly diverging on this panel; it was arriving consistently
+at a poor predictor. During F-only training, the main improvement was in
+**what it predicted after settling**, rather than a transition from an unstable
+iteration to a stable one. This origin includes 128 earlier fusion-only updates,
+so we cannot say when settling first emerged. It also does not reproduce the
+paper's Figure 3 training distribution.
+
+Lowering KL weight in the matched NF comparison improved every pass's CE,
+while raw latent and KL losses became worse. The completed NFR update-48
+midpoint shows the same direction; its terminal comparison is still pending.
+This is a tradeoff among training objectives: better next-token prediction,
+less agreement with the auxiliary targets. The lower weighted objective cannot
+itself establish improvement because its definition changed. Lowering KL also
+changes gradient scales and clipping, so these results do not identify a single
+mechanism or prove that the auxiliary objective is generally harmful.
 
 A transition between saved checkpoints is localized only to that interval.
 Eight-update short probes help identify where to inspect; retained resumable
 states permit a targeted replay if a sharper transition is worth resolving.
-An unchanged 128-to-192 extension can examine behavior beyond the learning-rate
-warmup, but a short run without recovery does not establish that FBT cannot work.
+F stopped at 128; no extension to 192 is queued. The current
+[next-step criteria](next-steps.md) prioritize bounded NFR endpoint dynamics
+before considering further training.
