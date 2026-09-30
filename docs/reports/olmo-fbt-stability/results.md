@@ -53,6 +53,20 @@ predictions are much broader. Pre-final-normalization RMS remains finite,
 representation-collapse mechanism. It separates the question of settling from
 that of learning useful feedback.
 
+Independent readback confirms this across all eight rows: the tail-relative
+change at32 is1.45e-6–1.89e-6. The unsettled suffix still contains7,944/8,192
+positions, so removal of the guaranteed settled prefix cannot explain the
+pattern. The last several CE values change only around1e-7. Final hidden and
+fusion-input scales are substantially imposed by normalization and are not
+independent evidence of a healthy representation. The FP32 numerical floor may
+account for the small residual differences.
+
+The previous NF-origin diagnostic has identical membership/counts; its first
+four CE values agree within1.62e-7 aggregated and5.11e-7 per row. This is close
+numerical agreement, not bit-exact identity, because readout grouping/reductions
+differ. The old entropy used a different eligible-position mask and must not be
+compared directly with the new CE-position entropy.
+
 [Origin pass curves](figures/update-000000-figure3-style.pdf) ·
 [Scale and entropy](figures/update-000000-scale-entropy.pdf) ·
 [Curve W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/socosavi) ·

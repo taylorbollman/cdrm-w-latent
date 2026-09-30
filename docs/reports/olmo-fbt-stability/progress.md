@@ -61,3 +61,18 @@ training32sqvp7e). Already empiricalsettling atorigin: tailrelativehiddenchange
 problem is stablepoorfeedback, not persistentpassinstability on thispanel.
 Regular64roworiginCE2.642404/7.399125/7.143659/7.171813 is a differentpanel.
 Rootfigures copiedinto reportfigures and resultsupdated. No recipe change.
+
+07:53 UTC: F update8 probe: smallpanelCE pass1/4/8=2.6733/7.2986/7.3087;
+tailrelativechange pass4/8=.017374/.000470. Settling is faster, laterCE remains
+poor. First8updates finite/clipped; first7rawgrad8.50–51.82. Origincheckpoint0
+alreadycloudverified. Training stays unchanged. Optional input-scale/fusion
+paper-compatibility read-only assessment delegated; no new testgrid or mutation.
+Acceptance/curveorigin archives allretainedGCS in storage-receipt.md (5772ee5).
+
+07:59 UTC: Draft PR55 opened. Read-only paper/code scale assessment found no
+raw25x fusion imbalance: normalizedembeddinggate, normalizedproduct calibrated
+toOLMoembeddingRMS. Paperintentionallyomitsadditiveidentitypath. See
+fusion-scale-assessment.md for sourcecitations and actual adaptations. No
+normalization/gate change. Update14 finite, rawgrad4.00, trainCE4.8213;
+firstregularposttraining64roweval16 pending. ConditionalNFRindependentpreflight
+passes685checks/22CPUtests (61b3575), remainsunlaunched.
