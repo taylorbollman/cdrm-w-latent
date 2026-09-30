@@ -224,3 +224,65 @@ Both operations used the CPU container. The two directories were archived with
 `scripts.olmo_two_gpu_retain` using the same individual-command pattern documented
 above, substituting their names for `<stage>`, with no `--checkpoint-dir`.
 No model/checkpoint changes, new GPU tests or historical runtime edits occurred.
+
+## Curve summaries through updates 32 and 64
+
+The completed, W&B-synced summaries through updates 32 and 64 were retained
+independently while native F training continued. These are immutable analysis
+directories with pinned probe snapshots, source snapshot, CSV and PDF/PNG
+figures. The mutable live training report was not read or archived. The origin
+archive above remains unchanged.
+
+| Directory under common evidence prefix | Included probe updates | Members | Archive generation | Archive SHA256 |
+|---|---|---:|---|---|
+|`fbt-stability-summary-update000032-01`|0, 32|9|1790758721777901|`fd5fe1d5a58ccec5d799885a92d351eff763c00f5b19361da800d14784aa0260`|
+|`fbt-stability-summary-update000064-01`|0, 32, 64|10|1790758723465646|`65098c13876c794e135d524b310bc612046c7b2a5c72e2e4316d16f73f7f8910`|
+
+| Directory | Receipt generation | Receipt SHA256 |
+|---|---|---|
+|`fbt-stability-summary-update000032-01`|1790758722288735|`0a64ca3cca0359650d034148411d2fb4eed03530bffb531be6a1469274fc1b77`|
+|`fbt-stability-summary-update000064-01`|1790758723962304|`6f02a5232cf1d69d578cbe7c813caf97e29a64dcaf0bc877d6ef229c983cead6`|
+
+Local receipts/results use the same stage names under
+`.runtime/olmo-fbt-stability-retention/`. The unchanged `olmo_two_gpu_retain`
+helper was called sequentially with each summary as `--input-dir`, its directory
+in the table as `--prefix`, and the corresponding local `--receipt`. The CPU
+container used `CDRM_DOCKER_GPUS=none`, `CDRM_FLASH_ATTENTION_SOURCE=installed`,
+and `env -u GOOGLE_APPLICATION_CREDENTIALS`; no `--checkpoint-dir` was supplied.
+All remote archive/manifest/receipt objects passed size, server MD5, SHA metadata
+and downloaded SHA256 checks. No model execution or state rehash was involved.
+
+## Immutable F64 context bundle
+
+The separate seven-member context archive preserves only the completed F64
+evaluation, verified publication receipt, exact optional-summary arguments,
+preparation helper and analysis source pins/snapshots. It contains no mutable
+whole-run report. The checkpoint state and manifest were already cloud-verified
+by the execution worker and were not uploaded or rehashed again.
+
+Directory under the common evidence prefix: `fbt-stability-f64-context-01`.
+
+| Object | Generation | Bytes | SHA256 |
+|---|---|---:|---|
+|`evidence.tar.gz`|1790759155710271|97,177|`fa1e43eee15333ca7ed6f41ff5bd89200a3fce3e976d2be28919a0c7ad2604a2`|
+|`retention-manifest.json`|1790759155979018|2,074|`3e66921c276978ece92696cdc8fd49cad7e9688057a593d1b62e1611da9d283e`|
+|`storage-receipt.json`|1790759156268942|1,306|`d8282c93fbcf0cd06721fe0d8964234ecf7b070548376a48f15699132a603bff`|
+
+The evaluation SHA256 is
+`3ebee2842db92e8c532e22fb267ff624f50b6b7da7035d1a832a36038894cef2`;
+the publication SHA256 is
+`d25506b4607d1a6fce0448b5b2ef22db2646ee34f2d2b42a8ff894b67090cfd4`.
+Exact arguments and interpretation are in
+[f64-context.md](../olmo-nfr-kl-continuation/f64-context.md). Both were checked
+against the same development membership as original NFR parent32. This is
+F-only context at update 64, not a paired optimizer fork or F128 endpoint.
+
+The CPU retainer used
+`--input-dir .runtime/olmo-nfr-kl-continuation/f64-context-01`,
+`--prefix gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/fbt-stability-f64-context-01`,
+and `--receipt .runtime/olmo-fbt-stability-retention/f64-context-01.json`,
+with `env -u GOOGLE_APPLICATION_CREDENTIALS` and no `--checkpoint-dir`.
+No GPU work or frozen runtime-source edits occurred. A metadata check caught
+and corrected an optional-summary guard in the unpinned reporting helper only:
+FBT mode is enabled while NextLat weights and predictor parameters are zero.
+The fix is separately committed as `2ff12d8`, with 14 focused CPU tests passing.
