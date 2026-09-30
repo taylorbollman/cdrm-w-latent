@@ -94,3 +94,10 @@ later-pass auxiliaries increase while CE improves. All16 resumed updates
 finite/clipped; norm min/median/max2.359/3.129/5.199. All222live source pins
 remain exact. Cloud75 verified; named80 save/publication follows evaluation.
 Next regular dev96, then100 at the existing warmup boundary; continue unchanged.
+
+17:14 UTC: update88 complete; all24 resumed updates finite/clipped, identical
+rank metrics. Norm min/median/max1.585/3.033/5.199; latestLR.0001766. Cloud85
+verified. No new development measurement since80 and no setting changes.
+Guarded terminal W&B checkpoint-summary reconciliation/retention is prepared
+in `.runtime/olmo-nfr-stability-128/retain_terminal_128.py` (no active-run
+mutation); see storage-receipt.md for the pinned command and recovery notes.
