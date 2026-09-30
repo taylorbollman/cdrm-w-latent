@@ -87,3 +87,7 @@ the next token position's hidden state/distribution within each pass, not the
 next FBT iteration. Their detached teachers evolve with the trained model.
 The opposite trends alone establish neither numerical failure nor a cause
 such as gradient conflict or predictor lag.
+
+At the end of warmup, update100 CE is2.769629/3.510893/3.552609/3.574547,
+gap.804918nats. The36 resumed updates remain finite/clipped. Update101
+will use the original schedule's peak LR2e-4; no schedule change was made.

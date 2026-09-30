@@ -109,3 +109,11 @@ is.205328/.138491/.138226/.137641; KL2.867770/1.967461/1.977498/1.971348.
 All32 resumed updates finite/clipped; norm min/median/max1.585/2.744/5.199.
 Cloud95 verified; named96 save follows evaluation. Continue unchanged through
 the existing warmup100 boundary to128. No other GPU work has been launched.
+
+17:55 UTC: dev100 complete/boundary-exact. CE passes1–4 is
+2.769629/3.510893/3.552609/3.574547, gap.804918. Raw latent
+.205370/.144993/.145093/.144664; KL2.847800/2.045665/2.048391/2.041702.
+All36 resumed updates finite/clipped; norm min/median/max1.472/2.580/5.199.
+Update100 uses.0001982 and schedules.0002 for101; this is the original
+warmup, not a changed learning-rate plan. Cloud96 verified. Remaining28
+updates continue unchanged at the planned peak LR; next regular dev112.
