@@ -70,3 +70,10 @@ The saved128 state will receive the same bounded K1–32 probe after training.
 Regular development and final deep-pass results are pending. The control64
 endpoint will not be represented as a matched128 control, and no RT-benefit or
 useful-refinement claim follows from finite updates alone.
+
+Interim update80 regular-panel CE is2.787306/4.407264/4.511726/4.563218.
+Relative to64, fourth-pass CE improves.956904nats while first-pass CE rises
+.012336. The gap shrinks2.745152→1.775912nats. All16 resumed updates are
+finite/clipped and evaluation preserves training state exactly. Later-pass
+raw latent/KL losses rise while CE improves. Training remains in progress;
+see the dated record above for the latest checkpoint status.

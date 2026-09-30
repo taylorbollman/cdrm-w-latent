@@ -83,3 +83,14 @@ raw norm min/median/max2.545/3.129/3.915, clipping remains active. Cloud65
 verified; local70 save is underway. Graph memory is58.38GiB reserved and
 42.83GiB peak allocated per GPU, with13.46GiB sampled free after capture.
 No setting or code change. Dev80 remains the next predictive readout.
+
+16:52 UTC: dev80 complete, state preservation exact on both ranks. CE passes1–4
+is2.787306/4.407264/4.511726/4.563218, versus64
+2.774970/5.375003/5.481358/5.520121. First pass rises.012336nats; fourth falls
+.956904, reducing the fourth-minus-first gap2.745152→1.775912. This is
+substantial feedback adaptation but not useful refinement. Raw latent is
+.225323/.116845/.113217/.112122 and KL3.069052/1.618650/1.621195/1.613884:
+later-pass auxiliaries increase while CE improves. All16 resumed updates
+finite/clipped; norm min/median/max2.359/3.129/5.199. All222live source pins
+remain exact. Cloud75 verified; named80 save/publication follows evaluation.
+Next regular dev96, then100 at the existing warmup boundary; continue unchanged.
