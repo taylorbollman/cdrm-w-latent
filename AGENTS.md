@@ -31,6 +31,41 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 FBT stability and paired NFR KL continuation COMPLETE. PR55 final
+closeout underway; merge status is in docs/reports/olmo-fbt-stability/progress.md.
+Read that directory's results.md, post-diagnostics.md, resource-ledger.md and
+next-steps.md, plus docs/reports/olmo-nfr-kl-continuation/results.md/validation.md.
+Both NFR branches stopped64/cloud64/W&Bsynced, queue completed_pair/exit0.
+Both H100s verified idle inside container at14:32UTC. No GPU work is queued.
+Control KL1 CE2.930108/6.473414/6.604760/6.646855; reducedKL.1
+2.774970/5.375003/5.481358/5.520121. Raw auxiliary losses higher for reduced
+on every pass. Both32 resumed updates finite/clipped; median norm7.714→3.778.
+Same original NFR32+populatedAdam, data/RNG/schedule; only KL coefficient
+changed. RT0/15,K4,latent1,T1024,B12/rank,524288inputs/update, frozen215pins.
+Not an F128 warmstart. Both added16,777,216 inputs; original128 plan preserved.
+Independent pair audit16,483 passes; all branch/audit/summary evidence retained.
+ControlW&Bujz924fj; reduced1xu07xdf; paired summaryni8f0ch6, SHA
+b521e7546a3e4afef6fc81addb8dbf78b2e86585cb8f28e1d9c1bbd53907378a.
+Runtime .runtime/olmo-nfr-kl-continuation; figures/receipts in report directory.
+Next proposal: matched saved NFR64 K1–32 curves, then consider unchanged
+selectedKL.1 continuation64→128. Neither is launched. NFR64 deep curves have
+NOT yet been measured; existing component helper admits NFR32 only.
+No useful-refinement, RT-benefit or general BF16-equivalence claim.
+
+F128 COMPLETE/cloud128/synced32sqvp7e; terminalSHA8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe.
+Regular CE2.687038/2.919213/2.937069/2.942000; B1282.687618. All128finite,
+116clipped then12unclipped. F nativeaudit160485/fullBprefix24617pass.
+All17publications+evidence retainedGCS. F curves0/32/64/96/100/128 complete,
+settle~1.6e-6 by16passes at128; origin inherits fusion128 preparation.
+All five post-F GPU diagnostics completed: exactonlineF128 on2x128 crops,
+NF32/NFR32 and NF64KL1/.1 K32 curves. All saved conditions settle tightly;
+poor prediction is not explained by failure to settle. K4vs exactonline hidden
+error~1.08%, K32~1e-6; no generation/T1024online equivalence claim.
+Online helper complete/synced but pinned host launcher expected completed;
+terminal-adoption.json preserves reporting-only mismatch, no rerun. F208 and
+historical200/210 sources unchanged. Further GPU diagnostics must not run
+without checking the idle state first. Post-diagnostics notes/retention complete.
+
 2026-09-30 paired NF KL continuation COMPLETE, PR54 closeout metadata in
 `docs/reports/olmo-kl-continuation/progress.md`. Read results.md, next-steps.md,
 validation.md and storage-receipt.md there. Both sharedNF32 savedAdam branches
