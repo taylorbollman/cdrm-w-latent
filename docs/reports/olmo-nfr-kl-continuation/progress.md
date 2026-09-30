@@ -124,3 +124,23 @@ control, preserving the predictive/auxiliary tradeoff. Reduced norm
 min/median/max/final is2.09518/3.77819/7.92970/4.68710. Feedback still does not
 beat the first pass. Cloud63 is verified; final64 publication/host closeout
 and then independent paired audit/summary remain pending. No further training.
+
+14:32 UTC: both branches completed64/cloud64/W&Bsynced; queue completed_pair
+and hostsession57288 exited0. Reduced terminal report SHA
+9de466ea50ea837db1aaf6f0e88f23675c6a13af1f24a196fab992ea54a96e8c.
+Both H100s verified idle inside the required project container (0MiB/0% and
+no compute processes). Independent pair audit passed16,483 checks with no
+failures, SHA2ee9b737c8269ef071fd63792f9d4ed2d87598b900347b571d7811e1aadcb211.
+Matched initial model/Adam/RNG/cursors, data/LR, first raw forward, scope/source
+identity, evaluation preservation and publication guards pass. This was a
+JSON/source/state-boundary audit, not an additional GPU replay or BF16 clearance.
+
+14:35 UTC: pinned paired summary complete and four figures inspected/published
+to W&Bni8f0ch6. Summary SHA
+b521e7546a3e4afef6fc81addb8dbf78b2e86585cb8f28e1d9c1bbd53907378a.
+Results and figures are in results.md/figures. Both terminal branches and all
+16 publications retained; audit and summary small-evidence receipts are in
+validation.md/storage-receipt.md/summary-retention.md. Reduced checkpoint
+W&B summary reconciled to64/64/not-pending with history untouched. CPU-only
+closeout remains; no further training or diagnostic is queued. Next proposal:
+matched saved NFR64 K1–32 curves, then consider selected KL.1 continuation.

@@ -1,9 +1,11 @@
 # NFR KL continuation storage receipt
 
 The original NFR32-to64 KL1/KL0.1 pair was activated after the F128 and
-post-F diagnostic review. This receipt preserves **initial static authority**,
-not a completed training run. The active training directories, live queue
-state/events and training logs are deliberately excluded.
+post-F diagnostic review. Both branches are now complete and retained. The
+first section records their **initial static authority**; the later sections
+record each completed branch, its checkpoint publications and summary
+reconciliation. Initial archives excluded live training outputs; terminal
+archives were created only after the corresponding branch had closed.
 
 Evidence prefix:
 

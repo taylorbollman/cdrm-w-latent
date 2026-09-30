@@ -1,10 +1,15 @@
 # Combined-model KL continuation
 
-**2026-09-30: both branches have completed training and evaluation through 64;
-the reduced branch's final checkpoint publication and paired audit are pending.**
+**2026-09-30: both branches completed through 64, with verified cloud
+checkpoints, synchronized W&B and a passing independent paired audit.**
 Reducing KL weight from 1 to 0.1 improves development CE on every pass, with a
 1.126734-nat advantage on pass 4 at update 64. Both raw auxiliary losses are
 higher. This is a loss-balance tradeoff, not improvement in every objective.
+
+[Paired W&B summary](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ni8f0ch6)
+· [Raw-loss curves](figures/development-raw-losses.pdf)
+· [Absolute CE and pass gaps](figures/ce-refinement.pdf)
+· [Training dynamics](figures/training-dynamics.pdf).
 
 NFR means **NextLat + FBT + native RT**. The model uses four FBT passes (K4),
 with RT active at layers 0 and 15 of the 16-layer OLMo backbone. In this arm,
@@ -74,6 +79,25 @@ Control preclip norm min/median/max/final is
 2.095179/3.778194/7.929704/4.687100. The reduced coefficient lowers typical
 gradient scale and improves measured CE, but does not eliminate clipping.
 
+## Execution and recovery
+
+Both branches passed the independent paired audit (16,483 checks), including
+the common model/Adam/RNG/cursor origin, matching data/LR sequences and first
+raw forward losses, unchanged runtime sources, evaluation preservation and
+retained terminal checkpoints. This is an execution/state audit, not a second
+training replicate or a precision-equivalence test. See [validation.md](validation.md).
+
+The control/reduced executors took 117.73/118.14 minutes. Compute plus input
+materialization reached 3,571/3,566 real input tokens/s across the two GPUs;
+full-executor rates were 2,375/2,367. Peak allocated/reserved memory was
+42.834/59.076 GiB per GPU in both. The different timing scopes include different
+setup, evaluation and checkpoint costs; neither rate is an optimized throughput
+benchmark. Parameter and timing definitions are in the resource ledger below.
+
+Both branches retain eight cloud publications, ending at 64. Their final
+checkpoints include optimizer, scheduler, RNG and data cursor for continuation.
+The queue exited successfully, and both H100s were verified idle after closeout.
+
 ## Interpretation and remaining scope
 
 This comparison asks whether the earlier NF loss-balance finding also appears
@@ -93,5 +117,7 @@ training is queued after this pair.
 Control [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ujz924fj)
 and reduced [W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/1xu07xdf).
 Checkpoint locations and verified publications are in [storage-receipt.md](storage-receipt.md);
+the immutable comparison/figure artifacts are recorded in
+[summary-retention.md](summary-retention.md);
 timing definitions and parameter counts are in the
 [resource ledger](../olmo-fbt-stability/resource-ledger.md).

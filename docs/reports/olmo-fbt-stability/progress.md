@@ -161,3 +161,14 @@ isolated2x128 crops agrees~1e-6 atK32, K4hiddenerror1.08% despite tinyCEgap.
 See post-diagnostics.md and figures. NFR KL pair activated at10:34,
 queue-after-f128-01/session57288, controlW&Bujz924fj; both GPUs reserved.
 Read NFR progress.md for live work. F-only study closed; no F192 extension.
+
+14:35 UTC: the selected NFR follow-up has completed its paired64 endpoints;
+both final checkpoints are verified in GCS, W&B is synchronized, and the
+queue exited0. Reduced KL.1 improves CE on every pass (first/fourth
+2.774970/5.520121 versus control2.930108/6.646855), while raw auxiliary losses
+are higher. All32 resumed updates per arm are finite/clipped; median norm
+7.714→3.778. Independent pair audit16,483 passes; summary W&Bni8f0ch6.
+See ../olmo-nfr-kl-continuation/results.md for the complete comparison.
+Both H100s verified idle inside the required container at14:32UTC. No GPU
+work is queued. Saved NFR64 deep curves remain unmeasured and are the proposed
+next bounded diagnostic, not an automatic extension. PR55 final closeout below.
