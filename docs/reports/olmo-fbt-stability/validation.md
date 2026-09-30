@@ -85,3 +85,24 @@ integrity and diagnostic accounting. Finite updates or decreasing state changes
 do not establish useful refinement, global contraction, BF16 equivalence, or an
 advantage over an ordinary model. Exact-online comparisons require their
 separately bounded probe; the finite-pass curves do not imply them.
+
+## Independent interpretation review
+
+The saved-online, component-overlay and conditional NFR summary helpers were
+reviewed together while native F training continued. Their focused CPU tests
+passed **42 tests**. No blocking scientific-accounting issue was found.
+
+For causal FBT, total pass K already agrees with exact online execution on the
+first K positions in exact arithmetic. Early-prefix agreement is consequently
+an implementation check, not evidence of learned contraction; the cropped
+online diagnostic's late-half and tail errors carry the informative comparison.
+The consecutive-pass change probe excludes the first K-1 settled positions,
+which is a different comparison with a different boundary. Both retain their
+explicit floating-point and cropped-context qualifications.
+
+The conditional NFR summary keeps raw CE, latent and KL means on their separate
+eligible-target counts, checks pass coefficients, and excludes objective totals
+whose definitions change with KL weight. Throughput pools input tokens over
+per-update maximum-rank durations with startup, evaluation and checkpoint scopes
+identified. Optional F64 CE is same-panel descriptive context; it is not a paired
+KL intervention or evidence that one added component caused a difference.
