@@ -61,3 +61,10 @@ Small evidence retained as kl-native-control. Reduced branch launched05:30UTC,
 W&B x8f16eqv. Its full origin and raw repeated32 evaluation exactly equal
 control; declaredKL.1. Preparing graphs, no numerical failure. Both branches
 still use runtime210unchanged, data/LRplan128unchanged, savedAdam inherited.
+
+05:54 UTC: reducedKL.1 reached48, devCE2.714837/6.659169/6.755933/6.782391,
+versus matchedcontrol48 2.908634/7.090835/7.124708/7.127553. All four raw CEs
+improve directionally; laterpass deficit remains. First update33 raw loss sums,
+counts and LR exactly match control, with raw gradientnorm4.587565 vs11.802785.
+Cloud40verified; continue to64 as authorized, no extra intervention. Reported
+midpoint improvement is not a precision clearance or long-run quality claim.
