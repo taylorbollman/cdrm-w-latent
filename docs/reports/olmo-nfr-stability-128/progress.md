@@ -101,3 +101,11 @@ verified. No new development measurement since80 and no setting changes.
 Guarded terminal W&B checkpoint-summary reconciliation/retention is prepared
 in `.runtime/olmo-nfr-stability-128/retain_terminal_128.py` (no active-run
 mutation); see storage-receipt.md for the pinned command and recovery notes.
+
+17:40 UTC: dev96 complete and boundary-exact on both ranks. CE passes1–4
+is2.774441/3.630273/3.676090/3.700264. Fourth-minus-first gap is.925822,
+down from1.775912 at80; useful refinement remains unestablished. Raw latent
+is.205328/.138491/.138226/.137641; KL2.867770/1.967461/1.977498/1.971348.
+All32 resumed updates finite/clipped; norm min/median/max1.585/2.744/5.199.
+Cloud95 verified; named96 save follows evaluation. Continue unchanged through
+the existing warmup100 boundary to128. No other GPU work has been launched.

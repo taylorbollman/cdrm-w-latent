@@ -31,7 +31,7 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 16:52 UTC: NFR64-to128 TRAINING ACTIVE, authorized by latest user.
+2026-09-30 17:40 UTC: NFR64-to128 TRAINING ACTIVE, authorized by latest user.
 Branch feat/olmo-nfr-stability-128. Read docs/reports/olmo-nfr-stability-128/
 protocol.md and progress.md. Prepare matched no-update K1-32 NFR64 KL1/.1
 endpoint curves on common eight-row FP32/no-jitter panel. If bounded/settling,
@@ -44,9 +44,9 @@ endpoint y8xlyhtw/sf5dwyaz, runtime olmo-nfr-endpoint-curves. All retained.
 Unchanged continuation launched15:49, root83327, monitor68687, both GPUs.
 W&B2zu5jloq; runtime olmo-nfr-stability-128/native-nfr-reduced-64to128-01.
 Exact restored64 full state/Adam/RNG/cursor/scheduler and dev64 verified.
-Dev80complete CE2.787306/4.407264/4.511726/4.563218; fourth improves.9569
-from64, first rises.01234. Gap1.7759 stillworse than first. All16resumed
-updates finite/clipped; norm2.359–5.199. Cloud75verified; named80saving.
+Dev96complete CE2.774441/3.630273/3.676090/3.700264, gap.925822;
+dev80 gap1.775912, dev64 gap2.745152. Feedback still worse than first.
+All32resumed updates finite/clipped; norm1.585–5.199. Cloud95verified.
 DO NOT launch other GPU work. Timeout6h; STOP.json checkpointedstop; stop128.
 Final128 K32 probe prepared separately for AFTER terminaltraining+GPUrelease.
 Continuation36CPUtests/222frozenpins; endpoint44CPUtests. Scope/launch/

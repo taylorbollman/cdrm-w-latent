@@ -77,3 +77,13 @@ Relative to64, fourth-pass CE improves.956904nats while first-pass CE rises
 finite/clipped and evaluation preserves training state exactly. Later-pass
 raw latent/KL losses rise while CE improves. Training remains in progress;
 see the dated record above for the latest checkpoint status.
+
+Interim update96 regular-panel CE is2.774441/3.630273/3.676090/3.700264;
+the fourth-minus-first gap falls further to.925822nats. The first pass is
+close to its64 CE, but the feedback passes remain worse. All32 resumed updates
+are finite/clipped; dev96 preserves training state exactly. Later-pass raw
+latent/KL continue rising while CE improves. These auxiliary losses predict
+the next token position's hidden state/distribution within each pass, not the
+next FBT iteration. Their detached teachers evolve with the trained model.
+The opposite trends alone establish neither numerical failure nor a cause
+such as gradient conflict or predictor lag.
