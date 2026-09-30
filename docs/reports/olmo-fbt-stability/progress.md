@@ -54,3 +54,10 @@ figures while training continues. GPU concurrency remains one two-rank job.
 Conditional NFR KL215-source scope committedc1a764e; saved-component curves
 committedabf269e. Both prepared only, no additional training authorized by their
 mere existence; root selects useful follow-up using this F study's evidence.
+
+07:45 UTC: F origin K32 probe complete and CPUsummarypublished (W&Bsocosavi;
+training32sqvp7e). Already empiricalsettling atorigin: tailrelativehiddenchange
+.108499 atpass4→about1.57e-6 at32, butCE2.673866first→7.239747at32. Thus initial
+problem is stablepoorfeedback, not persistentpassinstability on thispanel.
+Regular64roworiginCE2.642404/7.399125/7.143659/7.171813 is a differentpanel.
+Rootfigures copiedinto reportfigures and resultsupdated. No recipe change.

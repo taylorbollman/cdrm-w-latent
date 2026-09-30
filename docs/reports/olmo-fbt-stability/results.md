@@ -3,10 +3,10 @@
 Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength,
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
-Native FBT-only results have not been produced yet.
+The native FBT-only run is active; the first origin measurement is available.
 
 The ordinary control has completed the requested 128 optimizer updates. Final
-checkpoint publication and terminal report closeout are still pending. This
+checkpoint publication and terminal report closeout are complete. This
 resumes the original ordinary update32 state and optimizer; it is not another
 random initialization or a new data order.
 
@@ -29,4 +29,31 @@ pass-curve panel or a final quality evaluation.
 
 Implementation checks: 52 focused execution/probe CPU tests, 55 independent
 auditor tests, and 23 isolated online-comparison tests pass. The small two-GPU
-insertion/cloud-resume checks are next, before the native F-only launch.
+insertion/cloud-resume checks also pass exactly (8,531 and10,150 independent
+checks respectively). Native F-only training is underway.
+
+## Before new F-only training: settling without useful prediction
+
+On the fixed eight-row FP32/no-jitter panel, the inherited fusion128 state already
+settles over repeated passes. This is empirical behavior on this panel, not a
+proof of global contraction. Its poor later-pass CE remains the central issue.
+
+| Total passes | CE, nats/target | Relative hidden change, final128 positions |
+| ---: | ---: | ---: |
+| 1 | 2.673866 | — |
+| 2 | 7.364103 | 0.979872 |
+| 4 | 7.188377 | 0.108499 |
+| 8 | 7.234902 | 0.004238 |
+| 16 | 7.239706 | 0.000406 |
+| 32 | 7.239747 | approximately0.000002 |
+
+Predictive entropy rises from2.653nats on the first pass to6.832 at32; the poor
+predictions are much broader. Pre-final-normalization RMS remains finite,
+1.603→1.323, and stack-input RMS0.0398→0.0371. This does not demonstrate a
+representation-collapse mechanism. It separates the question of settling from
+that of learning useful feedback.
+
+[Origin pass curves](figures/update-000000-figure3-style.pdf) ·
+[Scale and entropy](figures/update-000000-scale-entropy.pdf) ·
+[Curve W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/socosavi) ·
+[Training W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/32sqvp7e).
