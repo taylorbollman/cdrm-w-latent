@@ -31,6 +31,18 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 paired NF KL continuation IN PROGRESS, PR54. Read
+`docs/reports/olmo-kl-continuation/protocol.md` and progress.md. Exact sharedNF32
+savedAdam/schedule/RNG/cursor fork: KL1 control vsKL.1 only; stop64 each, noRT.
+Original128plan/B12/rank/T1024/effective524288/BF16 graphs unchanged. TinyNFR
+pair2,901/restart2,289 exact audits pass;109 focusedCPUtests pass. Frozen200
+unchanged,210executionpins. Post-run v2 auditor fixes tiny schedule shape only.
+Detachedqueue `.runtime/olmo-kl-continuation/native-pair-01` runs control then
+reduced; inspect reports/processes before recovery. Parent files still required
+on childresume. AsyncSSD/GCS retained; no extension past64 or new precision
+clearance. Code29e3948, tiny-audit34225f9 pushed. Historical completed milestones
+below must not be mistaken for current idle state.
+
 2026-09-30 saved-state feedback diagnostic COMPLETE; PR/merge closeout in
 docs/reports/olmo-feedback-diagnostic/progress.md. Read results.md, forward-notes.md,
 gradient-notes.md and next-steps.md there. Six FP32/no-jitter saved-state probes,

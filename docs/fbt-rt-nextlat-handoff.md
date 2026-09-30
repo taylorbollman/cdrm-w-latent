@@ -4,6 +4,23 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+Approved paired NF continuation is now running (PR54, 2026-09-30). Read
+[protocol](reports/olmo-kl-continuation/protocol.md) and
+[progress/recovery](reports/olmo-kl-continuation/progress.md). Both branches
+restore exact NF32 model/Adam/scheduler/rank RNG/cursors, then retain KL1 or
+explicitly set KL0.1. All other math and the original128-update data/LR plan
+stay fixed; stop64, evaluate repeated32 then48/64. No RT in native comparison.
+Tiny NFR control/restart acceptance passes2,901/2,289 exact checks;109 CPU tests
+across new components and audit corrections pass. Frozen200 prior files are
+unchanged;210 execution sources are pinned. V2 post-run auditor corrects only
+tiny schedule metadata, outside210. Native queue is detached under
+`.runtime/olmo-kl-continuation/native-pair-01`; control then reduced, no further
+training automatically. Check processes/reports before recovery; retain original
+parent files even for child resume. Periodic SSD saves/background GCS checks
+continue. Draft PR54; runtime commit29e3948. No new precision clearance.
+
+## Historical PR53 feedback diagnostic
+
 Saved-checkpoint feedback diagnostics are complete (2026-09-30). Read
 [results](reports/olmo-feedback-diagnostic/results.md),
 [forward analysis](reports/olmo-feedback-diagnostic/forward-notes.md),
@@ -31,9 +48,9 @@ GPU observations preserve their original helper snapshots. Observational helpers
 are relocated under `scripts/` to preserve old training source discovery; frozen
 200 runtime files and original checkpoints remain unchanged.
 
-Next proposal for review: paired NF continuation from32 with saved Adam/data
+Historical next proposal (now authorized above): paired NF continuation from32 with saved Adam/data
 order, unchanged control versus KL weight0.1, latent weight1, full feedback;
-32 more updates with evaluations48/64. This is **not launched** and needs a new
+32 more updates with evaluations48/64. The approved branch now has an explicit
 declared objective/branch identity. No further precision or architecture grid.
 Save/push/retain progress every20–30minutes; inspect reports/processes after an
 interruption. Final PR/validation/storage state is in the new progress report.
