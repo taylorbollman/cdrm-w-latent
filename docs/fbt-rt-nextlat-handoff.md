@@ -4,6 +4,42 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+The paired NF KL continuation is complete (PR54, 2026-09-30). Read
+[results](reports/olmo-kl-continuation/results.md),
+[next proposal](reports/olmo-kl-continuation/next-steps.md),
+[validation](reports/olmo-kl-continuation/validation.md),
+[storage](reports/olmo-kl-continuation/storage-receipt.md), and
+[progress/closeout](reports/olmo-kl-continuation/progress.md).
+Both branches restored the exact shared NF32 model/Adam/scheduler/rank RNG/cursor
+and ran32 more matched updates to64, changing only KL1 versusKL0.1. Original
+128-update data/LR plan, BF16 production graphs, K4 feedback, latentweight1 and
+all model/kernel code remain fixed. NF has no active RT layer.
+
+DevCE64 improves from2.845510/6.805770/6.923254/6.967279 to
+2.704137/5.752041/5.883908/5.956001. Median rawgradnorm falls7.791→2.928;
+all32updates per branch remain finite and clipped. Raw KL and latent losses
+are higher under0.1 in every pass: a clear loss tradeoff, not improvement of
+all objectives. Later passes remain~3.05–3.25nats worse than the first. This is
+a single-seed, fixed64-row-dev-prefix result inside100-update warmup, not
+useful-refinement, RT-benefit or new BF16 compatibility clearance.
+
+Native paired audit16,139 checks and exact tiny control/restart2,901/2,289 pass;
+125focusedCPUtests pass. Original200runtime files are unchanged;210execution
+sources are pinned. Separate v2 post-run audit fixes the tiny schedule metadata
+assumption; summary helpers are separately pinned. Both final64 checkpoints are
+cloud-verified and W&Bsynced. No training or continuation is queued.
+[Summary charts](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/72jc2qi3).
+
+Recommend reviewed paired NFR32→64 replication with nativeRT0/15 present and
+KL1 versus0.1, retaining its own savedAdam. Approximate budget3–4hours plus
+possible setup/retention overhead. Not launched; nativeNFR scope must be
+explicitly declared. Do not automatically extend training or add another loss
+intervention. Keep original parent files on child recovery. Runtime/evidence:
+`.runtime/olmo-kl-continuation`; receipts `.runtime/olmo-kl-retention`.
+Final PR/inventory/closeout pins are recorded in progress.md.
+
+## Historical PR53 feedback diagnostic
+
 Saved-checkpoint feedback diagnostics are complete (2026-09-30). Read
 [results](reports/olmo-feedback-diagnostic/results.md),
 [forward analysis](reports/olmo-feedback-diagnostic/forward-notes.md),
@@ -31,9 +67,9 @@ GPU observations preserve their original helper snapshots. Observational helpers
 are relocated under `scripts/` to preserve old training source discovery; frozen
 200 runtime files and original checkpoints remain unchanged.
 
-Next proposal for review: paired NF continuation from32 with saved Adam/data
+Historical next proposal (now authorized above): paired NF continuation from32 with saved Adam/data
 order, unchanged control versus KL weight0.1, latent weight1, full feedback;
-32 more updates with evaluations48/64. This is **not launched** and needs a new
+32 more updates with evaluations48/64. The approved branch now has an explicit
 declared objective/branch identity. No further precision or architecture grid.
 Save/push/retain progress every20–30minutes; inspect reports/processes after an
 interruption. Final PR/validation/storage state is in the new progress report.
