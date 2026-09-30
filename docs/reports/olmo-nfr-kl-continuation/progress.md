@@ -105,3 +105,14 @@ is not evidence of improved prediction. Reduced48/64 remain pending.
 Control terminal outputs and all8 publication receipts are retained, with
 W&B terminal checkpoint summary corrected to64/64/not-pending and history
 unchanged; see storage-receipt.md.
+
+13:35 UTC: reduced48 development completed. CE passes1–4 is
+2.790368/6.348725/6.456982/6.493014, lower than control48
+2.983241/6.764267/6.839343/6.858271 on every pass. First/fourth
+advantages are.192873/.365257nats. Raw KL is
+3.724618/.783862/.822513/.820431; latent is
+.341310/.057770/.056030/.055411, higher than control on every pass.
+Both branches remain finite; this is a predictive/auxiliary-loss tradeoff,
+not improvement in every objective. Reduced continues unchanged to64, with
+checkpoint43 verified and named48 publication next. Final paired audit,
+summary and review follow terminal64; no further training is queued.
