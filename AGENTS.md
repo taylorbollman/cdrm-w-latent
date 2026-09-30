@@ -31,18 +31,23 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 15:39 UTC: NEXT MILESTONE ACTIVE, authorized by latest user.
+2026-09-30 15:53 UTC: NFR64-to128 TRAINING ACTIVE, authorized by latest user.
 Branch feat/olmo-nfr-stability-128. Read docs/reports/olmo-nfr-stability-128/
 protocol.md and progress.md. Prepare matched no-update K1-32 NFR64 KL1/.1
 endpoint curves on common eight-row FP32/no-jitter panel. If bounded/settling,
 continue only saved reduced-KL NFR64 to128, preserving Adam/RNG/data/LR/model;
 inspect96/100/128 across existing warmup100. Stop128; no extra training beyond
-that. Two endpoint probes RUNNING, physicalGPU0control/GPU1reduced, root
-sessions2942/66539; monitor25914. Runtime olmo-nfr-endpoint-curves reports
-result-control-01/result-reduced-01; W&B y8xlyhtw/sf5dwyaz. Do not launch
-training until both complete and GPUs released. Root owns activation receipt.
-Continuation helper prepared with36CPUtests/222pins;44probeCPUtests passed.
-Scope/launch commands and retention receipts in new report progress.md.
+that. Endpoint probes COMPLETE/exit0/synced, preservation passed; both bounded
+and decaying. Reduced K4/K8 tail residual to finiteK32=2.179%/.1766%;
+CEK4/K32=5.412258/5.431623, no useful extra-pass prediction. W&B pair3p91owsx;
+endpoint y8xlyhtw/sf5dwyaz, runtime olmo-nfr-endpoint-curves. All retained.
+Unchanged continuation launched15:49, root83327, monitor68687, both GPUs.
+W&B2zu5jloq; runtime olmo-nfr-stability-128/native-nfr-reduced-64to128-01.
+Exact restored64 full state/Adam/RNG/cursor/scheduler verified; dev64running.
+DO NOT launch other GPU work. Timeout6h; STOP.json checkpointedstop; stop128.
+Final128 K32 probe prepared separately for AFTER terminaltraining+GPUrelease.
+Continuation36CPUtests/222frozenpins; endpoint44CPUtests. Scope/launch/
+activation/recovery paths and retention receipts in new report progress.md.
 Historical200/208/210/215 bytes immutable; new protocol also now pinned.
 Root coordinates all GPU launches; checkpoint/cloud/W&B policy unchanged.
 Earlier notes calling this proposal unapproved are superseded by authorization.
