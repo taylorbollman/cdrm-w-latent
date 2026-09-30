@@ -40,8 +40,10 @@ pass schedule change. Runtime .runtime/olmo-fbt-stability; inspect live reports
 and processes before launching. OrdinaryB128 COMPLETE/cloud128/synced37uu86ip.
 Tinyinsertion8531/cloudresume10150exactcheckspass. NativeF currentlyRUNNING
 native-f12-to128-01/session60881, W&B32sqvp7e; curvewatchersession31926.
-F0 andF32 alreadysettleatK32tolow~1e-6delta whileCEpoorbutimproving;
-F32regularCE2.651994/6.241516/6.326875/6.368114. Source208frozen.
+F0/32/64/96/100 deep curves completed. At100 regularCE is
+2.680524/3.195912/3.240730/3.259452; small-panel state changes reach~1e-6
+by16passes. Feedback learns but still trails ordinary pass. Origin inherits
+fusion128 preparation, so no claim about earlier stabilization. Source208frozen.
 ConditionalNFRKL32→64pair215sourcepreparedNOTLAUNCHED; possiblefollowup afterF
 plusboundedonline/componentchecks, notautomaticF192. Windowtarget13:37UTC.
 Preserve historical pins/checkpoint/cloud authorities. Progress/results give
