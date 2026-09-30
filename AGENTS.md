@@ -31,9 +31,9 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 19:45 UTC: NFR64-to128 AND FINAL PROBE COMPLETE. No training
+2026-09-30 19:52 UTC: NFR64-to128 AND FINAL PROBE COMPLETE. No training
 or GPU diagnostic remains active; update129 is not authorized or launched.
-Branch feat/olmo-nfr-stability-128, PR56 closing. Read docs/reports/
+PR56 merged1cc4bb8dd0a27d8736b9940c2500d66dfea2290f; main current. Read docs/reports/
 olmo-nfr-stability-128/results.md, validation.md, storage-receipt.md and
 progress.md. All64 resumed updates finite;57clipped, final6unclipped.
 Regular dev128 CE2.756071/3.045481/3.053890/3.058500, fourth-first gap.302429;

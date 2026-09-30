@@ -177,3 +177,8 @@ GCS (see storage-receipt.md). Independent source/panel/policy checks and raw
 sum/residual reaggregation pass. Both H100s verified idle/0MiB/no processes
 inside container after probe completion. Final results and figures are reviewed;
 PR56 ready for merge. No extension is queued, and no further GPU task remains.
+
+19:52 UTC: PR56 merged as1cc4bb8dd0a27d8736b9940c2500d66dfea2290f,
+with exact reviewed head8be72b368ceef9f4ad459fc8a4d85f6a003505bf.
+Main fast-forwarded; all scheduled work/evidence complete and GPUs idle.
+Next proposal remains128→192, with no extension yet authorized or launched.
