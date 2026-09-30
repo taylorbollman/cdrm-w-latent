@@ -75,3 +75,13 @@ authority, hostpid1282711. NFR stop32/timeout4h/settings unchanged; no repeated
 training, checkpoint-resume or GPU-runtime modification. status.py now selects
 queue-02 when present. B/NF evidence remains immutable. progress-0016 retention
 succeeded; completed NF and summary-b-nf-01 retention started.
+
+00:48 UTC: NFR W&B5byv5pkq active; graph preparation finished and5 counted
+updates complete. Cloud checkpoint2 verified; norm trajectory211.12/76.50/
+73.80/52.42/39.38, all clipped and finite. First update137.92s callback, timing
+remains provisional. Origin comparison validates all71named parameter tensors
+exact between NF/NFR and both replicas (values/shapes/dtypes; excludes buffers/
+Adam/RNG). origin-pair-01 retained; completed NF, B+NF summary and recovery
+launch snapshots all retained. queue-02 detachedpid1282711 owns NFR; original
+queue-01 stale report stays preserved. Next dev at16; stop32 unchanged.
+progress-0048 captures immutable metadata while native state retention proceeds.
