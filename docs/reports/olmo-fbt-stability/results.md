@@ -150,6 +150,9 @@ at 16 and 2.12e-6 at 32. The unsettled-suffix curve also approaches 1e-6.
 Settling takes somewhat more passes than at update 32, without persistent
 oscillation or divergence on this panel. There has been no observed binary
 transition from non-settling to settling: the origin already settled.
+The origin includes the prior fusion-only 128-update adaptation. This does not
+exclude a stabilization transition during that earlier preparation stage; it
+describes the shared starting point used by the current F/NF/NFR comparisons.
 
 Late predictive entropy is now 4.850 nats and pre-final-normalization RMS is
 2.733, versus 6.832 and 1.323 at the origin. These complement the state-change
