@@ -4,6 +4,42 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+Saved-checkpoint feedback diagnostics are complete (2026-09-30). Read
+[results](reports/olmo-feedback-diagnostic/results.md),
+[forward analysis](reports/olmo-feedback-diagnostic/forward-notes.md),
+[gradient analysis](reports/olmo-feedback-diagnostic/gradient-notes.md),
+[next proposal](reports/olmo-feedback-diagnostic/next-steps.md), and
+[progress](reports/olmo-feedback-diagnostic/progress.md).
+No training extension or new optimizer update occurred. Six saved-state probes
+use FP32/no jitter: NF0/NF32/NFR32 forwards on eight fixed dev rows; NF32 gradients
+on two fixed two-row batches and NFR32 on the first batch. All state/RNG checks
+pass; gradient reconstruction relative L2 is at most2.47e-6. Beta0 passes are
+exact; beta0.5 does not repair NF. Later-pass deficit already exists at NF0.
+Auxiliary losses improve alongside broader readouts/reduced positional variation;
+do not call that useful refinement or proven collapse. NFR still improves later
+CE versus NF while worsening first CE; all later passes remain poor.
+
+NF backbone total CE/auxiliary cosine varies -0.058/+0.231 across batches;
+NFR -0.536, fusion -0.646 (NF fusion positive). First-CE/auxiliary opposition
+repeats, but every measured total raw gradient still has positive dot products
+with both CE contributions. These are local raw gradients, not large-batch
+BF16 Adam updates; no new BF16 clearance or RT-causality claim.
+Charts: [p5xs1bod](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/p5xs1bod).
+Evidence/fixture retainedGCS under `olmo-two-gpu/20260930T031600Z/feedback-*`;
+receipts `.runtime/olmo-feedback-retention`, workingdata `.runtime/olmo-feedback-diagnostic`.
+GPU observations preserve their original helper snapshots. Observational helpers
+are relocated under `scripts/` to preserve old training source discovery; frozen
+200 runtime files and original checkpoints remain unchanged.
+
+Next proposal for review: paired NF continuation from32 with saved Adam/data
+order, unchanged control versus KL weight0.1, latent weight1, full feedback;
+32 more updates with evaluations48/64. This is **not launched** and needs a new
+declared objective/branch identity. No further precision or architecture grid.
+Save/push/retain progress every20–30minutes; inspect reports/processes after an
+interruption. Final PR/validation/storage state is in the new progress report.
+
+## Historical PR52 cohort (superseded next-step recommendation)
+
 The first 32-update matched adaptation pilot is complete (PR52). Read
 [results](reports/olmo-adaptation-pilot/results.md),
 [next steps](reports/olmo-adaptation-pilot/next-steps.md),
