@@ -15,7 +15,7 @@ from torch.nn.attention import SDPBackend, sdpa_kernel
 from cdrm.pretrained.artifacts import sha256_file
 from cdrm.pretrained.distributed_checkpoint import inspect_distributed_checkpoint, _local_rng
 from cdrm.pretrained.campaign_training import CampaignObjective
-from cdrm.pretrained.feedback_gradient_probe import feedback_gradient_probe
+from scripts.olmo_feedback_gradient_probe import feedback_gradient_probe
 from cdrm.pretrained.lm_training import LMTrainingConfig, TrainingCounters, parameter_layout
 from cdrm.pretrained.nextlat import NextLatBatch, build_nextlat_masks
 from scripts.experiment_tracking import OnlineTracker, scalar_metrics
@@ -117,7 +117,7 @@ def source_inventory():
         if sha256_file(ROOT/name) != expected:
             raise ValueError('Frozen runtime changed: '+name)
     added = ('scripts/olmo_feedback_diagnostic.py', 'scripts/olmo_feedback_fixture.py',
-             'cdrm/pretrained/feedback_gradient_probe.py', 'cdrm/pretrained/feedback_forward_probe.py',
+             'scripts/olmo_feedback_gradient_probe.py', 'scripts/olmo_feedback_forward_probe.py',
              'docs/reports/olmo-feedback-diagnostic/protocol.md')
     return {'frozen_count': len(frozen), 'frozen_inventory_sha256': sha256_file(frozen_path),
             'new_sources': {n: sha256_file(ROOT/n) for n in added}}
@@ -206,7 +206,7 @@ def run(args):
         rng_before = tree_digests(_local_rng(torch.device('cuda:0'), None))
         publish({'phase': 'weights_loaded', 'checkpoint_update': report['checkpoint']['counters']['optimizer_updates']})
         if args.stage == 'forward':
-            from cdrm.pretrained.feedback_forward_probe import feedback_forward_probe
+            from scripts.olmo_feedback_forward_probe import feedback_forward_probe
             for beta in args.betas:
                 rows = []
                 with evaluation_runtime(model) as runtime_evidence:

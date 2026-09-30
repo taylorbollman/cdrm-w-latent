@@ -7,7 +7,7 @@ import torch
 from cdrm.pretrained.campaign_recipe import CampaignRecipe, build_campaign_model
 from cdrm.pretrained.campaign_training import CampaignObjective
 from cdrm.pretrained.fbt_training import aggregate_pass_losses
-from cdrm.pretrained.feedback_gradient_probe import (
+from scripts.olmo_feedback_gradient_probe import (
     CONTRIBUTIONS, GRADIENTS, feedback_gradient_probe, gradient_accounting, weighted_feedback_terms,
 )
 from cdrm.pretrained.nextlat import NextLatBatch, NextLatLosses

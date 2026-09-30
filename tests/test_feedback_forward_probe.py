@@ -7,7 +7,7 @@ import torch
 from torch.nn import functional as F
 
 from cdrm.pretrained.campaign_recipe import CampaignRecipe, build_campaign_model
-from cdrm.pretrained.feedback_forward_probe import feedback_forward_probe
+from scripts.olmo_feedback_forward_probe import feedback_forward_probe
 from cdrm.pretrained.nextlat import NextLatBatch
 from cdrm.pretrained.olmo import OLMoConfig
 from cdrm.pretrained.olmo_tiled import OLMoTiledRTForCausalLM

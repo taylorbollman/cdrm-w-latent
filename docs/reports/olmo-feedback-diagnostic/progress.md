@@ -1,5 +1,32 @@
 # Saved-state feedback diagnostic progress
 
+**COMPLETE, 03:32 UTC.** All six native probes pass, all seven W&B runs including
+summary are synced, and both H100s are idle. No optimizer update or continuation
+is active/queued. Read results.md and next-steps.md; the proposed paired KL-weight
+continuation remains a review proposal only.
+
+Summary SHA256 `6508fd8c5d7276482c0fca8a12b6fcb1dd1e53fc1c6d0c4f3be4f075bafb815a`;
+W&B `p5xs1bod`. Six case wall times are64.75/79.52/181.34 seconds for
+NF0/NF32/NFR32 forwards and90.41/88.53/181.01 seconds for NF primary/NF
+conditional/NFR primary gradients; include load/hash/logging overhead, not
+training throughput measurements. Model/checkpoint bytes remain unchanged.
+
+Final55 CPU tests pass. Independent packaging audit confirms unchanged helper
+function bodies after relocation to scripts, exact original137/200 discovered
+source inventories, and successful fresh original training `load_spec` for
+both NF/NFR with no CUDA, model, optimizer, process group or RNG changes.
+Audit SHA256 `f53a583fffe0bcfd40e205c2b43a794580d98185942677b7c00bd4f5aec276da`;
+its cloud receipt is `packaging-retained-01.json` under the retention directory.
+Source snapshots in completed GPU reports preserve the original execution code;
+no historical report was rewritten to claim execution of relocated paths.
+
+All six probe archives, summary, fixture metadata/payload, failed preflight and
+packaging audit are cloud verified. Final code/docs/test/receipt closeout uses
+`feedback-closeout` under the same timestamp prefix; PR/merge identifiers are
+recorded below after publication.
+
+## Earlier progress (superseded by completion above)
+
 2026-09-30: user approved the bounded next-step proposal from PR52. Branch
 `feat/olmo-feedback-diagnostic`, base `19af4d0`. No learning extension is authorized
 by this milestone. Existing 200 runtime source pins and checkpoint bytes stay

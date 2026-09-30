@@ -2,6 +2,7 @@
 from copy import deepcopy
 from dataclasses import asdict
 import json
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -185,13 +186,19 @@ def test_source_inventory_checks_every_frozen_source_and_records_new_helper_pins
     inventory.parent.mkdir(parents=True)
     inventory.write_text(json.dumps(frozen))
     added = ('scripts/olmo_feedback_diagnostic.py', 'scripts/olmo_feedback_fixture.py',
-             'cdrm/pretrained/feedback_gradient_probe.py', 'cdrm/pretrained/feedback_forward_probe.py',
+             'scripts/olmo_feedback_gradient_probe.py', 'scripts/olmo_feedback_forward_probe.py',
              'docs/reports/olmo-feedback-diagnostic/protocol.md')
     for name in added:
         path = tmp_path/name
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(name+'\n')
     monkeypatch.setattr(diagnostic, 'ROOT', tmp_path)
+    actual_sha = diagnostic.sha256_file
+    frozen_pin = 'cfa54e38b245fc72b993093b1e7978de07f529c86a28886771be727941bc2162'
+    # Only substitute the synthetic inventory's external authority. Every
+    # individual old/new source hash remains an actual byte measurement.
+    monkeypatch.setattr(diagnostic, 'sha256_file',
+        lambda path: frozen_pin if Path(path) == inventory else actual_sha(path))
     observed = diagnostic.source_inventory()
     assert observed['frozen_count'] == 200
     assert observed['frozen_inventory_sha256'] == diagnostic.sha256_file(inventory)
@@ -199,3 +206,29 @@ def test_source_inventory_checks_every_frozen_source_and_records_new_helper_pins
     (tmp_path/'frozen/source-199.py').write_text('mutated final source\n')
     with pytest.raises(ValueError, match='Frozen runtime changed'):
         diagnostic.source_inventory()
+
+
+def test_source_inventory_rejects_an_unpinned_inventory_before_source_reads(tmp_path, monkeypatch):
+    inventory = tmp_path/'.runtime/olmo-pilot-async/runtime-sources.json'
+    inventory.parent.mkdir(parents=True)
+    inventory.write_text(json.dumps({f'source-{index}.py': 'a'*64 for index in range(200)}))
+    monkeypatch.setattr(diagnostic, 'ROOT', tmp_path)
+    with pytest.raises(ValueError, match='Frozen inventory authority changed'):
+        diagnostic.source_inventory()
+
+
+@pytest.mark.parametrize('arm', ['NF', 'NFR'])
+def test_actual_diagnostic_spec_uses_pinned_authority_without_runtime_source_rediscovery(arm, monkeypatch):
+    declaration_path = diagnostic.ROOT/'.runtime/olmo-adaptation-pilot/declarations-01/nf-nfr-declaration.json'
+    if not declaration_path.is_file():
+        pytest.skip('Retained native declaration is absent in this checkout')
+    monkeypatch.setattr(diagnostic.contract, 'source_hashes',
+                        lambda: pytest.fail('Historical declaration rediscovered new diagnostic modules'))
+    spec = diagnostic.diagnostic_spec(arm)
+    assert spec['kind'] == 'native' and spec['recipe'].arm == arm
+    assert spec['recipe'].sequence_length == 1024 and spec['recipe'].mode().num_passes == 4
+    assert spec['declaration'] == spec['resolved']['declaration']
+    assert spec['resolved']['sources'] == spec['declaration']['implementation_sources']
+    assert len(spec['plan']['updates']) == 128
+    assert spec['plan']['updates'][31]['next_cursor']['next_chunk'] == 16384
+    assert spec['startup']['target_recipe'] == spec['recipe'].to_dict()

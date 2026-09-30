@@ -14,11 +14,11 @@ import math
 import torch
 from torch.nn import functional as F
 
-from .campaign_recipe import CampaignRecipe
-from .document_policy import feedback_eligibility
-from .fbt_training import FBTNextLatLM
-from .lm_training import TERMS
-from .nextlat import build_nextlat_masks
+from cdrm.pretrained.campaign_recipe import CampaignRecipe
+from cdrm.pretrained.document_policy import feedback_eligibility
+from cdrm.pretrained.fbt_training import FBTNextLatLM
+from cdrm.pretrained.lm_training import TERMS
+from cdrm.pretrained.nextlat import build_nextlat_masks
 
 
 def _finite(value):

@@ -13,11 +13,11 @@ import math
 
 import torch
 
-from .campaign_losses import compute_dynamic_nextlat_loss_sums
-from .campaign_training import CampaignObjective
-from .fbt_training import FBTNextLatLosses, aggregate_pass_losses
-from .lm_training import TERMS
-from .nextlat import NextLatLosses
+from cdrm.pretrained.campaign_losses import compute_dynamic_nextlat_loss_sums
+from cdrm.pretrained.campaign_training import CampaignObjective
+from cdrm.pretrained.fbt_training import FBTNextLatLosses, aggregate_pass_losses
+from cdrm.pretrained.lm_training import TERMS
+from cdrm.pretrained.nextlat import NextLatLosses
 
 
 CONTRIBUTIONS = ("ce_first", "ce_later", "latent", "kl")

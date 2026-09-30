@@ -31,6 +31,23 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 saved-state feedback diagnostic COMPLETE; PR/merge closeout in
+docs/reports/olmo-feedback-diagnostic/progress.md. Read results.md, forward-notes.md,
+gradient-notes.md and next-steps.md there. Six FP32/no-jitter saved-state probes,
+no training: NF0/NF32/NFR32 forwards8devrows, NF32 gradients2x2trainrows,
+NFR32 gradients first2rows. Exact beta0 and crossbeta firstpass controls;
+reconstruction<=2.47e-6; states/RNG/grads unchanged. NF0 already has bad laterCE;
+beta.5 fails to repair. Broader laterreadouts and reduced position variation
+accompany lowerauxloss; no collapse/quality/causality claim. NF totalCEaux
+backbonecos-.058/+.231; NFR-.536, fusion-.646; firstCEauxopposition repeats,
+but all jointdotCE values remain positive locally. No BF16 Adam inference.
+Original200runtime/checkpoints unchanged; diagnostic helpers under scripts
+avoid changing oldtraininginventoryglob. ExactGPU source snapshots retained.
+Evidence/fixture GCS olmo-two-gpu/20260930T031600Z/feedback-*; receipts
+.runtime/olmo-feedback-retention; W&Bsummaryp5xs1bod. No GPU/training queued.
+Propose reviewed pairedNF savedAdam continuation32→64 controlvsKL0.1 only;
+not launched, requires new branch identity, retainallpriorqualifications.
+
 2026-09-30 first32 adaptation pilot COMPLETE, PR52 mergedfb866533
 (final closeout metadata in its progress.md). Read docs/reports/olmo-adaptation-pilot/results.md, next-steps.md,
 assessment-guide.md, validation.md, storage-receipt.md and progress.md. Runtime
