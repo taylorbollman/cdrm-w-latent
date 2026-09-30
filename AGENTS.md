@@ -31,6 +31,20 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 remaining topology readiness IN PROGRESS, branch
+feat/olmo-topology-migration, draft PR58. Read docs/reports/olmo-topology-migration/
+results.md, progress.md and usage.md. Parent session66753 owns sequential native
+control2/migrated1/cloud-restore/restart1; inspect .runtime/olmo-topology-migration/
+native-matrix.py and reports before launching GPU work. Native scope is original
+NFR127→128 only, never129. Control2 completed/cloud127+128/W&Bsynced and matches
+original128 scalar/state/RNG/cursor digests exactly. Migrated1 is running;
+native cross-rank comparison and exact cloud restart remain pending. Tiny1↔2,
+two exact restarts, independent-job isolation and nativeN/R/NR/FR smokes passed;
+109CPUtests. Explicit campaign retention hook fixes discovered pilot/campaign
+identity mismatch; failedattempt01 retained, historical422sources unchanged.
+Small evidence retainedGCS; final native gradient/evidence retention pending.
+Native1→2, eight-rank/H200/runtime acceptance remain outside this fixture.
+
 2026-09-30 GPU allocation first milestone COMPLETE, PR57. Read docs/reports/
 olmo-gpu-allocation/results.md, validation.md, storage-receipt.md, progress.md,
 memory-assessment.md and topology-migration-plan.md. All four primary cells and

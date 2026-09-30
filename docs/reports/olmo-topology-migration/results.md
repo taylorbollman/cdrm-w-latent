@@ -64,7 +64,16 @@ in the child. The native retry uses this source-pinned worker.
 
 ## Native migration and restart
 
-Pending. The fixed scope is original native NFR127→128, T1024,512 real rows per
+The two-rank control has completed, exited cleanly and published both boundaries.
+An independent comparison against the original scientific update 128 report
+passes all 14 scalar/full-boundary digest checks: model, Adam, scheduler,
+counters, both rank RNG streams, cursor, loss sums, gradient norm and learning
+rate agree exactly. This compares authenticated recorded digests; it is not an
+additional independent tensor readback of the historical endpoint. The control
+objective is 3.296812589 and its pre-clipping gradient norm is 0.944218695.
+
+One-rank migration and cloud restart remain pending. The fixed scope is original
+native NFR127→128, T1024,512 real rows per
 update, physical B12, K4, RT0/15, latent1/KL0.1, BF16 mixed with FP32 master
 weights/Adam and the original finite LR plan. Compare two ranks with one rank;
 then restore migrated127 from exact GCS generations and replay on one rank in a
@@ -73,6 +82,10 @@ initial model/optimizer/schedule/cursor and identical data/masks/keyed jitter.
 Changed-rank BF16 measurements are not assumed bitwise-identical or granted
 blanket numerical clearance. The strict same-topology restart must be exact.
 No update129 is authorized by this fixture.
+
+Native reverse 1→2 migration is not covered by this matrix; the tiny FP32
+fixture covers that direction. See the [operator guide](usage.md) for the
+bounded executor, reusable importer, and recovery commands.
 
 ## Retention and destination-machine scope
 
