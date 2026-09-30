@@ -77,3 +77,9 @@ launching. New probe/summary code is outside frozen222 training pins. Use
 `scripts.olmo_nfr_128_summary` for audit-bound training plots and
 `scripts.olmo_nfr_endpoint_summary --final128 FINAL_REPORT` for reduced64/128
 pass overlays; preserve original paired64 artifacts separately.
+
+16:20 UTC: updates65–70 all finite with identical reduced metrics across ranks;
+raw norm min/median/max2.545/3.129/3.915, clipping remains active. Cloud65
+verified; local70 save is underway. Graph memory is58.38GiB reserved and
+42.83GiB peak allocated per GPU, with13.46GiB sampled free after capture.
+No setting or code change. Dev80 remains the next predictive readout.
