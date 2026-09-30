@@ -87,3 +87,11 @@ guards before starting reduced from the original32 state. The current
 pace places paired closeout around14:30UTC, about an hour after the initial
 13:37 target under the user's timing flexibility; no further training
 will start after this finite pair.
+
+12:32 UTC: control terminal64/cloud64/W&Bsynced completed with host exit0.
+The unchanged queue passed its terminal guards and launched the reduced
+branch on both GPUs. W&B:
+https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/1xu07xdf .
+Original32 model/Adam/data/RNG and schedule are restored; only KL1→.1 changes.
+Control terminal evidence retention and summary reconciliation run on CPU
+in parallel. No extra GPU diagnostic or training beyond reduced64 is queued.
