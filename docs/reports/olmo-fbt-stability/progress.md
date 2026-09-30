@@ -92,3 +92,13 @@ recordedratherthancallinglowdeltaoverallhealth. ComparematchedNF32CE
 continueto128. Checkpoint32pending, previouscloud16. Figurescopiedtodocs.
 Newtraining-semantics-assessment.md recordsattachedgradientmatch, overallhalf
 lossnormalization anddeliberatepaperFigure3pass-mixture/startupdifferences.
+
+08:24 UTC: Independent F32 interpretation agrees: allquartiles/unsettledsuffix
+settle~7e-7; preLN RMS isnotmonotonicescalation (already~4.23at8vs3.76at32).
+Provisionalfollowuppriority ifF128remainshealthy: boundedisolatedonline+saved
+NF/NFRcurves, thenexplicitpairedNFRKL1/.1 saved32→64, ratherthanautomaticF192.
+F-vsNFremovesbothauxlosses; itdoesnotisolateKL. ExistingmatchedNF64experiment
+suppliesnarrowKLmotivation. Revisitbasedon64/96/100/128 andremainingtime.
+Initialwindowtarget13:37UTC; pairmayneedsmalloverruntofinishbothendpoints
+dependingactualruntime. No followup GPUlaunchyet. UseF64,notF128,formatched
+contextwhenthepairedNFR64resultsareavailable.

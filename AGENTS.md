@@ -33,13 +33,19 @@ W&B tracking.
 
 2026-09-30 ACTIVE FBT-only stability milestone, user authorized about6.5h from
 07:07UTC and evidence-driven follow-ups without review. Branch
-feat/olmo-fbt-stability. Read docs/reports/olmo-fbt-stability/protocol.md and
+feat/olmo-fbt-stability, draftPR55. Read docs/reports/olmo-fbt-stability/protocol.md and
 progress.md first. K4/beta1, noRT/NextLat, samefusion128 startup, initial128
 updates/conditional192, dense Figure3-style probes. No automatic gate ramp or
 pass schedule change. Runtime .runtime/olmo-fbt-stability; inspect live reports
-and processes before launching. Original B control32→128 may run during CPU
-implementation via unchanged200-source runtime. Preserve historical source
-pins and all checkpoint/cloud authorities; new F implementation is versioned.
+and processes before launching. OrdinaryB128 COMPLETE/cloud128/synced37uu86ip.
+Tinyinsertion8531/cloudresume10150exactcheckspass. NativeF currentlyRUNNING
+native-f12-to128-01/session60881, W&B32sqvp7e; curvewatchersession31926.
+F0 andF32 alreadysettleatK32tolow~1e-6delta whileCEpoorbutimproving;
+F32regularCE2.651994/6.241516/6.326875/6.368114. Source208frozen.
+ConditionalNFRKL32→64pair215sourcepreparedNOTLAUNCHED; possiblefollowup afterF
+plusboundedonline/componentchecks, notautomaticF192. Windowtarget13:37UTC.
+Preserve historical pins/checkpoint/cloud authorities. Progress/results give
+currentstatus; donotrestartcompletedB/tinychecks orlaunchGPUbesideactiveF.
 
 2026-09-30 paired NF KL continuation COMPLETE, PR54 closeout metadata in
 `docs/reports/olmo-kl-continuation/progress.md`. Read results.md, next-steps.md,
