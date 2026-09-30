@@ -89,3 +89,32 @@ Local receipt/result files are
 `.runtime/olmo-nfr-stability-retention/endpoint-terminal-01.json` and
 `endpoint-terminal-01-result.json`. No model state was uploaded again or
 rehashed, no local files were deleted, and no GPU command was run by retention.
+
+## Prepared final128 observer
+
+The final observer's frozen `prepare.py`, preparation receipt, new helper,
+tests and protocol were retained as a small additive source overlay, together
+with a copy inventory. All 244 preparation pins matched before copying. The
+historical training and endpoint source snapshots are already present in the
+preceding static and terminal archives; this six-file archive avoids repeating
+them. It is preparation only: no terminal128 checkpoint authority or actual
+final-probe result is claimed.
+
+Input directory:
+`.runtime/olmo-nfr-stability-128/final-probe-static-retention-input-01`.
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-final-probe-static-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 21,277 | `1790783852075089` | `18b5aa8eac10d97a8d7dbd0c14654870ff047beff0499d0b9191a43c010c29b6` |
+| `retention-manifest.json` | 1,898 | `1790783852323984` | `cb0aa03dd76d711c2775c49ab8f958b9c4eee60b8b0999c5c6c1140dbc542ce4` |
+| `storage-receipt.json` | 1,306 | `1790783852582314` | `7163a208e2d3ae668399450547267396cb4138edf9e8414dfd7b1b50f4c98a9f` |
+
+The six files total 53,827 bytes before compression. Server size, MD5, SHA
+metadata and downloaded SHA256 checks passed for all objects. Local
+receipt/result files are under `.runtime/olmo-nfr-stability-retention/` as
+`final-probe-static-01.json` and `final-probe-static-01-result.json`. The same
+CPU-only container policy was used; no active directory or checkpoint state
+was uploaded, no local file was deleted and no GPU command was run.

@@ -150,3 +150,39 @@ SHA256 `01e2a5087f5ad5e0e61539d128989ce2ad285aedcec957d88640e2c3ee9f1d32`.
 No GPU call, model load or checkpoint-state rehash was performed by this
 independent closure. The closed outputs and activation were retained separately
 from the active continuation; see the storage receipt.
+
+## Prepared final observer and reporting review
+
+Read-only review of `olmo_nfr_final_curves.py` found no unresolved correctness
+issue. It admits only the completed, synced and cloud-published reduced-KL
+NFR128 continuation with exact resolution, configuration, source inventory and
+ordered cursor. It reuses the frozen update64 observer's mathematical functions
+and compares materialized batch hashes against the exact reduced64 probe. The
+owner reported 30 focused CPU tests passing. Actual terminal128 scope binding,
+state authentication and preflight remain deferred until that checkpoint exists.
+Preparation SHA256:
+`e00655584ae906401bc12bab826ae24c68edf830a75819bae7327c8e13dddde8`.
+All 244 preparation pins matched at independent retention time.
+
+The continuation summary's time aggregation is appropriate: sum the selected
+regions within each rank, take the slower rank for each update, then divide
+total real input tokens by the sum of update durations. It does not sum rank
+times, average rates or multiply inputs by four FBT passes. Memory is the
+maximum sampled per-GPU value. Development64 is required to match exactly
+across the parent and restored run and is included only once. Raw loss target
+counts are retained separately; training CE keeps its pass weights and the
+auxiliary terms are pass-averaged before objective coefficients. Executor wall
+time is explicitly distinguished from final W&B/host closeout.
+
+The optional final-curve summary binds the new final128 schema to the exact
+reduced64 report SHA and requires identical data tensors, panel policy, pass
+coverage and preserved state. Its overlay selects reduced64 and reduced128,
+with distinct labels and a separate summary schema. It does not overwrite or
+relabel the retained paired64 comparison.
+
+The new terminal audit was also reviewed. Its reconstructed metadata,
+inherited boundary, unchanged data/LR, required update100 evaluation/save and
+accepted validator reuse are appropriate. Its explicit scope is an
+uninterrupted 64→128 segment; a restart requiring multiple report segments
+would need an independently reviewed history join. Imported audit helper
+sources must be included in the audit's own retained source inventory.
