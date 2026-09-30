@@ -42,7 +42,7 @@ three hours to the initial 13:37 target; completing the matched pair may extend
 modestly beyond that target under the user's earlier timing flexibility. This
 is a finite follow-up, not an open-ended training extension.
 
-Read-only status: `python3 .runtime/olmo-nfr-kl-continuation/live_status.py`.
+Read-only status: `python3 .runtime/olmo-nfr-kl-continuation/live_status_v2.py`.
 Reports, launch logs and queue state are under that runtime directory; large
 states go to `/mnt/localssd/cdrm-checkpoints/nfr-kl-continuation/` and verified
 cloud copies to the declared `gs://fast-chunks` namespace. After interruption,
@@ -58,3 +58,9 @@ Reduced remains queued, not yet launched. Startup/graph preparation underway.
 encountered the valid startup evaluation placeholder with empty panels.
 It now waits for completed panel results. Training and queue were unaffected;
 old monitor96042 exited. Startup evaluator is repeating saved32 before updates.
+
+10:51 UTC: graph preparation and the first resumed control update are complete.
+Update33 is finite, preclip norm8.8348; clipping remains active. The repeated
+update32 development CE is3.043012/7.026269/7.055292/7.063815, matching the
+parent panel. The next scheduled development measurement is48. Both GPUs
+remain reserved; no new diagnostic is being run beside the pair.
