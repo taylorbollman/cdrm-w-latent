@@ -52,3 +52,13 @@ records exact loss semantics and planned review criteria; no runtime changes.
 Posthoc inventory helper is prepared and retained in analysis-helpers-02.
 Immutable progress-2354 snapshots contain current queue/native report metadata
 and completed B retention authorities, not a coherent new recovery checkpoint.
+
+2026-09-30 00:16 UTC: NF reached32 with both development evaluations complete;
+final local checkpoint/retention still in progress, so do not claim the arm is
+closed. Verified cloud checkpoint26 currently provides recovery. Dev CE16:
+3.253614/7.774963/7.798390/7.815834; dev CE32:
+2.960392/7.393494/7.425865/7.435141. Final gradient norm6.60185; all32 updates
+clipped. Absolute CE improved, but later passes remain far worse than pass1.
+Auxiliary improvement is not sufficient refinement. NFR remains queued;
+originalqueue/session7388 still owns execution. progress-0016 preserves bounded
+metadata snapshots. Prior progress-2354 retention succeeded.
