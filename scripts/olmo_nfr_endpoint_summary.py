@@ -5,12 +5,24 @@ import argparse
 import csv
 import hashlib
 import json
+import math
 from pathlib import Path
 import shutil
 
 
 def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def require_finite(value):
+    if isinstance(value, dict):
+        for child in value.values():
+            require_finite(child)
+    elif isinstance(value, list):
+        for child in value:
+            require_finite(child)
+    elif isinstance(value, float) and not math.isfinite(value):
+        raise ValueError('Nonfinite measurement in completed probe')
 
 
 def load_pair(paths):
@@ -22,11 +34,21 @@ def load_pair(paths):
                 or record.get('after_update') != 64 or record.get('kl_weight') not in (1., .1)):
             raise ValueError('Require completed explicitly scoped NFR64 endpoint probes')
         result = record['result']
+        preservation = record.get('preservation', {})
+        if (any(record.get(key) is not True for key in ('weights_unchanged', 'rng_unchanged', 'gradient_buffers_absent'))
+                or preservation.get('integrity_passed') is not True or preservation.get('restored') is not True
+                or not preservation.get('checks') or not all(v is True for v in preservation['checks'].values())
+                or record.get('optimizer_updates_performed') != 0):
+            raise ValueError('Probe preservation or no-update contract failed')
+        require_finite(result)
+        require_finite(record['finite_residuals'])
         signature = (record['membership_sha256'], record['index_manifest_sha256'],
-                     result['input_tokens'], result['ce_targets'], result['policy'], result['beta'])
+                     result['input_tokens'], result['ce_targets'], result['policy'], result['beta'],
+                     record['batch_tensor_sha256'])
         if common is None:
             common = signature
         if (signature != common or result['policy'] != 'common_fp32_no_jitter_v1'
+                or result['input_tokens'] != 8192 or result['ce_targets'] != 8184
                 or result['beta'] != 1. or [p['pass'] for p in result['passes']] != list(range(1, 33))):
             raise ValueError('Mismatched panel, masks, precision, fusion strength or pass coverage')
         records.append({'path': path, 'sha256': digest(path), 'record': record,
