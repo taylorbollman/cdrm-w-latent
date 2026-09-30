@@ -1,0 +1,49 @@
+# NFR KL continuation progress
+
+2026-09-30, approximately 10:33 UTC: activated the predeclared
+[protocol](protocol.md) after the completed FBT-only study and bounded
+online/component checks. The user authorized evidence-driven continuation
+without another review pause during the overnight window.
+
+The F-only segment completed 128 finite updates and retained first-pass CE
+(2.687038, versus ordinary control 2.687618), while fourth-pass CE improved
+to 2.942000. Its independent native and full B-prefix audits passed. All F,
+NF and NFR saved-state curves settle by K32 on the same eight-row panel.
+NF32 and NFR32 settle faster than F32 despite much worse CE. The previous NF
+KL0.1 continuation improves settled CE while still settling by K32. These
+observations support testing loss balance in NFR rather than changing its
+fusion gate or pass schedule to address an unobserved failure to settle.
+
+Both branches resume the **original NFR32 checkpoint and populated Adam**.
+Neither starts from the new F128 model. Control uses KL1; reduced uses KL0.1.
+All other settings, including latent weight1, RT0/15, K4, T1024, physical B12
+per GPU, logical 524,288 inputs/update, data order and LR schedule, remain fixed.
+Each adds 32 updates and stops at64. The immutable scope and 215 training-source
+pins are unchanged. F64 is descriptive same-panel context, not a matched fork.
+
+Activation authority:
+`.runtime/olmo-nfr-kl-continuation/activation-01.json`, SHA256
+`c9b209280ac92c7b1a86655e90a52bfffe6a47f155c3e9cfb86586a7eb75d2e3`.
+It pins F128, its audit, all five completed diagnostics, the declared NFR scope
+and the host queue. The online diagnostic's helper completed and synchronized;
+its host launcher rejected the spelling `complete` versus `completed`. A
+separate adoption receipt preserves that reporting-only mismatch without
+rerunning or rewriting the evaluation.
+
+Host queue: `.runtime/olmo-nfr-kl-continuation/sequential_queue.py`
+with `--queue-name queue-after-f128-01 --activate`. It runs control then reduced,
+requires verified/synchronized control64 before starting the second branch,
+and stops on failure or the shared STOP file. No automatic retry or additional
+training beyond the paired endpoints. Each branch retains the accepted
+asynchronous cloud checkpoint policy and a 10,800-second timeout.
+
+Expected duration is about 3–4 hours. Beginning around 10:33 leaves roughly
+three hours to the initial 13:37 target; completing the matched pair may extend
+modestly beyond that target under the user's earlier timing flexibility. This
+is a finite follow-up, not an open-ended training extension.
+
+Read-only status: `python3 .runtime/olmo-nfr-kl-continuation/live_status.py`.
+Reports, launch logs and queue state are under that runtime directory; large
+states go to `/mnt/localssd/cdrm-checkpoints/nfr-kl-continuation/` and verified
+cloud copies to the declared `gs://fast-chunks` namespace. After interruption,
+inspect those authorities before launching anything.
