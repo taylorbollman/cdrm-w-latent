@@ -50,3 +50,77 @@ downloaded SHA256 checks passed. Local receipt/result files are under
 The static-input file inventory records exact source/destination paths and
 hashes. No local files were deleted, no model state was loaded or rehashed,
 and no GPU work was launched by retention.
+
+## Completed control 32→64 closure
+
+The original-KL control finished at its review boundary 64 with host exit 0,
+`stopped_at_boundary`, completed segment, W&B synced and final cloud 64
+publication verified. The broader 128-update plan is not complete. The reduced
+branch is running independently under the pre-existing queue; it was not
+paused, modified or included in this terminal archive.
+
+Terminal report: `.runtime/olmo-nfr-kl-continuation/native-nfr-control-32to64-01/report.json`.
+SHA256: `4e47728173364a6a3a6ed14887517cea9df8bcd2247d1b5d8ca743eb2f3b27fe`.
+Final publication: `checkpoint-publications/update-000064.json` in that directory.
+SHA256: `6b484f991be6121b403f07529a0627f314da7143cf6c997f3a204c3d4cc1bad7`.
+
+All 215 live runtime source files match the control source snapshot. Final 64
+boundary hashes match the saved checkpoint boundary; the local manifest and
+state-file size agree with the already verified cloud publication. Closure
+performed no checkpoint tensor loading or state-content rehash.
+
+The eight publications are updates 33, 38, 43, 48, 53, 58, 63, 64. Exact receipts are
+retained under neutral filenames in the separate inventory, since the standard
+small-evidence retainer excludes `checkpoint-*` directories. That inventory
+also contains the two remaining local manifests (63, 64), final manifest,
+terminal host receipt/launcher and metadata closure record. Source reports
+and training history were not rewritten.
+
+| Stage | Members | Archive generation / SHA256 | Receipt generation / SHA256 |
+|---|---:|---|---|
+| `nfr-kl-control32to64-01` | 256 | 1790771636506962 / `f3c4c9f2be0158fbeff30a315fe4b04e11520694e9fa77c3256523f56481c8a9` | 1790771637050364 / `85fdd7464a4b0cd6f15ae0769611ac25406a9b93051f3a425a78059fd8eb6a14` |
+| `nfr-kl-control-terminal-inventory-01` | 15 | 1790771638121382 / `871f6d4f6585feebbf45ed47239796c8a21cba2012ab6274a6cbbf67411222e3` | 1790771638642225 / `78122f7732640fec5323f2fb00c3c8186b37f9031c83d0103b553408a297af78` |
+| `nfr-kl-control-summary-correction-01` | 6 | 1790771640476842 / `9654f3939de8776fa9091222bfa1b9caab6bfcbcee52c215fa4dca7972879106` | 1790771641012084 / `bc70f83540c4d8aac6b3730bf9893180dd746ced260fa7cb5712146047701e48` |
+
+All three directories use the common GCS evidence prefix above. The main
+control archive selected 41,875,765 bytes before compression (39.94 MiB), below
+the unchanged 128 MiB cap; the inventory selected 6,920,334 bytes and correction
+selected 26,966,184 bytes. Archive/manifest/receipt size, server MD5, SHA metadata
+and downloaded SHA256 verification all passed. Exact local receipt/result
+objects are `.runtime/olmo-nfr-kl-retention/<stage>.json` and
+`<stage>-result.json`. No full checkpoint was uploaded again.
+
+Final checkpoint directory:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/nfr-kl-continuation/20260930-pair01/control/native-nfr-control-32to64-01/update-000064/`
+
+| Object | Generation | Bytes | SHA256 |
+|---|---|---:|---|
+| `state.pt` | 1790771374621236 | 15,214,973,825 | `fa7ef205a9b93da8002fc82c5de78dddf820fd7190845edb8a6f6757c7e031f6` |
+| `manifest.json` | 1790771452892688 | 623,321 | `f46420d563943d4e28f29b67c3f182c0c1e61f96406827061cb4e7beca4a14a3` |
+
+W&B `taylorbollman/pretrained-fbt-rt-nextlat/ujz924fj` had stale summary values
+**local 63 / cloud 58 / worker pending true**. The standalone reconciler corrected
+only these checkpoint summary fields to **64 / 64 / false**, plus provenance.
+Fresh readback passed on attempt 2; `_step` remained 64 and the run remained
+finished. The unrelated-summary digest before/after was
+`7373f8ed7c87a5aac139ce8452eb87c4938f2fe426ab815cea2e18e8bc8f5b60`.
+The immutable report/publication pins are unchanged. No history was altered.
+
+The helper explicitly accepts the existing `olmo-kl-continuation-report-v1`
+schema, retaining every terminal/drained/matching-publication/W&B guard. This
+metadata-only extension is outside the 215 frozen training source pins and
+passed one focused CPU regression; original reports were not relabeled.
+The correction's source snapshot records the precise helper bytes.
+
+Execution used the CPU-only project container and
+`env -u GOOGLE_APPLICATION_CREDENTIALS PYTHONPATH=/workspace/cdrm-w-latent python .runtime/olmo-nfr-kl-continuation/retain-control-terminal-01.py`.
+This wrapper called the established reconciler with the report/publication
+pins above, outputting `control-summary-correction-01`, followed by the unchanged
+retainer without `--checkpoint-dir`. Closure is reproducible from
+`control-terminal-closure-01/build.py` and its retained report. No additional
+GPU job or paired comparison was run.
+
+Completed control resource measurements were appended to the
+[resource ledger](../olmo-fbt-stability/resource-ledger.md); reduced-branch
+throughput and paired results remain pending.

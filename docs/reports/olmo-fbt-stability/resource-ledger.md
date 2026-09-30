@@ -28,13 +28,14 @@ W&B teardown; see timing definitions below.
 | NF KL1, updates 33–64 | 16,777,216 | 8,783 | 7,780 | 5,291 | 52.85 | 42.833 / 58.707 |
 | NF KL0.1, updates 33–64 | 16,777,216 | 8,787 | 7,636 | 5,231 | 53.45 | 42.833 / 58.707 |
 | NFR32, updates 1–32 | 16,777,216 | 3,746 | 3,566 | 2,457 | 113.81 | 33.352 / 59.076 |
+| NFR KL1, updates 33–64 | 16,777,216 | 3,747 | 3,571 | 2,375 | 117.73 | 42.834 / 59.076 |
 
 “Inputs” means valid **input tokens**, not documents or pass-token work. B128
 is a 96-update continuation from 32; each NF row is 32 updates from 32; F128
 starts at 0 and stops at the declared review boundary 128; NFR32 starts at 0.
 The rates use only the new tokens in those intervals, not the inherited
-cumulative counters. The active NFR32→64 pair remains **pending** and has no
-projected rates in this ledger.
+cumulative counters. The NFR KL1 continuation from 32 is now terminal; its
+reduced-KL partner remains **pending**, with no projected rates or paired result in this ledger.
 
 Every optimizer update contains 512 real packed rows globally, hence 524,288
 real input tokens. B uses physical batch 32/rank with 8 accumulated microbatches
@@ -78,8 +79,8 @@ can still contend with them.
 
 The broader timed update-region rates from
 `update_wall_seconds_by_rank` are B128: 68,293; F128: 10,207; NF KL1: 7,671;
-NF KL0.1: 7,531; NFR32: 3,247 input tokens/s. Their timers include per-update
-validation, observation/gather, intermediate report persistence and scheduled
+NF KL0.1: 7,531; NFR32: 3,247; NFR KL1 continuation: 3,241 input tokens/s.
+Their timers include per-update validation, observation/gather, intermediate report persistence and scheduled
 development/probe callbacks. They stop before the final update-wall evidence
 persistence, outer tracker logging and checkpoint callbacks; graph preparation
 also precedes the timer. Thus these are broader update regions, not the whole
@@ -107,9 +108,11 @@ not be added again. Source/input hashing and interruption protection are
 intentional costs in these short studies.
 
 Checkpoint submissions / foreground worker wait seconds were B128: 3 / 533.8 s; F128: 17 / 1482.5 s; NF KL1: 4 / 398.1 s;
-NF KL0.1: 4 / 390.2 s; NFR32: 9 / 453.1 s.
+NF KL0.1: 4 / 390.2 s; NFR32: 9 / 453.1 s;
+NFR KL1 continuation: 8 / 397.3 s.
 F additionally ran 18 settling probes and 10 named development evaluations;
-B ran 7 named evaluations, each NF continuation 3, and NFR32 ran 2.
+B ran 7 named evaluations, each NF continuation 3, NFR32 ran 2,
+and the NFR KL1 continuation ran 3 (including its restored 32 boundary).
 Different interval lengths, initialization versus resume, physical batches,
 probe schedules and checkpoint cadence prevent treating whole-wall ratios as
 controlled architecture speedups. Even the selected compute regions are
@@ -132,17 +135,19 @@ estimate would hide those scope differences and is not used here.
 ## Exact report authorities
 
 All report SHA256 values were verified from current immutable local files.
-The formulas above and saved fields suffice to reproduce every table entry;
-a convenience aggregation is `.runtime/olmo-fbt-stability/resource-ledger-01.json`.
+The formulas above and saved fields suffice to reproduce every table entry.
+Convenience aggregations are `.runtime/olmo-fbt-stability/resource-ledger-01.json`
+and `.runtime/olmo-nfr-kl-continuation/control-resource-ledger-01.json`.
 
 - **B128**: [.runtime/olmo-fbt-stability/native-b32-to128-01/report.json](../../../.runtime/olmo-fbt-stability/native-b32-to128-01/report.json); SHA256 `9b8f44ce52163eca6679f78f4603fb26e023d6354273f2369749fd5b4798f7f3`.
 - **F128**: [.runtime/olmo-fbt-stability/native-f12-to128-01/report.json](../../../.runtime/olmo-fbt-stability/native-f12-to128-01/report.json); SHA256 `8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe`.
 - **NF KL1**: [.runtime/olmo-kl-continuation/native-nf-control-32to64-01/report.json](../../../.runtime/olmo-kl-continuation/native-nf-control-32to64-01/report.json); SHA256 `d0b9c32c0f3465d8a9950915cf8a5582c47ee16c6df16347e8c2ed50879708b2`.
 - **NF KL0.1**: [.runtime/olmo-kl-continuation/native-nf-reduced-32to64-01/report.json](../../../.runtime/olmo-kl-continuation/native-nf-reduced-32to64-01/report.json); SHA256 `bd7fbc420ad5472d3f032b006a4df3bb0c87a4bdbceab14c61bed3761bc67e72`.
 - **NFR32**: [.runtime/olmo-adaptation-pilot/native-nfr12-first32-01/report.json](../../../.runtime/olmo-adaptation-pilot/native-nfr12-first32-01/report.json); SHA256 `01bceb2a1191adb513bea974d8dcb0a5b52e8b5c3b384dbd0e69d21cfea665f7`.
+- **NFR KL1 continuation**: [.runtime/olmo-nfr-kl-continuation/native-nfr-control-32to64-01/report.json](../../../.runtime/olmo-nfr-kl-continuation/native-nfr-control-32to64-01/report.json); SHA256 `4e47728173364a6a3a6ed14887517cea9df8bcd2247d1b5d8ca743eb2f3b27fe`.
 
 B/F retention authorities are in [storage-receipt.md](storage-receipt.md).
 The NF continuation's independent results/qualification are in
-[its report](../olmo-kl-continuation/results.md); the active NFR continuation
-has separate [initial storage authority](../olmo-nfr-kl-continuation/storage-receipt.md).
+[its report](../olmo-kl-continuation/results.md); the NFR continuation
+has separate [storage authorities](../olmo-nfr-kl-continuation/storage-receipt.md).
 This ledger makes no quality, numerical-equivalence, or campaign-capacity claim.
