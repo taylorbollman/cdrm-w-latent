@@ -46,3 +46,10 @@ matched prior NF32:2.960392/7.393494/7.425865/7.435141. At48 it is
 but later-vs-first deficit remains large. Continue authorizedstop64. Cloud40
 fully published while training continued. Reduced branch remains queued and
 unstarted. No model/source change since launch.
+
+05:22 UTC: control completed all32 additional updates and final64 dev eval:
+CE2.845510/6.805770/6.923254/6.967279. All32 finite and clipped; raw norm
+min/median/max4.62280/7.79101/14.49341. Later passes improve versus32 but remain
+much worse than first. Cloud58 verified; final64 save/retention in progress.
+Reduced branch still queued. This is a control endpoint, not yet the paired
+intervention result. Exact runtime210 remains frozen.
