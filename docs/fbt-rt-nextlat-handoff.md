@@ -4,6 +4,31 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+GPU allocation readiness is in progress on two H100s (PR57, 2026-09-30).
+Read [the plan](reports/olmo-gpu-allocation/plan.md),
+[live progress](reports/olmo-gpu-allocation/progress.md),
+[validation](reports/olmo-gpu-allocation/validation.md),
+[H200 capacity assessment](reports/olmo-gpu-allocation/memory-assessment.md), and
+[the following migration milestone](reports/olmo-gpu-allocation/topology-migration-plan.md).
+The current benchmark compares two independent single-rank jobs against one
+two-rank job at the same T1024/effective512 real rows per update, using B32 and
+NFR128 saved weights and populated Adam as immutable origins. These are
+disposable fixed-LR performance clones with replayed data, not continuation of
+the scientific experiment. Only NFR concurrent singles remain active; inspect
+`.runtime/olmo-gpu-allocation/suite.json` before launching GPU work.
+
+The preceding NFR64-to128 study and K32 endpoint probe are complete; see
+[its results](reports/olmo-nfr-stability-128/results.md). The regular development
+fourth-minus-first CE gap fell from2.745 at64 to0.302 at128, but later passes
+still predict worse than the first. Hidden-state settling is not useful
+refinement. No extension beyond128 is launched. Original runtime/checkpoints
+remain frozen and retained. Production topology migration/restart is the next
+engineering milestone; actual eight-rank/H200 acceptance remains on target
+hardware. Do not confuse benchmark rank flexibility with qualified production
+checkpoint migration.
+
+## Historical PR54 state
+
 The paired NF KL continuation is complete (PR54, 2026-09-30). Read
 [results](reports/olmo-kl-continuation/results.md),
 [next proposal](reports/olmo-kl-continuation/next-steps.md),

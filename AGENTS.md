@@ -31,6 +31,21 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 GPU allocation readiness IN PROGRESS, branch feat/olmo-gpu-allocation,
+PR57. Read docs/reports/olmo-gpu-allocation/plan.md, progress.md, validation.md,
+memory-assessment.md and topology-migration-plan.md. The only active GPU work is
+the bounded NFR concurrent-singles benchmark in .runtime/olmo-gpu-allocation/
+nfr-singles-01; inspect suite.json, supervisor.json and both job reports before
+launching anything. Bpair02/Bsingles01/NFRpair01 are completed and retained.
+Disposable clones import saved weights/Adam, hold saved LR, reset benchmark
+counters/data-prefix cursor, and never advance or overwrite scientific NFR128.
+The new allocation entrypoint uses unchanged shared campaign/DDP graph math.
+42CPUtests and tiny one/two-rank GPU graph acceptance pass. Native BF16 runs
+establish finite operation/performance, not broad precision equivalence.
+The next proposed milestone is explicit production checkpoint rank migration,
+fresh-process restart and job isolation. Historical loader/runtime stays frozen.
+Eight-rank/H200 acceptance and capacity measurements belong on the target node.
+
 2026-09-30 19:52 UTC: NFR64-to128 AND FINAL PROBE COMPLETE. No training
 or GPU diagnostic remains active; update129 is not authorized or launched.
 PR56 merged1cc4bb8dd0a27d8736b9940c2500d66dfea2290f; main current. Read docs/reports/
