@@ -77,3 +77,19 @@ finaldevCE2.704137/5.752041/5.883908/5.956001 vscontrol
 retention pending. Pairedaudit, summaryplots and fullinventory run only after
 report/worker/W&B close. No nativeRT or newBF16clearance. Strong directional
 loss-balance finding, not useful-refinement/quality-campaign completion.
+
+FINAL EXECUTION: native queue completed_pair; both32→64 continuations stopped,
+W&Bsynced and cloud64verified. BothH100s independently observed idle (0MiB,
+0%utilization, no compute processes). Nativepairedaudit16,139 passed, reportSHA
+`d6642b86d4a93f4c5fd729ece4cf3a852abba4dbec28c05eb91be3b77b265d6d`.
+Finalreducedreport SHA`bd7fbc420ad5472d3f032b006a4df3bb0c87a4bdbceab14c61bed3761bc67e72`.
+125distinctfocusedCPUtests pass; no broad numerical/quality clearance.
+Summaryplots/CSVs retained, W&Bsummary72jc2qi3 synced. SummaryJSON SHA
+`ff84e19a6f056463b7a43a8a4797b82e85a0e0788a2438f8e0e8b18eb1fb2d72`.
+Fullinventoryreport SHA`be70e73b248b001fd5d2bb5c58208f126270b4eb06fbc7c58e5bb63ec37bce0c`:
+13checkpointstates+13manifests+11smallarchive/manifestpairs,48countedobjects,
+121,856,167,737bytes. Inventoryitself and latercloseout/adminretention are separate;
+see storage-receipt.md for self-publication exclusions. All13 publication receipt
+bytes snapshotted under neutral names. Runtime210 and original200 files unchanged.
+No NFR replication or further training is queued. Next-steps.md proposes reviewed
+pairedNFR32→64 KL1/.1 (~3–4h). PR/administrative closeout follows below.

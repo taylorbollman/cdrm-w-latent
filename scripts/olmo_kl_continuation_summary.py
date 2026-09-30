@@ -304,7 +304,7 @@ def write_plots(summary, output):
         fig.savefig(output/(name+'.pdf'), bbox_inches='tight')
         fig.savefig(output/(name+'.png'), dpi=160, bbox_inches='tight')
         plt.close(fig)
-    fig, axes = plt.subplots(3, 2, figsize=(11, 10), sharex=True)
+    fig, axes = plt.subplots(3, 2, figsize=(11, 10), sharex=True, sharey='row')
     for col, (label, arm) in enumerate(summary['arms'].items()):
         xs = [d['after_update'] for d in arm['development']]
         for row, term in enumerate(TERMS):

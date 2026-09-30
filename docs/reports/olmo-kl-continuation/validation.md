@@ -31,8 +31,11 @@ payload.schedule in the tiny report. Separate v2 correctly checks the actual
 tiny configuration.schedule and every used/next LR, preserving frozen v1.
 Neither issue required changing model math, tolerances or stored checkpoints.
 
-Native audit and endpoint results remain pending while the paired continuation
-runs. Tiny exact restart evidence is not native exact restart evidence. Native
+Final native paired audit passes16,139 checks, including exact shared full
+origin, raw repeated32 evaluation, first-forward sums/counts, matched33–64
+accounting/LR, all source snapshots and terminal publications. The separate
+control audit passes8,009 checks. Both endpoints are cloud-durable and synced.
+Tiny exact restart evidence is not native exact restart evidence. Native
 lean observations bind the ordered plan, materialization/masks/jitter sources
 and row/logical-update identities; they do not retain every tensor input/noise
 byte hash. The two-GPU parent restore/transition compares complete saved-state

@@ -31,17 +31,21 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 paired NF KL continuation IN PROGRESS, PR54. Read
-`docs/reports/olmo-kl-continuation/protocol.md` and progress.md. Exact sharedNF32
-savedAdam/schedule/RNG/cursor fork: KL1 control vsKL.1 only; stop64 each, noRT.
-Original128plan/B12/rank/T1024/effective524288/BF16 graphs unchanged. TinyNFR
-pair2,901/restart2,289 exact audits pass;109 focusedCPUtests pass. Frozen200
-unchanged,210executionpins. Post-run v2 auditor fixes tiny schedule shape only.
-Detachedqueue `.runtime/olmo-kl-continuation/native-pair-01` runs control then
-reduced; inspect reports/processes before recovery. Parent files still required
-on childresume. AsyncSSD/GCS retained; no extension past64 or new precision
-clearance. Code29e3948, tiny-audit34225f9 pushed. Historical completed milestones
-below must not be mistaken for current idle state.
+2026-09-30 paired NF KL continuation COMPLETE, PR54 closeout metadata in
+`docs/reports/olmo-kl-continuation/progress.md`. Read results.md, next-steps.md,
+validation.md and storage-receipt.md there. Both sharedNF32 savedAdam branches
+completed64 with128plan/LR/data preserved. KL1 vs.1 CE64:
+2.845510/6.805770/6.923254/6.967279 vs2.704137/5.752041/5.883908/5.956001.
+Median rawgradnorm7.791→2.928, all32updates/arm finite/clipped; rawKL/latent
+higher under.1 in everypass. Laterpasses still~3.05–3.25nats behind first.
+Directional loss-balance result; no useful-refinement/RT benefit or BF16clearance.
+Nativepairedaudit16,139 and tiny pair/restart2,901/2,289 pass;125focusedCPUtests.
+Frozen200unchanged,210executionpins. Summary W&B72jc2qi3, controlw5eekmse,
+reducedx8f16eqv. Both64cloudverified/synced; no training queued. Retain parent
+files on childresume. Runtime `.runtime/olmo-kl-continuation`, retention
+`.runtime/olmo-kl-retention`, SSDkl-continuation. Recommend reviewed pairedNFR
+saved32→64 KL1/.1 replication (~3–4h); not launched, needs explicit nativeNFR
+scope. Full inventory/PRmerge details in progress; keep prior qualifications.
 
 2026-09-30 saved-state feedback diagnostic COMPLETE; PR/merge closeout in
 docs/reports/olmo-feedback-diagnostic/progress.md. Read results.md, forward-notes.md,
