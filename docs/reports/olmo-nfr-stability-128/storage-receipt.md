@@ -33,3 +33,32 @@ three objects. Local receipt and result:
 
 This archive preserves readiness and CPU preflight, not completed GPU curves or
 continuation. Their later receipts must be recorded separately.
+
+## Conditional continuation preparation
+
+The closed `continuation-prepared-01` directory, its CPU-test/readiness receipt,
+`launch_continuation.py` and all 222 pinned runtime sources were copied into
+`.runtime/olmo-nfr-stability-128/continuation-static-retention-input-01`.
+Scope, resolution and launcher pins matched the independent preparation
+receipt before copying. A new static report and per-file copy inventory record
+that this remains **prepared, not activated**. Mutable status helpers, future
+activation receipts, live endpoint outputs and training directories were
+excluded.
+
+The same CPU-only retainer verified and published 229 files, 3,671,835 bytes
+before compression, with the complete 222-file source inventory validated.
+GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr128-static-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 875,681 | `1790782973850511` | `1d215a43af74bb2198aa4f3cf5b52ea32b55a58d8ced23f06a312b8911b25b28` |
+| `retention-manifest.json` | 57,657 | `1790782974122928` | `e3a93b7e1c1b90d8895769bdf69dc0b29163cb86cb0ed8ab508904904e4dc926` |
+| `storage-receipt.json` | 1,274 | `1790782974403930` | `0c0f7ac0c7c25f02a454814eba9d63f716cc7cf51ae3aa8582431d660592ffa2` |
+
+All three objects passed server size, MD5, SHA metadata and downloaded SHA256
+checks. Local receipt/result files are
+`.runtime/olmo-nfr-stability-retention/continuation-static-01.json` and
+`continuation-static-01-result.json`. No model state was uploaded or rehashed,
+no local files were deleted, and no GPU command was run by retention.

@@ -59,8 +59,8 @@ lineage. Merely changing the old CLI stop or relabeling its report is inadequate
 ## New implementation review
 
 Read-only source review found no unresolved correctness issue in the new
-endpoint producer, summary or continuation adapter. The endpoint implementation
-and continuation implementations are frozen. This is not a native execution
+endpoint producer, summary or continuation adapter. The endpoint and
+continuation implementations are frozen. This is not a native execution
 result.
 
 The endpoint producer binds the passing pair audit, original 215-source
