@@ -52,3 +52,11 @@ The600-second checkpoint trigger is not a guarantee of at most ten minutes of
 lost work. Save-boundary delay, synchronous local save and background verification
 extend that interval. Until a new publication is verified, the preceding cloud
 checkpoint remains authoritative. Final retention drains before closure.
+
+Later verified receipts: `retention/inventory-01.json` and
+`retention/closeout-01.json`. The closeout snapshots final reports, helpers,
+source pins, all then-current receipts and documentation at4da92f3; its report
+SHA256 is`1b0d0594b4ad49f3aa7bf54045420609848a133f2b3e3f166ef1acccebd257e1`.
+PR52 merged as`fb866533557e044f378f9edc1cd920723ef5bafe`. Postmerge admin
+metadata uses `admin-01` and a separate receipt; it does not alter frozen
+cohort evidence or the earlier inventory counts.

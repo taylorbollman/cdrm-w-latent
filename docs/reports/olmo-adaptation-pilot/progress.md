@@ -130,3 +130,12 @@ closeout/admin excluded by design. Independent reviewer confirms96updates,
 allreported arithmetic/scopes; mask-deriveddenominator and wall-clockoverlap
 wording clarified. Finalresults/validation/storage and next-steps.md replace
 draftassessment. No more GPUwork; stop32 retained. PR52 closeout next.
+
+2026-09-30T02:28:28.070593+00:00: PR52 merged asfb866533557e044f378f9edc1cd920723ef5bafe
+after exacthead4da92f3/cleanmergeability; no configured remote checkruns/statuses
+(total0), so no claim of CIexecution. Localmainfast-forwarded. Closeout01
+reportSHA1b0d0594b4ad49f3aa7bf54045420609848a133f2b3e3f166ef1acccebd257e1
+is verifiedretained, as is inventory01. Their receipts are underretention;
+they are outside the21receipt inventory snapshot. Finalpostmerge metadata
+will be retained in admin-01 with its separate receipt. Allworkcomplete,
+no queuedGPUrun or extension. Proposeddiagnostic remains forreview.

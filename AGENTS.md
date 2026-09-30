@@ -31,8 +31,8 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 first32 adaptation pilot COMPLETE, PR52 (closeout metadata below in
-its progress.md). Read docs/reports/olmo-adaptation-pilot/results.md, next-steps.md,
+2026-09-30 first32 adaptation pilot COMPLETE, PR52 mergedfb866533
+(final closeout metadata in its progress.md). Read docs/reports/olmo-adaptation-pilot/results.md, next-steps.md,
 assessment-guide.md, validation.md, storage-receipt.md and progress.md. Runtime
 85e5f78/200pins unchanged; new execution/analysis only. All B/NF/NFR32 finite
 updates, dev16/32 and cloud32/synced W&B complete. No active/queued GPU work.
