@@ -74,3 +74,26 @@ Bare pretrained RT startup has heavy clipping (raw gradient norms about117 and
 114 on the first R/NR updates), retained as telemetry rather than cleared as
 stable optimization. After FR, retry bounded native migration/restart using
 new immutable output paths. Original scientific128 remains the endpoint.
+
+## Native integration completed; production-state matrix running
+
+All N/R/NR/FR native cells completed two accumulated, changed-input updates and
+clean shutdown. Independent inspection confirms identical starting tensors
+across common modules, exact ranks/counts/gradient/Adam checks and stable graph
+storage. Heavy fresh-start RT clipping remains a training-dynamics concern.
+The source-fixed native matrix is now sequentially running control2, migrated1,
+then a strict1-rank restart from an exact-generation cloud restoration of the
+migrated127 checkpoint. All three stop at128. Parent exec session66753 owns
+this queue; no other agent launches GPU work. Updated runtime status is in
+`.runtime/olmo-topology-migration/session-status.json`.
+
+## Native control update completed; retention and comparisons pending
+
+Retry02 completed its two-rank replay of update128 with finite objective
+3.296812589 and raw gradient norm0.944218695. Both replicas passed the runner's
+checks. Imported127 is fully verified in GCS; its background retention took
+347.9seconds while graph preparation continued. Final128 publication and clean
+teardown are still pending. The sequential queue will then perform one-rank
+migration, cloud restore and exact fresh-process restart. Independent auditors
+will compare finalized reports only. Current checkpoint/gradient files are on
+SSD; completed smoke/tiny evidence is already retained and referenced in docs.

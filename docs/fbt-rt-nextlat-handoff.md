@@ -4,6 +4,24 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+The remaining two-GPU readiness milestone is **in progress** on branch
+`feat/olmo-topology-migration`. Read
+[its live progress](reports/olmo-topology-migration/progress.md),
+[results](reports/olmo-topology-migration/results.md), and
+[destination-node scope](reports/olmo-topology-migration/target-node-plan.md).
+The 109 focused CPU tests, four required tiny topology/restart audits,
+independent-job cooperative/abrupt-exit isolation, and native N/R/NR/FR
+integration checks have passed. The native NFR migration/cloud-restart matrix
+is still running. Parent session 66753 executes the bounded queue in
+`.runtime/olmo-topology-migration/native-matrix.py`; inspect it and the reports
+before launching anything. All native replays are original 127→128, with
+populated Adam and the saved finite schedule. No update 129 is included.
+The first native attempt found a cloud-worker identity mismatch; its evidence
+is retained. An explicit campaign retention hook passed CPU/cloud acceptance
+and is used in retry 02. Historical model/runtime/storage files stay unchanged.
+
+## Previous allocation milestone
+
 The first GPU allocation milestone is complete on two H100s (PR57, 2026-09-30).
 Read [results](reports/olmo-gpu-allocation/results.md),
 [the plan](reports/olmo-gpu-allocation/plan.md),
