@@ -421,3 +421,67 @@ directories were `.runtime/olmo-fbt-stability/<stage>` except
 `terminal-inventory-01`, whose input was `terminal-closure-01`.
 No call supplied `--checkpoint-dir`; checkpoint objects were already published
 and verified. No new GPU execution or experiment launch occurred here.
+
+## Completed post-F diagnostics and plots
+
+Retained the four completed component diagnostics (NF32, NF64 KL1, NF64
+KL0.1, NFR32), the F128 online comparison, their three completed CPU plot
+summaries, and a separate immutable launch-authority bundle. All five helpers
+finished and W&B synced before archiving. Original report bytes and source
+snapshots were preserved. The retainer independently checked each report's
+source inventory (211/221/221/211/210 files respectively).
+
+The online helper returned `complete` after successful execution and W&B sync;
+the pinned host launcher expected `completed` and therefore exited 1 in its
+final report validation. The original launch record and traceback are retained,
+alongside the root's explicit `terminal-adoption.json`; neither the report nor
+launcher was rewritten. The other four host launchers exited 0. This is a host
+closeout spelling mismatch, not a repeated or failed model diagnostic.
+
+The separate authority bundle contains both preparation/bound plans, original
+commands and launcher, all five launch directories, neutral-name copies of the
+five checkpoint publication receipts and manifests, and a record checking all
+255 bound-plan pins. No model state was loaded or rehashed. CPU plot archives
+include their input snapshots, rendered artifacts and SHA-matched producer
+source copies; the original plot report pins are unchanged.
+
+All stages use the common `20260930T070700Z` evidence prefix stated above:
+
+| Stage | Members | Archive generation / SHA256 | Receipt generation / SHA256 |
+|---|---:|---|---|
+| `fbt-stability-post-nf32-01` | 220 | 1790764664037239 / `bd6126d855a72239b7c96b0189b44ee476db929d14f409bfd1ff1dce1a9113fa` | 1790764664551458 / `7a9a147a725d36c7ed1ffc03a5ca5b8f94876051ff86454e2633e5402f1acb6c` |
+| `fbt-stability-post-nf64-control-01` | 230 | 1790764665879988 / `41a92ebf9b87e7399ffa7c815e367f18080ea36aff9c6a8cbe05888e9f6dc479` | 1790764666436605 / `c781b0727c061b0ae5810aa1bc7661bd0076aa8cf8c021abbf9632158eebd2b1` |
+| `fbt-stability-post-nf64-reduced-01` | 230 | 1790764667743588 / `cc5371b92add8167ade61a0b0bea2032670c88f212f4f8876c03a94a4fd240d2` | 1790764668240214 / `27c7bbb4cc2c64966a1798bf3e0b77aa93a1fd036cc1cbd7464464cf2d5f02ec` |
+| `fbt-stability-post-nfr32-01` | 220 | 1790764669582064 / `6fc5201e6181eaf6af7ec4a466393f35483ee97ddfa5f0c9e5e8ebb3658e0ced` | 1790764670105224 / `64c11cbbb80e80946503f371fc58c835a8066042f9fd237c0787cce977d125b0` |
+| `fbt-stability-post-online-f128-01` | 214 | 1790764671622351 / `1e151cb9f5d2d79e72ae00eb28898f38aa1e0769464eb3439b571d9ed2b9c87a` | 1790764672148384 / `9bdaba1f6b8dc395e50c458cb69b244b82e9e2a558bd5af0ab7625b5883e3dfd` |
+| `fbt-stability-post-authorities-01` | 38 | 1790764673242007 / `38d685743d5eee01ba570ca8bf18ca2778dc5c9f2c5b64de1e67a7a5237dd53f` | 1790764673770707 / `0aafa359d5a6e671f537bfd950c062efb943ee92df2d238f0c7e20db5bddf27b` |
+| `fbt-stability-post-components-update32-summary-01` | 8 | 1790764676508312 / `5a14e0f84e1e85d9bd01a67c5aac1caf824feadf5de5a194f41236fc5fb03605` | 1790764677025993 / `e851b55f9e5672b530a8a1f5b1c56f371d4a41d0b4e7a8502509315c5d17f75b` |
+| `fbt-stability-post-components-update64-summary-01` | 8 | 1790764678147522 / `2f234120e4e85fbd45612c689916eef275dfd1b78952116683f5575cc01bdad6` | 1790764678632380 / `837ed6be4af039198b039b83aa93f9e088aacf292938ac70008dd755f476fb6a` |
+| `fbt-stability-post-online-summary-01` | 5 | 1790764679676473 / `fe69618a2a3230d39356bdfeaaf81bcd3b8ca499f6c2d0a9bdff3ffdad32e019` | 1790764680219257 / `cffdd02b40820818066bdaccd5848dcad9e7f1c5e96365aa0ece1f06736d6899` |
+
+Terminal diagnostic report pins:
+
+| Case | Report SHA256 |
+|---|---|
+| `nf32` | `b0d4630d31b325d4b833b7324eaaadd9fe7c7fcfd546c8d65632c47fe0ed37a8` |
+| `nf64-control` | `cbaee8ddbe833616f7c47ab189d90196358235e571e9974a24cc5f9f97b98392` |
+| `nf64-reduced` | `922d4c9dfdad3305a75e91d69a68e1f16da3abcd079a980913d8565b68986dec` |
+| `nfr32` | `b6083334682ae09f81969d77af28e3f2720bedf09c242c448eed6979c1e6c3ee` |
+| `online-f128` | `04b7133b93341f354903524b00dd6ff0ddaa3ef8590c12648983af0fff007616` |
+
+All archive/manifest/receipt objects passed size, server MD5, SHA metadata and
+downloaded SHA256 verification. Each directory stayed below the unchanged
+128MiB evidence cap. Receipts and full returned object metadata are in
+`.runtime/olmo-fbt-stability-retention/<stage>.json` and
+`<stage>-result.json`. The standard CPU-only launcher used
+`env -u GOOGLE_APPLICATION_CREDENTIALS python -m scripts.olmo_two_gpu_retain`,
+with each exact input/stage mapping recorded in
+`.runtime/olmo-fbt-stability-retention/post-diagnostic-retention-plan.json`.
+The batch caller is `retain-post-diagnostics.py` in the same directory.
+No checkpoint objects were uploaded again and no GPU jobs were launched.
+
+The concurrently activated NFR pair's static scope, queue source and activation
+authority were retained separately; see
+[its storage receipt](../olmo-nfr-kl-continuation/storage-receipt.md).
+No active training report, mutable queue state, events or log was archived as
+terminal evidence.
