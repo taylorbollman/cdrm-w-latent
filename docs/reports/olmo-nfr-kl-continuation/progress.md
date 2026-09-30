@@ -95,3 +95,13 @@ https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/1xu07xdf .
 Original32 model/Adam/data/RNG and schedule are restored; only KL1→.1 changes.
 Control terminal evidence retention and summary reconciliation run on CPU
 in parallel. No extra GPU diagnostic or training beyond reduced64 is queued.
+
+12:50 UTC: reduced first update33 completed finite. Both ranks' raw
+CE/KL/latent loss means match the control's first update exactly. Raw norm
+is3.237772 versus control8.834785. The repeated FP32/no-jitter dev32
+evaluation also matches all raw component means exactly. This authenticates
+the observed shared forward starting point; a smaller gradient norm alone
+is not evidence of improved prediction. Reduced48/64 remain pending.
+Control terminal outputs and all8 publication receipts are retained, with
+W&B terminal checkpoint summary corrected to64/64/not-pending and history
+unchanged; see storage-receipt.md.
