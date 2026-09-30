@@ -47,3 +47,9 @@ Reports, launch logs and queue state are under that runtime directory; large
 states go to `/mnt/localssd/cdrm-checkpoints/nfr-kl-continuation/` and verified
 cloud copies to the declared `gs://fast-chunks` namespace. After interruption,
 inspect those authorities before launching anything.
+
+10:34 UTC: queue activated, hostsession57288; readonly monitor96042.
+Control started successfully in verified two-H100 container,
+W&B https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ujz924fj .
+Both GPUs reserved for this queue; all post-F GPU diagnostics already exited.
+Reduced remains queued, not yet launched. Startup/graph preparation underway.

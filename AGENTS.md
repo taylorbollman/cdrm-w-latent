@@ -31,23 +31,33 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 ACTIVE FBT-only stability milestone, user authorized about6.5h from
-07:07UTC and evidence-driven follow-ups without review. Branch
-feat/olmo-fbt-stability, draftPR55. Read docs/reports/olmo-fbt-stability/protocol.md and
-progress.md first. K4/beta1, noRT/NextLat, samefusion128 startup, initial128
-updates/conditional192, dense Figure3-style probes. No automatic gate ramp or
-pass schedule change. Runtime .runtime/olmo-fbt-stability; inspect live reports
-and processes before launching. OrdinaryB128 COMPLETE/cloud128/synced37uu86ip.
-Tinyinsertion8531/cloudresume10150exactcheckspass. NativeF currentlyRUNNING
-native-f12-to128-01/session60881, W&B32sqvp7e; curvewatchersession31926.
-F0/32/64/96/100 deep curves completed. At100 regularCE is
-2.680524/3.195912/3.240730/3.259452; small-panel state changes reach~1e-6
-by16passes. Feedback learns but still trails ordinary pass. Origin inherits
-fusion128 preparation, so no claim about earlier stabilization. Source208frozen.
-ConditionalNFRKL32→64pair215sourcepreparedNOTLAUNCHED; possiblefollowup afterF
-plusboundedonline/componentchecks, notautomaticF192. Windowtarget13:37UTC.
-Preserve historical pins/checkpoint/cloud authorities. Progress/results give
-currentstatus; donotrestartcompletedB/tinychecks orlaunchGPUbesideactiveF.
+2026-09-30 ACTIVE paired NFR KL continuation after completed FBT-only study.
+User authorized about6.5h from07:07UTC and evidence-driven followups without
+review, with modest timing flexibility to finish a useful stage. Branch
+feat/olmo-fbt-stability, draftPR55. Read docs/reports/olmo-nfr-kl-continuation/
+progress.md and protocol.md, then olmo-fbt-stability/results.md/progress.md.
+Both GPUs reserved for NFR queue-after-f128-01/session57288, started10:34UTC.
+Control native-nfr-control-32to64-01 RUNNING, W&Bujz924fj; reduced branch
+automatically follows only after verified/synced control64. Host monitor96042.
+Both restore original NFR32+Adam, only KL1vs.1 changes; RT0/15, K4, latent1,
+T1024,B12/rank,524288inputs/update and original128schedule unchanged.
+Frozen215source scope; no F128 warmstart, no F192 extension. Runtime
+.runtime/olmo-nfr-kl-continuation. Inspect live reports/queue before launching.
+Pair estimated3–4h, may finish modestly after13:37 target; user informed.
+
+F128 COMPLETE/cloud128/synced32sqvp7e; terminalSHA8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe.
+Regular CE2.687038/2.919213/2.937069/2.942000; B1282.687618. All128finite,
+116clipped then12unclipped. F nativeaudit160485/fullBprefix24617pass.
+All17publications+evidence retainedGCS. F curves0/32/64/96/100/128 complete,
+settle~1.6e-6 by16passes at128; origin inherits fusion128 preparation.
+All five post-F GPU diagnostics completed: exactonlineF128 on2x128 crops,
+NF32/NFR32 and NF64KL1/.1 K32 curves. All saved conditions settle tightly;
+poor prediction is not explained by failure to settle. K4vs exactonline hidden
+error~1.08%, K32~1e-6; no generation/T1024online equivalence claim.
+Online helper complete/synced but pinned host launcher expected completed;
+terminal-adoption.json preserves reporting-only mismatch, no rerun. F208 and
+historical200/210 sources unchanged. Further GPU diagnostics must not run
+beside the active two-rank NFR queue. Post-diagnostics notes/retention underway.
 
 2026-09-30 paired NF KL continuation COMPLETE, PR54 closeout metadata in
 `docs/reports/olmo-kl-continuation/progress.md`. Read results.md, next-steps.md,
