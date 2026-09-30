@@ -2,8 +2,9 @@
 
 This note records independent review for the NFR64 pass curves and KL0.1
 continuation to update 128. Both endpoint probes and their CPU summary have
-completed and passed closure checks. Continuation execution is separate;
-its terminal validation remains pending.
+completed and passed closure checks. The uninterrupted continuation has now
+completed update128, published its final checkpoint and passed the independent
+terminal audit. The final saved-state pass probe is a separate observation.
 
 ## Existing endpoint authority
 
@@ -197,5 +198,47 @@ Its completed development64 artifact exactly reproduces the original raw
 result, with both rank preservation flags true. The immutable evaluation SHA
 is `a7ac6e49c1853abe493a4aac6df7d0c924be9d7f8d0974f31e876b7bc7e6ed9b`.
 The small origin observation and evaluation were retained without copying the
-active whole report. This verifies restoration at 64; the terminal128 audit has
-not yet run.
+active whole report. This verifies restoration at 64; the later terminal audit
+is recorded below.
+
+## Completed continuation closure and audit
+
+At 19:30 UTC on 2026-09-30, the host launcher had exited 0, the report declared
+`completed_plan` at update128, verified cloud publication reached128 and W&B
+was synced. The prepared CPU-only closure wrapper then completed successfully
+(session44902, exit0). It independently verified all 222 live/snapshot source
+pins, final manifest and state-file size, the saved final boundary and all
+sixteen published checkpoint receipts. Required named boundaries80,96,100,112
+and128 are present.
+
+| Authority | SHA256 |
+| --- | --- |
+| Terminal training report | `e678b1b70b833ef1384e79ddff990b20676449c10ed248e3d0e8d9e809847088` |
+| Final publication receipt | `6329275a58b609ca968c944e8ffb400f70ddb0ea5ae6de9d15c9695837ae16a0` |
+| Final manifest | `8e9e2deeb3ba122bc39622368be88d759327d54eec0ba93004a400c948572340` |
+| Metadata closure report | `8947bcef944927df5a981076fecebc252751c83daa39a0400efb794ff1670363` |
+| Independent terminal audit | `bd7a597d1011fe67b869c64767a82473112b174e8005bfbffe53c2127494c33a` |
+
+The execution agent ran the reviewed CPU auditor successfully: **15,557 checks,
+zero failures**. Independent retention preparation confirmed that result,
+successful audit host exit, all six input hashes and all twelve auditor source
+hashes. The audit authenticates inherited64 state, unchanged data/LR and
+objective, complete update history, declared evaluations including100,
+transport receipts and terminal128 state. No model tensor was reloaded or
+rehashed by the closure or retention work.
+
+The accepted summary reconciler corrected only the finished training run's
+checkpoint summary and associated provenance: local127/cloud122/pendingtrue
+became local128/cloud128/pendingfalse. Readback passed on its first attempt;
+all unrelated summary fields retained the same hash, `_step` stayed128 and
+no history write or training-state change occurred. Correction report SHA256:
+`87de10ed8f8d262f3e64ab7146901ed2402d1e82f35127897914f8e8b10cff6b`.
+
+The completed training summary also passed input, artifact and producer-hash
+checks and reports synced W&B publication. Its report SHA256 is
+`64fbb8b94f381d771f4e30ff96e6acb0cb39336dc7a4159e032100a11a961f5c`.
+This summary is bound to the passing terminal audit and exact parent64 and
+continuation reports. Separate storage receipts preserve the closed training,
+publication inventory, correction, audit and summary. These checks establish
+execution and evidence integrity; they do not establish useful later-pass
+refinement, BF16 trajectory equivalence or a matched KL1 control at update128.
