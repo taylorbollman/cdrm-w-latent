@@ -4,7 +4,8 @@ This note records independent review for the NFR64 pass curves and KL0.1
 continuation to update 128. Both endpoint probes and their CPU summary have
 completed and passed closure checks. The uninterrupted continuation has now
 completed update128, published its final checkpoint and passed the independent
-terminal audit. The final saved-state pass probe is a separate observation.
+terminal audit. The final saved-state pass probe and its update64→128 overlay
+have also completed and passed independent closure checks.
 
 ## Existing endpoint authority
 
@@ -242,3 +243,44 @@ continuation reports. Separate storage receipts preserve the closed training,
 publication inventory, correction, audit and summary. These checks establish
 execution and evidence integrity; they do not establish useful later-pass
 refinement, BF16 trajectory equivalence or a matched KL1 control at update128.
+
+## Completed final128 observer and overlay
+
+The final observer completed all eight packed rows and 32 passes, synced W&B
+(`w5r0fzkh`) and exited successfully. Its report SHA256 is
+`bfc90504971aaf954f24036a968ebb30ef3220dd1f15a9dba5e673c36b4d4326`.
+The actual bound scope and plan hashes are respectively
+`0c1efff6a31ecdddb1e2e8e803b55bad41d7ca1946da7545a86bb3df372384fb`
+and `78093269d68204acb6f507fc56079ba2e93f7e3c492dc8fa6540bde6079e5e1d`.
+
+Independent CPU closure verified all 240 live and copied execution source
+pins, saved-state authority, identical update64 batch tensor digests, panel
+membership, index and probe policy. The final probe has 8,192 input tokens
+and 8,184 CE targets. Weights, RNG, gradient buffers, runtime and ownership
+were preserved; the resident NextLat predictor was not called and no optimizer
+update occurred. Reaggregating all raw row/pass/region sums with the producer's
+`math.fsum` exactly reproduced the pooled report. Direct finite K4/K8-versus-K32
+residual sums and relative norms also reproduced, and derived metrics were
+finite. This validates the recorded observations without another GPU pass or
+checkpoint-state read.
+
+The bound-directory preparation had two earlier failures from the frozen
+full-stat read guard, first on `inventory.txt`, then `readiness-exclusions.txt`.
+Both original content hashes still match exactly. The unchanged third attempt
+passed; no source or data bytes were edited. An access-time/relatime metadata
+change is a plausible explanation, not established causality: the original
+pre-read stat was not captured. Both failure excerpts, later stat observations,
+the assessment, successful retry log and accepted-preflight receipt are
+retained alongside the completed scope/preflight/plan/launch/result.
+
+The final overlay completed and synced W&B (`tc74nrn4`), binding the exact
+reduced64 and final128 reports. Its input snapshots, artifacts and producer
+hash all matched. Overlay report SHA256:
+`5ce2a9053a1b0db47d8471466e74240ac6c71dae691d2df618256e6edf9dd75d`.
+The independent final-curve closure SHA256 is
+`cf8bdc3914ddc5a5c1f3ad33819b1ccfbcb7e38b74fdb2a58a02d9f5a0b0e109`;
+overlay closure SHA256 is
+`bbef13338fbaf30e8f476ebfbd7d1122a1d50314893917e0eeb9d11cc3f42087`.
+Both closed outputs were retained separately. K32 remains a finite reference;
+these common FP32/no-jitter observations do not establish exact-online
+convergence, BF16 trajectory equivalence or beneficial later-pass CE.

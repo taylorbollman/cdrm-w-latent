@@ -250,3 +250,38 @@ are `final-audit-01` and `training-summary-01`, each with a corresponding
 `-result.json`. No checkpoint tensor was uploaded again, loaded or rehashed;
 no local file was deleted, original report/history was unchanged, and no GPU
 command was run by this retention work.
+
+
+## Completed final pass curves and overlay
+
+After the final observer and overlay completed and synced, the entire closed
+`bound-01` selection was copied into `final-curves-retention-input-01`:
+scope, plan, command, CPU preflight, launch/completion and result with source
+snapshots. The selection also includes `binding-read-guard-01` intact. The two
+failed binding attempts are preserved alongside their unchanged-content
+receipts and successful third attempt; the possible access-time explanation
+remains explicitly an inference. No frozen reader or data bytes were modified.
+
+Independent CPU closure verified all 240 source pins, input authority,
+preservation, exact update64 data/policy equality and raw metric aggregation.
+Closure SHA256:
+`cf8bdc3914ddc5a5c1f3ad33819b1ccfbcb7e38b74fdb2a58a02d9f5a0b0e109`.
+The separate `final-curve-summary-retention-input-01` holds the completed
+update64→128 overlay, both input snapshots, pinned producer and closure:
+`bbef13338fbaf30e8f476ebfbd7d1122a1d50314893917e0eeb9d11cc3f42087`.
+
+Both CPU-only retentions completed successfully (sessions57872 and30830,
+exit0), under the same common GCS prefix used above:
+
+| Stage | Files | Archive bytes | Archive SHA256 | Storage-receipt SHA256 |
+| --- | ---: | ---: | --- | --- |
+| `nfr128-final-curves-01` | 505 | 2,079,217 | `9d263bb1e0ab692bd9d7d73a4954f9e0aeb7ac7bd1cd00b89ebfbb70691b9a60` | `954ef841adca16ba90323d562f1a53a72ef098bdc3c2069f3cded08fcc4c6c64` |
+| `nfr128-final-curve-summary-01` | 9 | 630,486 | `06283856d5891c670c91840d4be15f1d02d6be4c1055b9487dbb83b9651d5b4e` | `75ff9c769ec44f2c9904e138b38044818de966a9c27e66ba479281b91234e5ff` |
+
+The full curve selection contains505 files; the overlay selection contains9.
+Each archive, retention manifest and storage receipt passed server size, MD5,
+SHA metadata and downloaded SHA256 checks. Local receipt/result basenames in
+`.runtime/olmo-nfr-stability-retention/` are `final-curves-01` and
+`final-curve-summary-01`. No model tensors were reread or uploaded again,
+no GPU work occurred, no local files were deleted, and the completed original
+reports remained unchanged.
