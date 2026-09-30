@@ -67,11 +67,14 @@ boundary, and the local 128 manifest and state-file size match its published
 receipt. Closure verified metadata and source files only; it did not reload or
 rehash the large model/optimizer state.
 
-W&B's final training-history checkpoint telemetry is stale: its last logged
-fields say local 96/cloud 64/worker pending because the historical runner does
-not emit a new history row after terminal checkpoint drainage. The terminal
-report and verified receipts correctly say local 128/cloud 128/no pending worker.
-This is a logging limitation, not a missing checkpoint.
+W&B's last training-history row retains local 96/cloud 64/worker pending because
+the historical runner does not emit a new history row after terminal checkpoint
+drainage. On 2026-09-30, its **summary** was corrected from the pinned terminal
+report and publication receipt to local 128/cloud 128/no pending worker. Fresh
+readback verified those three fields and their provenance annotation, with every
+unrelated summary metric unchanged. No history, report or checkpoint was rewritten.
+The retained correction/readback receipts in [storage-receipt.md](storage-receipt.md)
+supersede the earlier statement that the current W&B summary itself is stale.
 
 W&B: https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/37uu86ip
 

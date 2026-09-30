@@ -161,3 +161,66 @@ Run that individual command inside the same CPU container with the credential
 environment adjustment above. No new GPU checks or training tests were run for
 retention. Full checkpoint objects remain at the destinations recorded in the
 neutral publication inventory.
+
+## W&B terminal-summary correction
+
+On 2026-09-30, the finished ordinary control run `37uu86ip` received a summary-only
+correction using its pinned terminal report and update-128 publication. The
+Public API changed `checkpoint/last_local_update` from 96 to 128,
+`checkpoint/last_verified_cloud_update` from 64 to 128, and
+`checkpoint/worker_pending` from true to false. A provenance annotation records
+both authority SHA256s, completed update, helper source hash and correction scope.
+This supersedes the earlier qualification about the current W&B summary being
+stale. Existing history rows retain their original values.
+
+Installed W&B SDK 0.27.2 was inspected before use: its public summary update
+writes `summaryMetrics` only. The helper did not initialize/resume a run or call
+history logging. A fresh API readback confirmed all three corrected values,
+finished run state, unchanged `_step=128`, and identical unrelated summary
+metrics. Both pinned local authority files remained unchanged. The unrelated
+summary SHA256 before and after was
+`15d138933ff63c1172669ddff7d8f52f7a2226e638310b06284e4697802e20c0`.
+
+The first immediate readback was stale, so the first attempt conservatively
+recorded a verification failure even though the mutation had succeeded.
+W&B also normalizes nested annotations into dotted keys. That attempt and its
+source snapshot remain intact. A later, separately recorded **read-only**
+verification established success without repeating the write. The reusable
+helper now handles dotted annotations and bounded readback retries; nine focused
+CPU tests passed. All 208 F-only and 215 conditional-NFR source pins remain unchanged.
+
+The successful readback report SHA256 is
+`13fab6979458a1f7d8bdad8b561a6adef787f5c6b7de3f29474721a19f4ad2b3`.
+
+Two additional fixed directories under the common evidence prefix retain both
+attempts. Each contains the usual archive, manifest and receipt:
+
+| Directory | Members | Archive generation | Archive SHA256 |
+|---|---:|---|---|
+|`fbt-stability-baseline-summary-correction-01`|6|1790756340374664|`93317bae79871ca60f7daebf784b76b6ce9bf8ad237f9ea3fb70b9305f8b99ac`|
+|`fbt-stability-baseline-summary-readback-01`|5|1790756341690414|`451c2b84be4f1add50679eba87c782dc6436f30155b2062270a22e1a94f53caa`|
+
+| Directory | Receipt generation | Receipt SHA256 |
+|---|---|---|
+|`fbt-stability-baseline-summary-correction-01`|1790756340894970|`c6b2e6e0c3c0f656272f7476919a3c83f618eeb3a9539d43c773aaffab12f8d3`|
+|`fbt-stability-baseline-summary-readback-01`|1790756342185849|`f081e3f2b6d88d8f2da2f68430ba8b8d65f22993b1a9db3483d28647819fb496`|
+
+Both archives passed server size/MD5, SHA metadata and downloaded SHA256 checks.
+The first includes the original terminal-report and publication snapshots; both
+include before/after summary values, a compact receipt and the applicable helper
+source snapshot. The later receipt identifies the earlier attempt by SHA256.
+
+The initial mutation used `scripts.olmo_terminal_summary_reconcile` with the
+report/publication paths and pins stated above and output
+`.runtime/olmo-fbt-stability/baseline-summary-correction-01`. The successful
+read-only verification used the same arguments plus:
+
+```text
+--verify-attempt .runtime/olmo-fbt-stability/baseline-summary-correction-01
+--output .runtime/olmo-fbt-stability/baseline-summary-readback-01
+```
+
+Both operations used the CPU container. The two directories were archived with
+`scripts.olmo_two_gpu_retain` using the same individual-command pattern documented
+above, substituting their names for `<stage>`, with no `--checkpoint-dir`.
+No model/checkpoint changes, new GPU tests or historical runtime edits occurred.
