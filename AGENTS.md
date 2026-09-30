@@ -35,9 +35,13 @@ W&B tracking.
 feat/olmo-topology-migration, draft PR58. Read docs/reports/olmo-topology-migration/
 results.md, progress.md and usage.md. Parent session66753 owns sequential native
 control2/migrated1/cloud-restore/restart1; inspect .runtime/olmo-topology-migration/
-native-matrix.py and reports before launching GPU work. Native scope is original
+native-matrix.py and reports before launching GPU work. Queue66753 was lost in
+chat interruption; control2 AND migrated1 completed/cloud127+128/W&Bsynced.
+Migrated launcher exit is unavailable; completed report/teardown preserved.
+Detached recovery tail PID2104081 now owns cloudrestore and strictrestart;
+check native-resume-tail-status.json before any GPU launch. Native scope is original
 NFR127→128 only, never129. Control2 completed/cloud127+128/W&Bsynced and matches
-original128 scalar/state/RNG/cursor digests exactly. Migrated1 is running;
+original128 scalar/state/RNG/cursor digests exactly. Migrated1 is complete;
 native cross-rank comparison and exact cloud restart remain pending. Tiny1↔2,
 two exact restarts, independent-job isolation and nativeN/R/NR/FR smokes passed;
 109CPUtests. Explicit campaign retention hook fixes discovered pilot/campaign

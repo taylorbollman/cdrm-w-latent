@@ -97,3 +97,18 @@ teardown are still pending. The sequential queue will then perform one-rank
 migration, cloud restore and exact fresh-process restart. Independent auditors
 will compare finalized reports only. Current checkpoint/gradient files are on
 SSD; completed smoke/tiny evidence is already retained and referenced in docs.
+
+## 2026-09-30 23:42 UTC — resumed after chat interruption
+
+Original host queue/session66753 disappeared, but its active migrated1 container
+completed successfully. Both control2 and migrated1 now report completed graph
+teardown, synced W&B, and verified cloud127/128 publications. Migrated host
+launcher exit status was lost; it is not reconstructed or claimed. No container
+or queue process remained at inspection. Its final report is authenticated at
+SHAa68296027726921d135d66b7cd2911d16fd6c0b018afe01ac66678700abf3cff.
+The missing cloud-restore/restart tail now runs detached as PID2104081 via
+`.runtime/olmo-topology-migration/native-resume-tail.py`, with persistent status
+and per-child exit receipts. No completed GPU update is repeated.
+`interruption-adoption-01.json` records the recovery decision. Independent CPU
+cross-topology audit is running; strict GPU restart follows exact-generation
+restoration. All execution sources remain unchanged.

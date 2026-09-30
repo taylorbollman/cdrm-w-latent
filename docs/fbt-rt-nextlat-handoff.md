@@ -12,8 +12,10 @@ The remaining two-GPU readiness milestone is **in progress** on branch
 The 109 focused CPU tests, four required tiny topology/restart audits,
 independent-job cooperative/abrupt-exit isolation, and native N/R/NR/FR
 integration checks have passed. The native NFR migration/cloud-restart matrix
-is still running. Parent session 66753 executes the bounded queue in
-`.runtime/olmo-topology-migration/native-matrix.py`; inspect it and the reports
+is still running. Original session66753 was lost in a chat interruption after
+control2 and migrated1 completed. Detached recovery tail PID2104081 now executes
+only cloud restore and strict restart; inspect `native-resume-tail-status.json`
+under `.runtime/olmo-topology-migration/` and the finalized reports
 before launching anything. All native replays are original 127→128, with
 populated Adam and the saved finite schedule. No update 129 is included.
 The first native attempt found a cloud-worker identity mismatch; its evidence
