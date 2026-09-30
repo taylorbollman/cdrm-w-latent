@@ -79,12 +79,39 @@ their exact input-report bytes, check the new source snapshots and verify
 checkpoint publication metadata. This is a bounded tiny FP32 acceptance check;
 it is not native BF16 trajectory equivalence.
 
-The native run has not yet passed its report audit. This document will be
-updated with actual evidence after execution. These checks address implementation
-integrity and diagnostic accounting. Finite updates or decreasing state changes
-do not establish useful refinement, global contraction, BF16 equivalence, or an
-advantage over an ordinary model. Exact-online comparisons require their
-separately bounded probe; the finite-pass curves do not imply them.
+Native F completed updates 1–128, processed **67,108,864 input tokens** and
+**67,043,328 CE targets**, and stopped at its declared review boundary. Host
+execution exited successfully, W&B synchronized, and the update-128 checkpoint
+was verified in cloud storage before the terminal report was pinned. The native
+independent report audit passed **160,485 checks with zero failures**, covering
+the clean shared origin, all 208 frozen execution sources, training/accounting,
+ten named development evaluations, eighteen stability probes and retention.
+
+A separate ordinary-B comparison passed **24,617 checks with zero failures**.
+It validates both B history segments, their exact update-32 resume boundary and
+all 200 frozen B sources, then compares the complete 128-update global ordered
+data/mask and LR prefix against F. Original backbone digests match; F's fusion
+startup is separately authenticated against the pinned NF origin authority.
+The comparison permits the intentional physical batch/rank-allocation difference
+(F uses B12 per rank; B uses B32). It does not require their learned trajectories
+or gradients to match.
+
+The retained evidence is under
+`.runtime/olmo-fbt-stability/native-f128-audit-01/`, including immutable input
+and audit-source snapshots and the one-off B-prefix audit source:
+
+| Artifact | SHA256 |
+| --- | --- |
+| Terminal native F training report | `8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe` |
+| Independent F audit `report.json` | `c6b8939ff90ffcfca1d7c31e9fdb156aedad0cfb0b90ddb450f64fba5525fcc7` |
+| Independent B-prefix `prefix-report.json` | `12b1023446e308d9ecb651a4cb62390af289c5f50926093c067a2e66ff897289` |
+
+These are JSON/source and recorded-boundary consistency checks, without model
+reload or new GPU execution. They address implementation integrity and diagnostic
+accounting. Finite updates or decreasing state changes do not establish useful
+refinement, global contraction, BF16 equivalence, or an advantage over an ordinary
+model. Exact-online comparisons require their separately bounded probe; the
+finite-pass curves do not imply them.
 
 ## Independent interpretation review
 
