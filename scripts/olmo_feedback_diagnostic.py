@@ -6,8 +6,8 @@ from dataclasses import replace
 import gc
 import json
 from pathlib import Path
+import shutil
 import time
-from types import SimpleNamespace
 
 import torch
 from torch.nn.attention import SDPBackend, sdpa_kernel
@@ -24,7 +24,9 @@ from scripts.olmo_campaign_fp32_localize import configure_full_fp32
 from scripts.olmo_campaign_recurrence_precision import state_pins
 from scripts.olmo_f2_graph_backend_probe import configure_determinism
 from scripts.olmo_feedback_fixture import load_fixture
-from scripts.olmo_pilot_async_execute import load_spec, construct
+from scripts.olmo_pilot_async_execute import construct
+from scripts import olmo_pilot_execution_contract as contract
+from scripts.olmo_two_gpu_validate import preserve_local_rng
 from scripts.olmo_validation import require_container_gpu
 from scripts.olmo_lm_common import tree_digests
 
@@ -109,6 +111,8 @@ def import_saved_weights(model, spec, directory, manifest_sha256):
 def source_inventory():
     frozen_path = ROOT/'.runtime/olmo-pilot-async/runtime-sources.json'
     frozen = json.loads(frozen_path.read_text())
+    if len(frozen) != 200 or sha256_file(frozen_path) != 'cfa54e38b245fc72b993093b1e7978de07f529c86a28886771be727941bc2162':
+        raise ValueError('Frozen inventory authority changed')
     for name, expected in frozen.items():
         if sha256_file(ROOT/name) != expected:
             raise ValueError('Frozen runtime changed: '+name)
@@ -117,6 +121,30 @@ def source_inventory():
              'docs/reports/olmo-feedback-diagnostic/protocol.md')
     return {'frozen_count': len(frozen), 'frozen_inventory_sha256': sha256_file(frozen_path),
             'new_sources': {n: sha256_file(ROOT/n) for n in added}}
+
+
+def diagnostic_spec(arm):
+    """Read the pinned accepted plan, without rediscovering a training inventory.
+
+    New observational modules extend the package glob. They are separately pinned
+    and do not migrate the accepted training declaration or its resolved plan.
+    """
+    directory = ROOT/'.runtime/olmo-adaptation-pilot/declarations-01'
+    declaration = contract.legacy.read_json(directory/'nf-nfr-declaration.json', DECL)
+    resolved = contract.legacy.read_json(directory/'nf-nfr-resolved.json', RESOLVED, limit=128*1024**2)
+    sources = declaration['implementation_sources']
+    frozen = json.loads((ROOT/'.runtime/olmo-pilot-async/runtime-sources.json').read_text())
+    if any(frozen.get(n) != pin or sha256_file(ROOT/n) != pin for n,pin in sources.items()):
+        raise ValueError('Declared accepted implementation changed')
+    contract.validate_declaration(declaration, sources=sources)
+    contract.validate_resolved(resolved)
+    if resolved['declaration'] != declaration or resolved['sources'] != sources:
+        raise ValueError('Pinned plan/declaration disagree')
+    startup = contract.startup_plan(resolved, arm)
+    return {'kind': 'native', 'declaration': declaration, 'resolved': resolved,
+            'manifest': declaration['planning_manifest'], 'startup': startup,
+            'recipe': contract.recipe_from_dict(startup['target_recipe']),
+            'plan': resolved['planning']['plan'], 'checkpoint_mode': 'async'}
 
 
 def forward_summary(rows):
@@ -145,12 +173,14 @@ def run(args):
             print(json.dumps(event, allow_nan=False), flush=True)
         write_json(output/'report.json', report)
     try:
-        report['sources'] = source_inventory()
-        spec = load_spec(SimpleNamespace(checkpoint_mode='async', arm=args.arm, stop_after=32,
-            declaration=ROOT/'.runtime/olmo-adaptation-pilot/declarations-01/nf-nfr-declaration.json',
-            declaration_sha256=DECL,
-            resolved=ROOT/'.runtime/olmo-adaptation-pilot/declarations-01/nf-nfr-resolved.json',
-            resolved_sha256=RESOLVED))
+        report['source_authorities'] = source_inventory()
+        frozen = json.loads((ROOT/'.runtime/olmo-pilot-async/runtime-sources.json').read_text())
+        report['sources'] = frozen | report['source_authorities']['new_sources']
+        for name in report['sources']:
+            destination = output/'source-snapshot'/name
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(ROOT/name, destination)
+        spec = diagnostic_spec(args.arm)
         batch, provenance = load_fixture(ROOT/'.runtime/olmo-feedback-diagnostic/fixture-01',
             expected_report_sha256=FIXTURE, selection=args.selection)
         report['fixture'] = provenance
@@ -163,7 +193,7 @@ def run(args):
         torch.set_num_threads(8)
         report['runtime'] = require_container_gpu()
         tracker = OnlineTracker(project='pretrained-fbt-rt-nextlat', output_dir=output,
-            group='feedback-diagnostic', name=output.name)
+            group='feedback-diagnostic', name=output.name, preserve_state=preserve_local_rng)
         tracker.start({'arm': args.arm, 'stage': args.stage, 'selection': args.selection,
                        'precision': 'fp32_math_eager', 'feedback_jitter': 0, 'optimizer_updates': 0,
                        'manifest_sha256': args.manifest_sha256})
@@ -213,7 +243,7 @@ def run(args):
         report['rng_unchanged'] = rng_before == tree_digests(_local_rng(torch.device('cuda:0'), None))
         if not all(report[k] for k in ('weights_unchanged','grad_buffers_untouched','rng_unchanged')):
             raise ValueError('Diagnostic mutated model state')
-        if source_inventory() != report['sources']:
+        if source_inventory() != report['source_authorities']:
             raise ValueError('Diagnostic helper sources changed during execution')
         report['status'] = 'complete'
         tracker.summary({'completed': True, 'optimizer_updates': 0})
