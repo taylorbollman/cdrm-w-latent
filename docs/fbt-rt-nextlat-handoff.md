@@ -1,8 +1,44 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-29. **Read this first after compaction or interruption.**
+Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
+
+The first 32-update matched adaptation pilot is complete (PR52). Read
+[results](reports/olmo-adaptation-pilot/results.md),
+[next steps](reports/olmo-adaptation-pilot/next-steps.md),
+[validation](reports/olmo-adaptation-pilot/validation.md),
+[storage](reports/olmo-adaptation-pilot/storage-receipt.md), and
+[progress/closeout](reports/olmo-adaptation-pilot/progress.md).
+
+B, NF (K4 FBT + NextLat), and NFR (plus native RT at layers 0/15) each completed
+32 finite two-H100 updates on the same 16.78M new inputs at T1024. NF/NFR share
+fusion128 ancestry and exact initial parameters, with fresh predictor/Adam.
+The accepted 200-source runtime is unchanged. Source declarations, evaluations,
+checkpointing and recovery are validated; all 16 checkpoints are cloud-verified.
+Both GPUs are idle, and no training or diagnostic is queued.
+
+At update 32, dev CE is B 2.63179; NF 2.96039/7.39349/7.42586/7.43514;
+NFR 3.04301/7.02627/7.05529/7.06382. NF/NFR both improve since update 16, but
+later passes remain much worse than their own first pass. RT lowers later-pass
+CE relative to NF by about 0.37 while worsening first-pass CE by 0.083. All
+NF/NFR updates clip. This establishes execution and some adaptation, not useful
+refinement or a quality win. Earlier BF16 qualifications remain unchanged.
+
+Recommend bounded saved-state forward/feedback sensitivity and separate-loss
+backbone/fusion/predictor gradient probes, NF first and decisive NFR confirmation.
+No automatic extension beyond 32, despite the unchanged 128-update ceiling.
+Preserve the fresh-optimizer, early-warmup, single-seed and development-coverage
+qualifications. Charts: [p7vk0qz0](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/p7vk0qz0).
+
+Execution authority is `.runtime/olmo-adaptation-pilot/queue-02/report.json`.
+A chat-server restart killed queue01's host parent; NF's container finished
+uninterrupted. Queue02 adopted completed B/NF and launched only untouched NFR.
+NF's original launcher exit is unknown; final runtime/cloud/W&B records verify
+completion. No updates repeated. Keep queue01 as historical evidence.
+Continue saving/pushing/retaining progress every 20–30 minutes in future work.
+
+## Historical PR45 state (superseded by the current milestone above)
 
 **Overnight investigation complete, 2026-09-29, [PR45](https://github.com/taylorbollman/cdrm-w-latent/pull/45):**
 user authorized useful technical work without intermediate review. The numerical,
