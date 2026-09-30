@@ -159,3 +159,15 @@ advanced. Unchanged third attempt passed all guards; no source/data edit or
 relaxed validation. Access-time/relatime is the supported inference, not a
 captured before-stat proof for the first failures. All attempt/stat evidence
 preserved in binding-read-guard-01. No optimizer update129; finalprobe read-only.
+
+19:45 UTC: final128 observer completed8rows, all preservation/full-weight/RNG
+checks passed, W&Bw5r0fzkh synced, host97453exit0. Report
+SHAbfc90504971aaf954f24036a968ebb30ef3220dd1f15a9dba5e673c36b4d4326.
+CEK1/K4/K8/K32=2.772209/3.024883/3.030894/3.031271. K4vs32 all/tail
+residual2.0843%/.7445%, K8all/tail.1486%/.0170%. Hidden changes settle~1e-6
+by16; no row remains slowly decaying at32. Compared64, practical residuals
+shrink and later CE improves with training, but extra inference passes still
+worsen CE. Overlay summarytc74nrn4 synced/host75077exit0; PDF/PNG inspected.
+All scheduled work complete, no129 or extension launched. Root recommends
+bounded192 with160check; current user question has not authorized that work.
+Closed finalprobe/overlay/read-guard evidence retention and PR56 closeout follow.
