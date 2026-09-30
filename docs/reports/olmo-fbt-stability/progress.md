@@ -172,3 +172,13 @@ See ../olmo-nfr-kl-continuation/results.md for the complete comparison.
 Both H100s verified idle inside the required container at14:32UTC. No GPU
 work is queued. Saved NFR64 deep curves remain unmeasured and are the proposed
 next bounded diagnostic, not an automatic extension. PR55 final closeout below.
+
+Final closeout: PR55 was assessed, marked ready and squash-merged as
+871d23c31f8e07337e5064f9c4d18fbb3ae4e7e3. The local main branch was
+fast-forwarded to that commit. All F/B and NFR terminal checkpoints, audit
+evidence and summary figures are retained; W&B is synchronized. The existing
+GitHub CLI's deprecated edit query/unsupported head-match option were handled
+with the REST API, using a body file and an exact head-SHA merge guard. This
+changed no model or run evidence. Documentation closeout is committed on main.
+No model job or automatic continuation is active. Review results.md,
+post-diagnostics.md, the NFR results and next-steps.md before the next stage.

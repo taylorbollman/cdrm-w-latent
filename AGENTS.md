@@ -31,8 +31,9 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 FBT stability and paired NFR KL continuation COMPLETE. PR55 final
-closeout underway; merge status is in docs/reports/olmo-fbt-stability/progress.md.
+2026-09-30 FBT stability and paired NFR KL continuation COMPLETE. PR55 merged
+871d23c31f8e07337e5064f9c4d18fbb3ae4e7e3; main is current. Final closeout
+metadata is in docs/reports/olmo-fbt-stability/progress.md.
 Read that directory's results.md, post-diagnostics.md, resource-ledger.md and
 next-steps.md, plus docs/reports/olmo-nfr-kl-continuation/results.md/validation.md.
 Both NFR branches stopped64/cloud64/W&Bsynced, queue completed_pair/exit0.

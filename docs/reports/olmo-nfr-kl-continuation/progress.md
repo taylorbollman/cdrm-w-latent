@@ -144,3 +144,9 @@ validation.md/storage-receipt.md/summary-retention.md. Reduced checkpoint
 W&B summary reconciled to64/64/not-pending with history untouched. CPU-only
 closeout remains; no further training or diagnostic is queued. Next proposal:
 matched saved NFR64 K1–32 curves, then consider selected KL.1 continuation.
+
+Final closeout: all summary artifacts are cloud-verified; W&Bni8f0ch6 is synced.
+PR55 merged as871d23c31f8e07337e5064f9c4d18fbb3ae4e7e3 and local main
+was fast-forwarded. Both source/checkpoint lineages are retained. No GPU work
+is running or queued; proposed NFR64 curves and any64→128 continuation remain
+unlaunched. Detailed closeout is in ../olmo-fbt-stability/progress.md.
