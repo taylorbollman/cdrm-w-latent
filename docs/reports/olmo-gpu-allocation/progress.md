@@ -65,3 +65,11 @@ duplicate. Remaining suite producer and commands are retained under the runtime
 root. Final focusedCPUtest invocation has42passed in23.05s; log there.
 Summary helper committed0f4dd98. All code is pushed; full checkpoint migration
 and eight-rank/H200 measurements remain outside this first milestone.
+
+21:14UTC update: NFRpair01 completed and exited cleanly, W&Bzbbf26i3 synced.
+Measured-window throughput3,552.78inputs/s; peakallocated42.80GiB and reserved
+59.03GiB/rank. Its76-member evidence archive is cloud-verified. NFRsingles01
+is the only active cell, with W&Bsingle0ydqeqv2y/single1ube3ynpa; the bounded
+suite will stop after it. No scientific continuation beyond128 has occurred.
+DraftPR57 is open. Final allocation summary and production migration plan are
+being prepared without changing frozen benchmark/runtime sources.
