@@ -143,3 +143,19 @@ final curves, with160 observation. This is a proposal only. The live finite128
 scheduler cannot be bypassed with a stop flag; extension requires a new
 explicit192 plan with unchanged128 prefix and deliberate horizon-metadata
 transition preserving weights/Adam/RNG/cursor/currentLR. No new warmup/reset.
+
+19:29–19:35 UTC: true terminal completed_plan128/cloud128/synced/hostexit0.
+Final report SHAe678b1b70b833ef1384e79ddff990b20676449c10ed248e3d0e8d9e809847088.
+Both H100s verified idle in container. Independent audit passed15,557 checks;
+auditSHAbd7a597d1011fe67b869c64767a82473112b174e8005bfbffe53c2127494c33a.
+Training summary9xienwmk synced; development/training figures visually checked.
+Final128 K32 observer launched host97453 on GPU0, W&Bw5r0fzkh;
+runtime `.runtime/olmo-nfr-final-curves/bound-01/result-01`.
+PlanSHA78093269d68204acb6f507fc56079ba2e93f7e3c492dc8fa6540bde6079e5e1d;
+scopeSHA0c1efff6a31ecdddb1e2e8e803b55bad41d7ca1946da7545a86bb3df372384fb.
+CPU preflight initially hit full-stat guards on two historical data authority
+files; both content hashes remained exact, old mtime/ctime unchanged and atime
+advanced. Unchanged third attempt passed all guards; no source/data edit or
+relaxed validation. Access-time/relatime is the supported inference, not a
+captured before-stat proof for the first failures. All attempt/stat evidence
+preserved in binding-read-guard-01. No optimizer update129; finalprobe read-only.
