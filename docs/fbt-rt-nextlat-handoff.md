@@ -4,18 +4,26 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-GPU allocation readiness is in progress on two H100s (PR57, 2026-09-30).
-Read [the plan](reports/olmo-gpu-allocation/plan.md),
-[live progress](reports/olmo-gpu-allocation/progress.md),
+The first GPU allocation milestone is complete on two H100s (PR57, 2026-09-30).
+Read [results](reports/olmo-gpu-allocation/results.md),
+[the plan](reports/olmo-gpu-allocation/plan.md),
+[progress and closeout](reports/olmo-gpu-allocation/progress.md),
 [validation](reports/olmo-gpu-allocation/validation.md),
+[storage](reports/olmo-gpu-allocation/storage-receipt.md),
 [H200 capacity assessment](reports/olmo-gpu-allocation/memory-assessment.md), and
 [the following migration milestone](reports/olmo-gpu-allocation/topology-migration-plan.md).
-The current benchmark compares two independent single-rank jobs against one
+The benchmark compares two independent single-rank jobs against one
 two-rank job at the same T1024/effective512 real rows per update, using B32 and
 NFR128 saved weights and populated Adam as immutable origins. These are
 disposable fixed-LR performance clones with replayed data, not continuation of
-the scientific experiment. Only NFR concurrent singles remain active; inspect
-`.runtime/olmo-gpu-allocation/suite.json` before launching GPU work.
+the scientific experiment. All four cells and six native jobs completed and
+synced; both GPUs are idle and no work is queued. Aggregate useful input rates
+for pair versus concurrent singles are B70,318 versus71,590 and NFR3,553 versus
+3,642 tokens/s. Pairs give about1.95x individual-job throughput with similar
+node efficiency. These short measurements exclude setup/checkpoint transport;
+NFR's layouts also differ slightly in padded work. Tiny one/two-rank acceptance,
+42CPUtests and931closeout preservation checks pass. Existing BF16 numerical
+qualifications remain. See the report for complete memory/timing scope.
 
 The preceding NFR64-to128 study and K32 endpoint probe are complete; see
 [its results](reports/olmo-nfr-stability-128/results.md). The regular development

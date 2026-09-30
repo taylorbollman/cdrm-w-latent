@@ -31,20 +31,24 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 GPU allocation readiness IN PROGRESS, branch feat/olmo-gpu-allocation,
-PR57. Read docs/reports/olmo-gpu-allocation/plan.md, progress.md, validation.md,
-memory-assessment.md and topology-migration-plan.md. The only active GPU work is
-the bounded NFR concurrent-singles benchmark in .runtime/olmo-gpu-allocation/
-nfr-singles-01; inspect suite.json, supervisor.json and both job reports before
-launching anything. Bpair02/Bsingles01/NFRpair01 are completed and retained.
-Disposable clones import saved weights/Adam, hold saved LR, reset benchmark
-counters/data-prefix cursor, and never advance or overwrite scientific NFR128.
-The new allocation entrypoint uses unchanged shared campaign/DDP graph math.
-42CPUtests and tiny one/two-rank GPU graph acceptance pass. Native BF16 runs
-establish finite operation/performance, not broad precision equivalence.
-The next proposed milestone is explicit production checkpoint rank migration,
-fresh-process restart and job isolation. Historical loader/runtime stays frozen.
-Eight-rank/H200 acceptance and capacity measurements belong on the target node.
+2026-09-30 GPU allocation first milestone COMPLETE, PR57. Read docs/reports/
+olmo-gpu-allocation/results.md, validation.md, storage-receipt.md, progress.md,
+memory-assessment.md and topology-migration-plan.md. All four primary cells and
+six native jobs completed/exit0/W&Bsynced; both H100s verified idle. No GPU work
+is queued. Node aggregate pair versus two concurrent singles: B70,318/71,590
+inputs/s; NFR3,553/3,642. Pairs give roughly1.95x individual-job throughput;
+small aggregate differences are directional, including NFR padding overhead.
+T1024/effective512, B32/GPU forB andB12/GPU forNFR; K4/nativeRT0,15/latent1/KL.1.
+Disposable clones import saved weights/Adam, hold saved LR and replay a data
+prefix. Original scientific B32/NFR128 checkpoints and422 source pins unchanged.
+42CPUtests, tiny one/two-rank GPU graph acceptance and931preservation checks pass.
+Native BF16 finite operation is not broad numerical equivalence. InitialBpair01
+teardown failure retained; wrapper releases graphs before process-group cleanup.
+Next: explicit production checkpoint rank migration, fresh-process restart and
+job isolation. SavedNFR127 exists; authenticate/migrate/save127 then compare128
+without extending its finite schedule. Preserve historical microbatch counters.
+Historical loader/runtime stays frozen. Eight-rank/H200 acceptance and larger
+physical-batch measurements belong on the target node; no H200 rate is measured.
 
 2026-09-30 19:52 UTC: NFR64-to128 AND FINAL PROBE COMPLETE. No training
 or GPU diagnostic remains active; update129 is not authorized or launched.

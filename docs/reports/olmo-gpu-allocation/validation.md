@@ -127,3 +127,25 @@ recovery.
   throughput require measurement on the target machine.
 - Final native cells and their evidence retention should be recorded in the
   companion results report after their supervisors report successful completion.
+
+## Completed native allocation evidence
+
+All four primary cells completed with process exit0 and successful graph/reducer
+teardown: Bpair02, Bsingles01, NFRpair01 and NFRsingles01. Their six native jobs
+completed36 finite optimizer updates total (two warmup plus four measured per
+job); all six W&B runs synced. The first Bpair01 teardown failure remains
+retained and excluded from the primary comparison.
+
+The final read-only preservation audit passed931 checks with no failures:
+`.runtime/olmo-gpu-allocation/closeout-audit.json`. It verifies original B32 and
+NFR128 report/manifest hashes, all422 original source-inventory entries, each
+native job's source pins and supervisor report authority, completion/teardown,
+measured counts, and original checkpoint inode/size/mtime preservation. Full
+state content hashes were checked at each import; closeout did not add another
+full15GB readback. The audit producer is retained with the runtime evidence.
+
+Both H100s were checked inside the required container after the suite ended:
+zero compute processes,0MiB used,0% utilization. No further GPU work is queued.
+The final comparison summary independently checks matching contracts, ordered
+input authorities, objective accounting, device isolation and overlapping
+measurement windows. See results.md for throughput and its scope.
