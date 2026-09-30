@@ -112,3 +112,12 @@ GPU0/1 follow-up launcher prepared, not launched; source and terminal-F128
 binding guards checked. Independent helper review found no blocker (42 tests).
 New NFR summary helper c720207 requires completed/audited pair, raw losses and
 matched F64 context only; no weighted-objective quality comparison.
+
+09:35 UTC: F96 complete, deep curves synced yg1f732m. Regular CE
+2.680980/3.279866/3.328161/3.349725; small K32 CE3.294059; tail
+delta at16 is6.87e-6 and at32 is1.51e-6. Settling faster than64 and
+feedback prediction still improving, with no useful refinement over pass1.
+Continue unchanged to100/128; no reason yet to change gate/pass design.
+F64 exact context+curve32/64 summaries retainedGCS, see storage-receipt.
+The optional NFR summary F64 mode guard was fixed against real metadata
+(2ff12d8;14 focused tests); training/source208/215 remain unchanged.

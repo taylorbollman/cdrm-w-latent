@@ -3,11 +3,11 @@
 Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength,
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
-The native FBT-only run is active. Through update 64, feedback prediction is
+The native FBT-only run is active. Through update 96, feedback prediction is
 improving while first-pass prediction changes little; deeper passes still
 perform substantially worse than the first pass. Deep curves at 0 and 32
 already settle to a numerical floor, so settling alone is not the missing
-ingredient. At 64, regular first/fourth-pass CE is 2.675 / 4.766; useful
+ingredient. At 96, regular first/fourth-pass CE is 2.681 / 3.350; useful
 refinement remains unestablished.
 
 The ordinary control has completed the requested 128 optimizer updates. Final
@@ -161,3 +161,22 @@ curves; normalized hidden RMS alone would conceal the changing scale.
 [Curves through 64](figures/update-000064-figure3-style.pdf) ·
 [Scale/entropy through 64](figures/update-000064-scale-entropy.pdf) ·
 [W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/1tbe2qdx).
+
+## Update 96: the prediction gap narrows, with faster settling
+
+Regular development CE is **2.680980 / 3.279866 / 3.328161 / 3.349725**.
+The gap between fourth and first passes is 0.669 nats per target, versus
+4.529 at the origin. At update 80 the same four values were
+2.685428 / 3.735140 / 3.826067 / 3.876882. First-pass CE remains close to the
+ordinary control at the same update (2.671181).
+
+On the small panel, first/fourth/32nd-pass CE is
+2.711076 / 3.283633 / 3.294059. The tail relative state change is 0.05670
+at pass 4, 0.00214 at 8, 6.87e-6 at 16 and 1.51e-6 at 32. This is faster
+settling than at 64, alongside better feedback prediction. Late entropy is
+3.432 nats and pre-final-normalization RMS is 1.968. Extra inference passes
+still offer no CE benefit on this panel.
+
+[Curves through 96](figures/update-000096-figure3-style.pdf) ·
+[Scale/entropy through 96](figures/update-000096-scale-entropy.pdf) ·
+[W&B curves](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/yg1f732m).
