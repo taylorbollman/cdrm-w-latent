@@ -4,6 +4,39 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
+The first GPU allocation milestone is complete on two H100s (PR57, 2026-09-30).
+Read [results](reports/olmo-gpu-allocation/results.md),
+[the plan](reports/olmo-gpu-allocation/plan.md),
+[progress and closeout](reports/olmo-gpu-allocation/progress.md),
+[validation](reports/olmo-gpu-allocation/validation.md),
+[storage](reports/olmo-gpu-allocation/storage-receipt.md),
+[H200 capacity assessment](reports/olmo-gpu-allocation/memory-assessment.md), and
+[the following migration milestone](reports/olmo-gpu-allocation/topology-migration-plan.md).
+The benchmark compares two independent single-rank jobs against one
+two-rank job at the same T1024/effective512 real rows per update, using B32 and
+NFR128 saved weights and populated Adam as immutable origins. These are
+disposable fixed-LR performance clones with replayed data, not continuation of
+the scientific experiment. All four cells and six native jobs completed and
+synced; both GPUs are idle and no work is queued. Aggregate useful input rates
+for pair versus concurrent singles are B70,318 versus71,590 and NFR3,553 versus
+3,642 tokens/s. Pairs give about1.95x individual-job throughput with similar
+node efficiency. These short measurements exclude setup/checkpoint transport;
+NFR's layouts also differ slightly in padded work. Tiny one/two-rank acceptance,
+42CPUtests and931closeout preservation checks pass. Existing BF16 numerical
+qualifications remain. See the report for complete memory/timing scope.
+
+The preceding NFR64-to128 study and K32 endpoint probe are complete; see
+[its results](reports/olmo-nfr-stability-128/results.md). The regular development
+fourth-minus-first CE gap fell from2.745 at64 to0.302 at128, but later passes
+still predict worse than the first. Hidden-state settling is not useful
+refinement. No extension beyond128 is launched. Original runtime/checkpoints
+remain frozen and retained. Production topology migration/restart is the next
+engineering milestone; actual eight-rank/H200 acceptance remains on target
+hardware. Do not confuse benchmark rank flexibility with qualified production
+checkpoint migration.
+
+## Historical PR54 state
+
 The paired NF KL continuation is complete (PR54, 2026-09-30). Read
 [results](reports/olmo-kl-continuation/results.md),
 [next proposal](reports/olmo-kl-continuation/next-steps.md),
