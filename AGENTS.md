@@ -31,14 +31,19 @@ W&B tracking.
 
 # Pretrained model handoff
 
-2026-09-30 15:24 UTC: NEXT MILESTONE ACTIVE, authorized by latest user.
+2026-09-30 15:39 UTC: NEXT MILESTONE ACTIVE, authorized by latest user.
 Branch feat/olmo-nfr-stability-128. Read docs/reports/olmo-nfr-stability-128/
 protocol.md and progress.md. Prepare matched no-update K1-32 NFR64 KL1/.1
 endpoint curves on common eight-row FP32/no-jitter panel. If bounded/settling,
 continue only saved reduced-KL NFR64 to128, preserving Adam/RNG/data/LR/model;
 inspect96/100/128 across existing warmup100. Stop128; no extra training beyond
-that. Both GPUs verified idle15:24; no new launch yet. Separate explicit scope
-helpers under preparation; historical200/208/210/215 source bytes immutable.
+that. Two endpoint probes RUNNING, physicalGPU0control/GPU1reduced, root
+sessions2942/66539; monitor25914. Runtime olmo-nfr-endpoint-curves reports
+result-control-01/result-reduced-01; W&B y8xlyhtw/sf5dwyaz. Do not launch
+training until both complete and GPUs released. Root owns activation receipt.
+Continuation helper prepared with36CPUtests/222pins;44probeCPUtests passed.
+Scope/launch commands and retention receipts in new report progress.md.
+Historical200/208/210/215 bytes immutable; new protocol also now pinned.
 Root coordinates all GPU launches; checkpoint/cloud/W&B policy unchanged.
 Earlier notes calling this proposal unapproved are superseded by authorization.
 

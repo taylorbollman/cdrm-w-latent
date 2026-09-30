@@ -109,7 +109,7 @@ def main(argv=None):
                          title='Unsettled state suffix' if row == 0 else 'Final 128 positions')
         for axis in axes[row]:
             axis.axvline(4, color='grey', linestyle=':', linewidth=.8)
-            axis.set_xlabel('Total feedback pass (training uses 4)')
+            axis.set_xlabel('Total pass (training uses 4)')
             axis.grid(alpha=.2)
     axes[0, 0].legend()
     figure.suptitle('NFR64 saved checkpoints: settling and predictive loss\n'
