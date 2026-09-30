@@ -53,13 +53,31 @@ ablation; it does not demand that the learned F and NF trajectories match.
 
 ## GPU acceptance and scope
 
-GPU acceptance is pending. The intended bounded test compares the accepted
-F-only tiny execution with the new probe-enabled execution, then restores a
-committed new update-2 checkpoint in a fresh process and executes update 3.
-Complete model/Adam/cursor/RNG/input/raw-gradient state must agree exactly. The
-tiny probe schedule includes update 2 specifically to exercise a live captured
-training graph before the subsequent optimizer update, and repeats scheduled
-observations at the restored boundary.
+GPU acceptance completed successfully on the two H100s. The accepted F-only
+tiny execution and the new probe-enabled execution both completed three updates.
+The independent insertion audit passed **8,531 checks**, including exact
+model/Adam/cursor/RNG/input/raw-gradient evidence at every update and equal
+ordinary development evaluation. No training report was relabeled to obtain
+this agreement.
+
+The new update-2 checkpoint was restored from its committed GCS publication into
+a fresh directory, then update 3 was executed in a new process. The independent
+restart audit passed **10,150 checks**. Its restored origin, next update and
+final state match uninterrupted execution exactly. The repeated development
+evaluation and stability observations also match. The tiny probe schedule
+includes update 2 specifically to exercise a live captured training graph
+before the subsequent optimizer update, and observes update 3 as well.
+
+All three executions finished their finite plans and synchronized W&B:
+[accepted reference](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/b79u20pb),
+[with probes](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/rmjsgmmk),
+[fresh-process restart](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/3fxf5pjh).
+Independent audit reports are in
+`.runtime/olmo-fbt-stability/tiny-insertion-audit-01/report.json` and
+`.runtime/olmo-fbt-stability/tiny-restart-audit-01/report.json`. The audits pin
+their exact input-report bytes, check the new source snapshots and verify
+checkpoint publication metadata. This is a bounded tiny FP32 acceptance check;
+it is not native BF16 trajectory equivalence.
 
 The native run has not yet passed its report audit. This document will be
 updated with actual evidence after execution. These checks address implementation

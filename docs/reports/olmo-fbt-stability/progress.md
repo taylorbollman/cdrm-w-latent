@@ -34,3 +34,23 @@ B session82005. Optional separate saved NF/NFR curve and explicit NFR KL
 continuation helpers are being prepared only; neither is launched or allowed
 to modify the frozen live F sources. B has reached128; terminal publication
 still pending. W&B ordinary control37uu86ip.
+
+07:40 UTC: B128 completed_plan, cloud128 verified and W&B synced. Its final
+CE2.687618 is a modest deterioration from32, with finite/unclipped updates.
+FinalreportSHA9b8f44ce52163eca6679f78f4603fb26e023d6354273f2369749fd5b4798f7f3.
+The old W&B checkpoint-summary fields lag terminal drain; report and publication
+receipts are the checkpoint authority. Baseline evidence retention underway.
+
+07:41 UTC: Tiny insertion passes8,531 independent checks; fresh-process verified
+cloud restore2→3 passes10,150. Exact model/Adam/RNG/cursor/input/rawgradient and
+repeated evaluation/probe outputs agree. Queue02 completed; queue01 was stopped
+while waiting, solely to correct its terminalstatus spelling before any launch.
+No training was interrupted by that host-queue change.
+
+07:42 UTC: Native F launched as native-f12-to128-01, session60881; host launcher
+launch_case.py, fixed stop128 inside192 ceiling, lean observation,14400s bound.
+CPU curve_queue.py/session31926 publishes matched completed0/32/64/96/100/128
+figures while training continues. GPU concurrency remains one two-rank job.
+Conditional NFR KL215-source scope committedc1a764e; saved-component curves
+committedabf269e. Both prepared only, no additional training authorized by their
+mere existence; root selects useful follow-up using this F study's evidence.
