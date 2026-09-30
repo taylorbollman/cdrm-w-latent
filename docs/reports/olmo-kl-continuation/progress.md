@@ -53,3 +53,11 @@ min/median/max4.62280/7.79101/14.49341. Later passes improve versus32 but remain
 much worse than first. Cloud58 verified; final64 save/retention in progress.
 Reduced branch still queued. This is a control endpoint, not yet the paired
 intervention result. Exact runtime210 remains frozen.
+
+05:34 UTC: control fully closed (3171.07s executor wall, W&Bsynced,
+cloud64verified), independent control audit8,009 passed. Controlreport SHA
+`d0b9c32c0f3465d8a9950915cf8a5582c47ee16c6df16347e8c2ed50879708b2`.
+Small evidence retained as kl-native-control. Reduced branch launched05:30UTC,
+W&B x8f16eqv. Its full origin and raw repeated32 evaluation exactly equal
+control; declaredKL.1. Preparing graphs, no numerical failure. Both branches
+still use runtime210unchanged, data/LRplan128unchanged, savedAdam inherited.
