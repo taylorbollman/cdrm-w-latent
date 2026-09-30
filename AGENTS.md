@@ -31,6 +31,16 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 ACTIVE FBT-only stability milestone, user authorized about6.5h from
+07:07UTC and evidence-driven follow-ups without review. Branch
+feat/olmo-fbt-stability. Read docs/reports/olmo-fbt-stability/protocol.md and
+progress.md first. K4/beta1, noRT/NextLat, samefusion128 startup, initial128
+updates/conditional192, dense Figure3-style probes. No automatic gate ramp or
+pass schedule change. Runtime .runtime/olmo-fbt-stability; inspect live reports
+and processes before launching. Original B control32→128 may run during CPU
+implementation via unchanged200-source runtime. Preserve historical source
+pins and all checkpoint/cloud authorities; new F implementation is versioned.
+
 2026-09-30 paired NF KL continuation COMPLETE, PR54 closeout metadata in
 `docs/reports/olmo-kl-continuation/progress.md`. Read results.md, next-steps.md,
 validation.md and storage-receipt.md there. Both sharedNF32 savedAdam branches
