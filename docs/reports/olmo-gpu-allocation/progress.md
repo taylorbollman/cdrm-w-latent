@@ -73,3 +73,15 @@ is the only active cell, with W&Bsingle0ydqeqv2y/single1ube3ynpa; the bounded
 suite will stop after it. No scientific continuation beyond128 has occurred.
 DraftPR57 is open. Final allocation summary and production migration plan are
 being prepared without changing frozen benchmark/runtime sources.
+
+21:32UTC update: both NFRsingles01 jobs completed two warmup and two measured
+updates, all finite. Measured durations remain approximately287seconds per
+update; two measured updates remain. Both jobs passed the shared start gate.
+First measured start separation was0.146seconds. Peakallocated42.80GiB,
+reserved59.03GiB and sampled free13.13GiB perGPU. Graph teardown and full final
+summary remain pending. No new GPU cell has been added.
+
+Next-milestone implementation map and active handoff were pushed2f9872a.
+SavedNFR127 is locally present; migrate/save that boundary before testing its
+last allowed update128, rather than extending the schedule. See topology plan
+for exact preservation and historical-microbatch counter requirements.
