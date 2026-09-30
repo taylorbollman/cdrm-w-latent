@@ -109,3 +109,11 @@ cloud checkpoint21 verified and local26 saved/background retention underway.
 No new evaluation since16. Five updates remain before finaldev/stop32/terminal
 retention. progress-0133 retained and45c0224pushed. progress-0153 preserves
 current metadata. No additional GPU work or change in scope.
+
+02:12 UTC: NFR reached32 and final development evaluation completed. CE32:
+3.043012/7.026269/7.055292/7.063815. Later passes are0.3672/0.3706/0.3713
+lower than NF32, while firstpass is0.08262 higher. All32 finite/clipped,
+finalnorm10.5631. No pass refines firstpass; large deficit remains. Training
+stopped; terminal checkpoint sequence draining prior31 before32save/retention.
+Do not claim fully closed yet; wait finalreport/W&B/cloud32. progress-0153
+retained;8d28794pushed. progress-0212 preserves endpoint observations.
