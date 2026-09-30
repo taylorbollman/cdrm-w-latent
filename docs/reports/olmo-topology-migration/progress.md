@@ -29,3 +29,32 @@ Historical runtime and checkpoint source inventories stay unchanged.
   evidence. Native N/R/NR/FR smoke helper is being prepared independently.
 - No new GPU run or scientific continuation has started. Next: freeze sources,
   tiny CUDA/NCCL migrations, native127-to128 replay/restart, isolation and gaps.
+
+## 2026-09-30 22:21 UTC — tiny GPU acceptance and native import
+
+- Four required tiny CUDA/NCCL audits passed:2→1 and1→2 FP32 raw-gradient
+  relative L2 error4.835e-8; actual Adam-displacement relative error8.198e-7.
+  Fresh-process imported-boundary and live-graph-boundary restarts were bitwise
+  exact. A redundant cross-history comparison correctly rejected distinct
+  intermediate checkpoint manifest identities despite exact tensor/RNG state;
+  this is retained explicitly rather than weakening the strict auditor.
+- Cooperative and deliberate abrupt-exit independent-job isolation both passed.
+  Peer graphs survived, four additional real updates changed parameters, and
+  peer checkpoint bytes and fresh CPU model/Adam restore were verified.
+- Native two-rank127→128 control is running from authenticated original127,
+  preserving the actual finite schedule and populated optimizer. No update129
+  is authorized or supported by this fixture. Later native migration and strict
+  restart remain pending. Retention of the completed tiny evidence is underway.
+
+## 2026-09-30 22:27 UTC — native publication integration issue
+
+Native control attempt01 authenticated/imported/saved127 but its asynchronous
+CPU worker rejected the identity schema: SSD staging uses campaign identity,
+whereas the reused pilot worker hardcodes pilot identity. This was an omitted
+end-to-end storage compatibility case, not a numerical failure. Parent stopped
+only its authenticated owned container during graph preparation; original127
+and128 remain untouched, imported127 remains local, and no publication is
+claimed. Logs plus operator-stop receipt are preserved. The fix uses the
+existing retention manager's explicit worker hook with a new campaign-identity
+CPU worker; historical validators, files and checkpoint formats stay frozen.
+Before retrying native, exercise actual tiny asynchronous cloud publication.

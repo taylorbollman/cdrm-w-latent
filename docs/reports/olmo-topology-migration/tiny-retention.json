@@ -1,0 +1,566 @@
+{
+  "create_only": true,
+  "digest_helper": "scripts.openelm_retain.file_digest",
+  "elapsed_seconds": 10.893279790878296,
+  "evidence_archive_members": 723,
+  "exclusions": "WandB internals, environment/credential files, generated Docker shims, unrelated and pending native runs",
+  "included_completed_runs": [
+    "tiny-source-2r-01",
+    "tiny-control-2r-01",
+    "tiny-migrated-1r-01",
+    "tiny-restart-1r-01",
+    "tiny-live-restart-1r-01",
+    "tiny-reverse-2r-01",
+    "isolation-controlled-01",
+    "isolation-abrupt-01"
+  ],
+  "objects": [
+    {
+      "generation": "1790806971030147",
+      "md5_base64": "IIr2aB4Scc12f0ejsjORCw==",
+      "sha256": "cf378237918de99b78e7ee95554b1e035a38e358fc951f1da9031273234156e4",
+      "size_bytes": 5464593,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/evidence.tar.gz",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806971328146",
+      "md5_base64": "EXrxLb9fRtXqj/D3av1Vug==",
+      "sha256": "2fea42800d54f9a591f85fb6e5ad3f7174bfaa329f988157130a49c9e6711a30",
+      "size_bytes": 294391,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/inventory.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806971597867",
+      "md5_base64": "x30JMgC67M1TcPQDHNATLw==",
+      "sha256": "ab531639bd41ed674b4b3ec6539f7d91761778cd684622eef6587a8bb804a52e",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-source-2r-01/raw-gradients-000001.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806971860150",
+      "md5_base64": "YI09+zdA1cWsWy/HTkrP8Q==",
+      "sha256": "60eb3a6d3b657fac1be46f601670c0a7c94b1a942c952660e5ba34f028f510c1",
+      "size_bytes": 20422,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-source-2r-01/update-000000/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806972154440",
+      "md5_base64": "ojVw8EDE+RvpLCb1e9gagQ==",
+      "sha256": "c901560c91a46159dea55ce06da8f071b3d3daf8b1cea9eff077e8e14d91d2d8",
+      "size_bytes": 282779,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-source-2r-01/update-000000/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806972394680",
+      "md5_base64": "b2W5lEn/hLMusP1EvyYnog==",
+      "sha256": "a2b6529e1d8f28a5f94e5e2def2c459c241d5b550a719dec309d320c8c74794e",
+      "size_bytes": 20425,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-source-2r-01/update-000001/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806972669733",
+      "md5_base64": "eni+q8MWbqU5SrhJ0CkPDw==",
+      "sha256": "36db52dae1f9ab2669e82731a60fb2e58b7234f3017d70ac8cb0ac1fe18036a6",
+      "size_bytes": 723284,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-source-2r-01/update-000001/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806972930439",
+      "md5_base64": "4Q0Yv1nMcNedXJdLteEHjg==",
+      "sha256": "bd615f31d2dde74811428f019f0f03e81c90ea37d21b15a55ffa57790743d861",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/raw-gradients-000002.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806973192208",
+      "md5_base64": "IMh6QZsIXyyA75r40iN/mQ==",
+      "sha256": "3e88134c342e76b41c22be3df304a1afe859c222bde50c8d65de6a82f0894f57",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/raw-gradients-000003.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806973446864",
+      "md5_base64": "dYMZSInsiVcAWno8/6W5mw==",
+      "sha256": "446710372d57624c8e5441a44bc08944e3c49b9d8adadcd1ee409f1ea8536324",
+      "size_bytes": 77548,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000001/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806973699898",
+      "md5_base64": "RGd3yJ3CAPgo6Sro3m6bcA==",
+      "sha256": "02f62218d0a6bf6ea39ea2fb63f374b2d7f0097ef144e32e08e9878c13c9b815",
+      "size_bytes": 739604,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000001/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806973948581",
+      "md5_base64": "ZuDqx2c9w/aolP6VmqJckg==",
+      "sha256": "114afbabaa7f09ddba8896bc009f2c488d5d20ab367b6f356d430fadfecd5d62",
+      "size_bytes": 77552,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806974205500",
+      "md5_base64": "UOeTOsL3jmDF3wQb77Zz/w==",
+      "sha256": "177bef7bf153e2b0b6910d892fcbe32b823d86e42da2d158baa381f4e1a3e4c6",
+      "size_bytes": 739668,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806974446396",
+      "md5_base64": "CwJz5thNgClzR+xopIzyGQ==",
+      "sha256": "e5ee93903ad438eedab36cadceec88a3e9b6a9192936bd4c2733b1d93a91484c",
+      "size_bytes": 77553,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000003/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806974713521",
+      "md5_base64": "xfU0ou+KH4m2FfQL9cRNyw==",
+      "sha256": "eb923e9b5587e2169a607aeeeed8ca3b517015ee37d746f8be5608784d404af7",
+      "size_bytes": 739668,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-control-2r-01/update-000003/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806974958842",
+      "md5_base64": "R/mfS1uqL6YdV+7MlWwGBQ==",
+      "sha256": "b6d8bb391cda073ef4b5c69413da48b62e7d851fbc5b92a7ce4708e174f68115",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/raw-gradients-000002.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806975247911",
+      "md5_base64": "yEedhs/Rb6m5f03Y02lgsg==",
+      "sha256": "dca7b349c33e4a8fae91672338eb0221329f62be963a9cd1a111f421313a2fe3",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/raw-gradients-000003.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806975507846",
+      "md5_base64": "wwRHj7fg9tV5EEnUtb3BZg==",
+      "sha256": "8cf4057fd2669e3ac99ff2140e0060cd741708c0009d2fc77109a012dacf4d38",
+      "size_bytes": 77177,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000001/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806975765785",
+      "md5_base64": "pL0pFLbaRe6ce/oogaDuwQ==",
+      "sha256": "25d9f918fc21effbae43773df5d7a400cffb68ce6a17044de4b9d2675f109005",
+      "size_bytes": 720160,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000001/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806976032187",
+      "md5_base64": "KB317S4hOyVH+7iWjfzPoA==",
+      "sha256": "9a3f2e712112950ce10e957d89e667c1137f84f8d260a46f26d85259df63f454",
+      "size_bytes": 77180,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806976294930",
+      "md5_base64": "6mZX1mIUx/hKf0qhDbqYhg==",
+      "sha256": "5bf781b170bf394556f94f43d7ea78bb5453f04b064bb6dc325791c4e281e458",
+      "size_bytes": 720288,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806976539669",
+      "md5_base64": "Hx6Ie+kfSifapAWM0lZm1A==",
+      "sha256": "e6568fe22be5806528d964dec2038fbd02aa332532d9c5caa2ffeef150786fcf",
+      "size_bytes": 77181,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000003/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806976792308",
+      "md5_base64": "8cCAaVzxn30yAfrCK9MtBg==",
+      "sha256": "53a4f0db97e09e08b4d3b1883e81423ba98b5fd0e14de30f364356737c9c0a98",
+      "size_bytes": 720288,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-migrated-1r-01/update-000003/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806977051650",
+      "md5_base64": "R/mfS1uqL6YdV+7MlWwGBQ==",
+      "sha256": "b6d8bb391cda073ef4b5c69413da48b62e7d851fbc5b92a7ce4708e174f68115",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/raw-gradients-000002.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806977300905",
+      "md5_base64": "yEedhs/Rb6m5f03Y02lgsg==",
+      "sha256": "dca7b349c33e4a8fae91672338eb0221329f62be963a9cd1a111f421313a2fe3",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/raw-gradients-000003.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806977555540",
+      "md5_base64": "mAhLrFhmIYWyVkog+TVPNA==",
+      "sha256": "6b0fbd0ec72732cd2f2ae747100e1902d642b66837bf3bfed660cbff5e2128b0",
+      "size_bytes": 77177,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000001/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806977851073",
+      "md5_base64": "YTiAEFoNN4f4rZ2GusCG1w==",
+      "sha256": "19c9615f8a989517498d84d6ce45c46894373e605e8758d4eac94379aa6fef54",
+      "size_bytes": 741856,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000001/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806978094725",
+      "md5_base64": "iS7+LrBXIzd5Iz4sZAl5ag==",
+      "sha256": "521816f4e3287dc2863a22850fd76ef767aeebb54fac5af1501df249b1cecfc1",
+      "size_bytes": 77180,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806978333491",
+      "md5_base64": "YJafQmuPlulaIcnhlNWXpQ==",
+      "sha256": "d8fa31e81480534f0d5e63998e1e3ad0f4225a4d7012a3a8cb06ae9d502a6828",
+      "size_bytes": 741856,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806978580459",
+      "md5_base64": "LhHocpg9uPDaalzBzo7tgQ==",
+      "sha256": "5ee7a369e01f857f173a24eb435700fa96f83880b511d5ef425c8aa7c55c802e",
+      "size_bytes": 77181,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000003/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806978842342",
+      "md5_base64": "DprnOlYTw8ZGUlVL0UM4uQ==",
+      "sha256": "de97a939514d751646712a58c844bf13d01aedec761b45745d1872109a43136e",
+      "size_bytes": 741856,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-restart-1r-01/update-000003/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806979100928",
+      "md5_base64": "yEedhs/Rb6m5f03Y02lgsg==",
+      "sha256": "dca7b349c33e4a8fae91672338eb0221329f62be963a9cd1a111f421313a2fe3",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-live-restart-1r-01/raw-gradients-000003.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806979354803",
+      "md5_base64": "qcRWk+j88R22XMCpAxPiWg==",
+      "sha256": "f03bc5d2d2e393b9979da4f513cdc7747735af95ecb7a08d1ce927f5dffe5683",
+      "size_bytes": 77180,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-live-restart-1r-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806979611150",
+      "md5_base64": "bNtyPMluvt3z/IKC3nqOEA==",
+      "sha256": "8e3af38159f2d08dc843dadb233b755d930b4e692d7c0e59b2cb098016fcc713",
+      "size_bytes": 741856,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-live-restart-1r-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806979909643",
+      "md5_base64": "Ja1gCN7SfrlyULoSghmejA==",
+      "sha256": "6f151525de3c1781921c72671efcb91bf85e2c35f0c3b1a0dfe0400f8d818b41",
+      "size_bytes": 77181,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-live-restart-1r-01/update-000003/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806980169840",
+      "md5_base64": "WLf6HlCFgXYoIRoTa4yaeg==",
+      "sha256": "ad840b58a20c9c18b6cac783b9f9c327d5d2144f1a5c1e0356e0368ec5e34f96",
+      "size_bytes": 741856,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-live-restart-1r-01/update-000003/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806980440117",
+      "md5_base64": "4Q0Yv1nMcNedXJdLteEHjg==",
+      "sha256": "bd615f31d2dde74811428f019f0f03e81c90ea37d21b15a55ffa57790743d861",
+      "size_bytes": 219591,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-reverse-2r-01/raw-gradients-000002.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806980703908",
+      "md5_base64": "Ie082NA3CsnPu8kS+0R3wA==",
+      "sha256": "e5e53a7a3d98b4331e6260eaa0cada524e7d26e51c2337d692e388427e8ebf1b",
+      "size_bytes": 110633,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-reverse-2r-01/update-000001/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806980933453",
+      "md5_base64": "hBGnsoomDS9Pfn9gt7bc4w==",
+      "sha256": "c6b4bfa7db7afab7bfd69c823435e5fd62d691cc804aee75609390a963557baa",
+      "size_bytes": 748884,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-reverse-2r-01/update-000001/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806981177520",
+      "md5_base64": "6+0GVkBAleSWmRGi0wrzzA==",
+      "sha256": "507e54dd9164a16c12e81cae0bfd6aac7b29f8c65d573c76c8e041a384e31566",
+      "size_bytes": 110637,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-reverse-2r-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790806981441967",
+      "md5_base64": "txxnIoRKTd/oKqT/EpP3zw==",
+      "sha256": "82dfcefb081b345d0126ee82fb6aba0e73e97d410644ed214dfd70526f9621b2",
+      "size_bytes": 748948,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/tiny-checkpoints/tiny-reverse-2r-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    }
+  ],
+  "prefix": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/",
+  "receipt_uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/tiny-isolation/receipt.json",
+  "schema": "olmo-topology-tiny-retention-v1",
+  "scope": "Completed tiny migration and independent-job isolation only; pending native work excluded",
+  "status": "completed",
+  "tiny_ssd_artifacts": 39,
+  "total_object_bytes": 19440361,
+  "transport_helper": "scripts.olmo_two_gpu_retain.upload_verified",
+  "verification": {
+    "download_sha256": true,
+    "server_md5": true,
+    "server_size": true,
+    "sha256_metadata": true
+  }
+}
