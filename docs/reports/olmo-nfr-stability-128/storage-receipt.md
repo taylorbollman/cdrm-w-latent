@@ -62,3 +62,30 @@ checks. Local receipt/result files are
 `.runtime/olmo-nfr-stability-retention/continuation-static-01.json` and
 `continuation-static-01-result.json`. No model state was uploaded or rehashed,
 no local files were deleted, and no GPU command was run by retention.
+
+## Completed endpoint probes, summary and activation
+
+After both launchers exited 0 and both probes and their summary were completed
+and synced, their closed directories were copied into
+`.runtime/olmo-nfr-stability-128/endpoint-terminal-retention-input-01`.
+The selection contains `result-control-01`, `result-reduced-01`, `summary-01`,
+both launch completion directories, immutable `activation-01.json`, an
+independent CPU closure receipt and a copy inventory. It excludes the active
+64→128 training directory, its logs and every model checkpoint.
+
+The standard CPU-only retainer published 496 files, 14,401,033 bytes before
+compression, and verified both 230-file source snapshots. GCS prefix:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-two-gpu/20260930T070700Z/nfr-endpoint-terminal-01/`
+
+| Object | Bytes | Generation | SHA256 |
+| --- | ---: | --- | --- |
+| `evidence.tar.gz` | 2,958,605 | `1790783493220547` | `e1ff713c5c076698b1230e26745c2f05888b0e94131881b62d4c5ff04e2ed92e` |
+| `retention-manifest.json` | 132,146 | `1790783493523907` | `44f37b4a07fde5d039b80c439bba0bfa53d88ca63d85f8e57560ddc92913415b` |
+| `storage-receipt.json` | 1,300 | `1790783493787355` | `f7709b993156e45277038e6e7e508ac2ff68e6b7806c6d2acd86fc3c6ed5a404` |
+
+All objects passed server size, MD5, SHA metadata and downloaded SHA256 checks.
+Local receipt/result files are
+`.runtime/olmo-nfr-stability-retention/endpoint-terminal-01.json` and
+`endpoint-terminal-01-result.json`. No model state was uploaded again or
+rehashed, no local files were deleted, and no GPU command was run by retention.

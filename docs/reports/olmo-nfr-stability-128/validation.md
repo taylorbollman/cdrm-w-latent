@@ -1,8 +1,9 @@
 # Independent validation
 
-This note records independent review for the NFR64 pass curves and conditional
-KL0.1 continuation to update 128. It does not authorize training or imply that
-the new diagnostics or continuation have completed.
+This note records independent review for the NFR64 pass curves and KL0.1
+continuation to update 128. Both endpoint probes and their CPU summary have
+completed and passed closure checks. Continuation execution is separate;
+its terminal validation remains pending.
 
 ## Existing endpoint authority
 
@@ -118,3 +119,34 @@ and `188b0b08ad8ce219e817e355a4f8fef3a4b5cd6b3e4432e611077866b397d0de`.
 Preflight explicitly does not verify or load checkpoint state tensors. The
 immutable preparation evidence was independently copied and retained; see
 [storage-receipt.md](storage-receipt.md).
+
+## Completed endpoint closure
+
+Both endpoint launchers exited 0, each probe completed all eight rows and 32
+passes, and both W&B runs synced. Report SHA256 values:
+
+- KL1: `6a80643b3855829e4ad444a0a42dc188181348e7e9899879c40fe1d4ae276ac9`.
+- KL0.1: `97fe4e9029f809c7bc46956b8fee989e590a6f9839959e8bef64f72cd4378a0b`.
+
+Independent CPU closure confirmed identical panel, policy and batch tensor
+digests; zero optimizer updates; all runtime/mode/RNG preservation checks;
+unchanged weight hashes; absent gradient buffers; and all 230 live source
+pins for each probe. Reaggregating every raw per-row/pass/region sufficient
+statistic exactly reproduced the reported pooled sums and CE. Reaggregating
+the direct K4/K8-versus-K32 residuals exactly reproduced the reported squared
+sums and relative norms. Every derived pass metric was finite.
+
+The completed, synced summary binds those exact report hashes:
+`4396a81af23dbbb9f595dec1e395b9b9bcb8a124d0b1bb4e4d63ee144f768525`.
+The explicit continuation activation binds the same pair and reduced64 source:
+`9a85cd4f6b2d48e95a0e301c92f6536bee302acb3b5af0496da15c1247c95f71`.
+These checks support the integrity of the observations, not a conclusion that
+later passes improve CE. K32 remains a finite reference, and the existing BF16
+optimization-equivalence qualification is unchanged.
+
+The CPU-only closure receipt is
+`.runtime/olmo-nfr-stability-128/endpoint-terminal-retention-input-01/closure.json`,
+SHA256 `01e2a5087f5ad5e0e61539d128989ce2ad285aedcec957d88640e2c3ee9f1d32`.
+No GPU call, model load or checkpoint-state rehash was performed by this
+independent closure. The closed outputs and activation were retained separately
+from the active continuation; see the storage receipt.
