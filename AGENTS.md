@@ -31,6 +31,17 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-09-30 15:24 UTC: NEXT MILESTONE ACTIVE, authorized by latest user.
+Branch feat/olmo-nfr-stability-128. Read docs/reports/olmo-nfr-stability-128/
+protocol.md and progress.md. Prepare matched no-update K1-32 NFR64 KL1/.1
+endpoint curves on common eight-row FP32/no-jitter panel. If bounded/settling,
+continue only saved reduced-KL NFR64 to128, preserving Adam/RNG/data/LR/model;
+inspect96/100/128 across existing warmup100. Stop128; no extra training beyond
+that. Both GPUs verified idle15:24; no new launch yet. Separate explicit scope
+helpers under preparation; historical200/208/210/215 source bytes immutable.
+Root coordinates all GPU launches; checkpoint/cloud/W&B policy unchanged.
+Earlier notes calling this proposal unapproved are superseded by authorization.
+
 2026-09-30 FBT stability and paired NFR KL continuation COMPLETE. PR55 merged
 871d23c31f8e07337e5064f9c4d18fbb3ae4e7e3; main is current. Final closeout
 metadata is in docs/reports/olmo-fbt-stability/progress.md.
