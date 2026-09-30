@@ -62,3 +62,16 @@ clipped. Absolute CE improved, but later passes remain far worse than pass1.
 Auxiliary improvement is not sufficient refinement. NFR remains queued;
 originalqueue/session7388 still owns execution. progress-0016 preserves bounded
 metadata snapshots. Prior progress-2354 retention succeeded.
+
+00:25 UTC: Chat server restart killed host queue-01 parent, but NF's container
+survived uninterrupted and finished all32, terminal cloud verification and W&B
+sync. NF original launcher exit is unknown because its parent was lost; no
+exit0 is fabricated. Final reportSHA8e6fe4d8aa933650943320c4f277fd92f4d59e530e08ef456d23634e79cbd5a0.
+Independent B+NF summary passed, SHA45de106de400358cf9cb318338da6d567a0712b80236766b467f34943d4dbda3.
+GPU-container preflight confirmed both GPUs empty. New detached resume_queue.py
+validates/adopts B/NF final authorities and launches only untouched NFR with the
+exact original command. queue-01 is preserved; queue-02 is current scheduling
+authority, hostpid1282711. NFR stop32/timeout4h/settings unchanged; no repeated
+training, checkpoint-resume or GPU-runtime modification. status.py now selects
+queue-02 when present. B/NF evidence remains immutable. progress-0016 retention
+succeeded; completed NF and summary-b-nf-01 retention started.
