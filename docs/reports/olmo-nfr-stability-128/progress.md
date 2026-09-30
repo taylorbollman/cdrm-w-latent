@@ -56,3 +56,24 @@ checkpointed stop. Do not start another GPU job while this two-rank run lives.
 After terminal128, the final saved state will receive the same one-GPU K32
 observation, using a new explicit authority outside the live training pins.
 No additional intermediate deep-pass grid is planned absent a specific concern.
+
+16:07 UTC: strict restore, metadata transition, repeated dev64 and graph
+preparation all preserve the complete saved boundary exactly on both ranks.
+Repeated dev64 raw rows/counts/sums and per-pass CE/latent/KL match prior64.
+Immutable origin/evaluation evidence is retained; see validation/storage notes.
+Update65 completed with finite metrics, preclip norm2.544913 and LRused.0001352
+(next.000137). First new checkpoint65 save/publication is underway. Training
+continues unchanged; next regular dev80.
+
+Final128 observer is prepared with30focused CPU tests and independent review:
+`.runtime/olmo-nfr-final-curves/preparation.json`, SHA
+`e00655584ae906401bc12bab826ae24c68edf830a75819bae7327c8e13dddde8`.
+After terminal128/cloud128/synced/hostexit0, run the guarded CPU audit:
+`python3 .runtime/olmo-nfr-stability-128/run_final_audit.py`.
+Then bind/preflight final curve inside CPU-only container:
+`python .runtime/olmo-nfr-final-curves/prepare.py --preparation-sha256 e00655584ae906401bc12bab826ae24c68edf830a75819bae7327c8e13dddde8 --terminal-report-sha256 VERIFIED_FINAL_SHA --publication-sha256 VERIFIED_PUBLICATION_SHA --output-dir .runtime/olmo-nfr-final-curves/bound-01`.
+It produces the explicit single-GPU launch command. Check GPU release before
+launching. New probe/summary code is outside frozen222 training pins. Use
+`scripts.olmo_nfr_128_summary` for audit-bound training plots and
+`scripts.olmo_nfr_endpoint_summary --final128 FINAL_REPORT` for reduced64/128
+pass overlays; preserve original paired64 artifacts separately.
