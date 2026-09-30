@@ -139,3 +139,15 @@ Root selects bounded online+saved component checks next, conditional NFRKL
 pair after those; no automatic F192. Evidence agent waiting terminal host
 exit for audit; execution agent retains final curves then terminal artifacts
 and reconciles W&B summary if needed. No follow-up GPU launched yet.
+
+10:23 UTC: F host exit0; terminal report SHA
+8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe,
+stopped_at_boundary128, cloud128 verified and W&Bsynced. Native audit160485
+and complete Bprefix24617 pass. Post-F boundplan SHA
+e8e7618bcfa4ad5af549839d7264accceb3796e094205ca8b7b1892d79583e1d.
+Launched nfr32 on physicalGPU0/session35851 and online-f128 onGPU1/session19650
+with post-diagnostics-launcher.py; each enters verified isolated container.
+Prepared result-nfr32 and bound result-online-f128 respectively. NF32 and
+NF64control/reduced remain unlaunched, to run sequentially onGPU1 afteronline.
+CPU agents auditing/retaining/reading finished artifacts; no further training.
+Conditional NFR pair queue prepared but not activated.

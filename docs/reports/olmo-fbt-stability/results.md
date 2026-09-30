@@ -4,8 +4,9 @@ Started 2026-09-30. The [protocol](protocol.md) fixes K4, full feedback strength
 the fusion128 starting weights, fresh Adam, and the existing data/LR schedule.
 The [curve guide](reading-the-curves.md) explains what the measurements mean.
 The native FBT-only training segment has finished 128 updates (67,108,864 new
-input tokens). Final checkpoint publication and independent terminal auditing
-are pending. Feedback learns substantially while first-pass performance remains
+input tokens). Final checkpoint128 is cloud-verified and W&B is synchronized.
+Independent native and ordinary-control-prefix audits pass. Feedback learns
+substantially while first-pass performance remains
 close to the ordinary control. The iteration settles, but feedback still does
 not improve prediction over the ordinary pass on these panels.
 
@@ -237,3 +238,33 @@ curves, followed—if those checks expose no blocker—by the independently decl
 NFR KL1 versus KL0.1 continuation from its common saved update32 state. We are
 not extending F-only automatically to192. F versus NF removes both NextLat
 losses, so it does not by itself isolate the effect of KL; the paired test does.
+
+## Execution, memory and recovery
+
+Training used two H100 80GB GPUs, physical batch 12 per GPU, T1024 and 524,288
+real input tokens per optimizer update. The model has 1,176,764,416 backbone
+parameters plus 8,388,608 fusion parameters; no NextLat predictor or RT layer is
+active. Mixed BF16 training uses FP32 master parameters/Adam, activation
+checkpointing, CUDA graphs and the existing fused optimizer. Curve evaluation
+uses the separate common FP32/no-jitter policy.
+
+The 128 selected update regions took 6,574.69 seconds, counting the slower rank
+per update: **10,207 real input tokens/s**. Complete executor time was 9,567.97
+seconds (**7,014 input tokens/s**), including evaluations, probes, preparation
+and the diagnostic checkpoint cadence. These rates count input tokens once,
+not four times for the four model passes. Per-GPU peak allocated/reserved
+memory after graph preparation was 30.08/40.21 GiB.
+
+All 17 checkpoint publications, including named and wall-time recovery saves,
+are verified. Waiting for pending checkpoint workers accounted for 1,482.48
+seconds (24.7 minutes); selected local checkpoint observation/write/postcheck
+regions account for another 1,160.41 seconds. Named saves close to wall-time
+saves create avoidable overhead for a future production cadence. This is not
+an optimized long-run throughput measurement, and no live policy was changed.
+
+The independent F audit passes 160,485 checks. A separate 24,617-check audit
+authenticates the entire ordinary B history and its exact update32 restart,
+then verifies the common 128-update data/LR prefix while allowing the different
+physical batch allocation. These are metadata/state-boundary and source checks,
+not a new native GPU replay or an FP32/BF16 equivalence claim. See
+[validation](validation.md) and [storage receipts](storage-receipt.md).
