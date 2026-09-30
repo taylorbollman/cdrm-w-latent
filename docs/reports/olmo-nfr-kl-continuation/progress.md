@@ -116,3 +116,11 @@ Both branches remain finite; this is a predictive/auxiliary-loss tradeoff,
 not improvement in every objective. Reduced continues unchanged to64, with
 checkpoint43 verified and named48 publication next. Final paired audit,
 summary and review follow terminal64; no further training is queued.
+
+14:24 UTC: reduced64 development completed after all32 finite/clipped updates.
+CE is2.774970/5.375003/5.481358/5.520121; first/fourth improvements versus
+control64 are.155138/1.126734nats. All raw latent/KL losses remain higher than
+control, preserving the predictive/auxiliary tradeoff. Reduced norm
+min/median/max/final is2.09518/3.77819/7.92970/4.68710. Feedback still does not
+beat the first pass. Cloud63 is verified; final64 publication/host closeout
+and then independent paired audit/summary remain pending. No further training.

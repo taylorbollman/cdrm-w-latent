@@ -1,10 +1,10 @@
 # Combined-model KL continuation
 
-**Intermediate report, 2026-09-30: the reduced-KL branch is still running.**
-The control has completed update 64. The matched update-48 measurements favor
-reducing KL weight from 1 to 0.1 for predictive CE on every pass, while both raw
-auxiliary losses are higher. Terminal results and the paired audit remain
-pending. This is a loss-balance tradeoff, not improvement in every objective.
+**2026-09-30: both branches have completed training and evaluation through 64;
+the reduced branch's final checkpoint publication and paired audit are pending.**
+Reducing KL weight from 1 to 0.1 improves development CE on every pass, with a
+1.126734-nat advantage on pass 4 at update 64. Both raw auxiliary losses are
+higher. This is a loss-balance tradeoff, not improvement in every objective.
 
 NFR means **NextLat + FBT + native RT**. The model uses four FBT passes (K4),
 with RT active at layers 0 and 15 of the 16-layer OLMo backbone. In this arm,
@@ -43,12 +43,14 @@ Values are nats per target on the same 64-row panel; lower is better.
 | 48 | 1 | 2.983241 | 6.764267 | 6.839343 | 6.858271 |
 | 48 | 0.1 | 2.790368 | 6.348725 | 6.456982 | 6.493014 |
 | 64 | 1 | 2.930108 | 6.473414 | 6.604760 | 6.646855 |
-| 64 | 0.1 | pending | pending | pending | pending |
+| 64 | 0.1 | 2.774970 | 5.375003 | 5.481358 | 5.520121 |
 
 At update 48, reduced KL improves first/fourth-pass CE by 0.192873/0.365257
 nats relative to control. It improves absolute CE rather than merely shrinking
-the pass gap by degrading the first pass. However, neither branch's feedback
-passes beat its own first pass. Useful refinement remains unestablished.
+the pass gap by degrading the first pass. At 64, first/fourth-pass advantages
+are **0.155138/1.126734 nats**. The fourth-minus-first gap is 3.716748 for
+control and 2.745152 for reduced KL. Neither branch's feedback passes beat its
+own first pass. Useful refinement remains unestablished.
 
 The midpoint raw latent losses are
 0.261257/0.043548/0.044086/0.043945 for control versus
@@ -56,7 +58,21 @@ The midpoint raw latent losses are
 2.508881/0.620044/0.638946/0.637515 versus
 3.724618/0.783862/0.822513/0.820431. Thus both auxiliary losses are higher in
 every pass under the reduced coefficient. Weighted objective totals are not
-used to judge the two recipes.
+used to judge the two recipes. The same tradeoff persists at the terminal
+evaluation:
+
+| Raw auxiliary, update 64 | KL weight | Pass 1 | Pass 2 | Pass 3 | Pass 4 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Latent | 1 | 0.242130 | 0.043243 | 0.042835 | 0.042737 |
+| Latent | 0.1 | 0.274914 | 0.088235 | 0.084884 | 0.084474 |
+| KL | 1 | 2.299452 | 0.666133 | 0.683167 | 0.683961 |
+| KL | 0.1 | 3.320543 | 1.191557 | 1.210429 | 1.210006 |
+
+Both continuations completed 32 finite updates, with clipping active on all 32.
+Control preclip norm min/median/max/final is
+3.526242/7.714435/23.630489/6.139404; reduced is
+2.095179/3.778194/7.929704/4.687100. The reduced coefficient lowers typical
+gradient scale and improves measured CE, but does not eliminate clipping.
 
 ## Interpretation and remaining scope
 
