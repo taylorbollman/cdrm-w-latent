@@ -124,3 +124,9 @@ fourth-minus-first gap.499755, improving after warmup. Raw latent
 Latest preclip norm1.155449 remains finite. Cloud110 verified; named112
 save follows evaluation. Remaining16 updates and final saved-state probe
 continue under unchanged settings. No useful-refinement claim.
+
+18:56 UTC: update120 finite; cloud117 verified. Update119 norm.966437 is
+the first resumed update below clipping threshold1; update120 norm1.594339
+is again clipped. No new dev observation since112. Independent agents are
+watching terminal guards for CPU audit, final-probe binding, and closed-run
+retention; root retains control of the final GPU probe. No training beyond128.
