@@ -76,8 +76,10 @@ problems; the present evidence mostly shows the former recovering.
 First consolidate existing measurements into one scope-consistent ledger:
 real input tokens/s, full wall time, memory, parameter ownership, and clearly
 labeled estimated FLOPs where an existing validated estimate applies. Count
-inputs once despite K4. F recorded 10,207 inputs/s in selected update regions
-versus 7,014 over its full diagnostic executor; those denominators differ.
+inputs once despite K4. F recorded 10,746 inputs/s for compute plus materialization, 10,207 in
+broader timed update regions including scheduled development/probes, and
+7,014 over its full diagnostic executor; those denominators differ. See the
+[resource ledger](resource-ledger.md) for the exact timing scopes.
 Checkpoint waits and local save regions account for substantial overhead.
 
 A later storage-only milestone can coalesce near-adjacent named and wall-time

@@ -252,12 +252,18 @@ active. Mixed BF16 training uses FP32 master parameters/Adam, activation
 checkpointing, CUDA graphs and the existing fused optimizer. Curve evaluation
 uses the separate common FP32/no-jitter policy.
 
-The 128 selected update regions took 6,574.69 seconds, counting the slower rank
-per update: **10,207 real input tokens/s**. Complete executor time was 9,567.97
-seconds (**7,014 input tokens/s**), including evaluations, probes, preparation
-and the diagnostic checkpoint cadence. These rates count input tokens once,
-not four times for the four model passes. Per-GPU peak allocated/reserved
-memory after graph preparation was 30.08/40.21 GiB.
+The 128 timed update regions took 6,574.69 seconds, counting the slower rank
+per update: **10,207 real input tokens/s**. These regions include scheduled
+development evaluations and settling probes, but exclude preparation and
+checkpoint callbacks. Narrower compute-plus-materialization regions took
+6,245.08 seconds (**10,746 inputs/s**); compute alone reached 12,782 inputs/s.
+Complete executor time was 9,567.97 seconds (**7,014 inputs/s**), including
+preparation and the diagnostic checkpoint cadence. These rates count input
+tokens once, not four times for the four model passes. Per-GPU peak
+allocated/reserved memory immediately after graph preparation was
+30.08/40.21 GiB; maxima across preparation and subsequent updates were
+30.08/49.56 GiB. The [resource ledger](resource-ledger.md) gives common timing,
+physical/logical batch and parameter definitions across the completed arms.
 
 All 17 checkpoint publications, including named and wall-time recovery saves,
 are verified. Waiting for pending checkpoint workers accounted for 1,482.48
