@@ -1,8 +1,8 @@
 # Decision criteria after F128 and the paired NFR continuation
 
-Prepared 2026-09-30 while the already authorized NFR KL1/KL0.1 comparison is
-running. This note proposes work for user review; it authorizes no additional
-execution. Preserve the declared stop at update 64 for each branch. F means
+Updated 2026-09-30 after both NFR KL1/KL0.1 branches completed and retained
+update 64. This note proposes work for user review; it authorizes no additional
+execution. Both branches remain stopped at their declared boundary. F means
 FBT alone; NF adds NextLat; NFR adds both NextLat and native RT.
 
 ## What is established, and what is not
@@ -15,8 +15,9 @@ supports functionality and first-pass retention on the measured workload.
 It does **not** establish useful refinement: pass 4 remains 0.255 nats worse
 than pass 1. See the [training results](results.md).
 
-Settling is a separate property. Every measured F/NF/NFR checkpoint settles
-by K32 on the eight-row panel, including poor predictors. NF32 and NFR32
+Settling is a separate property. Every previously probed F/NF/NFR checkpoint
+settles by K32 on the eight-row panel, including poor predictors. The new NFR64
+endpoints have not had those deep-pass probes. NF32 and NFR32
 settle faster than F32 despite worse CE. The two isolated F128 crops directly
 agree with exact-online execution near 1e-6 at K32; K4 still has 1.08% hidden
 error despite a tiny mean CE difference. Those observations cover neither
@@ -47,16 +48,23 @@ removes both auxiliary losses; it cannot independently attribute that effect
 to KL. NFR-versus-NF also has different learned trajectories. Neither
 comparison establishes RT's causal value.
 
-### Midpoint assessment, 2026-09-30 at 13:35 UTC
+### Completed paired assessment
 
-The completed update-48 evaluations favor reduced KL for every pass's CE:
-2.790368 / 6.348725 / 6.456982 / 6.493014, versus control
-2.983241 / 6.764267 / 6.839343 / 6.858271. Raw latent and KL losses are higher
-on every pass. This is the same direction of tradeoff seen in NF, not general
-improvement in every objective. Control has also finished 64 with first/fourth
-CE 2.930108 / 6.646855 and 32 finite, clipped updates. **Reduced 64 remains
-pending; these are midpoint findings, not the terminal comparison.** See the
-[NFR progress record](../olmo-nfr-kl-continuation/progress.md).
+At update 64, reduced KL gives CE 2.774970 / 5.375003 / 5.481358 / 5.520121,
+versus control 2.930108 / 6.473414 / 6.604760 / 6.646855. Raw latent and KL
+losses are higher on every pass. The first/fourth-pass CE advantages are
+0.155138 / 1.126734 nats; the pass-4 penalty shrinks from 3.716748 to 2.745152
+nats through lower absolute CE, not a worsened first pass. KL0.1 is consequently
+the better candidate for a continuation aimed at predictive adaptation, but
+neither branch demonstrates useful refinement over its first pass.
+
+Both completed 32 finite, clipped updates. Median preclip norm fell from
+7.7144 to 3.7782 with lower KL, while throughput and memory were nearly
+identical. All terminal checkpoints were retained and the independent pair
+audit passed. This is the same direction of tradeoff seen in NF, not general
+improvement in every objective. See the
+[paired plots and raw-loss table on W&B](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ni8f0ch6)
+and [NFR progress record](../olmo-nfr-kl-continuation/progress.md).
 
 Finite K4 execution does not determine deeper-pass dynamics at these newer
 weights. In the prior NF pair, reducing KL improved CE while slowing early
@@ -78,6 +86,10 @@ clearance or an exact-online check.
 Authenticating NFR64 in a new diagnostic scope must be explicit; the existing
 saved-component helper admits NFR32 only. Do not silently repurpose its
 checkpoint allowlist. No broad grid or repeat exact-online study is proposed.
+The prior NFR32 K32 diagnostic took 506 seconds (about 8.4 minutes) on one GPU;
+two endpoints would roughly double that serial inference time, with independent
+GPU execution possible. This measured prior cost excludes new scope preparation
+and is not a runtime guarantee.
 
 If the endpoints remain bounded and settle, and a candidate completes cleanly
 with improving feedback prediction and acceptable first-pass retention,
@@ -101,10 +113,10 @@ problems; the present evidence mostly shows the former recovering.
 
 ## Efficiency and recovery before spending more
 
-First consolidate existing measurements into one scope-consistent ledger:
-real input tokens/s, full wall time, memory, parameter ownership, and clearly
-labeled estimated FLOPs where an existing validated estimate applies. Count
-inputs once despite K4. F recorded 10,746 inputs/s for compute plus materialization, 10,207 in
+Use the consolidated scope-consistent ledger for real input tokens/s, full
+wall time, memory and parameter ownership; label estimated FLOPs separately
+where a validated estimate applies. Count inputs once despite K4. F recorded
+10,746 inputs/s for compute plus materialization, 10,207 in
 broader timed update regions including scheduled development/probes, and
 7,014 over its full diagnostic executor; those denominators differ. See the
 [resource ledger](resource-ledger.md) for the exact timing scopes.

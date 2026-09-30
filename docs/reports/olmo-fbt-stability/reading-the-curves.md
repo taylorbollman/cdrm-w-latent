@@ -50,9 +50,11 @@ iteration to a stable one. This origin includes 128 earlier fusion-only updates,
 so we cannot say when settling first emerged. It also does not reproduce the
 paper's Figure 3 training distribution.
 
-Lowering KL weight in the matched NF comparison improved every pass's CE,
-while raw latent and KL losses became worse. The completed NFR update-48
-midpoint shows the same direction; its terminal comparison is still pending.
+Lowering KL weight in both completed NF and NFR comparisons improved every
+pass's CE, while raw latent and KL losses became worse. At NFR update 64,
+first/fourth-pass CE improves by 0.155 / 1.127 nats relative to control, but
+the fourth pass still trails its own first pass by 2.745 nats. See the
+[paired curves](../olmo-nfr-kl-continuation/figures/development-raw-losses.pdf).
 This is a tradeoff among training objectives: better next-token prediction,
 less agreement with the auxiliary targets. The lower weighted objective cannot
 itself establish improvement because its definition changed. Lowering KL also
