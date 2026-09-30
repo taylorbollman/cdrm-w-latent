@@ -93,3 +93,12 @@ see storage-receipt.md for self-publication exclusions. All13 publication receip
 bytes snapshotted under neutral names. Runtime210 and original200 files unchanged.
 No NFR replication or further training is queued. Next-steps.md proposes reviewed
 pairedNFR32→64 KL1/.1 (~3–4h). PR/administrative closeout follows below.
+
+PR54 merged as `da239d0e32ccc747e853dad1a94fa87c97ed2611`; reviewed branch
+head `b138f2009a6bdf2ebc460d027407b5d62b103dc7`. No hosted CI checks are
+configured/reported for that head; the scoped local/container validation above
+is the test authority. Main is synchronized. Small closeout archive113authorities
+(code/docs/launcher/recovery records and receipts) verified at `kl-closeout01`;
+receipt SHA`26424e2edcb1e2fd343534a6d5f31525a41e60832e947bf9356769fbf30926f3`. Later administrative retention at
+`kl-admin01` records this closeout paragraph and merge response; its receipt
+will live at `.runtime/olmo-kl-retention/admin-01.json`. No more training queued.
