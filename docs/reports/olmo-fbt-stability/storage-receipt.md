@@ -329,3 +329,95 @@ pattern: `--input-dir .runtime/olmo-fbt-stability/<stage>`,
 and `--receipt .runtime/olmo-fbt-stability-retention/<stage>.json`.
 No `--checkpoint-dir` was supplied. No GPU execution, model-state rehash,
 frozen-source change or new experiment launch occurred.
+
+## Terminal F128 evidence, audit and summary reconciliation
+
+Native F reached its initial review boundary at update 128; the original
+192-update declaration remains a ceiling, not completed exposure. The host
+launcher exited zero, the terminal report is `stopped_at_boundary`, W&B is
+synced, and checkpoint 128 is fully cloud-verified with no pending worker.
+The original report SHA256 is
+`8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe`.
+The report, training history, checkpoint state and frozen runtime sources were
+not changed by this closure.
+
+All 208 live/source-snapshot pins matched. The final saved boundary matched
+checkpoint128; its local manifest and state-file size matched the existing
+publication authority. No state tensor was loaded or large state file rehashed.
+The final publication receipt SHA256 is
+`11264d9d07edc532ec4a6ff9ce34bccfc30f67471297d191c1ed3f2c144a5e39`.
+
+The terminal run selected 131,433,171 evidence bytes (125.34 MiB), below the
+unchanged 128 MiB cap, so no core/async split was needed. Its primary archive
+contains 312 members. The separate inventory preserves all **17** publication
+receipts under neutral names so the generic `checkpoint-*` exclusion cannot
+drop them. These include scheduled and time-based recovery saves at updates:
+
+`0, 11, 16, 28, 32, 44, 48, 60, 64, 76, 80, 92, 96, 100, 112, 124, 128`.
+
+The terminal audit archive preserves the independent native-F audit (160,485
+passed checks), B-prefix audit (24,617 passed checks), pinned source snapshots
+and exact report/input snapshots. Its retained inventory hashes were checked
+before upload. Check counts are audit-record counts, not independent samples.
+The final curve archive includes immutable probe snapshots at 0/32/64/96/100/128.
+
+Every directory below is under the common evidence prefix stated above.
+
+| Directory | Members | Archive generation | Archive SHA256 |
+|---|---:|---|---|
+|`fbt-stability-summary-update000128-01`|13|1790763214373935|`2d7d2220fd4c8a29c34905877d509069876fe609a0fc0dd00d526c8c6d53aaf1`|
+|`fbt-stability-native-f128-01`|312|1790763830551185|`a132746048853a6bd32716894e5e9d7b15cdf718bdd3971bbca8d009f1ce5216`|
+|`fbt-stability-terminal-inventory-01`|23|1790763832465424|`c40e2178766a75835d372a4eec79040c0d65a965bd1727c52c8b8f32555e35cf`|
+|`fbt-stability-native-f128-audit-01`|16|1790763920013455|`6bfdb7a8940c359ecd51b5590148d5d21ae68c91ed1e78e3e00de1bdef8114c0`|
+|`fbt-stability-native-f128-summary-correction-01`|6|1790763914257435|`0a75d685a291ecb8df66af0ef7f73a7ffffa42654d282e4ac6a781048cf07048`|
+
+| Directory | Receipt generation | Receipt SHA256 |
+|---|---|---|
+|`fbt-stability-summary-update000128-01`|1790763214941004|`dae4cd7e295464f584aa739127310fa40752aff625552e8606fde4302b1ecbd2`|
+|`fbt-stability-native-f128-01`|1790763831124090|`d97d7a1d27921899cc2a3fc12fe261a2edf8ca2d73eafa95c29b82ac58f4a399`|
+|`fbt-stability-terminal-inventory-01`|1790763833005680|`732e5d70fbc3befeb665a2fdad6810f6117e8b7eaf05bad45f702d3a1073a03c`|
+|`fbt-stability-native-f128-audit-01`|1790763920588332|`b32e39b2943019f55ed19ac5f6a54351aaaf774f54dff766baca65d110b8ba7b`|
+|`fbt-stability-native-f128-summary-correction-01`|1790763914808686|`e484a67950459b5dd59da6f1fa7d6590a02ef9c1c4f6d726296fcedde9366dcb`|
+
+All archives, manifests and receipts passed size, server MD5, SHA metadata and
+downloaded SHA256 verification. Local receipt/result files use these stage names
+under `.runtime/olmo-fbt-stability-retention/`.
+
+The full final checkpoint remains at:
+
+`gs://fast-chunks/cdrm-w-latent/fbt-rt-nextlat/olmo-fusion-startup/fbt-stability/20260930-overnight01/F/native-f12-to128-01/update-000128/`
+
+| Object | Generation | Bytes | SHA256 |
+|---|---|---:|---|
+|`state.pt`|1790763589570207|14,222,290,081|`6a9842a21835dab572ee6c4d540fa814d999f733e2b98daa8b4977955305290c`|
+|`manifest.json`|1790763654943708|730,991|`b0c8cd0a94db8d33efba77e8533846e782ccf8833db891f8f124457ffd6350b7`|
+
+W&B run `taylorbollman/pretrained-fbt-rt-nextlat/32sqvp7e` initially retained
+stale checkpoint summary values `124 / 112 / true`. The existing standalone
+reconciler changed only the summary checkpoint fields to **128 / 128 / false**
+and added the authority/source provenance annotation. Fresh readback succeeded
+on its second bounded attempt. Run state remained finished, `_step` remained
+128, and every unrelated summary value was identical. The before/after hash of
+unrelated summary values is
+`ec4df5f1aeb641b560bc9142f199c18e36b55b2135f890892cd404c7bc937906`.
+No history was rewritten; the terminal report/publication pins remained unchanged.
+
+The correction command, run in the CPU container, was:
+
+```bash
+python -m scripts.olmo_terminal_summary_reconcile \
+  --report .runtime/olmo-fbt-stability/native-f12-to128-01/report.json \
+  --report-sha256 8a07a7fc2a5ecafc4523a1f5adb6a9b2073ebd1f46a586c9034e3815977cbdfe \
+  --publication .runtime/olmo-fbt-stability/native-f12-to128-01/checkpoint-publications/update-000128.json \
+  --publication-sha256 11264d9d07edc532ec4a6ff9ce34bccfc30f67471297d191c1ed3f2c144a5e39 \
+  --output .runtime/olmo-fbt-stability/native-f128-summary-correction-01
+```
+
+The unchanged retainer used the standard CPU container and
+`env -u GOOGLE_APPLICATION_CREDENTIALS`. Each stage used its matching
+`fbt-stability-<stage>` GCS directory and `<stage>.json` local receipt. Input
+directories were `.runtime/olmo-fbt-stability/<stage>` except
+`native-f128-01`, whose input was `native-f12-to128-01`, and
+`terminal-inventory-01`, whose input was `terminal-closure-01`.
+No call supplied `--checkpoint-dir`; checkpoint objects were already published
+and verified. No new GPU execution or experiment launch occurred here.
