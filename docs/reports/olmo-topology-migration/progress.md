@@ -112,3 +112,19 @@ and per-child exit receipts. No completed GPU update is repeated.
 `interruption-adoption-01.json` records the recovery decision. Independent CPU
 cross-topology audit is running; strict GPU restart follows exact-generation
 restoration. All execution sources remain unchanged.
+
+The recovered CPU cross-topology audit completed/exit0: all23 structural checks
+pass, initial tensor artifacts exact, raw-gradient relative L2 6.297229e-8 and
+actual Adam-displacement relative L2 3.817187e-7. Measured-only BF16 semantics
+remain explicit. Cloud restoration passed exact generation/SHA validation;
+native-restart-1r-02 is active. Final same-topology exactness remains pending.
+
+## 2026-10-01 00:04 UTC — final replay finished; publication/audit pending
+
+Cloud-restored restart completed update128, with the full recorded final
+boundary and metrics equal to migrated1. Its terminal checkpoint publication,
+clean exit and independent raw-tensor restart audit remain pending. No new GPU
+cell follows. Read-only final preservation passes428 checks:422 historical
+source entries plus original B32/NFR127/NFR128 manifests and full state hashes.
+All final evidence retention is prepared as an interruption-resistant CPU task;
+it cannot publish final acceptance before strict restart passes.
