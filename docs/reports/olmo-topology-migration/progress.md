@@ -157,3 +157,9 @@ Independent tar inspection verified all442 member bytes/digests and exclusions;
 results.md remains at its declared final SHA. All checkpoints, audits, failed
 attempt and interruption evidence are retained. Both GPUs remain idle and no
 GPU job or scientific continuation is queued. PR58 closeout follows.
+
+PR58 merged2026-10-01T00:21:34Z as9f2d4b998c0b62a24209a8efc81ca5d14405a5eb.
+Local checkout returned to main. This administrative closeout does not alter
+runtime sources, frozen final results, completed reports or retained artifacts.
+No GPU job, learning continuation or additional two-H100 fixture is queued.
+Next hardware-dependent work is the destination-node plan linked in results.md.

@@ -1,6 +1,6 @@
 # Pretrained OLMo / RT / FBT / NextLat implementation handoff
 
-Updated 2026-09-30. **Read this first after compaction or interruption.**
+Updated 2026-10-01. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
