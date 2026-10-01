@@ -1,0 +1,347 @@
+{
+  "all_new_objects_download_verified": true,
+  "audits": [
+    {
+      "acceptance_passed": null,
+      "name": "native-control2-vs-migrated1-u128-recovery01",
+      "numerical_acceptance": "measured_only",
+      "sha256": "0fbed46c72d936de5c68a78ed5d5bfb53adb7e7f877d4995fbb4a9865d65ff46",
+      "status": "completed",
+      "structural_passed": true
+    },
+    {
+      "acceptance_passed": true,
+      "name": "native-migrated1-vs-cloud-restart1-u128-recovery01",
+      "numerical_acceptance": "bitwise_restart",
+      "sha256": "b8616ab3310372e17b30e491b06b299d25ae6769f7df83f769cab1463f082b3f",
+      "status": "passed",
+      "structural_passed": true
+    },
+    {
+      "historical_report_reference": {
+        "path": ".runtime/olmo-nfr-stability-128/native-nfr-reduced-64to128-01/report.json",
+        "sha256": "e678b1b70b833ef1384e79ddff990b20676449c10ed248e3d0e8d9e809847088"
+      },
+      "name": "native-control-vs-historical128-json",
+      "numerical_acceptance": "recorded_scalars_and_digests_only",
+      "recorded_json_checks": 14,
+      "scope": "Cheap comparison of already recorded scalar metrics and full boundary digests; no independent historical tensor reload or changed-topology acceptance",
+      "sha256": "8583b354d0df4d79f82a6240f41fb22da1ca5484f5daef266e1fa2bf3563352d",
+      "status": "passed"
+    }
+  ],
+  "completed_native_runs": [
+    "native-control-2r-02",
+    "native-migrated-1r-02",
+    "native-restart-1r-02"
+  ],
+  "cpu_only": true,
+  "create_only": true,
+  "exclusions": [
+    "W&B internals",
+    "credentials/environment files",
+    "native checkpoint state duplicates",
+    "unrelated or incomplete jobs"
+  ],
+  "existing_checkpoint_download_verification": "Preserved from verified async publication receipts; exact generations and server metadata rechecked at closeout",
+  "existing_checkpoint_metadata_reverified": true,
+  "existing_checkpoint_references": [
+    {
+      "generation": "1790808895709218",
+      "md5_base64": "ac92+J2xQ3OEDRUGGFKfXQ==",
+      "sha256": "8b62340f0c065f11d1da42d0b0c0f1cb018cd9b9222d11ccb81835d1afe721d6",
+      "size_bytes": 15214787201,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-control-2r-02/update-000127/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790808957052302",
+      "md5_base64": "If2MaTH61qgOZMcCNUzkgw==",
+      "sha256": "8d4f1a10fd781430acaa3be7ff3234ed91b12070b5bcfafe794b7eab1cafc4ea",
+      "size_bytes": 155353,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-control-2r-02/update-000127/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790809680425332",
+      "md5_base64": "sV/qT1c7441p7gvSxipmLg==",
+      "sha256": "1edfc995252f224ad14e694a0bcd26aa5d0c29631c3903fcd4bff7ce4e76f802",
+      "size_bytes": 15214787329,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-control-2r-02/update-000128/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790809735161542",
+      "md5_base64": "eIvLFGz/36SAfN7PKGyNHg==",
+      "sha256": "acb2c0295812fb1b34c89e5de2b3e8e5c94c1204be4e8bdb6c5d1241d585c661",
+      "size_bytes": 155353,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-control-2r-02/update-000128/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790810168461626",
+      "md5_base64": "VNrHqfiaY50M+oR77mrV5A==",
+      "sha256": "75c344e0a3129868bfa55de5241055273df9de44dc10d06acfe5d06d16762e25",
+      "size_bytes": 15214767769,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-migrated-1r-02/update-000127/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790810223250410",
+      "md5_base64": "B77CJ0NnD6EX4f3VF/jDDQ==",
+      "sha256": "cfed10d5ac6758d7ee53443ed721d5983712fa6c73dc8c710879678d0d9c8a54",
+      "size_bytes": 154975,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-migrated-1r-02/update-000127/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790811084973524",
+      "md5_base64": "vBrMGvVa2Fgwya/L6EfGvw==",
+      "sha256": "0819eb1c472c7ed619c554fc335991e86c26fb022a3b346d92fed857ec3b6be9",
+      "size_bytes": 15214767833,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-migrated-1r-02/update-000128/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790811140507084",
+      "md5_base64": "Pe/HsE5ST+iie1Uii47s2A==",
+      "sha256": "45b886c36471000d2d9ff83743158584c665a12f2507f675702d2bdc75bf7227",
+      "size_bytes": 154975,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-migrated-1r-02/update-000128/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790812177791754",
+      "md5_base64": "MsW0+yPOPE4uOQrYS8Gruw==",
+      "sha256": "034ca206e2ae7de0d178973485fb2b482e3ffa25298eab4a09654eeeeaef4f57",
+      "size_bytes": 15214809561,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-restart-1r-02/update-000127/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790812248930193",
+      "md5_base64": "ESTql5rZUBJbYbZofNTuOg==",
+      "sha256": "8d03cbb0c4f2e8836bd67c1255f69de7bbc6d01018a7fc57ca22f6c061b03888",
+      "size_bytes": 154975,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-restart-1r-02/update-000127/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813073406900",
+      "md5_base64": "oSt9GKtj2p0ZaNmitXQ8tQ==",
+      "sha256": "9f045449a67b52c20e8aad6e45f20b31572cd3f714929dcc81b290aca425e9fd",
+      "size_bytes": 15214809561,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-restart-1r-02/update-000128/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813142538574",
+      "md5_base64": "OE3ubTNjXOiVxSUtC6BvKg==",
+      "sha256": "629f98f4d2f73a6de3ca6c7250335623af15d9bfe136a52fd65c3a7ef0c4a28a",
+      "size_bytes": 154975,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-restart-1r-02/update-000128/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    }
+  ],
+  "failed_attempt_included": "native-control-2r-01",
+  "failed_attempt_state_uploaded": false,
+  "final_preservation": {
+    "checks": 428,
+    "created_at": "2026-09-30T23:54:52.707421+00:00",
+    "origin127_sha256": "8775a577d7930f61adc923f8e7e54abf1aa3bf2d8890d737fbe1e3666f378d54",
+    "original_source_checks": 422,
+    "origins_sha256": "0df3f12fa226ee6bd6b04b79b49bdf65ecd513f467f94dd708b77ee031c2ec8e",
+    "report_sha256": "e5b2d5a89af81dbce9992d682b15be69ad24e2226654a9316e46ac8695dce968",
+    "scope": "Read-only streamed SHA256 of historical source entries and original B32/NFR127/NFR128 checkpoint bytes; no CUDA or tensor execution.",
+    "status": "passed"
+  },
+  "final_results_sha256": "51a4e259294de44dd140dcc964bfe58c6efb3eb21e68e81c866316110becd8d2",
+  "interruption_adoption": {
+    "adoption": {
+      "completed": [
+        "native-control-2r-02",
+        "native-migrated-1r-02"
+      ],
+      "migrated_launcher_exit": "unavailable after chat interruption",
+      "original_host_session": 66753,
+      "original_queue_alive": false,
+      "running_containers": 0,
+      "scope": "Resume only missing cloud restore and native strict restart. No scientific extension or repeated completed GPU update.",
+      "time": "2026-09-30T23:42:03.023689+00:00"
+    },
+    "completed_tail_status": {
+      "pid": 2104081,
+      "source_report_pins": {
+        "native-control-2r-02": "eaf1a0eca1603cf62c01a8fff7d8cfb9fc384fa1e4a58adc6e0688da522fe2f6",
+        "native-migrated-1r-02": "a68296027726921d135d66b7cd2911d16fd6c0b018afe01ac66678700abf3cff"
+      },
+      "stage": "completed",
+      "updated_at": "2026-10-01T00:06:22.326606+00:00"
+    },
+    "migrated_launcher_exit_available": false,
+    "qualification": "Original host queue was lost after the completed control and migration. The migrated launcher exit is unavailable; completed producer report and teardown, W&B sync and both verified cloud publications were adopted with no live process/container. Only missing cloud restoration and strict restart were resumed; their child exits were zero."
+  },
+  "members": 442,
+  "native_checkpoint_states_reuploaded": false,
+  "objects": [
+    {
+      "generation": "1790813710160732",
+      "md5_base64": "px8NDAIazIF3ROMFug1zyg==",
+      "sha256": "e7c8d60093a873558a6840af35da83d9a64278c217998cda5b21f8b5fde27c4e",
+      "size_bytes": 5071544987,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/raw-gradients/native-control-2r-02/raw-gradients-000128.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813796819290",
+      "md5_base64": "8zlNP+cLnZy7VlCEWrJCwA==",
+      "sha256": "2dba0a33b53dd45e4757f1b57032f03419e83e191de5d7c81ebfc0a1a5ded885",
+      "size_bytes": 5071544987,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/raw-gradients/native-migrated-1r-02/raw-gradients-000128.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813876520809",
+      "md5_base64": "8zlNP+cLnZy7VlCEWrJCwA==",
+      "sha256": "2dba0a33b53dd45e4757f1b57032f03419e83e191de5d7c81ebfc0a1a5ded885",
+      "size_bytes": 5071544987,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/raw-gradients/native-restart-1r-02/raw-gradients-000128.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813897859704",
+      "md5_base64": "yrP62b5SGHc2DeVxXH1h5A==",
+      "sha256": "9e38c836f47e7d0651249f668a5aab41d89b19d51b4e6ff5cc3735368873a521",
+      "size_bytes": 4528412,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/evidence.tar.gz",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790813898140304",
+      "md5_base64": "Cd1L8se9sWt04QYkfbSvxg==",
+      "sha256": "39d246bcf77903b58f9731c26a7b098d6873e8e1d4bcca45fb5daf9afcb3b87b",
+      "size_bytes": 139922,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/inventory.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    }
+  ],
+  "prefix": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/",
+  "receipt_publication": {
+    "generation": "1790813898412657",
+    "md5_base64": "7V2RXt8ebekOTH8a2BVrFw==",
+    "sha256": "f33f1dd6e59918ea03462460751476cdac4adf029e4b6a8b2fd6cee9e19d25f9",
+    "size_bytes": 13461,
+    "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/receipt.json",
+    "verification": {
+      "download_sha256": true,
+      "server_md5": true,
+      "server_size": true,
+      "sha256_metadata": true
+    }
+  },
+  "report_pins": {
+    "native-control-2r-02": {
+      "md5_base64": "USdsvBr7Zb6inrkDQxxA7A==",
+      "sha256": "eaf1a0eca1603cf62c01a8fff7d8cfb9fc384fa1e4a58adc6e0688da522fe2f6",
+      "size_bytes": 2820236
+    },
+    "native-migrated-1r-02": {
+      "md5_base64": "YjFwQWpGL6Aye/7uX3M27w==",
+      "sha256": "a68296027726921d135d66b7cd2911d16fd6c0b018afe01ac66678700abf3cff",
+      "size_bytes": 2529529
+    },
+    "native-restart-1r-02": {
+      "md5_base64": "G1DnUXBQDcadxViXiGc5ug==",
+      "sha256": "cc10cec584142e9bedf8d68f810d91d2ca2799e8c652fef247f6660f4dbf1a05",
+      "size_bytes": 2487329
+    }
+  },
+  "schema": "olmo-topology-native-retention-v1",
+  "scope": "Evidence preservation; scientific acceptance remains the explicitly recorded audit outcome",
+  "status": "verified"
+}

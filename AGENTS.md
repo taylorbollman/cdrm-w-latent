@@ -31,6 +31,29 @@ W&B tracking.
 
 # Pretrained model handoff
 
+2026-10-01 remaining two-H100 topology readiness COMPLETE, PR58 (closeout in
+its progress.md). Read docs/reports/olmo-topology-migration/results.md, usage.md,
+progress.md and target-node-plan.md. All GPU work completed; both H100s verified
+idle inside container. No GPU or scientific extension is queued. Native NFR
+127→128: two-rank control matches original128 metrics/model/Adam/RNG/cursor
+recorded digests exactly. Two→one migration raw-gradient relative L2 6.297229e-8,
+actual Adam-displacement relative L2 3.817187e-7, all23 structural checks pass;
+BF16 comparison is measured-only, not global precision clearance. Exact-generation
+GCS restore plus fresh one-rank restart passes bitwise raw-gradient/displacement
+and boundary equality; exit0/clean teardown/W&Bsynced, both127/128 cloud-published.
+Tiny1↔2, two exact restarts, cooperative/abrupt independent-job isolation and
+nativeN/R/NR/FR smokes pass. 109CPUtests;428preservation checks include422 historical
+source entries plus original B32/NFR127/NFR128 manifests and full checkpoint bytes.
+Heavy fresh RT startup clipping remains an optimization concern. No update129.
+Original host queue was interrupted after migrated1 completed; its launcher exit
+is unavailable, while completed report/teardown/cloud/W&B authority was adopted.
+Detached tail resumed only missing restore/restart and exited0; interruption
+receipts retained. First native attempt hit campaign/pilot upload identity
+mismatch; explicit worker hook fixed it without changing historical sources.
+All native raw-gradient/evidence objects are verified in native-retention.json;
+tiny and smoke/storage receipts also verified. Native1→2, actual eight-rank/independent
+layouts, H200 batch/memory and provider/runtime acceptance belong on target node.
+
 2026-09-30 GPU allocation first milestone COMPLETE, PR57. Read docs/reports/
 olmo-gpu-allocation/results.md, validation.md, storage-receipt.md, progress.md,
 memory-assessment.md and topology-migration-plan.md. All four primary cells and

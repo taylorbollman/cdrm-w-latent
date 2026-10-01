@@ -1,0 +1,120 @@
+{
+  "all_new_objects_download_verified": true,
+  "checkpoint_states_reuploaded": false,
+  "completed_native_report_pins": {
+    "native-fr-01": {
+      "md5_base64": "ILi0mn7cmE1mCvs4K4aINQ==",
+      "sha256": "6a84f1783b541d6430f20674865b98a10cc4fb11f002d88f5d92e4e70d1c6f8a",
+      "size_bytes": 250622
+    },
+    "native-n-01": {
+      "md5_base64": "udtl80xUAJB7MyjbhOVFlg==",
+      "sha256": "8a4d73b8d807fde3e8265d356410b7f2b45c592fe9d43be27c67af1416060a18",
+      "size_bytes": 257689
+    },
+    "native-nr-01": {
+      "md5_base64": "ZOZl0DcFMCmEhlS4kpZYbA==",
+      "sha256": "0e550b21323b6ad7affe2cc86194caaee9f4704dc6d37a495ef66aabe1ea335d",
+      "size_bytes": 257724
+    },
+    "native-r-01": {
+      "md5_base64": "rfCRKeZYOjMSL6P1fBt1sw==",
+      "sha256": "76a2e6f6cbfae9955edce0bc6ae16e98289a6254e8728da93bd854731ddde09a",
+      "size_bytes": 246985
+    }
+  },
+  "cpu_only": true,
+  "create_only": true,
+  "digest_helper": "scripts.openelm_retain.file_digest",
+  "elapsed_seconds": 1.7870220479962882,
+  "evidence_archive_members": 340,
+  "exclusions": [
+    "wandb internals",
+    "environment and credentials",
+    "pending native-control-2r-02 and all other native migration work",
+    "checkpoint state copies",
+    "unrelated outputs"
+  ],
+  "existing_checkpoint_download_verification": "Recorded by completed storage CPU probe; generations and server metadata rechecked during this retention",
+  "existing_checkpoint_metadata_reverified": true,
+  "existing_checkpoint_references": [
+    {
+      "generation": "1790808063527401",
+      "md5_base64": "6mZX1mIUx/hKf0qhDbqYhg==",
+      "sha256": "5bf781b170bf394556f94f43d7ea78bb5453f04b064bb6dc325791c4e281e458",
+      "size_bytes": 720288,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/storage-cpu-probe-01/update-000002/state.pt",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790808063791415",
+      "md5_base64": "KB317S4hOyVH+7iWjfzPoA==",
+      "sha256": "9a3f2e712112950ce10e957d89e667c1137f84f8d260a46f26d85259df63f454",
+      "size_bytes": 77180,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/storage-cpu-probe-01/update-000002/manifest.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    }
+  ],
+  "included_completed_native_runs": [
+    "native-n-01",
+    "native-r-01",
+    "native-nr-01",
+    "native-fr-01"
+  ],
+  "objects": [
+    {
+      "generation": "1790808843559663",
+      "md5_base64": "yRp9ME+fz+/pcBw5L3wVrg==",
+      "sha256": "3e0fe2b66c8bcab645330374b08f73489a87fc1d0b5b3afb70c15988d206f4ba",
+      "size_bytes": 1485292,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-smokes-and-storage/evidence.tar.gz",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    },
+    {
+      "generation": "1790808843818584",
+      "md5_base64": "Ua1bmiEOXrUZWy5XIcEyYg==",
+      "sha256": "9071e1a6c8ff5e032d36984e3eafa822726c78db72a201a19840d35d18de860c",
+      "size_bytes": 98931,
+      "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-smokes-and-storage/inventory.json",
+      "verification": {
+        "download_sha256": true,
+        "server_md5": true,
+        "server_size": true,
+        "sha256_metadata": true
+      }
+    }
+  ],
+  "prefix": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-smokes-and-storage/",
+  "receipt_publication": {
+    "generation": "1790808844067491",
+    "md5_base64": "s8PGjlbp2+d2GcIB9IW1ag==",
+    "sha256": "32f5506b1e4d8161ed2becd571c10b187346607f9b02b177dad59007889bb863",
+    "size_bytes": 3969,
+    "uri": "gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-smokes-and-storage/receipt.json",
+    "verification": {
+      "download_sha256": true,
+      "server_md5": true,
+      "server_size": true,
+      "sha256_metadata": true
+    }
+  },
+  "schema": "olmo-topology-native-smoke-storage-retention-v1",
+  "scope": "Four completed native functionality smokes and completed CPU storage probe only",
+  "status": "verified",
+  "transport_helper": "scripts.olmo_two_gpu_retain.upload_verified"
+}
