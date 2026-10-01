@@ -141,3 +141,19 @@ for evidence publication. Native final retention is authorized at the unique
 `native-final-01` GCS prefix, using a detached CPU-only helper. Check its receipt
 before claiming final raw-gradient/evidence durability. Historical source/core
 files remain unchanged; no additional numeric test or learning extension remains.
+
+## 2026-10-01 00:18 UTC — final evidence verified
+
+Detached CPU retention exited0 after294.52seconds. All6 new objects passed
+full exact-generation SHA/MD5/size readback:3 raw gradients totaling15,214,634,961
+bytes, a4,528,412-byte archive with442 members, inventory and receipt. Existing
+12 checkpoint objects were metadata-reverified and referenced, never reuploaded.
+Prefix: `gs://fast-chunks/cdrm-w-latent/olmo-topology-migration/20260930/native-final-01/`.
+Published receipt generation1790813898412657, SHA
+f33f1dd6e59918ea03462460751476cdac4adf029e4b6a8b2fd6cee9e19d25f9.
+Persistent native-retention.json SHA
+93d222876c3068930dcdedc0fe2c67f8c0eea99932b4dfd65752ca48d376d486.
+Independent tar inspection verified all442 member bytes/digests and exclusions;
+results.md remains at its declared final SHA. All checkpoints, audits, failed
+attempt and interruption evidence are retained. Both GPUs remain idle and no
+GPU job or scientific continuation is queued. PR58 closeout follows.

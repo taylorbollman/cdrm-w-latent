@@ -50,8 +50,8 @@ is unavailable, while completed report/teardown/cloud/W&B authority was adopted.
 Detached tail resumed only missing restore/restart and exited0; interruption
 receipts retained. First native attempt hit campaign/pilot upload identity
 mismatch; explicit worker hook fixed it without changing historical sources.
-Native final evidence publication status is native-retention.json; tiny and
-smoke/storage receipts already verified. Native1→2, actual eight-rank/independent
+All native raw-gradient/evidence objects are verified in native-retention.json;
+tiny and smoke/storage receipts also verified. Native1→2, actual eight-rank/independent
 layouts, H200 batch/memory and provider/runtime acceptance belong on target node.
 
 2026-09-30 GPU allocation first milestone COMPLETE, PR57. Read docs/reports/
