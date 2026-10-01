@@ -1,9 +1,11 @@
 # Production-state topology migration and remaining native integration
 
-**In progress.** Tiny migration/restart and independent-job isolation are
-accepted. The four remaining native integration cells have passed. Native
-NFR127→128 migration, cloud restoration and exact restart are still running;
-this report will be finalized after their independent audits.
+**Completed, 2026-10-01.** Explicit checkpoint migration, fresh-process restart,
+independent-job isolation and the four remaining native integration checks are
+accepted in the bounded scope below. Native two-to-one-rank differences are
+negligible, and the cloud-restored same-topology restart is bitwise exact.
+Both H100s are idle; no GPU job or scientific training extension is queued.
+Here N means NextLat, F means FBT feedback passes, and R means native temporal RT.
 
 ## What changes
 
@@ -107,17 +109,35 @@ interruption; completed producer report, graph teardown, W&B sync and both
 verified checkpoint publications were authenticated before adopting the result.
 The separate interruption receipt preserves that qualification.
 
-The exact-generation GCS restoration passed. Strict fresh-process restart from
-that restored checkpoint is running. The fixed scope is original
-native NFR127→128, T1024,512 real rows per
-update, physical B12, K4, RT0/15, latent1/KL0.1, BF16 mixed with FP32 master
-weights/Adam and the original finite LR plan. Compare two ranks with one rank;
-then restore migrated127 from exact GCS generations and replay on one rank in a
-fresh process. Compare raw gradients and actual Adam displacement, with exact
-initial model/optimizer/schedule/cursor and identical data/masks/keyed jitter.
-Changed-rank BF16 measurements are not assumed bitwise-identical or granted
-blanket numerical clearance. The strict same-topology restart must be exact.
-No update129 is authorized by this fixture.
+The exact-generation GCS restoration and strict fresh-process restart passed.
+The independent auditor reports **zero difference and bitwise equality** for
+all raw-gradient and actual Adam-displacement tensors. Initial and final
+boundary records, including model/Adam/scheduler/counters, rank RNG and cursor,
+are exact; graph preparation preserved the complete imported state. The
+restart exited 0 after verified publication and clean teardown, with W&B synced.
+Checkpoint serialization/file hashes need not match: the exactness claim is
+about tensor state and execution, not incidental serialized provenance.
+
+The fixed scope is original native NFR127→128, T1024, 512 real rows per update,
+physical B12, K4, RT at layers 0/15, latent weight 1 / KL weight 0.1, BF16 mixed
+with FP32 master weights/Adam and the original finite LR plan. Exact initial
+model/optimizer/schedule/cursor, data/masks/keyed jitter and physical batch were
+preserved. Changed-rank BF16 measurements do not grant blanket numerical
+clearance. No update 129 occurred or is authorized by this fixture.
+
+| Cell | Online W&B | Final report SHA256 |
+| --- | --- | --- |
+| Two-rank control | [f3xumz84](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/f3xumz84) | `eaf1a0eca1603cf62c01a8fff7d8cfb9fc384fa1e4a58adc6e0688da522fe2f6` |
+| One-rank migration | [du7ptlwr](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/du7ptlwr) | `a68296027726921d135d66b7cd2911d16fd6c0b018afe01ac66678700abf3cff` |
+| Cloud-restored one-rank restart | [ricgnpga](https://wandb.ai/taylorbollman/pretrained-fbt-rt-nextlat/runs/ricgnpga) | `cc10cec584142e9bedf8d68f810d91d2ca2799e8c652fef247f6660f4dbf1a05` |
+
+Independent audit artifacts under `.runtime/olmo-topology-migration/independent-audits/`:
+
+- `native-control-vs-historical128-json.json`: all 14 historical replay checks pass.
+- `native-control2-vs-migrated1-u128-recovery01.json`: measured BF16 comparison,
+  SHA256 `0fbed46c72d936de5c68a78ed5d5bfb53adb7e7f877d4995fbb4a9865d65ff46`.
+- `native-migrated1-vs-cloud-restart1-u128-recovery01.json`: accepted bitwise restart,
+  SHA256 `b8616ab3310372e17b30e491b06b299d25ae6769f7df83f769cab1463f082b3f`.
 
 Native reverse 1→2 migration is not covered by this matrix; the tiny FP32
 fixture covers that direction. See the [operator guide](usage.md) for the
@@ -129,10 +149,20 @@ Completed small evidence and tiny checkpoints are verified in GCS:
 [tiny/isolation receipt](tiny-retention.json),
 [native smoke/storage receipt](native-smoke-retention.json).
 Native migration checkpoints use asynchronous verified publication; their final
-receipts and raw-gradient artifact retention will be added at closeout.
+receipts, raw-gradient files, cloud restoration, interruption/failure evidence,
+independent audits and source snapshots are catalogued by the separately
+published [native retention receipt](native-retention.json). That receipt is
+created only after final evidence publication and exact-generation verification;
+the six native checkpoint states are referenced rather than uploaded again.
 
 Eight-rank execution, eight independent jobs, H200 physical batches and the new
 provider/runtime require destination-node acceptance. See
 [target-node plan](target-node-plan.md). The current tests do not infer H200 or
 eight-GPU performance, resolve fresh RT optimization, or extend the NFR science
 run beyond its existing128-update endpoint.
+
+No further two-H100-only acceptance is recommended before the move. Expanding
+native rank count and qualifying independent-job interference now belong on the
+actual destination node, together with its runtime, credentials and physical
+batch/memory measurements. The small reverse-rank fixture already exercises the
+added-rank RNG mechanism; it does not replace that destination acceptance.

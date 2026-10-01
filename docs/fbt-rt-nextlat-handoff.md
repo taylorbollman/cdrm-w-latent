@@ -4,23 +4,42 @@ Updated 2026-09-30. **Read this first after compaction or interruption.**
 
 ## Current decision, authorization and next action
 
-The remaining two-GPU readiness milestone is **in progress** on branch
-`feat/olmo-topology-migration`. Read
-[its live progress](reports/olmo-topology-migration/progress.md),
-[results](reports/olmo-topology-migration/results.md), and
+The remaining two-H100 readiness milestone is **complete** (PR58, 2026-10-01;
+merge/retention closeout in its progress). Read
+[results](reports/olmo-topology-migration/results.md),
+[progress](reports/olmo-topology-migration/progress.md),
+[operator and recovery guide](reports/olmo-topology-migration/usage.md), and
 [destination-node scope](reports/olmo-topology-migration/target-node-plan.md).
-The 109 focused CPU tests, four required tiny topology/restart audits,
-independent-job cooperative/abrupt-exit isolation, and native N/R/NR/FR
-integration checks have passed. The native NFR migration/cloud-restart matrix
-is still running. Original session66753 was lost in a chat interruption after
-control2 and migrated1 completed. Detached recovery tail PID2104081 now executes
-only cloud restore and strict restart; inspect `native-resume-tail-status.json`
-under `.runtime/olmo-topology-migration/` and the finalized reports
-before launching anything. All native replays are original 127→128, with
-populated Adam and the saved finite schedule. No update 129 is included.
-The first native attempt found a cloud-worker identity mismatch; its evidence
-is retained. An explicit campaign retention hook passed CPU/cloud acceptance
-and is used in retry 02. Historical model/runtime/storage files stay unchanged.
+Both H100s are idle. No GPU work or scientific continuation is queued.
+
+The native NFR 127→128 two-rank control exactly reproduces the historical
+recorded model/Adam/RNG/cursor state and metrics. Two-to-one migration differs
+by 6.297229e-8 in raw-gradient relative L2 and 3.817187e-7 in actual Adam
+displacement; all 23 structural checks pass. Fresh one-rank restart after an
+exact-generation GCS restoration is bitwise exact in gradients/displacement
+and boundary records. Both boundaries of all three native cells are verified
+in GCS; final gradient/evidence publication is catalogued in
+[native-retention.json](reports/olmo-topology-migration/native-retention.json).
+The scientific endpoint remains 128, with its populated Adam and finite schedule
+preserved. These tests do not grant general BF16/FP32 equivalence or demonstrate
+useful feedback refinement.
+
+The 109 focused CPU tests, tiny 1↔2 migrations/two exact restarts, independent-job
+cooperative/abrupt-exit isolation, and native N/R/NR/FR integration checks pass.
+The 428 final preservation checks cover all 422 historical source entries and
+original B32/NFR127/NFR128 checkpoint bytes. Fresh RT startup still clips heavily.
+A campaign/pilot identity mismatch found in the first native upload was fixed
+through an explicit worker hook; failed-attempt evidence is retained. A later
+chat interruption lost the host queue but not the completed migrated job;
+report/teardown/W&B/cloud authority was adopted with launcher exit unavailable.
+The detached recovery tail ran only the missing cloud restore and strict restart.
+
+Next work belongs on Nebius/the selected target node: pinned runtime and cloud
+credential acceptance, short restart/migration checks on that hardware, actual
+eight-rank and concurrent-job layouts, and H200 physical batch/memory calibration.
+Native rank expansion and H200/eight-GPU performance are not established by these
+two-H100 fixtures. Do not extend the finite 128-update scientific schedule without
+an explicit new continuation plan and authorization.
 
 ## Previous allocation milestone
 

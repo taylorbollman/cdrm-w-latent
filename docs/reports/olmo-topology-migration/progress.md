@@ -128,3 +128,16 @@ cell follows. Read-only final preservation passes428 checks:422 historical
 source entries plus original B32/NFR127/NFR128 manifests and full state hashes.
 All final evidence retention is prepared as an interruption-resistant CPU task;
 it cannot publish final acceptance before strict restart passes.
+
+## 2026-10-01 00:10 UTC — all acceptance complete; native retention underway
+
+Tail completed/exit0 at00:06:22UTC. Independent strict cloud-restart audit exited0
+at00:09:31UTC:23 structural checks, all71 gradient/displacement tensors bitwise
+exact over1,267,879,936 elements, exact full boundary/RNG/cursor records. Both
+H100s verified idle inside the required container; no GPU work queued. Native
+control/migrated/restart checkpoint127+128 all published and W&Bsynced.
+Final results.md is frozen at SHA51a4e259294de44dd140dcc964bfe58c6efb3eb21e68e81c866316110becd8d2
+for evidence publication. Native final retention is authorized at the unique
+`native-final-01` GCS prefix, using a detached CPU-only helper. Check its receipt
+before claiming final raw-gradient/evidence durability. Historical source/core
+files remain unchanged; no additional numeric test or learning extension remains.
